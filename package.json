@@ -1,0 +1,27 @@
+{
+  "name": "disconnect-agencies",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@lottiefiles/react-lottie-player": "^3.6.0",
+    "@studio-freight/lenis": "^1.0.42",
+    "eslint-config-next": "^14.2.35",
+    "framer-motion": "^12.23.26",
+    "lottie-react": "^2.4.1",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.2",
+    "@types/react": "19.2.7",
+    "tailwindcss": "4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

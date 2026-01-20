@@ -1,0 +1,45 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
+
+.instrument-serif {
+  font-family: "Instrument Serif", serif;
+}
+
+body {
+  background: black;
+  color: white;
+}
+.logo-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 22s linear infinite;
+}
+
+.logo-track {
+  display: flex;
+  gap: 48px;
+  padding-right: 48px;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+svg {
+  background: transparent !important;
+}
+html,
+body {
+  height: auto;
+}
+
+body {
+  overflow: hidden;
+}
+
+
