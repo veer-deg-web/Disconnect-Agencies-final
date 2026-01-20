@@ -20,13 +20,16 @@ export default function VisionShowcase() {
           <motion.div
             className="track"
             animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            transition={{
+              duration: 10, // 🚀 2× faster (was 20)
+              repeat: Infinity,
+              ease: "linear",
+            }}
           >
             {[...brands, ...brands].map((b, i) => (
-              <span style={{
-                padding:"50px",
-                fontSize:"30px"
-              }} key={i}>{b}</span>
+              <span className="brand" key={i}>
+                {b}
+              </span>
             ))}
           </motion.div>
         </div>
@@ -34,8 +37,6 @@ export default function VisionShowcase() {
 
       {/* CONTENT */}
       <div className="grid">
-      <AnimatedToggle/>
-
         {/* TEXT */}
         <div className="text">
           <h2>Bring us your vision</h2>
@@ -43,7 +44,12 @@ export default function VisionShowcase() {
             We're the full-service development agency that handles design,
             engineering, and launch end to end.
           </p>
-          <BookCallButton/>
+          <BookCallButton />
+        </div>
+
+        {/* TOGGLE */}
+        <div className="toggle-wrap">
+          <AnimatedToggle />
         </div>
       </div>
 
@@ -79,8 +85,11 @@ export default function VisionShowcase() {
           margin-bottom: 32px;
         }
 
+        /* MARQUEE */
         .marquee {
           overflow: hidden;
+          display: flex;
+          justify-content: center;
           mask-image: linear-gradient(
             to right,
             transparent,
@@ -92,14 +101,17 @@ export default function VisionShowcase() {
 
         .track {
           display: flex;
+          align-items: center;
           gap: 48px;
           width: max-content;
         }
 
-        .track span {
-          font-size: 18px;
+        .brand {
+          padding: 50px;
+          font-size: 30px;
           font-weight: 600;
           opacity: 0.85;
+          white-space: nowrap;
         }
 
         /* GRID */
@@ -115,74 +127,9 @@ export default function VisionShowcase() {
           align-items: center;
         }
 
-        /* TOGGLE */
         .toggle-wrap {
-          position: relative;
           display: flex;
           justify-content: center;
-        }
-
-        .glow-bg {
-          position: absolute;
-          width: 420px;
-          height: 200px;
-          background: radial-gradient(
-            circle,
-            rgba(255, 122, 24, 0.35),
-            transparent 70%
-          );
-          filter: blur(40px);
-        }
-
-        .capsule {
-          position: relative;
-          width: 340px;
-          height: 64px;
-          border-radius: 999px;
-          background: linear-gradient(
-            to right,
-            rgba(255, 122, 24, 0.35),
-            rgba(255, 122, 24, 0.12)
-          );
-          border: 1px solid rgba(255, 122, 24, 0.8);
-        }
-
-        .cap-icon {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          color: #ff7a18;
-          border: 1px solid rgba(255, 122, 24, 0.7);
-          background: rgba(0, 0, 0, 0.5);
-        }
-
-        .cap-icon.left {
-          left: 10px;
-        }
-
-        .cap-icon.right {
-          right: 10px;
-        }
-
-        .knob {
-          position: absolute;
-          top: 50%;
-          left: 10px;
-          transform: translateY(-50%);
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background: white;
-          box-shadow:
-            0 0 25px rgba(255, 122, 24, 0.9),
-            0 0 60px rgba(255, 122, 24, 0.6);
         }
 
         /* TEXT */
@@ -200,23 +147,46 @@ export default function VisionShowcase() {
 
         .text button {
           margin-top: 40px;
-          padding: 12px 24px;
-          border-radius: 999px;
-          background: white;
-          color: black;
-          border: none;
-          cursor: pointer;
-          font-weight: 500;
         }
 
+        /* ================= MOBILE ONLY ================= */
         @media (max-width: 900px) {
           .grid {
             grid-template-columns: 1fr;
-            gap: 64px;
+            gap: 56px;
           }
 
+          .text {
+            order: 1;
+            text-align: center;
+          }
+
+          .toggle-wrap {
+            order: 2;
+          }
+
+          /* Smaller text */
           .text h2 {
-            font-size: 36px;
+            font-size: 34px;
+          }
+
+          .text p {
+            font-size: 15px;
+            margin: 16px auto 0;
+          }
+
+          .text button {
+            margin: 32px auto 0;
+          }
+
+          /* Smaller marquee items */
+          .brand {
+            padding: 24px;
+            font-size: 18px;
+          }
+
+          .track {
+            gap: 24px;
           }
         }
       `}</style>

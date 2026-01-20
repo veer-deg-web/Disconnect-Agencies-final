@@ -1,0 +1,26 @@
+/* ===========================
+   WORST-CASE MOBILE FIX
+   Target: 344px width
+   =========================== */
+
+@media (max-width: 360px) {
+  .hero-section {
+    min-height: 100svh;
+    overflow: visible !important;
+  }
+
+  .hero-content-container {
+    min-height: auto !important;
+    align-items: flex-start;
+    padding-top: 4.5rem;
+  }
+
+  .hero-inner {
+    padding: 0 1rem !important;
+    max-width: 100%;
+
+    /* 🔥 SCALE EVERYTHING */
+    transform: scale(0.82);
+    transform-origin: top center;
+  }
+}

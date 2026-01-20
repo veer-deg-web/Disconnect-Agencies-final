@@ -8,6 +8,8 @@ export default function BookCallButton() {
     <button
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onTouchStart={() => setHover(true)}
+      onTouchEnd={() => setHover(false)}
       style={{
         height: "40px",
         width: "129px",
@@ -27,9 +29,11 @@ export default function BookCallButton() {
 
         cursor: "pointer",
         overflow: "hidden",
+
+        transition: "transform 0.15s ease",
       }}
     >
-      <span>Book A Call</span>
+      <span style={{ whiteSpace: "nowrap" }}>Book A Call</span>
 
       {/* Arrow Circle */}
       <div
@@ -75,6 +79,17 @@ export default function BookCallButton() {
           →
         </span>
       </div>
+
+      {/* MOBILE ONLY */}
+      <style jsx>{`
+        @media (max-width: 480px) {
+          button {
+            height: 44px; /* thumb-friendly */
+            width: auto;
+            padding: 0 14px 0 18px;
+          }
+        }
+      `}</style>
     </button>
   );
 }

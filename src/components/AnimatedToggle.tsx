@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import BookCallButton from "./BookCallButton";
 
 export default function ProperToggle() {
   return (
@@ -19,21 +20,19 @@ export default function ProperToggle() {
             ease: "easeInOut",
           }}
           style={{
-            height:"100%",
-            display:"flex",
-            flexDirection:"column",
-            justifyContent:"center"
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
           }}
-        > <div style={{
-            
-            borderRadius:"999px",
-            width:"64px",
-            height:"64px",
-            backgroundColor:"white"
-            
-        }}>
-
-        </div>
+        >
+          <div
+            style={{
+              borderRadius: "999px",
+              width: "64px",
+              height: "64px",
+              backgroundColor: "white",
+            }}
+          />
         </motion.div>
 
         {/* LEFT ICON */}
@@ -43,11 +42,19 @@ export default function ProperToggle() {
         <div className="icon right">🌐</div>
       </div>
 
+      {/* MOBILE CTA */}
+      <div className="mobile-cta">
+        <BookCallButton />
+      </div>
+
       <style jsx>{`
+        /* ================= DESKTOP (UNCHANGED) ================= */
+
         .toggle-wrap {
           position: relative;
           display: flex;
-          justify-content: center;
+          flex-direction: column;
+          align-items: center;
           margin: 80px 0;
         }
 
@@ -61,6 +68,7 @@ export default function ProperToggle() {
             transparent 70%
           );
           filter: blur(60px);
+          pointer-events: none;
         }
 
         .capsule {
@@ -77,22 +85,20 @@ export default function ProperToggle() {
           overflow: hidden;
         }
 
-        /* WHITE MOVING PLATE */
         .white-bg {
           position: absolute;
           top: 6px;
           left: 6px;
-          width: 140px; /* 🔥 BIG ENOUGH TO SEE */
+          width: 140px;
           height: 60px;
           border-radius: 999px;
           background: #ffffff;
           box-shadow:
             0 0 25px rgba(255, 255, 255, 0.9),
             0 0 60px rgba(255, 122, 24, 0.7);
-          z-index: 50;
+          z-index: 1;
         }
 
-        /* ICONS */
         .icon {
           position: absolute;
           top: 50%;
@@ -105,7 +111,8 @@ export default function ProperToggle() {
           justify-content: center;
           font-size: 20px;
           color: #ff7a18;
-          z-index: 2; /* ABOVE white bg */
+          z-index: 2;
+          pointer-events: none;
         }
 
         .icon.left {
@@ -114,6 +121,42 @@ export default function ProperToggle() {
 
         .icon.right {
           right: 6px;
+        }
+
+        .mobile-cta {
+          display: none;
+        }
+
+        /* ================= MOBILE ONLY ================= */
+
+        @media (max-width: 480px) {
+          .capsule {
+            width: 300px;
+            height: 64px;
+          }
+
+          .white-bg {
+            width: 120px;
+            height: 52px;
+          }
+
+          .icon {
+            width: 52px;
+            height: 52px;
+            font-size: 18px;
+          }
+
+          .glow-bg {
+            width: 300px;
+            height: 160px;
+            filter: blur(48px);
+          }
+
+          .mobile-cta {
+            display: flex;
+            justify-content: center;
+            margin-top: 32px;
+          }
         }
       `}</style>
     </div>
