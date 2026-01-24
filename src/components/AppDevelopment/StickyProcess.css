@@ -1,0 +1,54 @@
+.sticky-process {
+  padding: 140px 6%;
+  background: radial-gradient(#1a1a1a 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.sticky-process__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* LEFT TEXT */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 180px; /* creates scroll distance */
+}
+
+.step {
+  max-width: 420px;
+}
+
+.step__label {
+  font-size: 13px;
+  color: #6c7cff;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.step h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.step p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #b5b5b5;
+}
+
+/* RIGHT STICKY VISUAL */
+.visual {
+  position: relative;
+}
+
+.visual__sticky {
+  position: sticky;
+}
