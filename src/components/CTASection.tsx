@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { easeInOut } from "framer-motion";
 import BookCallButton from "@/components/BookCallButton";
+import GradientText from "./GradientText";
 
 /* =====================
    ANIMATION VARIANTS
@@ -121,8 +122,15 @@ export default function CTASection() {
                 color: "#ffffff",
                 marginBottom: "16px",
               }}
-            >
-              Start Investing Smarter Today
+            > <GradientText
+  colors={["#5227FF","#FF9FFC","#B19EEF"]}
+  animationSpeed={8}
+  showBorder={false}
+  className="custom-class"
+>
+   Start Investing Smarter Today
+</GradientText>
+             
             </motion.h2>
 
             <motion.p

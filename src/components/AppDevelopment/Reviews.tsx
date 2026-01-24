@@ -1,15 +1,38 @@
 "use client";
 
 import "./Reviews.css";
+import ShinyText from "@/components/ShinyText";
+import GradientText from "@/components/GradientText";
+
+
+/* ---------------- FEATURED REVIEW ---------------- */
 
 const featuredReview = {
-  text: `Disconnect completely transformed our app idea into a real product.
-I didn’t realize how much a smooth UI and proper development mattered until
-I saw the final result. Now I feel confident launching and scaling our app.`,
+  text: (
+    <div className="reviews__inline-flex">
+      <GradientText
+        colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
+        animationSpeed={8}
+        showBorder={false}
+        className="gradient-word"
+      >
+        Disconnect
+      </GradientText>
+
+      <ShinyText
+        text=" completely transformed our app idea into a real product. I didn’t realize how much a smooth UI and proper development mattered until I saw the final result. Now I feel confident launching and scaling our app."
+        speed={2}
+        color="#b5b5b5"
+        shineColor="#ffffff"
+        spread={120}
+      />
+    </div>
+  ),
   author: "Mary Smith",
   date: "May 16, 2025",
-  avatar: "/avatar.png", // replace later
 };
+
+/* ---------------- OTHER REVIEWS ---------------- */
 
 const reviews = [
   { name: "John Doe", date: "May 12, 2025" },
@@ -18,25 +41,47 @@ const reviews = [
   { name: "John Doe", date: "May 12, 2025" },
 ];
 
+/* ---------------- TRUSTED BY ---------------- */
+
+function TrustedBy() {
+  const images = [
+    "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
+    "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+    "https://images.unsplash.com/photo-1517841905240-472988babdf9",
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+  ];
+
+  return (
+    <div className="trusted-by">
+      <div className="trusted-by__avatars">
+        {images.map((src, i) => (
+          <div key={i} className="trusted-by__avatar">
+            <img src={src} alt="User avatar" />
+          </div>
+        ))}
+      </div>
+
+      <div className="trusted-by__info">
+        <div className="reviews__name">{featuredReview.author}</div>
+        <div className="reviews__date">{featuredReview.date}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- MAIN COMPONENT ---------------- */
+
 export default function Reviews() {
   return (
     <section className="reviews">
       {/* FEATURED REVIEW */}
-      <p className="reviews__quote">
+      <div className="reviews__quote">
         {featuredReview.text}
-      </p>
-
-      <div className="reviews__author">
-        <img
-          src={featuredReview.avatar}
-          alt={featuredReview.author}
-          className="reviews__avatar"
-        />
-        <div>
-          <div className="reviews__name">{featuredReview.author}</div>
-          <div className="reviews__date">{featuredReview.date}</div>
-        </div>
       </div>
+
+      {/* AUTHOR */}
+      <TrustedBy />
 
       {/* REVIEW STRIP */}
       <div className="reviews__strip">

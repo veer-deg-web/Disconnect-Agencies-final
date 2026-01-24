@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, useAnimationControls } from "framer-motion";
 import BookCallButton from "./BookCallButton";
+import ShinyText from "./ShinyText";
 
 /* ================= ANIMATIONS ================= */
 
@@ -141,7 +142,18 @@ export default function HeroContent() {
           animate={controls}
           style={{ fontSize: "75px", fontWeight: 600, lineHeight: 1.2 }}
         >
-          Disconnect agency
+          <ShinyText
+  text="Disconnect Agencies"
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FF5C00"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/>
         </motion.h1>
 
         {/* Paragraph */}

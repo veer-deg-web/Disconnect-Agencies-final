@@ -4,19 +4,22 @@
   background-size: 22px 22px;
 }
 
+/* MAIN GRID */
 .sticky-process__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   max-width: 1200px;
   margin: 0 auto;
+
+  position: relative; /* REQUIRED for sticky boundary */
 }
 
 /* LEFT TEXT */
 .steps {
   display: flex;
   flex-direction: column;
-  gap: 180px; /* creates scroll distance */
+  gap: 180px; /* controls scroll distance */
 }
 
 .step {
@@ -51,4 +54,5 @@
 
 .visual__sticky {
   position: sticky;
+  top: 140px; /* REQUIRED — distance from viewport top */
 }

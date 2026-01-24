@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import BookCallButton from "./BookCallButton";
+import GradientText from "./GradientText";
 
 /* =======================
    DATA
@@ -126,7 +127,15 @@ export default function PricingSection() {
       >
         {/* HEADING */}
         <motion.h2 variants={fadeUp} style={headingStyle}>
-          Pricing Options
+          
+<GradientText
+  colors={["#5227FF","#FF9FFC","#B19EEF"]}
+  animationSpeed={8}
+  showBorder={false}
+  className="custom-class"
+>
+ Pricing Options
+</GradientText>
         </motion.h2>
 
         {/* SUBTITLE */}
