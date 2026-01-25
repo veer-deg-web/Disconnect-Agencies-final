@@ -81,7 +81,7 @@ const columnsVariant = {
     transition: {
       duration: 1,
       ease,
-      delay: 0.4, // ensures text finishes first
+      delay: 0.4,
     },
   },
 };
@@ -97,21 +97,22 @@ export default function TestimonialsSection() {
 
   return (
     <section ref={ref} style={sectionStyle}>
-      <div style={container}>
+      <div className="testimonial-container" style={container}>
         {/* LEFT TEXT */}
         <motion.div
           variants={textVariant}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           style={leftContent}
+          className="testimonial-text"
         >
-          <h2 style={heading}>
+          <h2 className="testimonial-heading" style={heading}>
             Trusted by Forward-
             <br />
             Thinking Investors
           </h2>
 
-          <p style={subtitle}>
+          <p className="testimonial-subtitle" style={subtitle}>
             Real stories from users who've transformed their investment
             experience with AI-driven insights.
           </p>
@@ -123,10 +124,12 @@ export default function TestimonialsSection() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           style={rightContent}
+          className="testimonial-columns"
           onAnimationComplete={() => setStartScroll(true)}
         >
-          {/* COLUMN 1 */}
+          {/* COLUMN 1 (always visible) */}
           <motion.div
+            className="testimonial-column"
             style={column}
             animate={startScroll ? { y: ["0%", "-50%"] } : { y: 0 }}
             transition={{
@@ -140,8 +143,9 @@ export default function TestimonialsSection() {
             ))}
           </motion.div>
 
-          {/* COLUMN 2 */}
+          {/* COLUMN 2 (hidden on mobile) */}
           <motion.div
+            className="testimonial-column hide-mobile"
             style={column}
             animate={startScroll ? { y: ["-50%", "0%"] } : { y: 0 }}
             transition={{
@@ -156,6 +160,43 @@ export default function TestimonialsSection() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* ===============================
+         MOBILE ONLY OVERRIDES
+      =============================== */}
+      <style>{`
+        @media (max-width: 768px) {
+          .testimonial-container {
+            display: flex !important;
+            flex-direction: column;
+            gap: 48px;
+          }
+
+          .testimonial-heading {
+            font-size: 28px !important;
+            line-height: 1.2;
+          }
+
+          .testimonial-subtitle {
+            font-size: 14px !important;
+          }
+
+          .testimonial-columns {
+            grid-template-columns: 1fr !important;
+            height: 420px;
+          }
+
+          .hide-mobile {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .testimonial-heading {
+            font-size: 24px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

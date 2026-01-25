@@ -110,10 +110,9 @@ const iconWrapperStyle: React.CSSProperties = {
 };
 
 /* =======================
-   VARIANTS (TIMELINE)
+   VARIANTS
 ======================= */
 
-// Whole section
 const sectionVariant = {
   hidden: {},
   visible: {
@@ -123,7 +122,6 @@ const sectionVariant = {
   },
 };
 
-// Heading
 const headingVariant = {
   hidden: { opacity: 0, x: -60 },
   visible: {
@@ -133,7 +131,6 @@ const headingVariant = {
   },
 };
 
-// Row container
 const rowVariant = {
   hidden: {},
   visible: {
@@ -144,7 +141,6 @@ const rowVariant = {
   },
 };
 
-// Card
 const cardVariant = {
   hidden: {
     opacity: 0,
@@ -182,7 +178,7 @@ export default function ServicesSection() {
           variants={headingVariant}
           style={{ textAlign: "center", marginBottom: 80 }}
         >
-          <h2 style={headingStyle}>
+          <h2 className="services-heading" style={headingStyle}>
             Smarter Development.
             <br />
             Stronger Outcomes.
@@ -228,6 +224,31 @@ export default function ServicesSection() {
           ))}
         </motion.div>
       </motion.div>
+
+      {/* ===============================
+         MOBILE-ONLY HEADING SIZE
+         Nothing else changes
+      =============================== */}
+      <style>{`
+        @media (max-width: 768px) {
+          .services-heading {
+            font-size: 2.2rem !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .services-heading {
+            font-size: 1.8rem !important;
+            line-height: 1.25;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .services-heading {
+            font-size: 1.6rem !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

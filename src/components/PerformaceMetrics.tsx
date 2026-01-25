@@ -45,16 +45,14 @@ function TypewriterScribbleHeading({ play }: { play: boolean }) {
         return output;
       });
 
-      if (frame % 3 === 0) {
-        index++;
-      }
+      if (frame % 3 === 0) index++;
 
       if (index >= FINAL_TEXT.length) {
         clearInterval(interval);
         setText(FINAL_TEXT);
         setDone(true);
       }
-    }, 24); // ⚡ FASTER scribble
+    }, 24);
 
     return () => clearInterval(interval);
   }, [play, done]);
@@ -64,6 +62,7 @@ function TypewriterScribbleHeading({ play }: { play: boolean }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: play ? 1 : 0, y: play ? 0 : 20 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="performance-heading"
       style={headingStyle}
     >
       {text}
@@ -82,7 +81,6 @@ export default function PerformanceMetrics() {
 
   useEffect(() => {
     if (inView) {
-      // ⏱️ delay stats animation slightly after heading
       setTimeout(() => {
         controls.start("visible");
       }, 600);
@@ -92,12 +90,13 @@ export default function PerformanceMetrics() {
   return (
     <section ref={ref} style={sectionStyle}>
       {/* HEADING */}
-      <div style={{ marginBottom: 100 }}>
+      <div className="performance-heading-wrap">
         <TypewriterScribbleHeading play={inView} />
       </div>
 
       {/* STATS */}
       <motion.div
+        className="stats-grid"
         style={statsGridStyle}
         initial="hidden"
         animate={controls}
@@ -120,6 +119,36 @@ export default function PerformanceMetrics() {
           label="Custom Automation & AI Solutions Built for Businesses"
         />
       </motion.div>
+
+      {/* MOBILE OVERRIDES */}
+      <style>{`
+        /* =========================
+           MOBILE RESPONSIVE ONLY
+           Safe down to 344px
+        ========================= */
+
+        @media (max-width: 768px) {
+          .performance-heading-wrap {
+            margin-bottom: 60px;
+          }
+
+          .performance-heading {
+            font-size: 32px !important;
+            line-height: 1.2;
+          }
+
+          .stats-grid {
+            grid-template-columns: 1fr !important;
+            gap: 48px !important;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .performance-heading {
+            font-size: 28px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

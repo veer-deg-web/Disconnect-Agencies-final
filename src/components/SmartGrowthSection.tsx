@@ -107,7 +107,6 @@ export default function SmartGrowthSection() {
           >
             {/* IMAGE */}
             <div className="image-box">
-              {/* 🔥 ORANGE GLOW */}
               <span className="orange-glow" />
 
               <motion.div
@@ -139,6 +138,7 @@ export default function SmartGrowthSection() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
+                  className="cta-wrap"
                 >
                   <BookCallButton />
                 </motion.div>
@@ -192,7 +192,6 @@ export default function SmartGrowthSection() {
           position: relative;
         }
 
-        /* 🔥 ORANGE GRADIENT GLOW */
         .orange-glow {
           position: absolute;
           inset: -60px;
@@ -215,7 +214,6 @@ export default function SmartGrowthSection() {
           width: 100%;
           height: 100%;
           object-fit: contain;
-          display: block;
           position: relative;
           z-index: 1;
         }
@@ -236,11 +234,20 @@ export default function SmartGrowthSection() {
           line-height: 1.6;
         }
 
+        /* =========================
+           MOBILE ONLY CHANGES
+        ========================= */
         @media (max-width: 768px) {
+          .heading {
+            font-size: 34px;
+            margin-bottom: 80px;
+          }
+
           .feature-row,
           .feature-row.reverse {
             flex-direction: column;
             text-align: center;
+            gap: 48px;
           }
 
           .image-box {
@@ -254,6 +261,18 @@ export default function SmartGrowthSection() {
 
           .text-box {
             max-width: 100%;
+          }
+
+          /* Center BookCallButton */
+          .cta-wrap {
+            display: flex;
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .heading {
+            font-size: 30px;
           }
         }
       `}</style>
