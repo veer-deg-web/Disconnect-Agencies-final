@@ -1,25 +1,15 @@
-import BuildPocket from '@/components/AppDevelopment/BuildPocket/BuiltPocket';
-import HeroSection from '@/components/AppDevelopment/HeroSection/HeroSection';
-import ProductVisuals from '@/components/AppDevelopment/ProductVisuals/ProductVisuals';
-import Reviews from '@/components/AppDevelopment/Reviews';
-import StickyProcess from '@/components/AppDevelopment/StickyProcess';
-import CTASection from '@/components/CTASection';
-import Footer from '@/components/Footer';
-import PricingSection from '@/components/PricingSection';
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
+const AppDevelopmentClient = dynamic(
+  () => import("./client"),
+  { ssr: false }
+);
 
-export default function HomePage() {
+export default function Page() {
   return (
-    <main>
-      <HeroSection />
-      <ProductVisuals/>
-      <BuildPocket/>
-      <StickyProcess/>
-      <Reviews/>
-      <PricingSection/>
-      <CTASection/>
-      <Footer/>
-    </main>
-    
+    <Suspense fallback={null}>
+      <AppDevelopmentClient />
+    </Suspense>
   );
 }
