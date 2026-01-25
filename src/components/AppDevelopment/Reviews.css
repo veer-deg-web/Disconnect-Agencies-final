@@ -79,19 +79,87 @@
   font-size: 14px;
   opacity: 0.9;
 }
+
+/* INLINE TEXT FIX */
 .reviews__inline-flex {
-  display: inline-flex !important ;     /* not just flex */
-  align-items: baseline;       /* text alignment */
-  flex-wrap: wrap;             /* responsive */
+  display: inline-flex !important;
+  align-items: baseline;
+  flex-wrap: wrap;
   max-width: 100%;
 }
 
 .reviews__inline-flex > * {
-  display: inline !important;  /* override internal block styles */
+  display: inline !important;
   width: auto !important;
   white-space: normal;
 }
 
 .gradient-word {
   margin-right: 0.35em;
+}
+
+/* ======================================================
+   📱 MOBILE SCALING ONLY (NO LAYOUT CHANGE)
+   Safe for 344px width
+====================================================== */
+
+@media (max-width: 480px) {
+  .reviews {
+    padding: 72px 16px;
+  }
+
+  .reviews__quote {
+    font-size: 22px;
+    line-height: 1.45;
+    margin-bottom: 24px;
+  }
+
+  .trusted-by {
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+
+  .trusted-by__avatar {
+    width: 22px;
+    height: 22px;
+    margin-right: -5px;
+  }
+
+  .reviews__name {
+    font-size: 14px;
+  }
+
+  .reviews__date {
+    font-size: 12px;
+  }
+
+  /* Strip becomes readable */
+  .reviews__strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .review-card {
+    padding: 18px 12px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .review-card:nth-child(3),
+  .review-card:nth-child(4) {
+    border-bottom: none;
+  }
+
+  .review-card__name {
+    font-size: 14px;
+  }
+
+  .review-card__date {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .reviews__quote {
+    font-size: 20px;
+  }
 }

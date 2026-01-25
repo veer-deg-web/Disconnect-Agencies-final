@@ -127,15 +127,13 @@ export default function PricingSection() {
       >
         {/* HEADING */}
         <motion.h2 variants={fadeUp} style={headingStyle}>
-          
-<GradientText
-  colors={["#5227FF","#FF9FFC","#B19EEF"]}
-  animationSpeed={8}
-  showBorder={false}
-  className="custom-class"
->
- Pricing Options
-</GradientText>
+          <GradientText
+            colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
+            animationSpeed={8}
+            showBorder={false}
+          >
+            Pricing Options
+          </GradientText>
         </motion.h2>
 
         {/* SUBTITLE */}
@@ -181,7 +179,7 @@ export default function PricingSection() {
         </motion.div>
 
         {/* CARDS */}
-        <div style={grid}>
+        <div className="pricing-grid" style={grid}>
           {plans.map((plan) => (
             <motion.div
               key={plan.title}
@@ -248,6 +246,7 @@ export default function PricingSection() {
         </div>
       </motion.div>
 
+      {/* ================= MOBILE ONLY ================= */}
       <style>{`
         .highlight-cta button {
           background: #ff5a00 !important;
@@ -256,6 +255,13 @@ export default function PricingSection() {
         .highlight-cta button:hover {
           background: #ffffff !important;
           color: #000 !important;
+        }
+
+        /* Mobile: stack pricing cards */
+        @media (max-width: 768px) {
+          .pricing-grid {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
     </section>

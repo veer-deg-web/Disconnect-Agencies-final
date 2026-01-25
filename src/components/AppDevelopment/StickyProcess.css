@@ -4,22 +4,22 @@
   background-size: 22px 22px;
 }
 
-/* MAIN GRID */
+/* ================= DESKTOP GRID ================= */
+
 .sticky-process__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   max-width: 1200px;
   margin: 0 auto;
-
-  position: relative; /* REQUIRED for sticky boundary */
+  position: relative;
 }
 
 /* LEFT TEXT */
 .steps {
   display: flex;
   flex-direction: column;
-  gap: 180px; /* controls scroll distance */
+  gap: 180px;
 }
 
 .step {
@@ -47,12 +47,61 @@
   color: #b5b5b5;
 }
 
-/* RIGHT STICKY VISUAL */
+/* RIGHT VISUAL */
 .visual {
   position: relative;
 }
 
 .visual__sticky {
   position: sticky;
-  top: 140px; /* REQUIRED — distance from viewport top */
+  top: 140px;
+}
+
+/* ================= MOBILE FIX ================= */
+/* Worst case: 344px */
+
+@media (max-width: 480px) {
+  .sticky-process {
+    padding: 80px 16px;
+  }
+
+  /* Switch to column */
+  .sticky-process__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  /* Cube goes to top */
+  .visual {
+    order: -1;
+  }
+
+  /* Disable sticky */
+  .visual__sticky {
+    position: relative;
+    top: auto;
+  }
+
+  /* Reduce cube container height */
+  .visual__sticky > div {
+    height: 360px !important;
+  }
+
+  /* Steps stack normally */
+  .steps {
+    gap: 48px;
+  }
+
+  .step {
+    max-width: 100%;
+  }
+
+  .step h3 {
+    font-size: 24px;
+  }
+
+  .step p {
+    font-size: 14px;
+  }
 }

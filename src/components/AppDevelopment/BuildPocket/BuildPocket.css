@@ -1,11 +1,11 @@
-
-.build{
-    font-size: 48px;
+.build {
+  font-size: 48px;
   font-weight: 700;
   max-width: 520px;
   line-height: 1.2;
   margin-bottom: 40px;
 }
+
 .build-pocket {
   padding: 120px 6%;
   background: #000;
@@ -50,14 +50,12 @@
   color: #dcdcdc;
 }
 
+/* Partners Section */
+
 .partners {
   margin-top: 80px;
   padding: 50px 40px;
-  background: linear-gradient(
-    180deg,
-    #1a1a1a,
-    #0e0e0e
-  );
+  background: linear-gradient(180deg, #1a1a1a, #0e0e0e);
   border-radius: 24px;
   text-align: center;
 }
@@ -86,4 +84,64 @@
 .partners__note {
   font-size: 14px;
   color: #9b9b9b;
+}
+
+/* ======================================================
+   MOBILE ONLY (Worst Case: 344px width)
+   Desktop is NOT affected
+====================================================== */
+
+@media (max-width: 360px) {
+  .build-pocket {
+    padding: 64px 16px;
+    border-radius: 20px;
+  }
+
+  .build {
+    font-size: 28px;
+    max-width: 100%;
+    line-height: 1.25;
+    margin-bottom: 24px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .feature-card {
+    padding: 18px;
+  }
+
+  .feature-card h3 {
+    font-size: 16px;
+  }
+
+  .feature-card p {
+    font-size: 14px;
+  }
+
+  .partners {
+    margin-top: 48px;
+    padding: 32px 16px;
+  }
+
+  .partners__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .logo-box {
+    height: 56px;
+  }
+
+  /* Show only first 4 logos */
+  .hide-mobile {
+    display: none;
+  }
+
+  .partners__note {
+    font-size: 12px;
+  }
 }

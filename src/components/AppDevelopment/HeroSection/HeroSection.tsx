@@ -6,7 +6,7 @@ import './HeroSection.css';
 import Navbar from '@/components/HeroNavbar';
 import BookCallButton from '@/components/BookCallButton';
 import UIUXShowcaseLogos from '@/components/uiux/UIUXShowcaseLogos';
-import ShinyText from '@/Components/ShinyText';
+import ShinyText from '@/components/ShinyText';
 import SplashCursor from '@/components/SplashCursor';
 
 export default function HeroSection() {
