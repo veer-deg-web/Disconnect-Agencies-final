@@ -10,6 +10,7 @@ export default function Page() {
   return (
     <Suspense fallback={null}>
       <AppDevelopmentClient />
+      
     </Suspense>
   );
 }

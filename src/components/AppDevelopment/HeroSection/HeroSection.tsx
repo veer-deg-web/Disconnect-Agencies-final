@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import './HeroSection.css';
+import { useEffect, useState } from "react";
+import "./HeroSection.css";
 
-import Navbar from '@/components/HeroNavbar';
-import BookCallButton from '@/components/BookCallButton';
-import UIUXShowcaseLogos from '@/components/uiux/UIUXShowcaseLogos';
-import ShinyText from '@/components/ShinyText';
-import SplashCursor from '@/components/SplashCursor';
+import Navbar from "@/components/HeroNavbar";
+import BookCallButton from "@/components/BookCallButton";
+import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
+import ShinyText from "@/components/ShinyText";
+// import SplashCursor from "@/components/SplashCursor";
 
 export default function HeroSection() {
   const [loaded, setLoaded] = useState(false);
@@ -17,42 +17,42 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className={`hero ${loaded ? 'hero--loaded' : ''}`}
-    >
-        {/* <SplashCursor /> */}
+    <section className={`hero ${loaded ? "hero--loaded" : ""}`}>
+      {/* <SplashCursor /> */}
+
       <Navbar />
 
-      {/* TEXT */}
+      {/* ================= TEXT ================= */}
       <div className="hero__content">
         <p className="hero__tag">NOVA SECURES PRE-SERIES A FUNDING →</p>
 
-       <div className='hero__title'><ShinyText
-  text="Concepts To Launch
-"
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#ffffff"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
+        <div className="hero__title">
+          <ShinyText
+            text="Concepts To Launch"
+            speed={2}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#ffffff"
+            spread={120}
+            direction="left"
+            yoyo={false}
+            pauseOnHover={false}
+            disabled={false}
+          />
 
-< ShinyText
-  text="We Deliver
-"
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#ffffff"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/></div>
+          <ShinyText
+            text="We Deliver"
+            speed={2}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#ffffff"
+            spread={120}
+            direction="left"
+            yoyo={false}
+            pauseOnHover={false}
+            disabled={false}
+          />
+        </div>
 
         <p className="hero__subtitle">
           We help you design, build, and scale modern mobile and web applications.
@@ -63,7 +63,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* VISUAL */}
+      {/* ================= VISUAL ================= */}
       <div className="hero__visual">
         {/* BACKGROUND SHAPES */}
         <img
@@ -72,7 +72,7 @@ export default function HeroSection() {
           className="hero-shapes"
         />
 
-        {/* STACK (PHONE + LOGOS) */}
+        {/* PHONE STACK */}
         <div className="phone-stack">
           <div className="phone-wrapper">
             <img
@@ -85,14 +85,23 @@ export default function HeroSection() {
               <PhoneUI />
             </div>
           </div>
-
-          {/* LOGOS — GUARANTEED BELOW PHONE */}
-          
         </div>
       </div>
+
+      {/* ================= LOGOS (BELOW PHONE) ================= */}
       <div className="logos-below-phone">
-            <UIUXShowcaseLogos />
-        </div>
+        <UIUXShowcaseLogos
+          title="Our designs are featured on:"
+          logos={[
+            "DO",
+            "Logoipsum",
+            "IPSUM",
+            "∞∞",
+            "logoipsum",
+            "Logoips",
+          ]}
+        />
+      </div>
     </section>
   );
 }
@@ -134,5 +143,6 @@ function PhoneUI() {
         <strong>$2,203.60</strong>
       </div>
     </div>
+    
   );
 }

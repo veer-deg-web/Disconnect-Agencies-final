@@ -1,6 +1,17 @@
 "use client";
 
-export default function UIUXShowcaseLogos() {
+type UIUXShowcaseLogosProps = {
+  title?: string;
+  logos: string[];
+};
+
+export default function UIUXShowcaseLogos({
+  title = "Our designs are featured on:",
+  logos,
+}: UIUXShowcaseLogosProps) {
+  // duplicate logos for seamless loop
+  const marqueeLogos = [...logos, ...logos];
+
   return (
     <div
       style={{
@@ -9,6 +20,7 @@ export default function UIUXShowcaseLogos() {
         overflow: "hidden",
       }}
     >
+      {/* TITLE */}
       <p
         style={{
           color: "#9ca3af",
@@ -17,7 +29,7 @@ export default function UIUXShowcaseLogos() {
           textAlign: "center",
         }}
       >
-        Our designs are featured on:
+        {title}
       </p>
 
       {/* MARQUEE */}
@@ -36,21 +48,7 @@ export default function UIUXShowcaseLogos() {
             animation: "logo-marquee 24s linear infinite",
           }}
         >
-          {[
-            "DO",
-            "Logoipsum",
-            "IPSUM",
-            "∞∞",
-            "logoipsum",
-            "Logoips",
-            // duplicate for seamless loop
-            "DO",
-            "Logoipsum",
-            "IPSUM",
-            "∞∞",
-            "logoipsum",
-            "Logoips",
-          ].map((logo, index) => (
+          {marqueeLogos.map((logo, index) => (
             <div
               key={index}
               role="img"

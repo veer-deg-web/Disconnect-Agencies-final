@@ -1,0 +1,116 @@
+/* =====================================================
+   LAYOUT
+===================================================== */
+
+.category-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Tablet & below */
+@media (max-width: 1024px) {
+  .category-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* =====================================================
+   RIGHT PANEL
+===================================================== */
+
+.category-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.category-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+.category-select {
+  width: 100%;
+  margin-bottom: 24px;
+
+  padding: 14px 16px;
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+
+  color: #ffffff;
+  font-size: 16px;
+
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.category-select:focus {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Option styling (supported browsers) */
+.category-option {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.category-btn {
+  padding: 14px 24px;
+  border-radius: 16px;
+
+  background: #ffffff;
+  color: #000000;
+
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.category-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+}
+
+/* =====================================================
+   MOBILE (≤360px | 344 SAFE)
+===================================================== */
+
+@media (max-width: 360px) {
+  .category-title {
+    font-size: 28px;
+  }
+
+  .category-select {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  .category-btn {
+    width: 100%;
+    padding: 14px;
+    text-align: center;
+  }
+}

@@ -1,0 +1,233 @@
+/* =====================================================
+   SUPPORT SECTION
+===================================================== */
+
+.support-section {
+  padding: 120px 20px;
+  background: #050505;
+  color: #ffffff;
+}
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.support-title {
+  text-align: center;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 64px;
+}
+
+/* =====================================================
+   GRID (DESKTOP)
+===================================================== */
+
+.support-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 24px;
+
+  align-items: stretch;
+}
+
+/* =====================================================
+   GRID ITEMS (IMPORTANT)
+===================================================== */
+
+.support-item {
+  height: 100%;
+}
+
+.support-item.large {
+  grid-row: 1 / span 2;
+}
+
+/* =====================================================
+   CARD BASE
+===================================================== */
+
+.support-card {
+  position: relative;
+  height: 100%;
+
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 20px;
+  padding: 32px;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* =====================================================
+   TEXT STYLES
+===================================================== */
+
+.support-card p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+.support-card h3 {
+  font-size: 56px;
+  font-weight: 500;
+  margin: 16px 0;
+}
+
+/* =====================================================
+   PILLS
+===================================================== */
+
+.pill {
+  align-self: flex-start;
+  background: #d9ff3f;
+  color: #000;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.pill.light {
+  background: #e8ffe1;
+}
+
+/* =====================================================
+   QUOTE & AUTHOR
+===================================================== */
+
+.quote {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.author {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.author span {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* =====================================================
+   BRAND LOGO
+===================================================== */
+
+.brand {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  opacity: 0.7;
+}
+
+.brand img {
+  height: 18px;
+}
+
+/* =====================================================
+   TABLET (≤1024px)
+===================================================== */
+
+@media (max-width: 1024px) {
+  .support-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .support-item.large {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .support-item.small:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .support-item.small:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+/* =====================================================
+   MOBILE (≤360px | 344 SAFE)
+===================================================== */
+/* =====================================================
+   MOBILE — WORST CASE (≤344px)
+===================================================== */
+
+@media (max-width: 360px) {
+  .support-section {
+    padding: 72px 14px;
+  }
+
+  .support-title {
+    font-size: 26px;
+    line-height: 1.25;
+    margin-bottom: 40px;
+  }
+
+  /* FORCE SINGLE COLUMN */
+  .support-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto;
+    gap: 20px;
+  }
+
+  .support-item {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  /* CARD BASE */
+  .support-card {
+    padding: 24px 20px;
+  }
+
+  /* BIG CARD TEXT — IMPORTANT */
+  .support-item.large .quote {
+    font-size: 18px;              /* ⬆️ increased */
+    line-height: 1.65;
+  }
+
+  .support-item.large .author strong {
+    font-size: 15px;
+  }
+
+  .support-item.large .author span {
+    font-size: 13px;
+  }
+
+  /* NUMBERS */
+  .support-card h3 {
+    font-size: 44px;              /* ⬆️ clearer */
+    line-height: 1;
+  }
+
+  /* LOGO — IMPORTANT */
+  .brand img {
+    height: 36px;  
+                 /* ⬆️ increased */
+  }
+
+  /* PILLS */
+  .pill {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}

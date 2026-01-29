@@ -1,0 +1,89 @@
+/* =====================================================
+   MINI CALENDAR CONTAINER
+===================================================== */
+
+.mini-calendar {
+  width: 260px;
+  padding: 16px;
+
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+
+  color: #ffffff;
+}
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.mini-calendar__title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* =====================================================
+   WEEKDAYS
+===================================================== */
+
+.mini-calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+
+  text-align: center;
+  font-size: 12px;
+  margin-bottom: 6px;
+
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* =====================================================
+   DAYS GRID
+===================================================== */
+
+.mini-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+
+  text-align: center;
+}
+
+/* =====================================================
+   DAY CELL
+===================================================== */
+
+.mini-calendar__day {
+  padding: 6px 0;
+  font-size: 12px;
+  border-radius: 6px;
+
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Selected day */
+.mini-calendar__day--active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* =====================================================
+   MOBILE (≤360px | 344 SAFE)
+===================================================== */
+
+@media (max-width: 360px) {
+  .mini-calendar {
+    width: 100%;
+  }
+
+  .mini-calendar__title {
+    font-size: 16px;
+  }
+
+  .mini-calendar__day {
+    font-size: 11px;
+    padding: 5px 0;
+  }
+}

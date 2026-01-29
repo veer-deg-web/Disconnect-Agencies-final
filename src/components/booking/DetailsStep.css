@@ -1,0 +1,154 @@
+/* =====================================================
+   LAYOUT
+===================================================== */
+
+.details-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+/* Tablet & below */
+@media (max-width: 1024px) {
+  .details-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+.details-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.details-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.details-input,
+.details-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+
+  color: #ffffff;
+  font-size: 16px;
+
+  outline: none;
+}
+
+.details-input::placeholder,
+.details-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* =====================================================
+   TEXTAREA
+===================================================== */
+
+.details-textarea {
+  height: 128px;
+  resize: none;
+  margin-bottom: 16px;
+}
+
+/* =====================================================
+   ERRORS
+===================================================== */
+
+.details-error {
+  font-size: 13px;
+  color: #f87171;
+  margin-bottom: 8px;
+}
+
+/* =====================================================
+   SUBMIT BUTTON
+===================================================== */
+
+.details-submit {
+  padding: 14px 24px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 16px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.submit-active {
+  background: #ffffff;
+  color: #000000;
+  cursor: pointer;
+}
+
+.submit-disabled {
+  background: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+.details-summary {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 16px;
+}
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
+
+.details-back {
+  padding: 14px 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  width: fit-content;
+}
+
+/* =====================================================
+   MOBILE (≤360px | 344 SAFE)
+===================================================== */
+
+@media (max-width: 360px) {
+  .details-title {
+    font-size: 26px;
+  }
+
+  .details-input,
+  .details-textarea {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  .details-submit,
+  .details-back {
+    width: 100%;
+    text-align: center;
+  }
+}
