@@ -90,17 +90,15 @@ export default function HeroSection() {
 
       {/* ================= LOGOS (BELOW PHONE) ================= */}
       <div className="logos-below-phone">
-        <UIUXShowcaseLogos
-          title="Our designs are featured on:"
-          logos={[
-            "DO",
-            "Logoipsum",
-            "IPSUM",
-            "∞∞",
-            "logoipsum",
-            "Logoips",
-          ]}
-        />
+       <UIUXShowcaseLogos
+  title="Our designs are featured on:"
+  logos={[
+    { src: "/logos/react.svg", alt: "React" },
+    { src: "/logos/next.svg", alt: "Next.js" },
+    { src: "/logos/tailwind.svg", alt: "Tailwind CSS" },
+    { src: "/logos/framer.svg", alt: "Framer Motion" },
+  ]}
+/>
       </div>
     </section>
   );

@@ -1,15 +1,20 @@
 "use client";
 
+type LogoItem = {
+  src: string;
+  alt: string;
+};
+
 type UIUXShowcaseLogosProps = {
   title?: string;
-  logos: string[];
+  logos: LogoItem[];
 };
 
 export default function UIUXShowcaseLogos({
   title = "Our designs are featured on:",
   logos,
 }: UIUXShowcaseLogosProps) {
-  // duplicate logos for seamless loop
+  // Duplicate logos for seamless marquee
   const marqueeLogos = [...logos, ...logos];
 
   return (
@@ -33,13 +38,7 @@ export default function UIUXShowcaseLogos({
       </p>
 
       {/* MARQUEE */}
-      <div
-        style={{
-          width: "100%",
-          overflow: "hidden",
-        }}
-      >
-        {/* TRACK */}
+      <div style={{ width: "100%", overflow: "hidden" }}>
         <div
           style={{
             display: "flex",
@@ -49,25 +48,17 @@ export default function UIUXShowcaseLogos({
           }}
         >
           {marqueeLogos.map((logo, index) => (
-            <div
+            <img
               key={index}
-              role="img"
-              aria-label={logo}
+              src={logo.src}
+              alt={logo.alt}
               style={{
-                minWidth: "160px",
                 height: "48px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#ffffff",
-                fontSize: "20px",
-                fontWeight: 500,
-                whiteSpace: "nowrap",
+                objectFit: "contain",
                 opacity: 0.85,
+                filter: "grayscale(100%)",
               }}
-            >
-              {logo}
-            </div>
+            />
           ))}
         </div>
       </div>

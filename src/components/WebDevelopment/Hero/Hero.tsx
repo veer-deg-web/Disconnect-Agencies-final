@@ -105,16 +105,14 @@ export default function Hero() {
       </motion.div>
       <div className="logos-below-phone">
               <UIUXShowcaseLogos
-                title="partnering with world leading enterprises:"
-                logos={[
-                  "DO",
-                  "Logoipsum",
-                  "IPSUM",
-                  "∞∞",
-                  "logoipsum",
-                  "Logoips",
-                ]}
-              />
+  title="Our designs are featured on:"
+  logos={[
+    { src: "/logos/react.svg", alt: "React" },
+    { src: "/logos/next.svg", alt: "Next.js" },
+    { src: "/logos/tailwind.svg", alt: "Tailwind CSS" },
+    { src: "/logos/framer.svg", alt: "Framer Motion" },
+  ]}
+/>
             </div>
     </section>
   );

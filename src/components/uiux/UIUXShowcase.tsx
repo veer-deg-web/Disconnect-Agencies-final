@@ -1,5 +1,6 @@
 import UIUXShowcaseAnimated from "./UIUXShowcaseAnimated";
 import UIUXShowcaseLogos from "./UIUXShowcaseLogos";
+import React from "react";
 
 export default function UIUXShowcase() {
   return (
@@ -62,7 +63,13 @@ export default function UIUXShowcase() {
             opacity: 0.7,
           }}
         >
-          <UIUXShowcaseLogos />
+          <UIUXShowcaseLogos
+  logos={[
+    { src: "/logos/react.svg", alt: "React" },
+    { src: "/logos/next.svg", alt: "Next.js" },
+    { src: "/logos/tailwind.svg", alt: "Tailwind" },
+  ]}
+/>
         </div>
       </div>
     </section>
