@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import AnimatedToggle from "./AnimatedToggle";
-import BookCallButton from "./BookCallButton";
+import ShinyText from './ShinyText';
+
 
 const brands = ["Vaultic", "Altoris", "Quantora", "Fundara", "Wealthro"];
 
@@ -39,12 +40,22 @@ export default function VisionShowcase() {
       <div className="grid">
         {/* TEXT */}
         <div className="text">
-          <h2>Bring us your vision</h2>
+          <h2> <ShinyText
+  text="Bring us your vision"
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FF5C00"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/></h2>
           <p>
             We're the full-service development agency that handles design,
             engineering, and launch end to end.
           </p>
-          <BookCallButton />
         </div>
 
         {/* TOGGLE */}

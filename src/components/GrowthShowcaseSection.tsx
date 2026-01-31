@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import PrecisionGrowthGraph from "@/components/PrecisionGrowthGraph";
+import ShinyText from "./ShinyText";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -18,8 +19,31 @@ export default function GrowthShowcaseSection() {
           viewport={{ once: true }}
         >
           <h2 className="heading">
-            Show Up Your Idea <br />
-            We&apos;ll Handle The Rest
+            < ShinyText
+  text="Show Up Your Idea "
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FFffff"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/><br />
+< ShinyText
+  text="We Will Handle The Rest "
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FFffff"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/>
+           
           </h2>
         </motion.div>
       </div>

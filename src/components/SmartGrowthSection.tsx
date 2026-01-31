@@ -2,6 +2,7 @@
 
 import { motion, easeInOut, easeOut } from "framer-motion";
 import BookCallButton from "@/components/BookCallButton";
+import ShinyText from "./ShinyText";
 
 /* ======================
    ANIMATION VARIANTS
@@ -94,7 +95,19 @@ export default function SmartGrowthSection() {
           viewport={{ once: true }}
           style={{ display: "inline-block" }}
         >
-          Smarter Digital Growth Starts Here
+          <   ShinyText
+  text="Smarter Digital Growth Starts Here "
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FFffff"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/>
+          
         </motion.span>
       </h2>
 

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { easeInOut } from "framer-motion";
 import BookCallButton from "@/components/BookCallButton";
 import GradientText from "./GradientText";
+import ShinyText from "./ShinyText";
 
 /* =====================
    ANIMATION VARIANTS
@@ -122,14 +123,20 @@ export default function CTASection() {
                 color: "#ffffff",
                 marginBottom: "16px",
               }}
-            > <GradientText
-  colors={["#5227FF","#FF9FFC","#B19EEF"]}
-  animationSpeed={8}
-  showBorder={false}
-  className="custom-class"
->
-   Start Investing Smarter Today
-</GradientText>
+            > < ShinyText
+  text="Start Investing Smarter Today "
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FFffff"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/>
+   
+
              
             </motion.h2>
 

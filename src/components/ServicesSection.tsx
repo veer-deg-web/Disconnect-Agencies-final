@@ -2,6 +2,7 @@
 
 import { motion, useInView, cubicBezier } from "framer-motion";
 import { useRef } from "react";
+import ShinyText from "./ShinyText";
 
 /* =======================
    DATA
@@ -179,9 +180,32 @@ export default function ServicesSection() {
           style={{ textAlign: "center", marginBottom: 80 }}
         >
           <h2 className="services-heading" style={headingStyle}>
-            Smarter Development.
-            <br />
-            Stronger Outcomes.
+            < ShinyText
+  text="Smarter Development."
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FFffff"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/>
+            
+            <br />< ShinyText
+  text="Stronger Outcomes."
+  speed={2}
+  delay={0}
+  color="#b5b5b5"
+  shineColor="#FFffff"
+  spread={120}
+  direction="left"
+  yoyo={false}
+  pauseOnHover={false}
+  disabled={false}
+/>
+            
           </h2>
         </motion.div>
 
