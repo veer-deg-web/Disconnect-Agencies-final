@@ -14,66 +14,83 @@ export default function UIUXShowcaseLogos({
   title = "Our designs are featured on:",
   logos,
 }: UIUXShowcaseLogosProps) {
-  // Duplicate logos for seamless marquee
   const marqueeLogos = [...logos, ...logos];
 
   return (
-    <div
-      style={{
-        marginTop: "64px",
-        width: "100%",
-        overflow: "hidden",
-      }}
-    >
-      {/* TITLE */}
-      <p
-        style={{
-          color: "#9ca3af",
-          fontSize: "14px",
-          marginBottom: "32px",
-          textAlign: "center",
-        }}
-      >
-        {title}
-      </p>
+    <div style={container}>
+      <p style={titleStyle}>{title}</p>
 
-      {/* MARQUEE */}
-      <div style={{ width: "100%", overflow: "hidden" }}>
-        <div
-          style={{
-            display: "flex",
-            gap: "64px",
-            width: "max-content",
-            animation: "logo-marquee 24s linear infinite",
-          }}
-        >
+      <div style={marqueeWrap}>
+        <div style={track}>
           {marqueeLogos.map((logo, index) => (
             <img
               key={index}
               src={logo.src}
               alt={logo.alt}
-              style={{
-                height: "48px",
-                objectFit: "contain",
-                opacity: 0.85,
-                filter: "grayscale(100%)",
-              }}
+              draggable={false}
+              style={logoStyle}
             />
           ))}
         </div>
       </div>
 
-      {/* KEYFRAMES */}
       <style jsx>{`
-        @keyframes logo-marquee {
-          0% {
-            transform: translateX(0%);
+        @keyframes marquee {
+          from {
+            transform: translateX(0);
           }
-          100% {
+          to {
             transform: translateX(-50%);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-track {
+            animation: none;
           }
         }
       `}</style>
     </div>
   );
 }
+
+/* =======================
+   STYLES
+======================= */
+
+const container: React.CSSProperties = {
+  marginTop: 64,
+  width: "100%",
+  overflow: "hidden",
+};
+
+const titleStyle: React.CSSProperties = {
+  color: "#9ca3af",
+  fontSize: 14,
+  marginBottom: 32,
+  textAlign: "center",
+};
+
+const marqueeWrap: React.CSSProperties = {
+  position: "relative",
+  overflow: "hidden",
+  maskImage:
+    "linear-gradient(to right, transparent, black 12%, black 88%, transparent)",
+  WebkitMaskImage:
+    "linear-gradient(to right, transparent, black 12%, black 88%, transparent)",
+};
+
+const track: React.CSSProperties = {
+  display: "flex",
+  gap: 64,
+  width: "max-content",
+  animation: "marquee 26s linear infinite",
+};
+
+const logoStyle: React.CSSProperties = {
+  height: 44,
+  width: "auto",
+  objectFit: "contain",
+  opacity: 0.85,
+  filter: "grayscale(100%)",
+};

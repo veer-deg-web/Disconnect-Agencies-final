@@ -1,7 +1,7 @@
 "use client";
 
 import "./BuildPocket.css";
-import TargetCursor from "@/Components/TargetCursor";
+import TargetCursor from "@/components/TargetCursor";
 import ShinyText from "@/components/ShinyText";
 
 const features = [
