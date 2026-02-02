@@ -14,37 +14,7 @@ export default function WebDevelopmentPage() {
       <Hero />
       <SupportSection />
 
-      <FAQSection
-        title={`Questions?\nWe're here to assist!`}
-        defaultOpenIndex={0}
-        faqs={[
-          {
-            question: "Why is a strong brand identity important?",
-            answer:
-              "A robust brand identity and website serve as the face of your business, shaping how it is perceived by potential customers. They not only convey professionalism but also establish trust and credibility, vital factors in today’s competitive market.",
-          },
-          {
-            question: "How long before I see results?",
-            answer:
-              "Timelines vary based on project scope, but most clients begin to see measurable progress within weeks after launch.",
-          },
-          {
-            question: "Can I cancel anytime?",
-            answer:
-              "Yes. You can cancel or pause services anytime with proper notice.",
-          },
-          {
-            question: "Do you work with international clients?",
-            answer:
-              "Absolutely. We work with clients across different time zones and continents.",
-          },
-          {
-            question: "What industries do you specialize in?",
-            answer:
-              "We specialize in SaaS, fintech, e-commerce, startups, and enterprise platforms.",
-          },
-        ]}
-      />
+      <SupportedByAI  /> 
      <FeaturesSection
   headingLine1="Custom-designed modular"
   headingLine2="products at a world-class standard"
@@ -84,8 +54,38 @@ export default function WebDevelopmentPage() {
 />
 <IntegrationLogosSection />
 <PricingSection />
-<SupportedByAI  />      
-
+     
+<FAQSection
+        title={`Questions?\nWe're here to assist!`}
+        defaultOpenIndex={0}
+        faqs={[
+          {
+            question: "Why is a strong brand identity important?",
+            answer:
+              "A robust brand identity and website serve as the face of your business, shaping how it is perceived by potential customers. They not only convey professionalism but also establish trust and credibility, vital factors in today’s competitive market.",
+          },
+          {
+            question: "How long before I see results?",
+            answer:
+              "Timelines vary based on project scope, but most clients begin to see measurable progress within weeks after launch.",
+          },
+          {
+            question: "Can I cancel anytime?",
+            answer:
+              "Yes. You can cancel or pause services anytime with proper notice.",
+          },
+          {
+            question: "Do you work with international clients?",
+            answer:
+              "Absolutely. We work with clients across different time zones and continents.",
+          },
+          {
+            question: "What industries do you specialize in?",
+            answer:
+              "We specialize in SaaS, fintech, e-commerce, startups, and enterprise platforms.",
+          },
+        ]}
+      />
       <CTASection />
       <Footer />
     </>

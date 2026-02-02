@@ -14,7 +14,33 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 
-
+const faqs = [
+  {
+    question: "How is Aset different?",
+    answer:
+      "Aset isn’t just another investment platform—it’s powered by real-time AI that adapts to market changes, automates portfolio optimization, and provides actionable insights that go beyond static inputs or manual strategies.",
+  },
+  {
+    question: "Is Aset suitable for beginners?",
+    answer:
+      "Yes. Aset is designed for both beginners and experienced investors. The platform simplifies complex financial concepts while offering advanced tools for those who want deeper control.",
+  },
+  {
+    question: "How secure is my data and portfolio on Aset?",
+    answer:
+      "Security is our top priority. Aset uses industry-standard encryption, secure infrastructure, and best practices to ensure your data and investments remain protected at all times.",
+  },
+  {
+    question: "Can I customize my investment strategy?",
+    answer:
+      "Absolutely. You can tailor strategies based on your goals, risk tolerance, and preferences, while still benefiting from AI-driven recommendations and automation.",
+  },
+  {
+    question: "What kind of assets can I manage with Aset?",
+    answer:
+      "Aset supports a wide range of assets, including stocks, ETFs, and other investment instruments, allowing you to manage and optimize your portfolio from a single dashboard.",
+  },
+];
 
 
 export default function Home() {
@@ -31,7 +57,11 @@ export default function Home() {
       <PerformanceMetrics />
       <PricingSection/>
       <TestimonialsSection/>
-      <FAQSection/>
+      <FAQSection
+  title="FAQ"
+  faqs={faqs}
+  defaultOpenIndex={0}
+/>
       <CTASection/>
       <Footer/>
     </PageBackground>
