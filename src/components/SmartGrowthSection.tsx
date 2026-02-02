@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, easeInOut, easeOut } from "framer-motion";
-import BookCallButton from "@/components/BookCallButton";
+
 import ShinyText from "./ShinyText";
 
 /* ======================
@@ -153,7 +153,7 @@ export default function SmartGrowthSection() {
                   viewport={{ once: true }}
                   className="cta-wrap"
                 >
-                  <BookCallButton />
+                  
                 </motion.div>
               </motion.div>
             </div>
@@ -277,10 +277,7 @@ export default function SmartGrowthSection() {
           }
 
           /* Center BookCallButton */
-          .cta-wrap {
-            display: flex;
-            justify-content: center;
-          }
+          
         }
 
         @media (max-width: 360px) {
