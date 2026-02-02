@@ -2,6 +2,7 @@
 
 import { motion, useInView, cubicBezier } from "framer-motion";
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 import ShinyText from "./ShinyText";
 
 /* =======================
@@ -12,6 +13,7 @@ type Service = {
   title: string;
   description: string;
   icon: string;
+  route: string;
 };
 
 const topRow: Service[] = [
@@ -20,18 +22,21 @@ const topRow: Service[] = [
     description:
       "Our Web3 fintech simplifies complex finance for all to access.",
     icon: "/icons/ai.svg",
+    route: "/AIModels",
   },
   {
     title: "App Development",
     description:
       "High-performance mobile and web apps built for speed, scalability, and seamless user experiences across all platforms.",
     icon: "/icons/app.svg",
+    route: "/AppDevelopment",
   },
   {
     title: "Web Development",
     description:
       "Modern, responsive websites engineered for reliability, fast loading, and conversion-focused user journeys.",
     icon: "/icons/web.svg",
+    route: "/WebDevelopment",
   },
 ];
 
@@ -41,18 +46,21 @@ const bottomRow: Service[] = [
     description:
       "Intuitive, visually polished interfaces crafted to elevate engagement.",
     icon: "/icons/uiux.svg",
+    route: "/Uiux",
   },
   {
     title: "SEO & Growth Optimization",
     description:
       "Data-driven strategies that boost visibility and organic traffic.",
     icon: "/icons/seo.svg",
+    route: "/SEO",
   },
   {
     title: "Full-Stack Development",
     description:
       "End-to-end engineering creating robust, secure digital systems.",
     icon: "/icons/fullstack.svg",
+    route: "/FullStack",
   },
 ];
 
@@ -85,6 +93,7 @@ const cardStyle: React.CSSProperties = {
   border: "1px solid rgba(255,255,255,0.1)",
   background: "rgba(255,255,255,0.05)",
   backdropFilter: "blur(10px)",
+  cursor: "pointer",
 };
 
 const titleStyle: React.CSSProperties = {
@@ -164,8 +173,13 @@ const cardVariant = {
 ======================= */
 
 export default function ServicesSection() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement | null>(null);
   const inView = useInView(ref, { once: true, margin: "-120px" });
+  const router = useRouter();
+
+  const handleNavigate = (route: string) => {
+    router.push(route);
+  };
 
   return (
     <section ref={ref} style={sectionStyle}>
@@ -180,32 +194,21 @@ export default function ServicesSection() {
           style={{ textAlign: "center", marginBottom: 80 }}
         >
           <h2 className="services-heading" style={headingStyle}>
-            < ShinyText
-  text="Smarter Development."
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FFffff"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
-            
-            <br />< ShinyText
-  text="Stronger Outcomes."
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FFffff"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
-            
+            <ShinyText
+              text="Smarter Development."
+              speed={2}
+              color="#b5b5b5"
+              shineColor="#ffffff"
+              spread={120}
+            />
+            <br />
+            <ShinyText
+              text="Stronger Outcomes."
+              speed={2}
+              color="#b5b5b5"
+              shineColor="#ffffff"
+              spread={120}
+            />
           </h2>
         </motion.div>
 
@@ -215,9 +218,18 @@ export default function ServicesSection() {
             <motion.div
               key={item.title}
               variants={cardVariant}
-              whileHover={{ scale: 1.04 }}
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 0 0 1px rgba(255,90,0,0.4)",
+              }}
               transition={{ type: "spring", stiffness: 260, damping: 18 }}
               style={cardStyle}
+              onClick={() => handleNavigate(item.route)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleNavigate(item.route);
+              }}
             >
               <CardGlow />
               <IconBox icon={item.icon} />
@@ -236,9 +248,18 @@ export default function ServicesSection() {
             <motion.div
               key={item.title}
               variants={cardVariant}
-              whileHover={{ scale: 1.04 }}
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 0 0 1px rgba(255,90,0,0.4)",
+              }}
               transition={{ type: "spring", stiffness: 260, damping: 18 }}
               style={cardStyle}
+              onClick={() => handleNavigate(item.route)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleNavigate(item.route);
+              }}
             >
               <CardGlow />
               <IconBox icon={item.icon} />
@@ -249,10 +270,7 @@ export default function ServicesSection() {
         </motion.div>
       </motion.div>
 
-      {/* ===============================
-         MOBILE-ONLY HEADING SIZE
-         Nothing else changes
-      =============================== */}
+      {/* MOBILE HEADING SIZE ONLY */}
       <style>{`
         @media (max-width: 768px) {
           .services-heading {

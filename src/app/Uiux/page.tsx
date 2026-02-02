@@ -7,11 +7,44 @@ import UIUXSolutions from "@/components/uiux/UIUXSolutions";
 import UIUXPricing from "@/components/uiux/UIUXPricing";
 import UIUXTrustedBy from "@/components/uiux/UIUXTrustedBy";
 import UIUXTutorials from "@/components/uiux/UIUXTutorials";
-import UIUXFAQ from "@/components/uiux/UIUXFAQ";
-import UIUXFinalCTA from "@/components/uiux/UIUXFinalCTA";
+
 import Footer from "@/components/Footer";
 import FAQSection from "@/components/FAQSection";
 import CTASection from "@/components/CTASection";
+
+const faqs = [
+  {
+    question: "Why wouldn’t I just hire a full-time designer?",
+    answer:
+      "Hiring a full-time designer is expensive and inflexible. With our model, you get top-tier design talent on demand—no long-term commitments, overhead, or downtime.",
+  },
+  {
+    question: "Is there a limit to how many requests I can have?",
+    answer:
+      "No hard limits. You can submit as many requests as you want. We work through them one by one, prioritizing quality and speed.",
+  },
+  {
+    question: "How fast will I receive my designs?",
+    answer:
+      "Most requests are delivered within 24–48 hours depending on complexity. Larger projects may take slightly longer.",
+  },
+  {
+    question: "Who are the designers?",
+    answer:
+      "Our designers are senior-level professionals with experience across startups, agencies, and enterprise products.",
+  },
+  {
+    question: "What if I don’t like the design?",
+    answer:
+      "No worries — we’ll revise it until you’re 100% satisfied. Unlimited revisions are included.",
+  },
+  {
+    question: "Are there any refunds if I don’t like the service?",
+    answer:
+      "If you’re not happy within the first week, we offer a no-questions-asked refund.",
+  },
+];
+
 
 export default function UIUXPage() {
   return (
@@ -36,7 +69,11 @@ export default function UIUXPage() {
       <UIUXPricing />
       <UIUXTrustedBy />
       <UIUXTutorials />
-      <FAQSection />
+      <FAQSection
+        title={`Questions?\nWe're here to assist!`}
+        faqs={faqs}
+        defaultOpenIndex={0}
+      />
       <CTASection/>
       <Footer />
       
