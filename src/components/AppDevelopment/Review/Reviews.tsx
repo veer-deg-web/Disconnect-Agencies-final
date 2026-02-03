@@ -10,23 +10,21 @@ import GradientText from "@/components/GradientText";
 const featuredReview = {
   text: (
     <div className="reviews__inline-flex">
-      <GradientText
-        colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
-        animationSpeed={8}
-        showBorder={false}
-        className="gradient-word"
-      >
-        Disconnect
-      </GradientText>
+  <GradientText
+   colors={["#F59E0B", "#F0ABFC", "#C4B5FD"]}
+    animationSpeed={8}
+    showBorder={false}
+    className="gradient-word"
+  >
+    Disconnect
+  </GradientText>
 
-      <ShinyText
-        text=" completely transformed our app idea into a real product. I didn’t realize how much a smooth UI and proper development mattered until I saw the final result. Now I feel confident launching and scaling our app."
-        speed={2}
-        color="#b5b5b5"
-        shineColor="#ffffff"
-        spread={120}
-      />
-    </div>
+  <span className="review-text">
+    completely transformed our app idea into a real product. I didn’t realize
+    how much a smooth UI and proper development mattered until I saw the final
+    result. Now I feel confident launching and scaling our app.
+  </span>
+</div>
   ),
   author: "Mary Smith",
   date: "May 16, 2025",

@@ -21,6 +21,8 @@
   margin-bottom: 40px;
 }
 
+/* ================= FEATURES ================= */
+
 .features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -50,7 +52,7 @@
   color: #dcdcdc;
 }
 
-/* Partners Section */
+/* ================= PARTNERS ================= */
 
 .partners {
   margin-top: 80px;
@@ -67,7 +69,7 @@
 
 .partners__grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr); /* 🖥 Desktop unchanged */
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -87,8 +89,8 @@
 }
 
 /* ======================================================
-   MOBILE ONLY (Worst Case: 344px width)
-   Desktop is NOT affected
+   📱 MOBILE (≤ 360px / 375px)
+   → 2 × 2 GRID
 ====================================================== */
 
 @media (max-width: 360px) {
@@ -128,7 +130,7 @@
   }
 
   .partners__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* ✅ 2 × 2 */
     gap: 14px;
   }
 
@@ -136,12 +138,34 @@
     height: 56px;
   }
 
-  /* Show only first 4 logos */
+  /* Show only 4 logos */
   .hide-mobile {
     display: none;
   }
 
   .partners__note {
     font-size: 12px;
+  }
+}
+
+/* ======================================================
+   📱 LARGE MOBILE / SMALL TABLET (≤ 600px)
+   → 2 × 2 GRID
+====================================================== */
+
+@media (max-width: 600px) {
+  .partners__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ======================================================
+   💻 TABLET (≤ 900px)
+   → 3 × 2 GRID
+====================================================== */
+
+@media (max-width: 900px) {
+  .partners__grid {
+    grid-template-columns: repeat(3, 1fr); /* ✅ 3 × 2 */
   }
 }

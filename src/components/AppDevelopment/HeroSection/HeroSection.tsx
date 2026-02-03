@@ -93,10 +93,10 @@ export default function HeroSection() {
        <UIUXShowcaseLogos
   title="Our designs are featured on:"
   logos={[
-    { src: "/logos/react.svg", alt: "React" },
-    { src: "/logos/next.svg", alt: "Next.js" },
-    { src: "/logos/tailwind.svg", alt: "Tailwind CSS" },
-    { src: "/logos/framer.svg", alt: "Framer Motion" },
+    { src: "siReact", alt: "React" },
+    { src: "siNextdotjs", alt: "Next.js" },
+    { src: "siTailwindcss", alt: "Tailwind CSS" },
+    { src: "siFramer", alt: "Framer Motion" },
   ]}
 />
       </div>

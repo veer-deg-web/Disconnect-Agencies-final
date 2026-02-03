@@ -1,7 +1,10 @@
 "use client";
 
+import * as SimpleIcons from "simple-icons";
+
 type LogoItem = {
-  src: string;
+  /** simple-icons export name, e.g. "siReact", "siNextdotjs" */
+  src: keyof typeof SimpleIcons;
   alt: string;
 };
 
@@ -14,6 +17,7 @@ export default function UIUXShowcaseLogos({
   title = "Our designs are featured on:",
   logos,
 }: UIUXShowcaseLogosProps) {
+  // duplicate once for seamless loop
   const marqueeLogos = [...logos, ...logos];
 
   return (
@@ -22,15 +26,23 @@ export default function UIUXShowcaseLogos({
 
       <div style={marqueeWrap}>
         <div style={track}>
-          {marqueeLogos.map((logo, index) => (
-            <img
-              key={index}
-              src={logo.src}
-              alt={logo.alt}
-              draggable={false}
-              style={logoStyle}
-            />
-          ))}
+          {marqueeLogos.map((logo, index) => {
+            const icon = SimpleIcons[logo.src];
+            if (!icon) return null;
+
+            return (
+              <svg
+                key={index}
+                viewBox="0 0 24 24"
+                width={44}
+                height={44}
+                aria-label={logo.alt}
+                style={logoStyle}
+              >
+                <path d={icon.path} />
+              </svg>
+            );
+          })}
         </div>
       </div>
 
@@ -55,7 +67,7 @@ export default function UIUXShowcaseLogos({
 }
 
 /* =======================
-   STYLES
+   STYLES (FINAL)
 ======================= */
 
 const container: React.CSSProperties = {
@@ -74,6 +86,7 @@ const titleStyle: React.CSSProperties = {
 const marqueeWrap: React.CSSProperties = {
   position: "relative",
   overflow: "hidden",
+  whiteSpace: "nowrap", // 🔥 critical for continuity
   maskImage:
     "linear-gradient(to right, transparent, black 12%, black 88%, transparent)",
   WebkitMaskImage:
@@ -82,15 +95,14 @@ const marqueeWrap: React.CSSProperties = {
 
 const track: React.CSSProperties = {
   display: "flex",
-  gap: 64,
-  width: "max-content",
-  animation: "marquee 26s linear infinite",
+  gap: 96,                         // 🔥 spacing
+  width: "fit-content",
+  minWidth: "200%",                // 🔥 EXACTLY double width
+  animation: "marquee 14s linear infinite", // 🔥 speed
 };
 
 const logoStyle: React.CSSProperties = {
-  height: 44,
-  width: "auto",
-  objectFit: "contain",
-  opacity: 0.85,
-  filter: "grayscale(100%)",
+  fill: "#ffffff",
+  opacity: 0.9,
+  transition: "opacity 0.3s ease",
 };

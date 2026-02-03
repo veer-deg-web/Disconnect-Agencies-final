@@ -41,13 +41,13 @@
 .phone {
   position: absolute;
   left: 50%;
-  top: 42%; /* 👈 shifted UP so it does NOT overlap text */
+  top: 42%;
   transform: translate(-50%, -50%);
   width: 360px;
   z-index: 1;
 }
 
-/* ================= CARDS ================= */
+/* ================= CARDS (DESKTOP) ================= */
 
 .card-left {
   position: absolute;
@@ -70,21 +70,18 @@
   z-index: 10;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= TABLET ================= */
 
 @media (max-width: 768px) {
   .visual-wrapper {
+    transform: scale(0.7);
+    transform-origin: top center;
     height: 520px;
-  }
-
-  .phone {
-    width: 300px;
-    top: 45%;
   }
 }
 
-/* 📱 MOBILE: STACK CARDS IN COLUMN */
-/* 📱 MOBILE IMAGE FIX (<= 480px) */
+/* ================= MOBILE STACKED (≤480px) ================= */
+
 @media (max-width: 480px) {
   .product-visuals {
     padding: 100px 0 120px;
@@ -94,26 +91,27 @@
     font-size: 28px;
   }
 
-  /* Stack layout */
+  /* STACK EVERYTHING */
   .visual-wrapper {
     height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 24px; /* 🔥 tight spacing */
+    transform: none;
   }
 
-  /* PHONE IMAGE */
+  /* PHONE */
   .phone {
     position: relative;
-    top: 0;
+    top: auto;
+    left: auto;
     transform: none;
-    width: 220px;           /* 👈 reduced */
-    height: auto;
-    margin-bottom: 16px;
+    width: 200px; /* 🔥 reduced */
+    margin-bottom: 8px;
   }
 
-  /* RESET CARD POSITIONING */
+  /* CARDS */
   .card-left,
   .card-right,
   .card-bottom {
@@ -125,23 +123,40 @@
     justify-content: center;
   }
 
-  /* SCALE DOWN TILTED CARDS */
+  /* SCALE CARD CONTENT */
   .card-left > div,
   .card-right > div,
   .card-bottom > div {
-    max-width: 90%;
-    height: auto;
+    max-width: 85%; /* 🔥 reduced size */
+    transform: scale(0.9);
+    transform-origin: center;
   }
 
-  /* FORCE IMAGE TO FIT */
+  /* IMAGES INSIDE CARDS */
   .card-left img,
   .card-right img,
   .card-bottom img {
-    width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
   }
 }
+
+/* ================= 344px SAFE ================= */
+
+@media (max-width: 360px) {
+  .phone {
+    width: 185px;
+  }
+
+  .card-left > div,
+  .card-right > div,
+  .card-bottom > div {
+    max-width: 82%;
+    transform: scale(0.88);
+  }
+}
+
 /* ================= WE HELP ================= */
 
 .we-help {
