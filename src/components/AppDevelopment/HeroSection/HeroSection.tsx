@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import "./HeroSection.css";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+} from "react-icons/si";
 
 import Navbar from "@/components/HeroNavbar";
 import BookCallButton from "@/components/BookCallButton";
@@ -9,6 +15,12 @@ import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import ShinyText from "@/components/ShinyText";
 // import SplashCursor from "@/components/SplashCursor";
 
+const heroLogos = [
+  { node: <SiReact />, title: "React" },
+  { node: <SiNextdotjs />, title: "Next.js" },
+  { node: <SiTypescript />, title: "TypeScript" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS" },
+];
 export default function HeroSection() {
   const [loaded, setLoaded] = useState(false);
 
@@ -90,15 +102,7 @@ export default function HeroSection() {
 
       {/* ================= LOGOS (BELOW PHONE) ================= */}
       <div className="logos-below-phone">
-       <UIUXShowcaseLogos
-  title="Our designs are featured on:"
-  logos={[
-    { src: "siReact", alt: "React" },
-    { src: "siNextdotjs", alt: "Next.js" },
-    { src: "siTailwindcss", alt: "Tailwind CSS" },
-    { src: "siFramer", alt: "Framer Motion" },
-  ]}
-/>
+        <UIUXShowcaseLogos logos={heroLogos} />
       </div>
     </section>
   );

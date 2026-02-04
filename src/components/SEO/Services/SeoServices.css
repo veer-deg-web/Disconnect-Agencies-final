@@ -1,0 +1,144 @@
+.seo-services {
+  padding: 120px 6%;
+  background: #000;
+  color: #fff;
+}
+
+/* ===== HEADER ===== */
+
+.seo-header {
+  max-width: 720px;
+  margin-bottom: 60px;
+}
+
+.seo-label {
+  color: #3b6cff;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.seo-title {
+  font-size: 42px;
+  line-height: 1.2;
+  margin: 12px 0;
+}
+
+.seo-sub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.seo-subtitle {
+  color: #9b9b9b;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+.hire-btn {
+  background: #3b6cff;
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ===== GRID ===== */
+
+.seo-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+}
+
+/* ===== GLASS ===== */
+
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 28px;
+  height: 100%;
+}
+
+/* ===== LIST ===== */
+
+.seo-item {
+  margin-bottom: 8px;
+}
+
+.seo-item-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 18px 0;
+}
+
+.seo-item-head h3 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.arrow-icon {
+  color: #3b6cff;
+  display: flex;
+}
+
+.seo-item-body {
+  overflow: hidden;
+}
+
+.seo-item-body p {
+  color: #9b9b9b;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== IMAGE ===== */
+
+.seo-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seo-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 900px) {
+  .seo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seo-image {
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .seo-title {
+    font-size: 28px;
+  }
+}

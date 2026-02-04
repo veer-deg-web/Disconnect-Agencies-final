@@ -1,0 +1,161 @@
+/* SECTION */
+.seo-reviews-section {
+  padding: 120px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+.seo-reviews-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 64px;
+}
+
+.seo-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #6366f1;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.seo-reviews-header h2 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.seo-reviews-header p {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* GRID */
+.seo-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* CARD */
+.seo-review {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* TOP (Avatar + Name) */
+.seo-review__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.seo-review__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* PERSON */
+.seo-review__person {
+  display: flex;
+  flex-direction: column;
+}
+
+.seo-review__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.seo-review__role {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* QUOTE */
+.seo-review__quote {
+  font-size: 13px;
+  color: #d1d5db;
+  line-height: 1.6;
+  margin: 12px 0 18px;
+}
+
+/* BOTTOM */
+.seo-review__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+/* COMPANY */
+.seo-review__company {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+/* RATING */
+.seo-review__rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.seo-review__score {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.seo-review__label {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+/* Tablet */
+@media (max-width: 900px) {
+  .seo-reviews-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seo-reviews-header h2 {
+    font-size: 30px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .seo-reviews-section {
+    padding: 80px 16px;
+  }
+
+  .seo-review {
+    padding: 20px;
+  }
+
+  .seo-review__score {
+    font-size: 30px;
+  }
+
+  .seo-review__rating {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
