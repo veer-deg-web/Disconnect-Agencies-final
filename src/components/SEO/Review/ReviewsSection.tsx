@@ -9,7 +9,7 @@ const reviews = [
     name: "Jon Bell",
     role: "Data Scientist",
     company: "Code Solutions",
-    avatar: "section.png",
+    avatar: "/Section.png",
     rating: "9/10",
     quote:
       "The team at Talentify understood my career goals and helped me secure a fantastic role.",
@@ -18,7 +18,7 @@ const reviews = [
     name: "Eniola Bakare",
     role: "Full Stack Developer",
     company: "Abstract Studio",
-    avatar: "/section.png",
+    avatar: "/Section.png",
     rating: "10/10",
     quote:
       "From start to finish, Talentify made the recruitment process super simple.",
@@ -27,7 +27,7 @@ const reviews = [
     name: "Sarah Maplas",
     role: "Lead UX Designer",
     company: "Creative Studios",
-    avatar: "/section.png",
+    avatar: "/Section.png",
     rating: "8/10",
     quote:
       "Thanks to Talentify, I found a perfect remote tech role that matches my skills.",
@@ -36,7 +36,7 @@ const reviews = [
     name: "Tim Chen",
     role: "Senior Software Engineer",
     company: "ABC Solutions",
-    avatar: "/section.png",
+    avatar: "/Section.png",
     rating: "9/10",
     quote:
       "Talentify helped me land my dream remote developer job in just a few weeks.",

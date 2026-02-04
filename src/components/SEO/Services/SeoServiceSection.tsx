@@ -112,7 +112,7 @@ export default function SEOServicesSection() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
         >
-          <img src="/section.png" alt="SEO service visual" />
+          <img src="/Section.png" alt="SEO service visual" />
         </motion.div>
       </div>
     </section>
