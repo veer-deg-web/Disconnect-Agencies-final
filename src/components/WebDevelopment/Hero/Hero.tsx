@@ -5,6 +5,18 @@ import { motion, Variants } from "framer-motion";
 import './Hero.css';
 import ShinyText from "../../ShinyText";
 import UIUXShowcaseLogos from "../../uiux/UIUXShowcaseLogos";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+} from "react-icons/si"; 
+const heroLogos = [
+  { node: <SiReact />, title: "React" },
+  { node: <SiNextdotjs />, title: "Next.js" },
+  { node: <SiTypescript />, title: "TypeScript" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS" },
+];
 
 /* =========================
    FRAMER MOTION VARIANTS
@@ -104,15 +116,7 @@ export default function Hero() {
         </motion.div>
       </motion.div>
       <div className="logos-below-phone">
-              <UIUXShowcaseLogos
-  title="Our designs are featured on:"
-  logos={[
-    { src: "/logos/react.svg", alt: "React" },
-    { src: "/logos/next.svg", alt: "Next.js" },
-    { src: "/logos/tailwind.svg", alt: "Tailwind CSS" },
-    { src: "/logos/framer.svg", alt: "Framer Motion" },
-  ]}
-/>
+             <UIUXShowcaseLogos logos={heroLogos} />
             </div>
     </section>
   );

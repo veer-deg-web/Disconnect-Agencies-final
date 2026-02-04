@@ -1,7 +1,18 @@
 import UIUXShowcaseAnimated from "./UIUXShowcaseAnimated";
 import UIUXShowcaseLogos from "./UIUXShowcaseLogos";
 import React from "react";
-
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+} from "react-icons/si"; 
+const heroLogos = [
+  { node: <SiReact />, title: "React" },
+  { node: <SiNextdotjs />, title: "Next.js" },
+  { node: <SiTypescript />, title: "TypeScript" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS" },
+];
 export default function UIUXShowcase() {
   return (
     <section
@@ -63,13 +74,7 @@ export default function UIUXShowcase() {
             opacity: 0.7,
           }}
         >
-          <UIUXShowcaseLogos
-  logos={[
-    { src: "/logos/react.svg", alt: "React" },
-    { src: "/logos/next.svg", alt: "Next.js" },
-    { src: "/logos/tailwind.svg", alt: "Tailwind" },
-  ]}
-/>
+          <UIUXShowcaseLogos logos={heroLogos} />
         </div>
       </div>
     </section>
