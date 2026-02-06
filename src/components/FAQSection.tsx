@@ -17,6 +17,7 @@ interface FAQSectionProps {
   title?: string;
   faqs?: FAQItem[];
   defaultOpenIndex?: number | null;
+  accentColor?: string; // 🔥 NEW PROP
 }
 
 /* =======================
@@ -61,6 +62,7 @@ export default function FAQSection({
   title = "Questions?\nWe're here to assist!",
   faqs = [],
   defaultOpenIndex = 0,
+  accentColor = "#ff7a18", // ✅ DEFAULT ORANGE
 }: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(
     faqs.length ? defaultOpenIndex : null
@@ -103,11 +105,11 @@ export default function FAQSection({
               style={{
                 ...itemWrapper,
                 borderColor: isOpen
-                  ? "rgba(255, 122, 24, 0.55)"
-                  : "rgba(255, 122, 24, 0.28)",
+                  ? `${accentColor}88`
+                  : `${accentColor}44`,
                 boxShadow: isOpen
-                  ? "0 0 0 1px rgba(255, 122, 24, 0.45), 0 0 24px rgba(255, 122, 24, 0.15)"
-                  : "inset 0 0 0 1px rgba(255, 122, 24, 0.08)",
+                  ? `0 0 0 1px ${accentColor}88, 0 0 24px ${accentColor}33`
+                  : `inset 0 0 0 1px ${accentColor}22`,
               }}
             >
               {/* QUESTION */}
@@ -115,14 +117,18 @@ export default function FAQSection({
                 onClick={() => setOpenIndex(isOpen ? null : index)}
                 style={{
                   ...questionRow,
-                  color: isOpen ? "#ff7a18" : "#ffffff",
+                  color: isOpen ? accentColor : "#ffffff",
                 }}
               >
                 <span>{faq.question}</span>
+
                 <motion.span
                   animate={{ rotate: isOpen ? 180 : 0 }}
                   transition={{ duration: 0.35, ease }}
-                  style={iconStyle}
+                  style={{
+                    ...iconStyle,
+                    color: accentColor,
+                  }}
                 >
                   {isOpen ? "−" : "+"}
                 </motion.span>
@@ -177,7 +183,7 @@ const listStyle: React.CSSProperties = {
 const itemWrapper: React.CSSProperties = {
   background:
     "linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
-  border: "1px solid rgba(255, 122, 24, 0.28)",
+  border: "1px solid",
   borderRadius: 16,
   overflow: "hidden",
 };
@@ -199,7 +205,6 @@ const questionRow: React.CSSProperties = {
 const iconStyle: React.CSSProperties = {
   fontSize: 22,
   fontWeight: 600,
-  color: "#ff7a18",
 };
 
 const answerWrapper: React.CSSProperties = {

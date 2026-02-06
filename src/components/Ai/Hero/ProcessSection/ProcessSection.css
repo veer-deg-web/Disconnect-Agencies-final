@@ -1,0 +1,229 @@
+:root {
+  --process-card-height: 420px;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.process {
+  padding: 140px 0;
+  background: #000;
+  color: #fff;
+}
+
+.process-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.2rem;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.process-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 80px;
+}
+
+.process-pill {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 14px;
+}
+
+.process-header h2 {
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 700;
+}
+
+.process-header p {
+  margin-top: 14px;
+  color: #b5b5b5;
+  font-size: 15px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.process-card {
+  height: var(--process-card-height);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.process-card-content h3 {
+  font-size: 26px;
+  margin-top: 10px;
+}
+
+.process-card-content p {
+  margin-top: 12px;
+  color: #b5b5b5;
+  line-height: 1.6;
+}
+
+.step-pill {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.25);
+  color: #c4b5fd;
+}
+
+/* =========================
+   VIDEO
+========================= */
+
+.process-video {
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.process-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.process-controls {
+  margin-top: 28px;
+}
+
+.process-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.process-buttons button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #333;
+  border: none;
+  cursor: pointer;
+}
+
+.process-buttons button.active {
+  background: #7c3aed;
+}
+
+.process-progress {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.process-progress-bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  transition: width 0.4s ease;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .process-card {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .process {
+    padding: 90px 0;
+  }
+
+  .process-header h2 {
+    font-size: 26px;
+  }
+}
+/* =========================
+   CARD + ARROWS WRAPPER
+========================= */
+
+.process-card-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   ARROW BUTTONS
+========================= */
+
+.process-arrow {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.process-arrow:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.05);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.process-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.process-arrow.left {
+  left: -64px;
+}
+
+.process-arrow.right {
+  right: -64px;
+}
+
+/* =========================
+   RESPONSIVE ARROWS
+========================= */
+
+@media (max-width: 900px) {
+  .process-arrow.left {
+    left: 8px;
+    bottom: -60px;
+  }
+
+  .process-arrow.right {
+    right: 8px;
+    bottom: -60px;
+  }
+}

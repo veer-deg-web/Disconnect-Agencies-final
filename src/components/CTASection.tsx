@@ -4,8 +4,15 @@ import React from "react";
 import { motion } from "framer-motion";
 import { easeInOut } from "framer-motion";
 import BookCallButton from "@/components/BookCallButton";
-import GradientText from "./GradientText";
 import ShinyText from "./ShinyText";
+
+/* =====================
+   TYPES
+===================== */
+
+type CTASectionProps = {
+  gradient?: string; // 🔥 NEW PROP
+};
 
 /* =====================
    ANIMATION VARIANTS
@@ -38,7 +45,16 @@ const cardVariant = {
   },
 };
 
-export default function CTASection() {
+/* =====================
+   DEFAULT GRADIENT
+===================== */
+
+const DEFAULT_GRADIENT =
+  "radial-gradient(80% 120% at 50% 100%, #ff8c00 0%, #b94700 35%, #1a1a1a 70%, #0d0d0d 100%)";
+
+export default function CTASection({
+  gradient = DEFAULT_GRADIENT, // ✅ default orange
+}: CTASectionProps) {
   return (
     <>
       {/* MOBILE OVERRIDES — 344px SAFE */}
@@ -94,8 +110,7 @@ export default function CTASection() {
             borderRadius: "28px",
             padding: "96px 32px",
             textAlign: "center",
-            background:
-              "radial-gradient(80% 120% at 50% 100%, #ff8c00 0%, #b94700 35%, #1a1a1a 70%, #0d0d0d 100%)",
+            background: gradient, // 🔥 PROP USED HERE
             boxShadow:
               "0 0 0 1px rgba(255,255,255,0.05), 0 40px 120px rgba(0,0,0,0.8)",
             overflow: "hidden",
@@ -123,21 +138,19 @@ export default function CTASection() {
                 color: "#ffffff",
                 marginBottom: "16px",
               }}
-            > < ShinyText
-  text="Start Investing Smarter Today "
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FFffff"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
-   
-
-             
+            >
+              <ShinyText
+                text="Start Investing Smarter Today"
+                speed={2}
+                delay={0}
+                color="#b5b5b5"
+                shineColor="#ffffff"
+                spread={120}
+                direction="left"
+                yoyo={false}
+                pauseOnHover={false}
+                disabled={false}
+              />
             </motion.h2>
 
             <motion.p
