@@ -70,7 +70,7 @@ export default function GrowthShowcaseSection() {
 
             <div className="imageBottom imageRight">
               <div className="imageMotion">
-                <Image src="/visual.png" alt="" fill priority />
+                <Image src="/Visual.png" alt="" fill priority />
               </div>
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function GrowthShowcaseSection() {
 
             <div className="imageBottomOrbit imageBottomCenter">
               <div className="imageMotion">
-                <Image src="/image@2x.png" alt="" fill priority />
+                <Image src="/Image@2x.png" alt="" fill priority />
               </div>
             </div>
           </div>
