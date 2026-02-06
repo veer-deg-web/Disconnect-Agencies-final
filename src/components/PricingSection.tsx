@@ -6,11 +6,11 @@ import {
   useInView,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import BookCallButton from "./BookCallButton";
+
 import GradientText from "./GradientText";
 
 /* =======================
-   DATA
+   TYPES
 ======================= */
 
 type Plan = {
@@ -21,7 +21,18 @@ type Plan = {
   highlight?: boolean;
 };
 
-const plans: Plan[] = [
+interface PricingSectionProps {
+  headingTitle?: string;
+  headingGradient?: string[];
+  accentColor?: string;
+  plansOverride?: Plan[];
+}
+
+/* =======================
+   DEFAULT DATA
+======================= */
+
+const defaultPlans: Plan[] = [
   {
     title: "Starter Plan",
     monthly: 999,
@@ -80,10 +91,7 @@ const fadeUp = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.9,
-      ease: easeSmooth,
-    },
+    transition: { duration: 0.9, ease: easeSmooth },
   },
 };
 
@@ -92,10 +100,7 @@ const cardVariant = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.75,
-      ease: easeSmooth,
-    },
+    transition: { duration: 0.75, ease: easeSmooth },
   },
 };
 
@@ -103,13 +108,17 @@ const cardVariant = {
    COMPONENT
 ======================= */
 
-export default function PricingSection() {
+export default function PricingSection({
+  headingTitle = "Pricing Options",
+  headingGradient = ["#5227FF", "#FF9FFC", "#B19EEF"],
+  accentColor = "#ff5a00",
+  plansOverride,
+}: PricingSectionProps) {
+  const plans = plansOverride ?? defaultPlans;
+
   const ref = useRef<HTMLDivElement | null>(null);
   const controls = useAnimation();
-  const inView = useInView(ref, {
-    once: true,
-    margin: "-100px",
-  });
+  const inView = useInView(ref, { once: true, margin: "-100px" });
 
   const [billing, setBilling] =
     useState<"monthly" | "yearly">("monthly");
@@ -120,19 +129,15 @@ export default function PricingSection() {
 
   return (
     <section ref={ref} style={sectionStyle}>
-      <motion.div
-        variants={timeline}
-        initial="hidden"
-        animate={controls}
-      >
+      <motion.div variants={timeline} initial="hidden" animate={controls}>
         {/* HEADING */}
         <motion.h2 variants={fadeUp} style={headingStyle}>
           <GradientText
-            colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
+            colors={headingGradient}
             animationSpeed={8}
             showBorder={false}
           >
-            Pricing Options
+            {headingTitle}
           </GradientText>
         </motion.h2>
 
@@ -145,14 +150,8 @@ export default function PricingSection() {
         <motion.div variants={fadeUp} style={toggleWrap}>
           <div style={toggle}>
             <motion.div
-              animate={{
-                left: billing === "monthly" ? "0%" : "50%",
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-              }}
+              animate={{ left: billing === "monthly" ? "0%" : "50%" }}
+              transition={{ type: "spring", stiffness: 500, damping: 35 }}
               style={toggleThumb}
             />
 
@@ -186,14 +185,26 @@ export default function PricingSection() {
               variants={cardVariant}
               style={{
                 ...card,
-                ...(plan.highlight ? highlightCard : {}),
+                ...(plan.highlight
+                  ? {
+                      background: `linear-gradient(180deg, ${accentColor}55, #1a1a1a)`,
+                      border: `2px solid ${accentColor}`,
+                    }
+                  : {}),
               }}
             >
               <div>
                 <div style={cardHeader}>
                   <h3>{plan.title}</h3>
                   {plan.highlight && (
-                    <span style={badge}>Best Value</span>
+                    <span
+                      style={{
+                        ...badge,
+                        color: accentColor,
+                      }}
+                    >
+                      Best Value
+                    </span>
                   )}
                 </div>
 
@@ -208,10 +219,7 @@ export default function PricingSection() {
                     key={billing}
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      duration: 0.4,
-                      ease: easeSmooth,
-                    }}
+                    transition={{ duration: 0.4, ease: easeSmooth }}
                     style={price}
                   >
                     $
@@ -235,29 +243,16 @@ export default function PricingSection() {
                 </ul>
               </div>
 
-              <div
-                className={plan.highlight ? "highlight-cta" : ""}
-                style={{ marginTop: "auto" }}
-              >
-                <BookCallButton />
+              <div style={{ marginTop: "auto" }}>
+                
               </div>
             </motion.div>
           ))}
         </div>
       </motion.div>
 
-      {/* ================= MOBILE ONLY ================= */}
+      {/* MOBILE OVERRIDES */}
       <style>{`
-        .highlight-cta button {
-          background: #ff5a00 !important;
-          color: #fff !important;
-        }
-        .highlight-cta button:hover {
-          background: #ffffff !important;
-          color: #000 !important;
-        }
-
-        /* Mobile: stack pricing cards */
         @media (max-width: 768px) {
           .pricing-grid {
             grid-template-columns: 1fr !important;
@@ -269,7 +264,7 @@ export default function PricingSection() {
 }
 
 /* =======================
-   STYLES
+   STYLES (UNCHANGED)
 ======================= */
 
 const sectionStyle: React.CSSProperties = {
@@ -341,11 +336,6 @@ const card: React.CSSProperties = {
   flexDirection: "column",
 };
 
-const highlightCard: React.CSSProperties = {
-  background: "linear-gradient(180deg, #a64012, #351707)",
-  border: "2px solid #ff5a00",
-};
-
 const cardHeader: React.CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
@@ -354,7 +344,6 @@ const cardHeader: React.CSSProperties = {
 
 const badge: React.CSSProperties = {
   background: "#fff",
-  color: "#ff5a00",
   padding: "4px 10px",
   borderRadius: 999,
   fontSize: 12,

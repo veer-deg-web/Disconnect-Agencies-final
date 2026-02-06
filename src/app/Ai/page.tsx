@@ -9,6 +9,7 @@ import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import HeroNavbar from "@/components/HeroNavbar";
 import { faqs } from "@/Data/faq";
+import PricingSection from "@/components/PricingSection";
 
 export default function Ai() {
   return (
@@ -23,6 +24,15 @@ export default function Ai() {
         buttonText="Download"
       />
       <BenefitsSection />
+      <PricingSection
+  headingTitle="AI-Powered Pricing Built to Scale"
+  headingGradient={[
+    "#7C3AED", // violet
+    "#A78BFA", // soft purple
+    "#22D3EE", // cyan accent
+  ]}
+  accentColor="#7C3AED"
+/>
       <TestimonialsSection />
       <FAQSection
   faqs={faqs}
