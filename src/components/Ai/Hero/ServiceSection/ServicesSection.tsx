@@ -59,11 +59,69 @@ const textVariant: Variants = {
     transition: { duration: 0.9, ease: easeSmooth },
   },
 };
+/* =========================
+   HEADER ANIMATIONS
+========================= */
+
+const headerContainer: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.18,
+    },
+  },
+};
+
+const headerItem: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: easeSmooth,
+    },
+  },
+};
 
 export default function ServicesSection() {
   return (
     <section className="services">
       <div className="services-container">
+        {/* =========================
+    SERVICES HEADER
+========================= */}
+<motion.div
+  className="services-header"
+  variants={headerContainer}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.4 }}
+>
+  <motion.span
+    className="services-pill"
+    variants={headerItem}
+  >
+    Our Services
+  </motion.span>
+
+  <motion.h2
+    className="services-heading"
+    variants={headerItem}
+  >
+    AI Solutions That Take Your
+    <br />
+    Business to the Next Level
+  </motion.h2>
+
+  <motion.p
+    className="services-subheading"
+    variants={headerItem}
+  >
+    We design, develop, and implement automation tools
+    that help you work smarter — not harder.
+  </motion.p>
+</motion.div>
         <div className="services-list">
           {services.map((service, index) => {
             const reverse = index % 2 !== 0;

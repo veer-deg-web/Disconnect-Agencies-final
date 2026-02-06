@@ -10,12 +10,15 @@ import Footer from "@/components/Footer";
 import HeroNavbar from "@/components/HeroNavbar";
 import { faqs } from "@/Data/faq";
 import PricingSection from "@/components/PricingSection";
+import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";  
+import { partnerLogos } from "@/Data/PartnerLogo";
 
 export default function Ai() {
   return (
    <>
       <HeroNavbar />
       <HeroSection />
+     <UIUXShowcaseLogos logos={partnerLogos} iconGap={96} title="Over 50+ businesses trusts us ." />
       <ServicesSection />  
       <ProcessSection /> 
       <AntigravitySection

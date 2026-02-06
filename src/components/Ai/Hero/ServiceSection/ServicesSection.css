@@ -173,3 +173,44 @@
     font-size: 14px;
   }
 }
+/* =========================
+   SERVICES HEADER
+========================= */
+
+.services-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 120px auto;
+  padding: 0 1rem;
+}
+
+.services-pill {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ddd;
+  margin-bottom: 16px;
+}
+
+.services-heading {
+  font-size: clamp(28px, 4.5vw, 42px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.services-subheading {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #b5b5b5;
+}
+
+/* Mobile spacing */
+@media (max-width: 900px) {
+  .services-header {
+    margin-bottom: 80px;
+  }
+}
