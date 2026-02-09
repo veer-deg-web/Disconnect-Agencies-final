@@ -10,6 +10,8 @@ import TestimonialsSection from "@/components/Cloud/Testimonials/TestimonialsSec
 import HeroSection from "@/components/Cloud/Hero/HeroSection";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import CTASection from "@/components/CTASection";
+import{ Cloudfaq } from "@/Data/Cloudfaq";
+import FAQSection from "@/components/FAQSection";
 
 export default function CloudPage() {
     return (    
@@ -24,6 +26,11 @@ export default function CloudPage() {
             <Awards/>
             <ProcessSection/>
             <TestimonialsSection/>
+             <FAQSection
+              faqs={Cloudfaq}
+              accentColor="#DBFE49"
+              title="Answer To Your Queries"
+            />
             <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #DBFE49 0%, rgba(219,254,73,0.35) 35%, #0b0b0b 70%, #0b0b0b 100%)"
 />

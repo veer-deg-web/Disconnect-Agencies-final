@@ -9,7 +9,7 @@ export default function HeroSection() {
       {/* VIDEO BACKGROUND */}
      <motion.video
   className="cloud-video"
-  src="/Cloudhero.mov"
+  src="/CloudHero.mov"
   autoPlay
   muted
   loop
