@@ -1,11 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  SiAmazon,
-  SiGooglecloud,
-  SiCloudflare,
-} from "react-icons/si";
+import { SiAmazon, SiGooglecloud, SiCloudflare } from "react-icons/si";
 import "./CloudServices.css";
 
 const services = [
@@ -40,9 +36,16 @@ export default function CloudServicesSection() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <span className="label">OUR SERVICES</span>
+        {/* LABEL */}
+        <div className="cloud-label">
+          <span className="label-dot" />
+          <span className="label-text">OUR SERVICES</span>
+        </div>
+
+        {/* HEADING */}
         <h2>
-          What are <span>our Services</span>
+          What are <br />
+          <span>our Services</span>
         </h2>
       </motion.div>
 

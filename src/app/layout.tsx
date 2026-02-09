@@ -1,5 +1,7 @@
 import "./globals.css";
 import SmoothScroll from "./providers/SmoothScroll";
+import DotBackground from "@/components/DotBackground/DotBackground";
+import "@/components/DotBackground/DotBackground.css";
 
 export const metadata = {
   title: "Next.js",
@@ -20,11 +22,16 @@ export default function RootLayout({
           margin: 0,
         }}
       >
-        {/* Lenis runs as a side-effect only */}
+        {/* GLOBAL DOT BACKGROUND */}
+        <DotBackground />
+
+        {/* Smooth scrolling (side-effect only) */}
         <SmoothScroll />
 
-        {/* App content */}
-        {children}
+        {/* SITE CONTENT */}
+        <div style={{ position: "relative", zIndex: 1 }}>
+          {children}
+        </div>
       </body>
     </html>
   );

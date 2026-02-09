@@ -8,11 +8,13 @@ import Awards from "@/components/Cloud/Awards/Awards";
 import ProcessSection from "@/components/Cloud/Process/ProcessSection";
 import TestimonialsSection from "@/components/Cloud/Testimonials/TestimonialsSection";
 import HeroSection from "@/components/Cloud/Hero/HeroSection";
+import DotBackground from "@/components/DotBackground/DotBackground";
+import CTASection from "@/components/CTASection";
 
 export default function CloudPage() {
     return (    
         <main>
-
+<DotBackground color="rgba(219, 254, 73, 0.18)" />
             <HeroNav/>
             <HeroSection/>
             <CloudServicesSection/>
@@ -22,6 +24,9 @@ export default function CloudPage() {
             <Awards/>
             <ProcessSection/>
             <TestimonialsSection/>
+            <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #DBFE49 0%, rgba(219,254,73,0.35) 35%, #0b0b0b 70%, #0b0b0b 100%)"
+/>
 
         </main>
     );          

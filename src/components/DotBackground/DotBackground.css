@@ -1,0 +1,9 @@
+.dot-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background-size: 24px 24px;
+  opacity: 1;
+}
