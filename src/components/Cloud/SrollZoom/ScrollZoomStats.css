@@ -1,0 +1,94 @@
+.sz-container {
+  height: 230vh;
+  background: black;
+}
+
+.sz-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Global background */
+.sz-global-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* 3 vertical sections */
+.sz-sections {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Section */
+.sz-section {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 4rem;
+}
+
+/* Section background clone */
+.sz-section-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("/moss-bg.png");
+  background-size: cover;
+  background-position: center;
+  filter: blur(0px);
+  transition: filter 0.4s ease;
+  z-index: 1;
+}
+
+/* Blur only hovered section */
+.sz-section-bg.blur {
+  filter: blur(14px);
+}
+
+/* Content */
+.sz-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.sz-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  color: #8a8a8a;
+  margin-bottom: 0.5rem;
+}
+
+.sz-dot {
+  color: #b6ff2e;
+}
+
+.sz-value {
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 300;
+  color: #bfbfbf;
+  transition: color 0.3s ease;
+}
+
+.sz-value.active {
+  color: #b6ff2e;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .sz-sections {
+    grid-template-columns: 1fr;
+  }
+}

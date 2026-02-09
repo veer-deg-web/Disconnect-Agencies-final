@@ -1,0 +1,171 @@
+/* =========================
+   AWARDS SECTION – BASE
+========================= */
+
+.aw-section {
+  padding: 9rem 0 11rem;
+  background: #0b0b0b;
+}
+
+.aw-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================
+   HEADING
+========================= */
+
+.aw-heading {
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: #8a8a8a;
+  margin-bottom: 4rem;
+}
+
+.aw-dot {
+  color: #b6ff2e;
+}
+
+/* =========================
+   TABLE HEADER
+========================= */
+
+.aw-header {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 1fr;
+  padding-bottom: 1.5rem;
+  font-size: 0.7rem;
+  color: #6f6f6f;
+}
+
+/* =========================
+   TABLE BODY
+========================= */
+
+.aw-table {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =========================
+   ROW
+========================= */
+
+.aw-row {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 1fr;
+  align-items: center;
+  padding: 2.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+/* =========================
+   TEXT STYLES
+========================= */
+
+.aw-brand {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: #8a8a8a;
+}
+
+.aw-prize {
+  text-align: center;
+  font-size: 1rem;
+  color: #d6d6d6;
+  line-height: 1.4;
+  transition: color 0.35s ease;
+}
+
+.aw-date {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #8a8a8a;
+  transition: color 0.35s ease;
+}
+
+/* =========================
+   HOVER STATE
+========================= */
+
+.aw-row:hover .aw-prize,
+.aw-row:hover .aw-date {
+  color: #b6ff2e;
+}
+
+/* =========================
+   TABLET & MOBILE
+   (≤ 768px)
+========================= */
+
+@media (max-width: 768px) {
+  .aw-wrapper {
+    padding: 0 1.2rem;
+  }
+
+  /* Header stacks same as rows */
+  .aw-header {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    padding-bottom: 1rem;
+    font-size: 0.65rem;
+  }
+
+  /* Hide middle header label (UX choice) */
+  .aw-header span:nth-child(2) {
+    display: none;
+  }
+
+  /* Rows stack vertically */
+  .aw-row {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    padding: 1.6rem 0;
+  }
+
+  .aw-brand {
+    font-size: 0.7rem;
+  }
+
+  .aw-prize {
+    text-align: left;
+    font-size: 0.95rem;
+  }
+
+  .aw-date {
+    text-align: left;
+    font-size: 0.7rem;
+  }
+}
+
+/* =========================
+   WORST CASE DEVICES
+   (≤ 360px / 344px)
+========================= */
+
+@media (max-width: 360px) {
+  .aw-wrapper {
+    padding: 0 1rem;
+  }
+
+  .aw-heading {
+    font-size: 0.7rem;
+    margin-bottom: 3rem;
+  }
+
+  .aw-row {
+    padding: 1.4rem 0;
+  }
+
+  .aw-prize {
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+
+  .aw-brand,
+  .aw-date {
+    font-size: 0.65rem;
+  }
+}

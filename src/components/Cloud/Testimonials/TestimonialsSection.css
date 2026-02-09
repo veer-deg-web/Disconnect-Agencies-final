@@ -1,0 +1,145 @@
+/* =========================
+   SECTION
+========================= */
+
+.testimonials-section {
+  position: relative;
+  padding: 8rem 0;
+  background:
+    linear-gradient(rgba(11,11,11,0.85), rgba(11,11,11,0.85)),
+    url("/scrollzoom.png") center / cover no-repeat;
+  overflow: hidden;
+}
+
+/* =========================
+   LABEL
+========================= */
+
+.testimonials-label {
+  position: absolute;
+  left: 6vw;
+  top: 2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: #8a8a8a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.testimonials-label .dot {
+  width: 6px;
+  height: 6px;
+  background: #b6ff2e;
+}
+
+/* =========================
+   MARQUEE
+========================= */
+
+.testimonials-viewport {
+  margin-left: 40vw;
+  overflow: hidden;
+}
+
+.testimonials-track {
+  display: flex;
+  will-change: transform;
+}
+
+.testimonial-item {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.testimonial-spacer {
+  flex-shrink: 0;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.testimonial-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* RECTANGLE */
+
+.testimonial-card.wide {
+  width: 420px;
+  height: 260px;
+  padding: 32px;
+  justify-content: space-between;
+}
+
+/* SQUARE */
+
+.testimonial-card.square {
+  width: 260px;
+  height: 190px;
+  padding: 24px;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.tag {
+  color: #b6ff2e;
+  font-size: 0.85rem;
+}
+
+.quote {
+  margin: 16px 0;
+  line-height: 1.6;
+  color: #cfcfcf;
+}
+
+.author {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.author img,
+.testimonial-card.square img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.author strong,
+.testimonial-card.square strong {
+  color: #b6ff2e;
+}
+
+.author span,
+.testimonial-card.square span {
+  font-size: 0.8rem;
+  color: #9a9a9a;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+  .testimonials-viewport {
+    margin-left: 0;
+    padding-left: 4vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonial-card {
+    width: 85vw !important;
+    height: auto;
+  }
+}

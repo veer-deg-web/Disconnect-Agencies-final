@@ -1,0 +1,243 @@
+/* =========================
+   BASE
+========================= */
+
+.process-section {
+  background: #0b0b0b;
+  padding: 8rem 0;
+  overflow: visible;
+}
+
+.process-section * {
+  will-change: transform, opacity, filter;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.process-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 80px;
+}
+
+/* =========================
+   LEFT COLUMN (STICKY CONTEXT)
+========================= */
+
+.process-left {
+  position: relative; /* ✅ REQUIRED */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 56px;
+}
+
+/* =========================
+   STICKY LABEL
+========================= */
+
+.process-label-fixed {
+  position: fixed;
+  top: 0px;
+  left: calc((100vw - 1450px) / 2 + 1rem);
+  z-index: 50;
+  pointer-events: none;
+}
+
+.process-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: #8a8a8a;
+  display: flex;
+  align-items: center;
+}
+
+.process-label .dot {
+  width: 6px;
+  height: 6px;
+  background: #b6ff2e;
+  margin-right: 10px;
+}
+
+/* =========================
+   HEADING
+========================= */
+
+.process-heading {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: #fff;
+}
+
+.process-heading span {
+  color: #b6ff2e;
+}
+
+/* =========================
+   ROW
+========================= */
+
+.process-row {
+  position: relative;
+  padding-left: 32px;
+  padding-bottom: 56px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* =========================
+   STEP RAIL
+========================= */
+
+.process-step-rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: rgba(255,255,255,0.08);
+}
+
+.process-step-rail-active {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 2px;
+  background: #b6ff2e;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.process-row-header {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 24px 0;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 16px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.row-dot {
+  width: 6px;
+  height: 6px;
+  background: rgba(255,255,255,0.3);
+}
+
+.row-step {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+
+.row-title-closed {
+  font-size: 1rem;
+  color: #7d7d7d;
+}
+
+.process-row-header.active .row-dot,
+.process-row-header.active .row-step {
+  background: #b6ff2e;
+  color: #b6ff2e;
+}
+
+.process-row-header.active .row-title-closed {
+  color: transparent;
+}
+
+/* =========================
+   EXPANDED CARD
+========================= */
+
+.process-expand {
+  margin-top: 16px;
+  margin-left: 8px;
+  padding: 28px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.process-image-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.process-image-wrap img {
+  width: 280px;
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.process-content-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+}
+
+.process-content-row h3 {
+  color: #b6ff2e;
+  margin: 0;
+}
+
+.process-content-row p {
+  color: #9a9a9a;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+  .process-label-fixed {
+    position: relative;
+    top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .process-wrapper {
+    grid-template-columns: 1fr;
+    gap: 64px;
+  }
+
+  .process-left {
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .process-row {
+    padding-left: 0;
+  }
+
+  .process-step-rail {
+    display: none;
+  }
+
+  .process-content-row {
+    grid-template-columns: 1fr;
+  }
+
+  .process-image-wrap img {
+    width: 220px;
+  }
+}
+
+@media (max-width: 360px) {
+  .process-heading {
+    font-size: 1.7rem;
+  }
+
+  .process-image-wrap img {
+    width: 180px;
+  }
+}
