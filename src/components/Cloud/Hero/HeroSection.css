@@ -1,0 +1,129 @@
+/* =========================
+   HERO
+========================= */
+
+.cloud-hero {
+  position: relative;
+  height: 100vh;
+  background: #0b0b0b;
+  overflow: hidden;
+}
+
+/* =========================
+   VIDEO
+========================= */
+
+.cloud-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================
+   INNER
+========================= */
+
+.cloud-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* =========================
+   LEFT TEXT
+========================= */
+
+.cloud-left {
+  position: absolute;
+  left: 6%;
+  top: 45%;
+  font-size: clamp(3.2rem, 6vw, 6.2rem);
+  font-weight: 300;
+  color: #ffffff;
+}
+
+.cloud-left span {
+  color: #dbfe49;
+}
+
+/* =========================
+   RIGHT TEXT
+========================= */
+
+.cloud-right {
+  position: absolute;
+  right: 10%;
+  top: 47%;
+  line-height: 0.9;
+}
+
+.cloud-right .services {
+  display: block;
+  font-size: clamp(3.2rem, 6vw, 6.2rem);
+  font-weight: 300;
+  color: #dbfe49;
+}
+
+.cloud-right .ready {
+  display: block;
+  font-size: clamp(3.2rem, 6vw, 6.2rem);
+  font-weight: 300;
+  color: #ffffff;
+}
+
+/* =========================
+   META
+========================= */
+
+.cloud-meta {
+  position: absolute;
+  right: 6%;
+  top: 18%;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #cfcfcf;
+}
+
+/* =========================
+   SCROLL
+========================= */
+
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+  .cloud-left {
+    left: 4%;
+  }
+
+  .cloud-right {
+    right: 4%;
+  }
+}
+
+@media (max-width: 768px) {
+  .cloud-left {
+    top: 30%;
+    font-size: 3rem;
+  }
+
+  .cloud-right {
+    top: 55%;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .cloud-meta {
+    display: none;
+  }
+}
