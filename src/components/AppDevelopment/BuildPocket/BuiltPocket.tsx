@@ -55,11 +55,11 @@ export default function BuildPocket() {
 
       {/* Scoped Cursor */}
       <TargetCursor
-        spinDuration={2}
-        hideDefaultCursor
-        parallaxOn
-        hoverDuration={0.2}
-      />
+  spinDuration={3}
+  hideDefaultCursor={false}
+  parallaxOn={false}
+  hoverDuration={0.3}
+/>
 
       <div className="build-pocket__top">
 
