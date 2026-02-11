@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import SEOProcessCard from "./SeoProcessCard";
 import "./SeoProcess.css";
 
@@ -39,18 +40,39 @@ const steps = [
 
 export default function SEOProcessSection() {
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState<"left" | "right">("right");
 
   const next = () => {
-    if (index < steps.length - 2) setIndex(index + 1);
+    if (index < steps.length - 2) {
+      setDirection("right");
+      setIndex(index + 1);
+    }
   };
 
   const prev = () => {
-    if (index > 0) setIndex(index - 1);
+    if (index > 0) {
+      setDirection("left");
+      setIndex(index - 1);
+    }
+  };
+
+  const slideVariants = {
+    enter: (dir: string) => ({
+      x: dir === "right" ? 60 : -60,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir: string) => ({
+      x: dir === "right" ? -60 : 60,
+      opacity: 0,
+    }),
   };
 
   return (
     <section className="seo-process">
-      {/* Heading */}
       <div className="seo-process__header">
         <span className="seo-process__label">PROCESS</span>
         <h2 className="seo-process__title">
@@ -62,17 +84,33 @@ export default function SEOProcessSection() {
         </p>
       </div>
 
-      {/* Glass container */}
       <div className="seo-process__glass">
-        {/* TWO CARDS */}
         <div className="seo-process__cards">
+
+          {/* LEFT CARD (static) */}
           <SEOProcessCard {...steps[index]} />
-          {steps[index + 1] && (
-            <SEOProcessCard {...steps[index + 1]} />
-          )}
+
+          {/* RIGHT CARD (animated) */}
+          <AnimatePresence mode="wait" custom={direction}>
+            {steps[index + 1] && (
+              <motion.div
+                key={index}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <SEOProcessCard {...steps[index + 1]} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Controls */}
         <div className="seo-process__controls">
           <button onClick={prev} disabled={index === 0}>←</button>
 

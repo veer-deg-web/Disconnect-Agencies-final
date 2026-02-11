@@ -1,5 +1,6 @@
 "use client";
-import { JSX } from "react";
+
+import { JSX, useRef } from "react";
 import {
   SiCodesandbox,
   SiAdobe,
@@ -30,8 +31,41 @@ export default function ReviewCard({
   rating,
   quote,
 }: ReviewCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rotateX = ((y / rect.height) - 0.5) * 14;
+    const rotateY = ((x / rect.width) - 0.5) * -14;
+
+    card.style.transform = `
+      perspective(1200px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      translateY(-8px)
+      scale(1.02)
+    `;
+  };
+
+  const resetTilt = () => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transform =
+      "perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)";
+  };
+
   return (
-    <div className="seo-review">
+    <div
+      ref={cardRef}
+      className="seo-review"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetTilt}
+    >
       {/* TOP */}
       <div className="seo-review__top">
         <img src={avatar} alt={name} className="seo-review__avatar" />
@@ -53,7 +87,6 @@ export default function ReviewCard({
           <span>{company}</span>
         </div>
 
-        {/* RATING */}
         <div className="seo-review__rating">
           <span className="seo-review__score">{rating}</span>
           <span className="seo-review__label">Job Satisfaction</span>

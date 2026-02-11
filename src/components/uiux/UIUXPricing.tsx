@@ -149,7 +149,7 @@ export default function UIUXPricing() {
               playsInline
               style={sphereVideo}
             >
-              <source src="/sphere.mp4" type="video/mp4" />
+              <source src="/Sphere.mp4" type="video/mp4" />
             </video>
           </motion.div>
             <div style={cardGlow} />

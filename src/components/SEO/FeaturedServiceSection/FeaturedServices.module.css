@@ -119,3 +119,47 @@
     grid-template-columns: 1fr;
   }
 }
+.card {
+  background: rgba(20, 20, 20, 0.75);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px;
+  text-align: left;
+
+  border: 1px solid rgba(80,120,255,0.2);
+
+  transform-style: preserve-3d;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s ease,
+    border-color 0.3s ease;
+
+  will-change: transform;
+  position: relative;
+}
+
+/* Glow overlay */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at top left,
+    rgba(80,120,255,0.25),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.card:hover {
+  border-color: #4f7cff;
+  box-shadow:
+    0 40px 100px rgba(80,120,255,0.35),
+    0 15px 40px rgba(0,0,0,0.5);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
