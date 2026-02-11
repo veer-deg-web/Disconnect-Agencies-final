@@ -110,8 +110,8 @@ const cardVariant = {
 
 export default function PricingSection({
   headingTitle = "Pricing Options",
-  headingGradient = ["#5227FF", "#FF9FFC", "#B19EEF"],
-  accentColor = "#ff5a00",
+  headingGradient = ["#FF512F", "#FF7B00", "#FFB347"],
+  accentColor = "#FF7B00",
   plansOverride,
 }: PricingSectionProps) {
   const plans = plansOverride ?? defaultPlans;

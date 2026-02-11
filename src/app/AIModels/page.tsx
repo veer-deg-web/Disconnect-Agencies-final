@@ -18,7 +18,7 @@ export default function Ai() {
    <>
       <HeroNavbar />
       <HeroSection />
-     <UIUXShowcaseLogos logos={partnerLogos} iconGap={96} title="Over 50+ businesses trusts us ." />
+     <UIUXShowcaseLogos logos={partnerLogos} iconGap={200} title="Over 50+ businesses trusts us ." />
       <ServicesSection />  
       <ProcessSection /> 
       <AntigravitySection

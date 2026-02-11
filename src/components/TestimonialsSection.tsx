@@ -133,7 +133,7 @@ export default function TestimonialsSection() {
             style={column}
             animate={startScroll ? { y: ["0%", "-50%"] } : { y: 0 }}
             transition={{
-              duration: 26,
+              duration: 14,
               repeat: Infinity,
               ease: "linear",
             }}
@@ -149,7 +149,7 @@ export default function TestimonialsSection() {
             style={column}
             animate={startScroll ? { y: ["-50%", "0%"] } : { y: 0 }}
             transition={{
-              duration: 26,
+              duration: 14,
               repeat: Infinity,
               ease: "linear",
             }}
@@ -209,7 +209,11 @@ function TestimonialCard({ name, role, quote }: Testimonial) {
   return (
     <div style={card}>
       <div style={cardHeader}>
-        <div style={avatar} />
+        <img
+  src="/Section.png"
+  alt={name}
+  style={avatarImage}
+/>
         <div>
           <div style={nameStyle}>{name}</div>
           <div style={roleStyle}>{role}</div>
@@ -285,12 +289,12 @@ const cardHeader: React.CSSProperties = {
   gap: 12,
   marginBottom: 12,
 };
-
-const avatar: React.CSSProperties = {
+const avatarImage: React.CSSProperties = {
   width: 42,
   height: 42,
   borderRadius: "50%",
-  background: "linear-gradient(145deg, #ff5a00, #ff2a00)",
+  objectFit: "cover",
+  border: "1px solid rgba(255,255,255,0.15)",
 };
 
 const nameStyle: React.CSSProperties = {

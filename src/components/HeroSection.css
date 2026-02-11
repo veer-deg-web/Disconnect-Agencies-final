@@ -3,32 +3,43 @@
   min-height: 100vh;
   width: 100%;
   overflow: hidden;
-
-  background-image: url("/her0-bg.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  transform: translateZ(0);
-  will-change: transform;
+  isolation: isolate; /* ensures clean stacking */
 }
 
-/* Navbar layer */
+/* Background image (Next Image handles scaling efficiently) */
+.hero-bg {
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* Optional dark overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.6)
+  );
+  z-index: -1;
+}
+
+/* Navbar */
 .hero-navbar {
   position: relative;
-  z-index: 30;
+  z-index: 10;
 }
 
-/* Content wrapper */
+/* Content container */
 .hero-content-container {
   position: relative;
-  z-index: 20;
+  z-index: 5;
   min-height: 100vh;
   display: flex;
   align-items: center;
 }
 
-/* Inner width container */
+/* Inner width */
 .hero-inner {
   margin: 0 auto;
   width: 100%;
@@ -36,28 +47,22 @@
   padding: 0 3rem;
 }
 
-/* MOBILE BACKGROUND SCALING */
+/* Responsive adjustments */
 
 @media (max-width: 768px) {
-  .hero-section {
-    background-size: 1200px auto;
-    background-position: center top;
+  .hero-inner {
+    padding: 0 2rem;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-section {
-    background-size: 900px auto;
-    background-position: center top;
+  .hero-inner {
+    padding: 0 1.5rem;
   }
 }
 
 @media (max-width: 360px) {
-  .hero-section {
-    background-size: 750px auto;
-  }
-
   .hero-inner {
-    padding: 0 1.5rem;
+    padding: 0 1.2rem;
   }
 }

@@ -26,7 +26,7 @@ export default function WebDevelopmentPage() {
     <>
       <Hero />
        <section className="uiux-marquee-section">
-    <UIUXShowcaseLogos logos={heroLogos} />
+    <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
   </section>
       <SupportSection />
 
@@ -103,7 +103,9 @@ export default function WebDevelopmentPage() {
           },
         ]}
       />
-      <CTASection />
+    <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #C7FF1A 0%, #9BE000 40%, #1a1a1a 75%, #0d0d0d 100%)"
+/>
       <Footer />
     </>
   );
