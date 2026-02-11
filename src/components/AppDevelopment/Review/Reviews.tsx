@@ -1,7 +1,7 @@
 "use client";
 
 import "./Reviews.css";
-import ShinyText from "@/components/ShinyText";
+
 import GradientText from "@/components/GradientText";
 
 
@@ -11,7 +11,8 @@ const featuredReview = {
   text: (
     <div className="reviews__inline-flex">
   <GradientText
-   colors={["#F59E0B", "#F0ABFC", "#C4B5FD"]}
+   colors={[
+ "#5869E3", "#7C3AED", "#22D3EE"]}
     animationSpeed={8}
     showBorder={false}
     className="gradient-word"
