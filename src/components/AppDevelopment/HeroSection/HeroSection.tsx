@@ -102,7 +102,7 @@ export default function HeroSection() {
 
       {/* ================= LOGOS (BELOW PHONE) ================= */}
       <div className="logos-below-phone">
-        <UIUXShowcaseLogos logos={heroLogos} />
+        <UIUXShowcaseLogos logos={heroLogos} iconGap={200} />
       </div>
     </section>
   );
