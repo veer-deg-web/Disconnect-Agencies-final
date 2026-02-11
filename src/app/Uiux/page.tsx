@@ -5,12 +5,24 @@ import UIUXBenefits from "@/components/uiux/UIUXBenefits";
 import UIUXFeatures from "@/components/uiux/UIUXFeatures";
 import UIUXSolutions from "@/components/uiux/UIUXSolutions";
 import UIUXPricing from "@/components/uiux/UIUXPricing";
-import UIUXTrustedBy from "@/components/uiux/UIUXTrustedBy";
+
 import UIUXTutorials from "@/components/uiux/UIUXTutorials";
 
 import Footer from "@/components/Footer";
 import FAQSection from "@/components/FAQSection";
 import CTASection from "@/components/CTASection";
+import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+} from "react-icons/si"; 
+const heroLogos = [
+  { node: <SiReact />, title: "React" },
+  { node: <SiNextdotjs />, title: "Next.js" },
+  { node: <SiTypescript />, title: "TypeScript" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS" },
+];
 
 const faqs = [
   {
@@ -67,7 +79,7 @@ export default function UIUXPage() {
       <UIUXFeatures />
       <UIUXSolutions />
       <UIUXPricing />
-      <UIUXTrustedBy />
+       <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
       <UIUXTutorials />
       <FAQSection
         title={`Questions?\nWe're here to assist!`}
