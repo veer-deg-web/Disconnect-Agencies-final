@@ -1,4 +1,4 @@
-import GrowthShowcaseSection from "@/components/GrowthShowcaseSection";
+import GrowthShowcaseSection from "@/components/Home/GrowthShowcaseSection/GrowthShowcaseSection";
 import HeroSection  from "@/components/HeroSection";
 import PageBackground from "@/components/PageBackground";
 

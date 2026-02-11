@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import PrecisionGrowthGraph from "@/components/PrecisionGrowthGraph";
-import ShinyText from "./ShinyText";
+import ShinyText from "../../ShinyText";
 import "./GrowthShowcaseSection.css";
 
 export default function GrowthShowcaseSection() {
