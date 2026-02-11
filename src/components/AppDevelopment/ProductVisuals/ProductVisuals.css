@@ -34,7 +34,7 @@
   line-height: 1.15;
   letter-spacing: -0.02em;
   background: linear-gradient(90deg, #fff, #cfd6ff);
-  -webkit-background-clip: text;
+
   -webkit-text-fill-color: transparent;
 }
 
