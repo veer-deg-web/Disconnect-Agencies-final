@@ -1,44 +1,49 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import LocomotiveScroll from "locomotive-scroll";
-import "locomotive-scroll/dist/locomotive-scroll.css";
 
 export default function SmoothScroll() {
-  const locoRef = useRef<LocomotiveScroll | null>(null);
+  const locoRef = useRef<any>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    let loco: any;
 
-    if (prefersReducedMotion) return;
+    const initScroll = async () => {
+      const LocomotiveScroll = (await import("locomotive-scroll")).default;
 
-    const scrollContainer = document.querySelector(
-      "[data-scroll-container]"
-    ) as HTMLElement | null;
+      const scrollContainer = document.querySelector(
+        "[data-scroll-container]"
+      ) as HTMLElement | null;
 
-    if (!scrollContainer) {
-      console.warn("LocomotiveScroll: No scroll container found");
-      return;
-    }
+      if (!scrollContainer) return;
 
-    // 🔧 TS FIX: cast options to any
-    const loco = new LocomotiveScroll({
-      el: scrollContainer,
-      smooth: true,
-      smartphone: { smooth: true },
-      tablet: { smooth: true },
-      lerp: 0.08,
-    } as any);
+      const isMobile = window.innerWidth < 768;
 
-    locoRef.current = loco;
+      loco = new (LocomotiveScroll as any)({
+        el: scrollContainer,
+        smooth: !isMobile, // ❗ disable smooth on mobile
+        lerp: 0.08,
+        multiplier: 1,
+        smartphone: {
+          smooth: false,
+        },
+        tablet: {
+          smooth: false,
+        },
+      });
+
+      locoRef.current = loco;
+    };
+
+    initScroll();
 
     return () => {
-      loco.destroy();
-      locoRef.current = null;
+      if (locoRef.current) {
+        locoRef.current.destroy();
+        locoRef.current = null;
+      }
     };
   }, []);
 
