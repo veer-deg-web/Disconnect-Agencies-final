@@ -13,12 +13,14 @@ type UIUXShowcaseLogosProps = {
   title?: string;
   logos: LogoItem[];
   iconGap?: number;
+  logoSize?: number;   // ✅ NEW PROP
 };
 
 export default function UIUXShowcaseLogos({
   title = "Our designs are featured on",
   logos,
   iconGap = 64,
+  logoSize = 44, // default size
 }: UIUXShowcaseLogosProps) {
   return (
     <section
@@ -28,7 +30,7 @@ export default function UIUXShowcaseLogos({
         background: "#000",
       }}
     >
-      {/* 🔥 HARD OVERRIDE */}
+      {/* HARD OVERRIDE */}
       <style>{`
         .logo-loop-fix,
         .logo-loop-fix * {
@@ -50,6 +52,7 @@ export default function UIUXShowcaseLogos({
             opacity: 0.7,
             fontWeight: 500,
             color: "#fff",
+            fontSize: "18px",
           }}
         >
           {title}
@@ -61,11 +64,11 @@ export default function UIUXShowcaseLogos({
           logos={[...logos, ...logos, ...logos]}
           speed={80}
           direction="left"
-          logoHeight={44}
-          gap={iconGap}
+          logoHeight={logoSize}   // ✅ dynamic
+          gap={iconGap}           // spacing
           hoverSpeed={0}
           scaleOnHover
-          fadeOut={false}   
+          fadeOut={false}
           ariaLabel="Technology partners"
         />
       </div>

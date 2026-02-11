@@ -9,17 +9,17 @@ import ShinyText from "@/components/ShinyText";
 ======================= */
 
 const ROW_1 = [
-  { name: "David Chen", role: "Marketing Officer", img: "/people/1.jpg" },
-  { name: "James Patel", role: "UX Designer", img: "/people/2.jpg" },
-  { name: "Liam Johnson", role: "Software Engineer", img: "/people/3.jpg" },
-  { name: "Emma Brooks", role: "Operations", img: "/people/4.jpg" },
+  { name: "David Chen", role: "Marketing Officer", img: "/Section.png" },
+  { name: "James Patel", role: "UX Designer", img: "/Section.png" },
+  { name: "Liam Johnson", role: "Software Engineer", img: "/Section.png" },
+  { name: "Emma Brooks", role: "Operations", img: "/Section.png" },
 ];
 
 const ROW_2 = [
-  { name: "Noah Ramirez", role: "Product Manager", img: "/people/5.jpg" },
-  { name: "Olivia Martinez", role: "Head of Sales", img: "/people/6.jpg" },
-  { name: "Aisha Rahman", role: "Digital Strategist", img: "/people/7.jpg" },
-  { name: "Ethan Brown", role: "Brand Lead", img: "/people/8.jpg" },
+  { name: "Noah Ramirez", role: "Product Manager", img: "/Section.png" },
+  { name: "Olivia Martinez", role: "Head of Sales", img: "/Section.png" },
+  { name: "Aisha Rahman", role: "Digital Strategist", img: "/Section.png" },
+  { name: "Ethan Brown", role: "Brand Lead", img: "/Section.png" },
 ];
 
 /* =======================

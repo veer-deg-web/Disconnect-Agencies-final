@@ -7,11 +7,27 @@ import FeaturesSection from "@/components/WebDevelopment/FeatureGridSection/Feat
 import IntegrationLogosSection from "@/components/WebDevelopment/IntegrationLogoSection/IntegrationLogoSection";
 import PricingSection from "@/components/WebDevelopment/PricingSection/PricingSection";
 import SupportedByAI from "@/components/WebDevelopment/SupportedByAi/SupportedByAi";
+import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+} from "react-icons/si"; 
+const heroLogos = [
+  { node: <SiReact />, title: "React" },
+  { node: <SiNextdotjs />, title: "Next.js" },
+  { node: <SiTypescript />, title: "TypeScript" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS" },
+];
 
 export default function WebDevelopmentPage() {
   return (
     <>
       <Hero />
+       <section className="uiux-marquee-section">
+    <UIUXShowcaseLogos logos={heroLogos} />
+  </section>
       <SupportSection />
 
       <SupportedByAI  /> 
@@ -58,6 +74,7 @@ export default function WebDevelopmentPage() {
 <FAQSection
         title={`Questions?\nWe're here to assist!`}
         defaultOpenIndex={0}
+         accentColor="#C7FF1A"
         faqs={[
           {
             question: "Why is a strong brand identity important?",

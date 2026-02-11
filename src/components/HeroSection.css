@@ -1,0 +1,63 @@
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+
+  background-image: url("/her0-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Navbar layer */
+.hero-navbar {
+  position: relative;
+  z-index: 30;
+}
+
+/* Content wrapper */
+.hero-content-container {
+  position: relative;
+  z-index: 20;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Inner width container */
+.hero-inner {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1320px;
+  padding: 0 3rem;
+}
+
+/* MOBILE BACKGROUND SCALING */
+
+@media (max-width: 768px) {
+  .hero-section {
+    background-size: 1200px auto;
+    background-position: center top;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    background-size: 900px auto;
+    background-position: center top;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-section {
+    background-size: 750px auto;
+  }
+
+  .hero-inner {
+    padding: 0 1.5rem;
+  }
+}

@@ -1,8 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import AnimatedToggle from "./AnimatedToggle";
+import Cubes from "./Cubes";
 import ShinyText from './ShinyText';
+import UIUXShowcaseLogos from "./uiux/UIUXShowcaseLogos";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+} from "react-icons/si"; 
+const heroLogos = [
+  { node: <SiReact />, title: "React" },
+  { node: <SiNextdotjs />, title: "Next.js" },
+  { node: <SiTypescript />, title: "TypeScript" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS" },
+];
 
 
 const brands = ["Vaultic", "Altoris", "Quantora", "Fundara", "Wealthro"];
@@ -15,25 +28,14 @@ export default function VisionShowcase() {
 
       {/* TRUSTED BY */}
       <div className="trusted">
-        <p>Trusted by top innovative teams</p>
+       
 
-        <div className="marquee">
-          <motion.div
-            className="track"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{
-              duration: 10, // 🚀 2× faster (was 20)
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            {[...brands, ...brands].map((b, i) => (
-              <span className="brand" key={i}>
-                {b}
-              </span>
-            ))}
-          </motion.div>
-        </div>
+       <UIUXShowcaseLogos
+  logos={heroLogos}
+  title="Trusted By Top Innovative Teams"
+  logoSize={60}
+  iconGap={200}
+/>
       </div>
 
       {/* CONTENT */}
@@ -60,7 +62,17 @@ export default function VisionShowcase() {
 
         {/* TOGGLE */}
         <div className="toggle-wrap">
-          <AnimatedToggle />
+        <Cubes
+  gridSize={6}
+  maxAngle={30}
+  radius={3}
+  borderStyle="2px dashed #FF8C32"
+  faceColor="#141414"
+  rippleColor="#FF6B00"
+  rippleSpeed={1.5}
+  autoAnimate
+  rippleOnClick
+/>
         </div>
       </div>
 
