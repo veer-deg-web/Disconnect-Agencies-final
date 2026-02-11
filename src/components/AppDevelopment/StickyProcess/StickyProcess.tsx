@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import "./StickyProcess.css";
 import Cubes from "@/components/Cubes";
 
@@ -31,31 +33,69 @@ const steps = [
 ];
 
 export default function StickyProcess() {
+  const [current, setCurrent] = useState(0);
+
+  const next = () =>
+    setCurrent((prev) => (prev + 1) % steps.length);
+
+  const prev = () =>
+    setCurrent((prev) =>
+      (prev - 1 + steps.length) % steps.length
+    );
+
   return (
     <section className="sticky-process">
       <div className="sticky-process__inner">
-        {/* LEFT – TEXT */}
-        <div className="steps">
-          {steps.map((item, index) => (
-            <div key={index} className="step">
-              <span className="step__label">{item.step}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </div>
-          ))}
+
+        {/* LEFT – CAROUSEL TEXT */}
+        <div className="steps-carousel">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              className="step-card"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4 }}
+            >
+              <span className="step__label">
+                {steps[current].step}
+              </span>
+
+              <h3>{steps[current].title}</h3>
+
+              <p>{steps[current].description}</p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* CONTROLS */}
+          <div className="carousel-controls">
+            <button onClick={prev}>←</button>
+            <button onClick={next}>→</button>
+          </div>
+
+          {/* PROGRESS BAR */}
+          <div className="progress">
+            <div
+              className="progress-bar"
+              style={{
+                width: `${((current + 1) / steps.length) * 100}%`,
+              }}
+            />
+          </div>
         </div>
 
-        {/* RIGHT – STICKY CUBES */}
+        {/* RIGHT – STICKY CUBE */}
         <div className="visual">
           <div className="visual__sticky">
-            <div style={{ height: "600px", position: "relative" }}>
+            <div className="cube-container">
               <Cubes
                 gridSize={6}
                 maxAngle={30}
                 radius={3}
-                borderStyle="2px dashed #B19EEF"
-                faceColor="#1a1a2e"
-                rippleColor="#ff6b6b"
+                borderStyle="2px dotted #5869E3"
+                faceColor="#0f1224"
+                rippleColor="#5869E3"
                 rippleSpeed={1.5}
                 autoAnimate
                 rippleOnClick
@@ -63,6 +103,7 @@ export default function StickyProcess() {
             </div>
           </div>
         </div>
+
       </div>
     </section>
   );

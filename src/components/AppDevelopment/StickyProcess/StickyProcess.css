@@ -1,107 +1,141 @@
 .sticky-process {
   padding: 140px 6%;
-  background: radial-gradient(#1a1a1a 1px, transparent 1px);
+  background: radial-gradient(#111 1px, transparent 1px);
   background-size: 22px 22px;
 }
 
-/* ================= DESKTOP GRID ================= */
-
+/* DESKTOP GRID */
 .sticky-process__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 100px;
   max-width: 1200px;
   margin: 0 auto;
-  position: relative;
 }
 
-/* LEFT TEXT */
-.steps {
+/* LEFT CAROUSEL */
+.steps-carousel {
+  max-width: 460px;
   display: flex;
   flex-direction: column;
-  gap: 180px;
 }
 
-.step {
-  max-width: 420px;
+/* CARD */
+.step-card {
+  padding: 32px;
+  border-radius: 20px;
+  background: rgba(20, 22, 44, 0.6);
+  border: 1px solid rgba(88, 105, 227, 0.25);
+  backdrop-filter: blur(14px);
 }
 
 .step__label {
   font-size: 13px;
-  color: #6c7cff;
+  color: #5869E3;
   font-weight: 600;
-  display: inline-block;
   margin-bottom: 10px;
+  display: inline-block;
 }
 
-.step h3 {
-  font-size: 32px;
-  font-weight: 700;
+.step-card h3 {
+  font-size: 30px;
+  font-weight: 600;
   margin-bottom: 12px;
-  color: #ffffff;
+  color: #fff;
 }
 
-.step p {
+.step-card p {
   font-size: 16px;
   line-height: 1.6;
   color: #b5b5b5;
 }
 
-/* RIGHT VISUAL */
-.visual {
-  position: relative;
+/* CONTROLS */
+.carousel-controls {
+  margin-top: 28px;
+  display: flex;
+  gap: 16px;
 }
 
+.carousel-controls button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(88,105,227,0.3);
+  background: #14162c;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.carousel-controls button:hover {
+  background: #5869E3;
+  box-shadow: 0 0 12px rgba(88,105,227,0.5);
+}
+
+/* PROGRESS BAR */
+.progress {
+  margin-top: 24px;
+  height: 3px;
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg,#5869E3,#7B8CFF);
+  transition: width 0.4s ease;
+}
+
+/* RIGHT VISUAL */
 .visual__sticky {
   position: sticky;
   top: 140px;
 }
 
-/* ================= MOBILE FIX ================= */
-/* Worst case: 344px */
+/* FIXED HEIGHT CUBE */
+.cube-container {
+  height: 600px;
+  position: relative;
+}
 
-@media (max-width: 480px) {
-  .sticky-process {
-    padding: 80px 16px;
-  }
+/* ================= MOBILE ================= */
 
-  /* Switch to column */
+@media (max-width: 900px) {
+
   .sticky-process__inner {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 60px;
   }
 
-  /* Cube goes to top */
+  /* SHIFT ORDER */
   .visual {
     order: -1;
   }
 
-  /* Disable sticky */
   .visual__sticky {
     position: relative;
     top: auto;
   }
 
-  /* Reduce cube container height */
-  .visual__sticky > div {
-    height: 360px !important;
+  .cube-container {
+    height: 360px;
   }
 
-  /* Steps stack normally */
-  .steps {
-    gap: 48px;
-  }
-
-  .step {
-    max-width: 100%;
-  }
-
-  .step h3 {
+  .step-card h3 {
     font-size: 24px;
   }
 
-  .step p {
+  .step-card p {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cube-container {
+    height: 300px;
   }
 }
