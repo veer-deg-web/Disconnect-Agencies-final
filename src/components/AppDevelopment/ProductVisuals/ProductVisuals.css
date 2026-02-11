@@ -3,28 +3,46 @@
 .product-visuals {
   position: relative;
   width: 100%;
-  padding: 160px 0 200px;
-  background: #0b0b0b;
+  padding: 140px 6% 180px;
+  background: radial-gradient(circle at center, #11152a 0%, #05060f 70%);
   overflow: hidden;
 }
 
+.product-visuals::before {
+  content: "";
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, rgba(88,105,227,0.15), transparent 70%);
+  top: -300px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ================= HERO TEXT ================= */
+
 .product-visuals__content {
-  max-width: 720px;
-  margin: 0 auto 120px;
+  max-width: 900px;
+  margin: 0 auto 100px;
   text-align: center;
 }
 
 .product-visuals__content h2 {
-  font-size: 48px;
+  font-size: clamp(32px, 4vw, 52px);
   font-weight: 700;
-  line-height: 1.2;
-  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #fff, #cfd6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .product-visuals__content p {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #aaa;
+  margin-top: 18px;
+  font-size: clamp(15px, 1.2vw, 18px);
+  color: #9aa3ff;
+  opacity: 0.9;
 }
 
 /* ================= VISUAL WRAPPER ================= */
@@ -41,17 +59,17 @@
 .phone {
   position: absolute;
   left: 50%;
-  top: 42%;
+  top: 45%;
   transform: translate(-50%, -50%);
   width: 360px;
   z-index: 1;
 }
 
-/* ================= CARDS (DESKTOP) ================= */
+/* ================= FLOATING CARDS ================= */
 
 .card-left {
   position: absolute;
-  top: -100px;
+  top: -80px;
   left: 0;
   z-index: 10;
 }
@@ -72,148 +90,206 @@
 
 /* ================= TABLET ================= */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .visual-wrapper {
-    transform: scale(0.7);
+    transform: scale(0.85);
     transform-origin: top center;
-    height: 520px;
+    height: 560px;
   }
 }
 
-/* ================= MOBILE STACKED (≤480px) ================= */
+/* ================= MOBILE STACK ================= */
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+
   .product-visuals {
-    padding: 100px 0 120px;
+    padding: 100px 20px 120px;
   }
 
-  .product-visuals__content h2 {
-    font-size: 28px;
+  .product-visuals__content {
+    margin-bottom: 60px;
   }
 
-  /* STACK EVERYTHING */
   .visual-wrapper {
     height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px; /* 🔥 tight spacing */
+    gap: 28px;
     transform: none;
   }
 
-  /* PHONE */
   .phone {
     position: relative;
-    top: auto;
     left: auto;
+    top: auto;
     transform: none;
-    width: 200px; /* 🔥 reduced */
-    margin-bottom: 8px;
+    width: 240px;
+    margin: 0 auto;
   }
 
-  /* CARDS */
   .card-left,
   .card-right,
   .card-bottom {
     position: relative;
     inset: auto;
-    transform: none;
     width: 100%;
     display: flex;
     justify-content: center;
   }
 
-  /* SCALE CARD CONTENT */
   .card-left > div,
   .card-right > div,
   .card-bottom > div {
-    max-width: 85%; /* 🔥 reduced size */
-    transform: scale(0.9);
+    max-width: 90%;
+    transform: scale(0.92);
     transform-origin: center;
-  }
-
-  /* IMAGES INSIDE CARDS */
-  .card-left img,
-  .card-right img,
-  .card-bottom img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
   }
 }
 
-/* ================= 344px SAFE ================= */
+/* ================= 344 SAFE ================= */
 
 @media (max-width: 360px) {
+
   .phone {
-    width: 185px;
+    width: 210px;
   }
 
   .card-left > div,
   .card-right > div,
   .card-bottom > div {
-    max-width: 82%;
+    max-width: 85%;
     transform: scale(0.88);
   }
 }
 
-/* ================= WE HELP ================= */
+/* ================================================= */
+/* ================= WE HELP SECTION =============== */
+/* ================================================= */
 
 .we-help {
-  padding: 100px 5%;
-  background: radial-gradient(#1a1a1a 1px, transparent 1px);
-  background-size: 22px 22px;
-  color: #fff;
+  padding: 140px 6%;
+  background: radial-gradient(circle at center, #0b1022 0%, #05060f 80%);
+  position: relative;
+}
+
+.we-help::before {
+  content: "";
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(88,105,227,0.12), transparent 70%);
+  bottom: -250px;
+  right: -200px;
+  pointer-events: none;
 }
 
 .we-help__title {
   text-align: center;
-  font-size: 42px;
+  font-size: clamp(28px, 3vw, 44px);
   font-weight: 700;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
+  letter-spacing: -0.02em;
 }
 
 .we-help__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  gap: 40px;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-@media (max-width: 480px) {
-  .we-help__grid {
-    grid-template-columns: 1fr;
-  }
+/* ================= PREMIUM 3D TILT (FIXED PROPERLY) ================= */
 
-  .we-help__title {
-    font-size: 28px;
-  }
+/* CLEAN CARD */
+.we-card {
+  padding: 36px;
+  border-radius: 24px;
+  background: rgba(20, 25, 55, 0.55);
+  border: 1px solid rgba(88,105,227,0.25);
+  backdrop-filter: blur(16px);
+
+  transform-style: preserve-3d;
+  transition:
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s ease,
+    border-color 0.3s ease;
 }
 
-.we-help__card {
-  padding: 30px;
-  border-radius: 20px;
+/* PREMIUM 3D TILT */
+.we-card:hover {
+  transform:
+    perspective(1200px)
+    rotateX(6deg)
+    rotateY(-6deg)
+    translateY(-12px)
+    scale(1.02);
+
+  border-color: #5869E3;
+
+  box-shadow:
+    0 35px 100px rgba(88,105,227,0.35),
+    0 15px 40px rgba(0,0,0,0.4);
+}
+
+/* Disable heavy tilt on mobile */
+@media (max-width: 768px) {
+  .we-help__card:hover {
+    transform: translateY(-6px);
+  }
 }
 
 .we-help__card h3 {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 22px;
+  margin-bottom: 12px;
   color: #fff;
+  letter-spacing: -0.01em;
 }
 
 .we-help__card p {
-  color: #aaa;
-  font-size: 16px;
+  color: #9aa3ff;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #eef1ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 28px;
+  color: #5869E3;
   margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+
+  .we-help {
+    padding: 100px 24px;
+  }
+
+  .we-help__grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .we-help__card {
+    padding: 28px;
+  }
+
+  .we-help__card h3 {
+    font-size: 20px;
+  }
+
+  .we-help__card p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+
+  .we-help__title {
+    font-size: 26px;
+  }
+
+  .we-help__card {
+    padding: 24px;
+  }
 }

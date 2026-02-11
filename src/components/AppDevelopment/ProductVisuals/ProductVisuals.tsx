@@ -4,6 +4,13 @@ import "./ProductVisuals.css";
 import TiltedCard from "@/components/TiltedCard";
 import SpotlightCard from "@/components/SpotlightCard";
 
+import {
+  SiAppstore,
+  SiReact,
+  SiTestinglibrary,
+  SiLightning,
+} from "react-icons/si";
+
 export default function ProductVisuals() {
   return (
     <>
@@ -23,14 +30,12 @@ export default function ProductVisuals() {
 
         {/* VISUAL */}
         <div className="visual-wrapper">
-          {/* PHONE */}
           <img
             src="/frame.png"
             alt="App preview"
             className="phone"
           />
 
-          {/* CARD 1 */}
           <div className="card-left">
             <TiltedCard
               imageSrc="/tilted-card1.png"
@@ -45,7 +50,6 @@ export default function ProductVisuals() {
             />
           </div>
 
-          {/* CARD 2 */}
           <div className="card-right">
             <TiltedCard
               imageSrc="/tilted-card2.png"
@@ -60,7 +64,6 @@ export default function ProductVisuals() {
             />
           </div>
 
-          {/* CARD 3 */}
           <div className="card-bottom">
             <TiltedCard
               imageSrc="/tilted-card3.png"
@@ -78,55 +81,62 @@ export default function ProductVisuals() {
       </section>
 
       {/* ================= WE HELP ================= */}
-      <section className="we-help">
-        <h2 className="we-help__title">We helps you...</h2>
+      {/* ================= WE HELP ================= */}
+<section className="we-help">
+  <h2 className="we-help__title">We help you...</h2>
 
-        <div className="we-help__grid">
-          <SpotlightCard spotlightColor="rgba(0,229,255,0.2)">
-            <div className="we-help__card">
-              <div className="icon">⬛</div>
-              <h3>All your app needs, in one place</h3>
-              <p>
-                Plan, design, develop, and launch your product smoothly with our
-                end-to-end app services.
-              </p>
-            </div>
-          </SpotlightCard>
+  <div className="we-help__grid">
 
-          <SpotlightCard spotlightColor="rgba(0,229,255,0.2)">
-            <div className="we-help__card">
-              <div className="icon">📊</div>
-              <h3>Build smarter, faster apps</h3>
-              <p>
-                From UI to backend, we create scalable apps with clean code and
-                smooth performance.
-              </p>
-            </div>
-          </SpotlightCard>
+    <SpotlightCard
+      className="we-card"
+      spotlightColor="rgba(88,105,227,0.25)"
+    >
+      <SiAppstore className="icon" />
+      <h3>All your app needs, in one place</h3>
+      <p>
+        Plan, design, develop, and launch your product smoothly with our
+        end-to-end app services.
+      </p>
+    </SpotlightCard>
 
-          <SpotlightCard spotlightColor="rgba(0,229,255,0.2)">
-            <div className="we-help__card">
-              <div className="icon">🔔</div>
-              <h3>Stay ahead with quality delivery</h3>
-              <p>
-                We follow a clear process, timely updates, and testing—so your app
-                launches without stress.
-              </p>
-            </div>
-          </SpotlightCard>
+    <SpotlightCard
+      className="we-card"
+      spotlightColor="rgba(88,105,227,0.25)"
+    >
+      <SiReact className="icon" />
+      <h3>Build smarter, faster apps</h3>
+      <p>
+        From UI to backend, we create scalable apps with clean code and
+        smooth performance.
+      </p>
+    </SpotlightCard>
 
-          <SpotlightCard spotlightColor="rgba(0,229,255,0.2)">
-            <div className="we-help__card">
-              <div className="icon">✨</div>
-              <h3>Get expert ideas to grow</h3>
-              <p>
-                Disconnect Agency helps you improve features, UX, and performance
-                for long-term success.
-              </p>
-            </div>
-          </SpotlightCard>
-        </div>
-      </section>
+    <SpotlightCard
+      className="we-card"
+      spotlightColor="rgba(88,105,227,0.25)"
+    >
+      <SiTestinglibrary className="icon" />
+      <h3>Stay ahead with quality delivery</h3>
+      <p>
+        We follow a clear process, timely updates, and testing—so your app
+        launches without stress.
+      </p>
+    </SpotlightCard>
+
+    <SpotlightCard
+      className="we-card"
+      spotlightColor="rgba(88,105,227,0.25)"
+    >
+      <SiLightning className="icon" />
+      <h3>Get expert ideas to grow</h3>
+      <p>
+        Disconnect Agency helps you improve features, UX, and performance
+        for long-term success.
+      </p>
+    </SpotlightCard>
+
+  </div>
+</section>
     </>
   );
 }
