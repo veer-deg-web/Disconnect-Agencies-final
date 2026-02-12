@@ -2,14 +2,31 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter,usePathname } from "next/navigation";
 import { MorphingLoginButton } from "./HeroContent";
 
 export default function HeroNavbar() {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleNavigate = (item: string) => {
+    setOpen(false);
+
+    if (item === "Home") {
+      router.push("/");
+      return;
+    }
+
+    // Add routes as needed
+    if (item === "Pricing") router.push("/pricing");
+    if (item === "Services") router.push("/services");
+    if (item === "Benefit") router.push("/benefit");
+    if (item === "Book A Call") router.push("/book-call");
+  };
 
   return (
     <>
-      {/* MOBILE RULES — BUILT FOR 344px */}
       <style>
         {`
           @media (max-width: 768px) {
@@ -41,7 +58,6 @@ export default function HeroNavbar() {
           backdropFilter: "blur(12px)",
         }}
       >
-        {/* NAV BAR */}
         <nav
           className="nav"
           style={{
@@ -54,8 +70,11 @@ export default function HeroNavbar() {
             justifyContent: "space-between",
           }}
         >
-          {/* LOGO */}
-          <div style={{ flexShrink: 0 }}>
+          {/* LOGO → GO HOME */}
+          <div
+            style={{ flexShrink: 0, cursor: "pointer" }}
+            onClick={() => router.push("/")}
+          >
             <Image
               src="/logo.png"
               alt="Disconnect"
@@ -82,6 +101,7 @@ export default function HeroNavbar() {
                 <li
                   key={item}
                   style={{ cursor: "pointer" }}
+                  onClick={() => handleNavigate(item)}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.color = "#fff")
                   }
@@ -101,7 +121,7 @@ export default function HeroNavbar() {
             <MorphingLoginButton />
           </div>
 
-          {/* HAMBURGER — MOBILE */}
+          {/* HAMBURGER */}
           <button
             aria-label="Open menu"
             onClick={() => setOpen(!open)}
@@ -167,7 +187,7 @@ export default function HeroNavbar() {
               (item) => (
                 <div
                   key={item}
-                  onClick={() => setOpen(false)}
+                  onClick={() => handleNavigate(item)}
                   style={{
                     padding: "14px 0",
                     fontSize: "16px",

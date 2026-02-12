@@ -12,6 +12,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import { Section } from "lucide-react";
 
 
 const faqs = [
@@ -50,12 +51,15 @@ export default function Home() {
         <HeroSection />
       </main>
       <VisionShowcase />
-      <ServicesSection/>
+      <section id="services">
+      <ServicesSection/></section>
       <GrowthShowcaseSection />
       <SmartGrowthSection />
       
       <PerformanceMetrics />
+      <section id="pricing">
       <PricingSection/>
+</section>
       <TestimonialsSection/>
       <FAQSection
   title="FAQ"
@@ -67,8 +71,8 @@ export default function Home() {
   tiltGlow="#DE5E03"
   tiltIntensity={14}
 />
-      <Footer/>
-    </PageBackground>
+      <Footer/></PageBackground>
+    
     
   );
 }
