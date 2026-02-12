@@ -17,6 +17,7 @@ import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";import {
   SiTypescript,
   SiTailwindcss,
 } from "react-icons/si"; 
+
 const heroLogos = [
   { node: <SiReact />, title: "React" },
   { node: <SiNextdotjs />, title: "Next.js" },
@@ -61,18 +62,11 @@ const faqs = [
 export default function UIUXPage() {
   return (
     <>
-    <div style={
-      {
-        minHeight : "200vh",
-      }
-    }>
+    
       <UIUXHeroSection />
-    </div>
-      <div style={{
-        position: "relative",
-        top: "-70vh",
-        zIndex: 10,
-      }}>
+ 
+
+<div style={{ position: "relative", zIndex: 10 }}>
         <UIUXShowcase />
       <UIUXProcess />
       <UIUXBenefits />

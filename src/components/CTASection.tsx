@@ -209,7 +209,7 @@ export default function CTASection({
               variants={fadeUp}
               style={{ display: "flex", justifyContent: "center" }}
             >
-              <BookCallButton />
+              <BookCallButton circleColor={tiltGlow} />
             </motion.div>
           </motion.div>
         </motion.div>

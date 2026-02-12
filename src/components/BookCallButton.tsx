@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 
-export default function BookCallButton() {
+type BookCallButtonProps = {
+  circleColor?: string; // 🔥 new prop
+};
+
+export default function BookCallButton({
+  circleColor = "#f97316", // ✅ default orange
+}: BookCallButtonProps) {
   const [hover, setHover] = useState(false);
 
   return (
@@ -13,23 +19,18 @@ export default function BookCallButton() {
       style={{
         height: "40px",
         width: "129px",
-
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-
         padding: "0 10px 0 14px",
         borderRadius: "999px",
         background: "#f4e9e2",
         border: "none",
-
         fontSize: "14px",
         fontWeight: 500,
         color: "#000",
-
         cursor: "pointer",
         overflow: "hidden",
-
         transition: "transform 0.15s ease",
       }}
     >
@@ -42,12 +43,11 @@ export default function BookCallButton() {
           height: "24px",
           width: "24px",
           borderRadius: "50%",
-          background: hover ? "#f97316" : "#000",
+          background: hover ? circleColor : "#000", // ✅ dynamic color
 
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-
           overflow: "hidden",
           transition: "background 0.3s ease",
           flexShrink: 0,
@@ -84,7 +84,7 @@ export default function BookCallButton() {
       <style jsx>{`
         @media (max-width: 480px) {
           button {
-            height: 44px; /* thumb-friendly */
+            height: 44px;
             width: auto;
             padding: 0 14px 0 18px;
           }
