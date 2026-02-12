@@ -104,7 +104,9 @@ export default function WebDevelopmentPage() {
         ]}
       />
     <CTASection
-  gradient="radial-gradient(80% 120% at 50% 100%, #C7FF1A 0%, #9BE000 40%, #1a1a1a 75%, #0d0d0d 100%)"
+  gradient="radial-gradient(80% 120% at 50% 100%, #CFFE25 0%, rgba(207,254,37,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#CFFE25"
+  tiltIntensity={12}
 />
       <Footer />
     </>

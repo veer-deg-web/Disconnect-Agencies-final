@@ -86,7 +86,11 @@ export default function UIUXPage() {
         faqs={faqs}
         defaultOpenIndex={0}
       />
-      <CTASection/>
+      <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #6214D9 0%, rgba(98,20,217,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#6214D9"
+  tiltIntensity={14}
+/>
       <Footer />
       
       </div>

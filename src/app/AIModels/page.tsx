@@ -41,8 +41,10 @@ export default function Ai() {
   faqs={faqs}
   accentColor="#7c3aed"
 />
-     <CTASection
-  gradient="radial-gradient(80% 120% at 50% 100%, #7c3aed 0%, #4c1d95 40%, #1a1a1a 70%, #0d0d0d 100%)"
+    <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #814AC8 0%, rgba(129,74,200,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#814AC8"
+  tiltIntensity={14}
 />
 <Footer />
     </>

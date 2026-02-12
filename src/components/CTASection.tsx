@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { easeInOut } from "framer-motion";
 import BookCallButton from "@/components/BookCallButton";
@@ -11,7 +11,9 @@ import ShinyText from "./ShinyText";
 ===================== */
 
 type CTASectionProps = {
-  gradient?: string; // 🔥 NEW PROP
+  gradient?: string;
+  tiltGlow?: string;        // 🔥 NEW
+  tiltIntensity?: number;   // 🔥 NEW
 };
 
 /* =====================
@@ -46,18 +48,50 @@ const cardVariant = {
 };
 
 /* =====================
-   DEFAULT GRADIENT
+   DEFAULTS
 ===================== */
 
 const DEFAULT_GRADIENT =
   "radial-gradient(80% 120% at 50% 100%, #ff8c00 0%, #b94700 35%, #1a1a1a 70%, #0d0d0d 100%)";
 
 export default function CTASection({
-  gradient = DEFAULT_GRADIENT, // ✅ default orange
+  gradient = DEFAULT_GRADIENT,
+  tiltGlow = "#7c3aed",
+  tiltIntensity = 10,
 }: CTASectionProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -tiltIntensity;
+    const rotateY = ((x - centerX) / centerX) * tiltIntensity;
+
+    card.style.transform = `
+      perspective(1200px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      translateY(-6px)
+    `;
+  };
+
+  const resetTilt = () => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+  };
+
   return (
     <>
-      {/* MOBILE OVERRIDES — 344px SAFE */}
+      {/* MOBILE SAFE OVERRIDES */}
       <style>
         {`
           @media (max-width: 768px) {
@@ -96,13 +130,14 @@ export default function CTASection({
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: "#0b0b0b",
-          position: "relative",
         }}
       >
-        {/* CARD */}
         <motion.div
+          ref={cardRef}
           className="cta-card"
           variants={cardVariant}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={resetTilt}
           style={{
             position: "relative",
             maxWidth: "1200px",
@@ -110,24 +145,29 @@ export default function CTASection({
             borderRadius: "28px",
             padding: "96px 32px",
             textAlign: "center",
-            background: gradient, // 🔥 PROP USED HERE
-            boxShadow:
-              "0 0 0 1px rgba(255,255,255,0.05), 0 40px 120px rgba(0,0,0,0.8)",
+            background: gradient,
+            boxShadow: `
+              0 0 0 1px rgba(255,255,255,0.05),
+              0 40px 120px rgba(0,0,0,0.8),
+              0 0 60px ${tiltGlow}40
+            `,
+            transition:
+              "transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease",
+            transformStyle: "preserve-3d",
             overflow: "hidden",
           }}
         >
-          {/* GRAIN */}
+          {/* Dynamic glow overlay */}
           <div
             style={{
               position: "absolute",
               inset: 0,
-              backgroundImage:
-                "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\"><filter id=\"n\"><feTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"4\"/></filter><rect width=\"200\" height=\"200\" filter=\"url(%23n)\" opacity=\"0.08\"/></svg>')",
+              background: `radial-gradient(600px circle at 50% 0%, ${tiltGlow}30, transparent 70%)`,
               pointerEvents: "none",
+              opacity: 0.7,
             }}
           />
 
-          {/* CONTENT */}
           <motion.div variants={containerVariant}>
             <motion.h2
               className="cta-heading"
@@ -147,9 +187,6 @@ export default function CTASection({
                 shineColor="#ffffff"
                 spread={120}
                 direction="left"
-                yoyo={false}
-                pauseOnHover={false}
-                disabled={false}
               />
             </motion.h2>
 
@@ -161,7 +198,7 @@ export default function CTASection({
                 margin: "0 auto 40px",
                 fontSize: "16px",
                 lineHeight: 1.6,
-                color: "rgba(255,255,255,0.8)",
+                color: "rgba(255,255,255,0.85)",
               }}
             >
               Harness the power of AI to grow your portfolio with confidence and

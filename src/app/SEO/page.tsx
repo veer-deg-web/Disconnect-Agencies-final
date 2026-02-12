@@ -16,12 +16,10 @@ export default function SEOPage() {
       <FeaturedServicesSection />
       <UIUXPricing />
       <ReviewsSection />
-     <CTASection
-  gradient="radial-gradient(80% 120% at 50% 100%, 
-  #3B6CFF 0%, 
-  rgba(59,108,255,0.35) 35%, 
-  #0b0b0b 70%, 
-  #0b0b0b 100%)"
+    <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #3755CD 0%, rgba(55,85,205,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#3755CD"
+  tiltIntensity={14}
 />
       <Footer />
     </main>

@@ -62,7 +62,11 @@ export default function Home() {
   faqs={faqs}
   defaultOpenIndex={0}
 />
-      <CTASection/>
+      <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#DE5E03"
+  tiltIntensity={14}
+/>
       <Footer/>
     </PageBackground>
     

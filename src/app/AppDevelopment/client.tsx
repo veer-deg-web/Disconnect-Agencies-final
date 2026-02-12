@@ -33,11 +33,9 @@ export default function HomePage() {
 
 />
      <CTASection
-  gradient="radial-gradient(80% 120% at 50% 100%, 
-    #7C8CF8 0%, 
-    #5869E3 35%, 
-    #1E1F3A 65%, 
-    #0B0F1F 100%)"
+  gradient="radial-gradient(80% 120% at 50% 100%, #3B4EC3 0%, rgba(59,78,195,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#3B4EC3"
+  tiltIntensity={14}
 />
       <Footer/>
     </main>
