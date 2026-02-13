@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView, cubicBezier } from "framer-motion";
-import { useRef } from "react";
+import { useRef,useState } from "react";
 import { useRouter } from "next/navigation";
 import ShinyText from "./ShinyText";
 import SpotlightCard from "./SpotlightCard";
@@ -119,38 +119,88 @@ export default function ServicesSection() {
     margin: "0 auto",
   }}
 >
-        {services.map((service) => (
-          <motion.div
-            key={service.title}
-            initial={{ opacity: 0, y: 40, scale: 0.96 }}
-            animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-            transition={{ duration: 0.6, ease }}
-            whileHover={{ scale: 1.04 }}
-          >
-            {/* ✅ SINGLE SpotlightCard */}
-            <motion.div
-  whileHover={{ scale: 1.04 }}
-  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-  onClick={() => router.push(service.route)}
-  role="button"
-  tabIndex={0}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") router.push(service.route);
-  }}
->
-  {/* ✅ SINGLE SpotlightCard (NO onClick here) */}
-  <SpotlightCard
-    spotlightColor="rgba(255, 90, 0, 0.25)"
-    className="service-card"
-  >
-    <div className="service-icon">{service.icon}</div>
-    <h3>{service.title}</h3>
-    <p>{service.description}</p>
-  </SpotlightCard>
-</motion.div>
-          </motion.div>
-        ))}
+   {services.map((service) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [glow, setGlow] = useState({ x: 50, y: 50 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.innerWidth < 768) return;
+
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -8;
+    const rotateY = ((x - centerX) / centerX) * 8;
+
+    card.style.transform = `
+      perspective(1200px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      translateY(-8px)
+    `;
+
+    setGlow({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+    });
+  };
+
+  const resetTilt = () => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    card.style.transform =
+      "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+  };
+
+  return (
+    <motion.div
+      key={service.title}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease }}
+    >
+      <div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={resetTilt}
+        onClick={() => router.push(service.route)}
+        style={{
+          position: "relative",
+          transformStyle: "preserve-3d",
+          transition:
+            "transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease",
+        }}
+      >
+        {/* 🔥 Glow Layer */}
+        <div
+          className="card-glow"
+          style={{
+            background: `radial-gradient(circle at ${glow.x}% ${glow.y}%,
+              rgba(255,90,0,0.35),
+              transparent 60%)`,
+          }}
+        />
+
+        <SpotlightCard
+          spotlightColor="rgba(255, 90, 0, 0.25)"
+          className="service-card"
+        >
+          <div className="service-icon">{service.icon}</div>
+          <h3>{service.title}</h3>
+          <p>{service.description}</p>
+        </SpotlightCard>
       </div>
+    </motion.div>
+  );
+})}</div>
 
       {/* MOBILE TYPE SCALE */}
       <style>{`
@@ -186,6 +236,29 @@ export default function ServicesSection() {
           line-height: 1.6;
           color: rgba(255,255,255,0.75);
         }
+          .card-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  pointer-events: none;
+  transition: background 0.2s ease;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+.service-card {
+  position: relative;
+  z-index: 1;
+  border-radius: 20px;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.05);
+
+  transition:
+    transform 0.4s cubic-bezier(0.22,1,0.36,1),
+    box-shadow 0.4s ease;
+}
           .services-grid {
   grid-template-columns: repeat(3, 1fr); /* Desktop: 3 columns */
 }
