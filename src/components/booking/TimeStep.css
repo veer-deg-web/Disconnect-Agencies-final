@@ -4,134 +4,174 @@
 
 .time-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 40px;
-  align-items: flex-start;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: start;
 }
 
-/* Tablet */
 @media (max-width: 1024px) {
   .time-layout {
     grid-template-columns: 1fr;
-    gap: 32px;
   }
 }
 
 /* =====================================================
-   DATE SECTION
+   RIGHT SIDE
+===================================================== */
+
+.time-right {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 480px;
+  margin-left: auto;
+}
+
+/* =====================================================
+   DATE BOX
 ===================================================== */
 
 .time-date {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.time-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-/* =====================================================
-   TIME PANEL
-===================================================== */
-
-.time-panel {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
+  padding: 20px;
   border-radius: 20px;
-  padding: 24px;
 
-  max-height: 450px;
-  overflow-y: auto;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(20px);
 }
 
 /* =====================================================
-   TIME SLOT BUTTON
+   CAROUSEL
 ===================================================== */
 
-.time-slot {
-  width: 100%;
-  padding: 12px 16px;
-  margin-bottom: 12px;
+.time-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
 
-  border-radius: 14px;
-  text-align: left;
-
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-
-  font-size: 15px;
+.arrow-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 18px;
   cursor: pointer;
 
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: all 0.25s ease;
 }
 
-.time-slot:hover {
-  background: rgba(255, 255, 255, 0.18);
+.arrow-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.12);
 }
 
-.time-slot--active {
-  background: #2563eb;
-  color: #ffffff;
+.arrow-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Time Display */
+
+.time-display {
+  flex: 1;
+  text-align: center;
+}
+
+.time-slot-display {
+  font-size: 28px;
+  font-weight: 600;
+  padding: 16px 0;
+
+  border-radius: 16px;
+
+  background: linear-gradient(
+    to bottom right,
+    rgba(124,58,237,0.3),
+    rgba(255,255,255,0.08)
+  );
+
+  border: 1px solid rgba(124,58,237,0.5);
+
+  box-shadow:
+    0 15px 40px rgba(124,58,237,0.25);
 }
 
 /* =====================================================
-   ACTION BUTTONS
+   PROGRESS BAR
+===================================================== */
+
+.time-progress {
+  height: 6px;
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.time-progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    #7c3aed,
+    #a855f7
+  );
+  transition: width 0.4s ease;
+}
+
+/* =====================================================
+   ACTIONS
 ===================================================== */
 
 .time-actions {
+  margin-top: 36px;
   display: flex;
-  gap: 16px;
-  margin-top: 24px;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.time-back,
+.time-next {
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .time-back {
-  padding: 14px 24px;
-  border-radius: 16px;
-
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
   color: #ffffff;
 }
 
 .time-next {
-  padding: 14px 24px;
-  border-radius: 16px;
-
   background: #ffffff;
   color: #000000;
+}
 
-  font-weight: 600;
+.time-next--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* =====================================================
-   MOBILE (≤360px | 344 SAFE)
+   MOBILE (344px SAFE)
 ===================================================== */
 
 @media (max-width: 360px) {
-  .time-title {
-    font-size: 20px;
-  }
-
-  .time-panel {
-    padding: 20px;
-    max-height: none;
-  }
-
-  .time-slot {
-    font-size: 14px;
-    padding: 12px;
+  .time-slot-display {
+    font-size: 22px;
   }
 
   .time-actions {
     flex-direction: column;
   }
 
-  .time-back,
-  .time-next {
+  .time-next,
+  .time-back {
     width: 100%;
-    text-align: center;
   }
 }

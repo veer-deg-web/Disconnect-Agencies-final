@@ -4,8 +4,9 @@
 
 .calendar-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 40px;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: start;
 }
 
 /* Tablet */
@@ -16,11 +17,24 @@
 }
 
 /* =====================================================
-   MAIN CALENDAR
+   CALENDAR CONTAINER
 ===================================================== */
 
 .calendar-main {
-  grid-column: span 2;
+  max-width: 420px;
+  width: 100%;
+  margin-left: auto;
+  padding: 24px;
+  border-radius: 24px;
+
+  background: linear-gradient(
+    to bottom right,
+    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.02)
+  );
+
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 /* =====================================================
@@ -29,26 +43,35 @@
 
 .calendar-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .calendar-title {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   color: #ffffff;
 }
 
+/* =====================================================
+   NAV BUTTONS
+===================================================== */
+
 .nav-btn {
-  padding: 4px 8px;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 18px;
-  transition: color 0.2s ease;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #fff;
+
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
 }
 
 .nav-btn:hover {
-  color: #ffffff;
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-1px);
 }
 
 /* =====================================================
@@ -58,27 +81,19 @@
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  opacity: 0.6;
+  margin-bottom: 10px;
 }
 
 /* =====================================================
-   CALENDAR GRID
+   GRID
 ===================================================== */
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-
-  padding: 24px;
-  border-radius: 16px;
-
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  gap: 6px;
 }
 
 /* =====================================================
@@ -86,92 +101,82 @@
 ===================================================== */
 
 .calendar-day {
-  padding: 12px 0;
   border-radius: 12px;
-  font-size: 14px;
+  padding: 8px 0;
+  background: transparent;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition:
+    transform 0.2s cubic-bezier(0.22,1,0.36,1),
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.calendar-day:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.day-disabled {
-  color: rgba(255, 255, 255, 0.25);
-  cursor: not-allowed;
-  background: rgba(255, 255, 255, 0.05);
+.calendar-day:hover:not(.day-disabled) {
+  transform: scale(1.08);
+  background: rgba(255,255,255,0.08);
 }
 
 .day-selected {
-  background: #2563eb;
-  color: #ffffff;
-}
-
-/* =====================================================
-   ACTION BUTTONS
-===================================================== */
-
-.calendar-actions {
-  display: flex;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-
-.btn-secondary {
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  color: #ffffff;
-}
-
-.btn-primary {
-  padding: 12px 24px;
   background: #ffffff;
   color: #000000;
-  border-radius: 12px;
-  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(255,255,255,0.2);
 }
 
-.btn-disabled {
-  background: rgba(255, 255, 255, 0.3);
-  color: rgba(0, 0, 0, 0.3);
+.day-disabled {
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
 /* =====================================================
-   MOBILE (≤360px | 344 SAFE)
+   ACTIONS
+===================================================== */
+
+.calendar-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.btn-secondary,
+.btn-primary {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.btn-primary {
+  background: #ffffff;
+  color: #000000;
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   344px SAFE
 ===================================================== */
 
 @media (max-width: 360px) {
-  .calendar-title {
-    font-size: 24px;
-  }
-
-  .calendar-grid {
-    padding: 16px;
-    gap: 8px;
+  .calendar-main {
+    padding: 18px;
+    max-width: 100%;
   }
 
   .calendar-day {
-    font-size: 13px;
-    padding: 10px 0;
-  }
-
-  .calendar-actions {
-    flex-direction: column;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    text-align: center;
+    padding: 6px 0;
+    font-size: 14px;
   }
 }

@@ -4,16 +4,14 @@
 
 .category-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(24px, 4vw, 48px);
   align-items: center;
 }
 
-/* Tablet & below */
 @media (max-width: 1024px) {
   .category-layout {
     grid-template-columns: 1fr;
-    gap: 32px;
   }
 }
 
@@ -25,6 +23,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  max-width: 420px;
+  margin-left: auto;
 }
 
 /* =====================================================
@@ -32,43 +32,104 @@
 ===================================================== */
 
 .category-title {
-  font-size: 36px;
+  font-size: clamp(28px, 4vw, 36px);
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   color: #ffffff;
 }
 
 /* =====================================================
-   SELECT
+   CUSTOM SELECT
 ===================================================== */
 
-.category-select {
+.custom-select {
+  position: relative;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+}
 
+.select-trigger {
+  width: 100%;
   padding: 14px 16px;
   border-radius: 16px;
 
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
   backdrop-filter: blur(20px);
 
   color: #ffffff;
   font-size: 16px;
 
-  outline: none;
-  appearance: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
 }
 
-.category-select:focus {
-  border-color: rgba(255, 255, 255, 0.35);
+.select-trigger:hover {
+  border-color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
 }
 
-/* Option styling (supported browsers) */
-.category-option {
-  background: #000000;
+.arrow {
+  transition: transform 0.25s ease;
+}
+
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+/* =====================================================
+   DROPDOWN
+===================================================== */
+
+.select-dropdown {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+
+  padding: 10px;
+  border-radius: 18px;
+
+  background: linear-gradient(
+    to bottom right,
+    rgba(15,15,15,0.95),
+    rgba(40,40,40,0.95)
+  );
+
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,0.1);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.6),
+    0 0 40px rgba(124,58,237,0.15);
+
+  z-index: 50;
+}
+
+/* =====================================================
+   OPTIONS
+===================================================== */
+
+.select-option {
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
   color: #ffffff;
+
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+}
+
+.select-option:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateX(4px);
+}
+
+.select-option.active {
+  background: rgba(124,58,237,0.25);
 }
 
 /* =====================================================
@@ -86,31 +147,28 @@
   font-size: 16px;
   cursor: pointer;
 
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
 }
 
 .category-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(255,255,255,0.2);
 }
 
 /* =====================================================
-   MOBILE (≤360px | 344 SAFE)
+   MOBILE SAFE (344px)
 ===================================================== */
 
 @media (max-width: 360px) {
-  .category-title {
-    font-size: 28px;
+  .category-panel {
+    max-width: 100%;
   }
 
-  .category-select {
-    padding: 12px 14px;
-    font-size: 15px;
+  .category-title {
+    font-size: 26px;
   }
 
   .category-btn {
     width: 100%;
-    padding: 14px;
-    text-align: center;
   }
 }

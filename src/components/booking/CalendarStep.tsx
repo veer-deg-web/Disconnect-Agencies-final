@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
 import "./CalendarStep.css";
 
-export default function CalendarStep({ category, date, setDate, next, back }: any) {
+export default function CalendarStep({
+  category,
+  date,
+  setDate,
+  next,
+  back,
+}: any) {
   const today = new Date();
 
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -31,7 +38,8 @@ export default function CalendarStep({ category, date, setDate, next, back }: an
 
   const prevMonth = () => {
     const isCurrent =
-      currentMonth === today.getMonth() && currentYear === today.getFullYear();
+      currentMonth === today.getMonth() &&
+      currentYear === today.getFullYear();
 
     if (isCurrent) return;
 
@@ -46,7 +54,11 @@ export default function CalendarStep({ category, date, setDate, next, back }: an
 
   const isPast = (day: number) => {
     const check = new Date(currentYear, currentMonth, day);
-    const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const todayMid = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
     return check < todayMid;
   };
 
@@ -54,78 +66,93 @@ export default function CalendarStep({ category, date, setDate, next, back }: an
     <StepWrapper>
       <div className="calendar-layout">
 
+        {/* LEFT */}
         <ServiceInfoCard category={category} />
 
-        {/* MAIN CALENDAR */}
-        <div className="calendar-main">
+        {/* RIGHT */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${currentMonth}-${currentYear}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{
+              duration: 0.45,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="calendar-main"
+          >
 
-          {/* MONTH HEADER */}
-          <div className="calendar-header">
-            <button onClick={prevMonth} className="nav-btn">←</button>
+            {/* HEADER */}
+            <div className="calendar-header">
+              <button onClick={prevMonth} className="nav-btn">←</button>
 
-            <h2 className="calendar-title">
-              {monthNames[currentMonth]} {currentYear}
-            </h2>
+              <h2 className="calendar-title">
+                {monthNames[currentMonth]} {currentYear}
+              </h2>
 
-            <button onClick={nextMonth} className="nav-btn">→</button>
-          </div>
+              <button onClick={nextMonth} className="nav-btn">→</button>
+            </div>
 
-          {/* DAYS TITLE */}
-          <div className="calendar-weekdays">
-            <div>Sun</div><div>Mon</div><div>Tue</div>
-            <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-          </div>
+            {/* WEEKDAYS */}
+            <div className="calendar-weekdays">
+              <div>Sun</div><div>Mon</div><div>Tue</div>
+              <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
 
-          {/* FULL CALENDAR */}
-          <div className="calendar-grid">
+            {/* GRID */}
+            <div className="calendar-grid">
 
-            {Array.from({ length: firstDay }).map((_, i) => (
-              <div key={`empty-${i}`} />
-            ))}
+              {Array.from({ length: firstDay }).map((_, i) => (
+                <div key={`empty-${i}`} />
+              ))}
 
-            {Array.from({ length: daysInMonth }).map((_, i) => {
-              const day = i + 1;
-              const disabled = isPast(day);
+              {Array.from({ length: daysInMonth }).map((_, i) => {
+                const day = i + 1;
+                const disabled = isPast(day);
 
-              const isSelected =
-                date instanceof Date &&
-                date.getDate() === day &&
-                date.getMonth() === currentMonth &&
-                date.getFullYear() === currentYear;
+                const isSelected =
+                  date instanceof Date &&
+                  date.getDate() === day &&
+                  date.getMonth() === currentMonth &&
+                  date.getFullYear() === currentYear;
 
-              return (
-                <button
-                  key={day}
-                  disabled={disabled}
-                  onClick={() =>
-                    !disabled && setDate(new Date(currentYear, currentMonth, day))
-                  }
-                  className={`calendar-day
-                    ${disabled ? "day-disabled" : ""}
-                    ${isSelected ? "day-selected" : ""}
-                  `}
-                >
-                  {day}
-                </button>
-              );
-            })}
-          </div>
+                return (
+                  <button
+                    key={day}
+                    disabled={disabled}
+                    onClick={() =>
+                      !disabled &&
+                      setDate(new Date(currentYear, currentMonth, day))
+                    }
+                    className={`calendar-day
+                      ${disabled ? "day-disabled" : ""}
+                      ${isSelected ? "day-selected" : ""}
+                    `}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* NAV BUTTONS */}
-          <div className="calendar-actions">
-            <button onClick={back} className="btn-secondary">
-              ← Back
-            </button>
+            {/* ACTIONS */}
+            <div className="calendar-actions">
+              <button onClick={back} className="btn-secondary">
+                ← Back
+              </button>
 
-            <button
-              onClick={next}
-              disabled={!date}
-              className={`btn-primary ${!date ? "btn-disabled" : ""}`}
-            >
-              Continue →
-            </button>
-          </div>
-        </div>
+              <button
+                onClick={next}
+                disabled={!date}
+                className={`btn-primary ${!date ? "btn-disabled" : ""}`}
+              >
+                Continue →
+              </button>
+            </div>
+
+          </motion.div>
+        </AnimatePresence>
       </div>
     </StepWrapper>
   );
