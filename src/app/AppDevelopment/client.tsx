@@ -19,7 +19,8 @@ export default function HomePage() {
       <BuildPocket/>
       <StickyProcess/>
       <Reviews/>
-      <PricingSection
+     <section id="pricing">
+        <PricingSection
   headingTitle="AI-Powered Pricing Built to Scale"
   headingGradient={[
     "#5869E3", // primary indigo
@@ -27,7 +28,9 @@ export default function HomePage() {
     "#A5B4FC", // light indigo highlight
   ]}
   accentColor="#5869E3"
-/><FAQSection
+/>
+</section>
+<FAQSection
   faqs={faqs}
   accentColor="#5869E3"
 

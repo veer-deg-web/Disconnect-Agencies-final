@@ -72,7 +72,9 @@ export default function UIUXPage() {
       <UIUXBenefits />
       <UIUXFeatures />
       <UIUXSolutions />
-      <UIUXPricing />
+      <section id="pricing">
+        <UIUXPricing />
+      </section>
        <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
       <UIUXTutorials />
       <FAQSection

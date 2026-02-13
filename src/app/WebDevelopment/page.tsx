@@ -69,7 +69,9 @@ export default function WebDevelopmentPage() {
   ]}
 />
 <IntegrationLogosSection />
-<PricingSection />
+<section id="pricing">
+  <PricingSection />
+</section>
      
 <FAQSection
         title={`Questions?\nWe're here to assist!`}

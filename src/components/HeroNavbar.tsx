@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link"; // ✅ added
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { MorphingLoginButton } from "./HeroContent";
@@ -19,10 +19,8 @@ export default function HeroNavbar() {
       return;
     }
 
-    if (item === "Pricing") router.push("/pricing");
-
-    // ❌ removed old Services route
-    // if (item === "Services") router.push("/services");
+    // ❌ removed old Pricing route
+    // if (item === "Pricing") router.push("/pricing");
 
     if (item === "Benefit") router.push("/benefit");
     if (item === "Book A Call") router.push("/book-call");
@@ -73,7 +71,7 @@ export default function HeroNavbar() {
             justifyContent: "space-between",
           }}
         >
-          {/* LOGO → GO HOME */}
+          {/* LOGO */}
           <div
             style={{ flexShrink: 0, cursor: "pointer" }}
             onClick={() => router.push("/")}
@@ -112,7 +110,7 @@ export default function HeroNavbar() {
                       "rgba(255,255,255,0.7)")
                   }
                 >
-                  {/* ✅ Only Services uses Link */}
+                  {/* ✅ SERVICES SCROLL */}
                   {item === "Services" ? (
                     <Link
                       href="/#services"
@@ -123,6 +121,18 @@ export default function HeroNavbar() {
                       }}
                     >
                       Services
+                    </Link>
+                  ) : item === "Pricing" ? (
+                    /* ✅ PRICING SCROLL (CURRENT PAGE) */
+                    <Link
+                      href={`${pathname}#pricing`}
+                      onClick={() => setOpen(false)}
+                      style={{
+                        color: "inherit",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Pricing
                     </Link>
                   ) : (
                     <span onClick={() => handleNavigate(item)}>
@@ -221,6 +231,14 @@ export default function HeroNavbar() {
                       style={{ color: "#fff", textDecoration: "none" }}
                     >
                       Services
+                    </Link>
+                  ) : item === "Pricing" ? (
+                    <Link
+                      href={`${pathname}#pricing`}
+                      onClick={() => setOpen(false)}
+                      style={{ color: "#fff", textDecoration: "none" }}
+                    >
+                      Pricing
                     </Link>
                   ) : (
                     <span onClick={() => handleNavigate(item)}>

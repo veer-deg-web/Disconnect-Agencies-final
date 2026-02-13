@@ -27,7 +27,8 @@ export default function Ai() {
         buttonText="Download"
       />
       <BenefitsSection />
-      <PricingSection
+      <section id="pricing">
+        <PricingSection
   headingTitle="AI-Powered Pricing Built to Scale"
   headingGradient={[
     "#7C3AED", // violet
@@ -35,7 +36,7 @@ export default function Ai() {
     "#22D3EE", // cyan accent
   ]}
   accentColor="#7C3AED"
-/>
+/></section>
       <TestimonialsSection />
       <FAQSection
   faqs={faqs}
