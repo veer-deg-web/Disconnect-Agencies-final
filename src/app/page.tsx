@@ -52,7 +52,8 @@ export default function Home() {
       </main>
       <VisionShowcase />
       <section id="services">
-      <ServicesSection/></section>
+      <ServicesSection/>
+      </section>
       <GrowthShowcaseSection />
       <SmartGrowthSection />
       

@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link"; // ✅ added
 import { useState } from "react";
-import { useRouter,usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { MorphingLoginButton } from "./HeroContent";
 
 export default function HeroNavbar() {
@@ -18,9 +19,11 @@ export default function HeroNavbar() {
       return;
     }
 
-    // Add routes as needed
     if (item === "Pricing") router.push("/pricing");
-    if (item === "Services") router.push("/services");
+
+    // ❌ removed old Services route
+    // if (item === "Services") router.push("/services");
+
     if (item === "Benefit") router.push("/benefit");
     if (item === "Book A Call") router.push("/book-call");
   };
@@ -101,7 +104,6 @@ export default function HeroNavbar() {
                 <li
                   key={item}
                   style={{ cursor: "pointer" }}
-                  onClick={() => handleNavigate(item)}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.color = "#fff")
                   }
@@ -110,7 +112,23 @@ export default function HeroNavbar() {
                       "rgba(255,255,255,0.7)")
                   }
                 >
-                  {item}
+                  {/* ✅ Only Services uses Link */}
+                  {item === "Services" ? (
+                    <Link
+                      href="/#services"
+                      onClick={() => setOpen(false)}
+                      style={{
+                        color: "inherit",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Services
+                    </Link>
+                  ) : (
+                    <span onClick={() => handleNavigate(item)}>
+                      {item}
+                    </span>
+                  )}
                 </li>
               )
             )}
@@ -187,7 +205,6 @@ export default function HeroNavbar() {
               (item) => (
                 <div
                   key={item}
-                  onClick={() => handleNavigate(item)}
                   style={{
                     padding: "14px 0",
                     fontSize: "16px",
@@ -197,7 +214,19 @@ export default function HeroNavbar() {
                     cursor: "pointer",
                   }}
                 >
-                  {item}
+                  {item === "Services" ? (
+                    <Link
+                      href="/#services"
+                      onClick={() => setOpen(false)}
+                      style={{ color: "#fff", textDecoration: "none" }}
+                    >
+                      Services
+                    </Link>
+                  ) : (
+                    <span onClick={() => handleNavigate(item)}>
+                      {item}
+                    </span>
+                  )}
                 </div>
               )
             )}
