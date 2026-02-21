@@ -3,84 +3,81 @@
 import { useEffect, useRef } from "react";
 import "./OurWorkStack.css";
 
+const cards = [
+  { src: "/Stack1.png", alt: "Work 1" },
+  { src: "/Stack2.png", alt: "Work 2" },
+  { src: "/Stack3.png", alt: "Work 3" },
+];
+
+const N = cards.length; // 3
+
 export default function OurWorkStack() {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const wrapperRef  = useRef<HTMLDivElement>(null);
+  const slidersRef  = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
 
+    /**
+     * Scroll logic
+     * ─────────────────────────────────────────────────────
+     * wrapper height = N × 100vh  →  (N-1) × 100vh of scroll travel
+     * rect.top goes from 0 to -(N-1)×vh as we scroll through.
+     *
+     * Card 0 (base): stays at translateY = 0 always
+     * Card i (i > 0): slides in from +100vh → 0 over its own 100vh segment
+     */
     const onScroll = () => {
-      const scrollY = window.scrollY;
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
-      const vh = window.innerHeight;
+      const rect    = wrapper.getBoundingClientRect();
+      const vh      = window.innerHeight;
+      const scrolled = -rect.top; // 0 → (N-1)*vh
 
-      // shared progress for the whole section
-      const progress =
-        (scrollY - sectionTop) / (sectionHeight - vh);
-      const clamped = Math.max(0, Math.min(1, progress));
+      slidersRef.current.forEach((slider, i) => {
+        if (!slider) return;
 
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
-
-        // THIS is the correct stacking math
-        const localProgress = clamped * 3 - index;
-
-        let translateY = vh;
-
-        if (localProgress >= 1) {
-          translateY = 0;
-        } else if (localProgress > 0) {
-          translateY = vh * (1 - localProgress);
+        if (i === 0) {
+          slider.style.transform = "translateY(0)";
+          return;
         }
 
-        card.style.transform = `translate3d(0, ${translateY}px, 0)`;
+        // segment for card i: scrolled in [  (i-1)*vh , i*vh  ]
+        const raw = scrolled - (i - 1) * vh;
+        const t   = Math.max(0, Math.min(1, raw / vh)); // 0 → 1
+        const ty  = vh * (1 - t);                       // vh → 0
+
+        slider.style.transform = `translateY(${ty}px)`;
       });
     };
 
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <section ref={sectionRef} className="our-work-section">
-      <div className="our-work-sticky">
-        {/* IMAGE 1 */}
-        <div
-          ref={(el) => {
-            cardsRef.current[0] = el;
-          }}
-          className="our-work-card"
-          style={{ zIndex: 1 }}
-        >
-          <img src="/Stack1.png" alt="Work 1" />
-        </div>
-
-        {/* IMAGE 2 */}
-        <div
-          ref={(el) => {
-            cardsRef.current[1] = el;
-          }}
-          className="our-work-card"
-          style={{ zIndex: 2 }}
-        >
-          <img src="/Stack2.png" alt="Work 2" />
-        </div>
-
-        {/* IMAGE 3 */}
-        <div
-          ref={(el) => {
-            cardsRef.current[2] = el;
-          }}
-          className="our-work-card"
-          style={{ zIndex: 3 }}
-        >
-          <img src="/Stack3.png" alt="Work 3" />
-        </div>
+    /* wrapper: 300vh → creates 200vh of scroll travel */
+    <div ref={wrapperRef} className="work-stack-wrapper">
+      <div className="work-stack-sticky">
+        {cards.map((c, i) => (
+          /*
+           * Two-element structure:
+           *   .work-stack-outer  — absolute inset 0, handles z-index
+           *   .work-stack-slider — JS sets translateY on this
+           *   .work-stack-card   — the visible card, centered inside slider
+           */
+          <div key={i} className="work-stack-outer" style={{ zIndex: i + 1 }}>
+            <div
+              ref={(el) => { slidersRef.current[i] = el; }}
+              className="work-stack-slider"
+            >
+              <div className="work-stack-card">
+                <img src={c.src} alt={c.alt} loading="lazy" />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }

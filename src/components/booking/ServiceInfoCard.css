@@ -3,30 +3,21 @@
 ===================================================== */
 
 .service-card {
-  position: relative; /* 🔥 required for glow */
+  position: relative;
   width: 100%;
-  padding: clamp(20px, 4vw, 28px);
+  padding: clamp(18px, 3vw, 28px);
   border-radius: 20px;
-
-  background: linear-gradient(
-    to bottom right,
-    #050505,
-    rgba(255, 255, 255, 0.02)
-  );
-
+  background: linear-gradient(to bottom right,
+      #050505,
+      rgba(255, 255, 255, 0.02));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-
   border: 1px solid rgba(255, 255, 255, 0.1);
-
   display: flex;
   flex-direction: column;
   gap: 12px;
-
   color: #ffffff;
   overflow: hidden;
-
-  /* 🔥 Performance + smoother tilt */
   will-change: transform;
   transform-style: preserve-3d;
   transition:
@@ -34,12 +25,18 @@
     border-color 0.3s ease;
 }
 
-/* Subtle hover depth */
 .service-card:hover {
   border-color: rgba(255, 255, 255, 0.2);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.6),
     0 0 40px rgba(124, 58, 237, 0.15);
+}
+
+/* ── On mobile, service card renders BELOW the step panel ── */
+@media (max-width: 780px) {
+  .service-card {
+    order: 2;
+  }
 }
 
 /* =====================================================
@@ -51,16 +48,12 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-
   opacity: 0.9;
   transition: background 0.2s ease;
-
-  /* makes glow blend nicely */
   mix-blend-mode: screen;
 }
 
-/* Ensure content stays above glow */
-.service-card > * {
+.service-card>* {
   position: relative;
   z-index: 1;
 }
@@ -71,9 +64,15 @@
 
 .service-card__image {
   width: 100%;
-  height: clamp(140px, 28vw, 180px);
+  height: clamp(120px, 22vw, 180px);
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 14px;
+}
+
+@media (max-width: 780px) {
+  .service-card__image {
+    height: 140px;
+  }
 }
 
 /* =====================================================
@@ -81,7 +80,7 @@
 ===================================================== */
 
 .service-card__title {
-  font-size: clamp(20px, 5vw, 24px);
+  font-size: clamp(18px, 3vw, 22px);
   font-weight: 700;
   margin: 0;
 }
@@ -94,8 +93,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: clamp(13px, 3.5vw, 15px);
-  color: rgba(209, 213, 219, 1);
+  font-size: clamp(13px, 2.5vw, 14px);
+  color: rgba(209, 213, 219, 0.9);
 }
 
 /* =====================================================
@@ -104,25 +103,21 @@
 
 .service-card__note {
   margin-top: auto;
-  font-size: clamp(12px, 3vw, 13px);
-  color: rgba(156, 163, 175, 1);
+  font-size: 13px;
+  color: rgba(156, 163, 175, 0.85);
   line-height: 1.6;
 }
 
 /* =====================================================
-   MOBILE SAFE (344px)
+   344px SAFE
 ===================================================== */
 
 @media (max-width: 360px) {
   .service-card {
-    padding: 18px;
+    padding: 16px;
   }
 
   .service-card__image {
-    height: 130px;
-  }
-
-  .service-card__title {
-    font-size: 20px;
+    height: 120px;
   }
 }
