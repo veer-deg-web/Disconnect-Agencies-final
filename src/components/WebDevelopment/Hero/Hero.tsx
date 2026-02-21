@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/HeroNavbar";
 import { motion, Variants } from "framer-motion";
 import './Hero.css';
 import ShinyText from "../../ShinyText";
@@ -58,7 +57,6 @@ export default function Hero() {
       {/* Overlay */}
       <div className="hero-overlay" />
 
-      <Navbar />
 
       <motion.div
         className="hero-webdev__content"
@@ -70,17 +68,17 @@ export default function Hero() {
         <motion.div className="hero-badge" variants={item}>
           <span className="blink-dot" />
           <span><ShinyText
-  text="We Deliver Stunning Websites Like Never BeforeDisconnect Agencies"
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#c7ff1a"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/></span>
+            text="We Deliver Stunning Websites Like Never BeforeDisconnect Agencies"
+            speed={2}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#c7ff1a"
+            spread={120}
+            direction="left"
+            yoyo={false}
+            pauseOnHover={false}
+            disabled={false}
+          /></span>
         </motion.div>
 
         {/* Title */}
@@ -104,8 +102,8 @@ export default function Hero() {
           </button>
         </motion.div>
       </motion.div>
-     
+
     </section>
-    
+
   );
 }

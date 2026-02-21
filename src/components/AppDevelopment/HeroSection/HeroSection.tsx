@@ -9,7 +9,6 @@ import {
   SiTailwindcss,
 } from "react-icons/si";
 
-import Navbar from "@/components/HeroNavbar";
 import BookCallButton from "@/components/BookCallButton";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import ShinyText from "@/components/ShinyText";
@@ -31,42 +30,42 @@ export default function HeroSection() {
 
   // 🔥 Memoized Hyperspeed config (prevents WebGL recreation)
   const hyperspeedOptions = useMemo(() => ({
-  distortion: "turbulentDistortion",
-  length: 400,
-  roadWidth: 10,
-  islandWidth: 2,
-  lanesPerRoad: 3,
-  fov: 90,
-  fovSpeedUp: 150,
-  speedUp: 2,
-  carLightsFade: 0.4,
-  totalSideLightSticks: 20,
-  lightPairsPerRoadWay: 40,
-  shoulderLinesWidthPercentage: 0.05,
-  brokenLinesWidthPercentage: 0.1,
-  brokenLinesLengthPercentage: 0.5,
+    distortion: "turbulentDistortion",
+    length: 400,
+    roadWidth: 10,
+    islandWidth: 2,
+    lanesPerRoad: 3,
+    fov: 90,
+    fovSpeedUp: 150,
+    speedUp: 2,
+    carLightsFade: 0.4,
+    totalSideLightSticks: 20,
+    lightPairsPerRoadWay: 40,
+    shoulderLinesWidthPercentage: 0.05,
+    brokenLinesWidthPercentage: 0.1,
+    brokenLinesLengthPercentage: 0.5,
 
-  lightStickWidth: [0.12, 0.5] as [number, number],
-  lightStickHeight: [1.3, 1.7] as [number, number],
-  movingAwaySpeed: [60, 80] as [number, number],
-  movingCloserSpeed: [-120, -160] as [number, number],
-  carLightsLength: [12, 80] as [number, number],
-  carLightsRadius: [0.05, 0.14] as [number, number],
-  carWidthPercentage: [0.3, 0.5] as [number, number],
-  carShiftX: [-0.8, 0.8] as [number, number],
-  carFloorSeparation: [0, 5] as [number, number],
+    lightStickWidth: [0.12, 0.5] as [number, number],
+    lightStickHeight: [1.3, 1.7] as [number, number],
+    movingAwaySpeed: [60, 80] as [number, number],
+    movingCloserSpeed: [-120, -160] as [number, number],
+    carLightsLength: [12, 80] as [number, number],
+    carLightsRadius: [0.05, 0.14] as [number, number],
+    carWidthPercentage: [0.3, 0.5] as [number, number],
+    carShiftX: [-0.8, 0.8] as [number, number],
+    carFloorSeparation: [0, 5] as [number, number],
 
-  colors: {
-    roadColor: 526344,
-    islandColor: 657930,
-    background: 0,
-    shoulderLines: 1250072,
-    brokenLines: 1250072,
-    leftCars: [14177983, 6770850, 12732332],
-    rightCars: [242627, 941733, 3294549],
-    sticks: 242627,
-  },
-}), []);
+    colors: {
+      roadColor: 526344,
+      islandColor: 657930,
+      background: 0,
+      shoulderLines: 1250072,
+      brokenLines: 1250072,
+      leftCars: [14177983, 6770850, 12732332],
+      rightCars: [242627, 941733, 3294549],
+      sticks: 242627,
+    },
+  }), []);
   return (<>
     <section className={`hero ${loaded ? "hero--loaded" : ""}`}>
       {/* 🔥 Hyperspeed Background */}
@@ -74,7 +73,6 @@ export default function HeroSection() {
         <Hyperspeed effectOptions={hyperspeedOptions} />
       </div>
 
-      <Navbar />
 
       {/* ================= TEXT ================= */}
       <div className="hero__content">
@@ -118,9 +116,9 @@ export default function HeroSection() {
       </div>
 
       {/* ================= LOGOS ================= */}
-      
+
     </section><div className="logos-below-phone">
-        <UIUXShowcaseLogos logos={heroLogos} iconGap={200} />
-      </div></>
+      <UIUXShowcaseLogos logos={heroLogos} iconGap={200} />
+    </div></>
   );
 }

@@ -1,4 +1,3 @@
-import HeroNavbar from "@/components/HeroNavbar";
 import UIUXHeroAnimatedContent from "./UIUXHeroAnimatedContent";
 
 export default function UIUXHeroSection() {
@@ -11,7 +10,6 @@ export default function UIUXHeroSection() {
         top: 0,
       }}
     >
-      <HeroNavbar />
       <div
         style={{
           minHeight: "100vh",
