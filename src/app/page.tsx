@@ -64,7 +64,7 @@ export default function Home() {
       <TestimonialsSection/>
       <FAQSection
   title="FAQ"
-  faqs={faqs}
+  category="general"
   defaultOpenIndex={0}
 />
       <CTASection

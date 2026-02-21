@@ -10,7 +10,6 @@ import TestimonialsSection from "@/components/Cloud/Testimonials/TestimonialsSec
 import HeroSection from "@/components/Cloud/Hero/HeroSection";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import CTASection from "@/components/CTASection";
-import{ Cloudfaq } from "@/Data/Cloudfaq";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 
@@ -28,7 +27,7 @@ export default function CloudPage() {
             <ProcessSection/>
             <TestimonialsSection/>
              <FAQSection
-              faqs={Cloudfaq}
+              category="cloud"
               accentColor="#DBFE49"
               title="Answer To Your Queries"
             />

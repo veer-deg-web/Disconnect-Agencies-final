@@ -4,21 +4,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import ShinyText from "./ShinyText";
 import { EASE_SMOOTH } from "@/lib/animations";
+import { useFaq } from "@/lib/useFaq";
 
 /* =======================
    TYPES
 ======================= */
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
+type FaqCategory = "general" | "cloud" | "all";
 
 interface FAQSectionProps {
+  /** Which FAQs to load from the backend. Defaults to "general". */
+  category?: FaqCategory;
   title?: string;
-  faqs?: FAQItem[];
   defaultOpenIndex?: number | null;
-  accentColor?: string; // 🔥 NEW PROP
+  accentColor?: string;
 }
 
 /* =======================
@@ -56,17 +55,69 @@ const itemVariant = {
 };
 
 /* =======================
+   SKELETON LOADER
+======================= */
+
+function FaqSkeleton({ accentColor }: { accentColor: string }) {
+  return (
+    <div style={listStyle}>
+      {[1, 2, 3, 4].map((i) => (
+        <div
+          key={i}
+          style={{
+            ...itemWrapper,
+            borderColor: `${accentColor}22`,
+            padding: "22px 24px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              height: 16,
+              borderRadius: 8,
+              background: `linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.06) 100%)`,
+              backgroundSize: "200% 100%",
+              animation: "faq-shimmer 1.4s infinite",
+              width: `${55 + i * 7}%`,
+            }}
+          />
+          <div
+            style={{
+              width: 22,
+              height: 22,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.06)",
+              flexShrink: 0,
+            }}
+          />
+        </div>
+      ))}
+      <style>{`
+        @keyframes faq-shimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* =======================
    COMPONENT
 ======================= */
 
 export default function FAQSection({
+  category = "general",
   title = "Questions?\nWe're here to assist!",
-  faqs = [],
   defaultOpenIndex = 0,
-  accentColor = "#ff7a18", // ✅ DEFAULT ORANGE
+  accentColor = "#ff7a18",
 }: FAQSectionProps) {
+  const { faqs, loading, error } = useFaq(category);
+
   const [openIndex, setOpenIndex] = useState<number | null>(
-    faqs.length ? defaultOpenIndex : null
+    defaultOpenIndex
   );
 
   return (
@@ -88,7 +139,18 @@ export default function FAQSection({
         />
       </motion.h2>
 
+      {/* LOADING SKELETON */}
+      {loading && <FaqSkeleton accentColor={accentColor} />}
+
+      {/* ERROR */}
+      {!loading && error && (
+        <p style={{ textAlign: "center", color: "rgba(255,100,100,0.7)", fontSize: 14 }}>
+          Failed to load FAQs. Please try again later.
+        </p>
+      )}
+
       {/* FAQ LIST */}
+      {!loading && !error && (
       <motion.div
         variants={listVariant}
         initial="hidden"
@@ -153,6 +215,7 @@ export default function FAQSection({
           );
         })}
       </motion.div>
+      )}
     </section>
   );
 }
