@@ -2,9 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import { easeInOut } from "framer-motion";
 import BookCallButton from "@/components/BookCallButton";
 import ShinyText from "./ShinyText";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 /* =====================
    TYPES
@@ -34,7 +34,7 @@ const fadeUp = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: easeInOut },
+    transition: { duration: 0.8, ease: EASE_SMOOTH },
   },
 };
 
@@ -43,7 +43,7 @@ const cardVariant = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.9, ease: easeInOut },
+    transition: { duration: 0.9, ease: EASE_SMOOTH },
   },
 };
 
@@ -146,6 +146,7 @@ export default function CTASection({
             padding: "96px 32px",
             textAlign: "center",
             background: gradient,
+            ...WILL_CHANGE_TRANSFORM,
             boxShadow: `
               0 0 0 1px rgba(255,255,255,0.05),
               0 40px 120px rgba(0,0,0,0.8),

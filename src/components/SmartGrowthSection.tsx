@@ -1,13 +1,13 @@
 "use client";
 
-import { motion, easeInOut, easeOut } from "framer-motion";
-
+import { motion } from "framer-motion";
 import ShinyText from "./ShinyText";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 /* ======================
    ANIMATION VARIANTS
 ====================== */
-const ease = easeInOut;
+const ease = EASE_SMOOTH;
 
 const headingVariant = {
   hidden: { opacity: 0, y: 60 },
@@ -31,7 +31,7 @@ const imageVariant = {
       },
       opacity: {
         duration: 1.3,
-        ease: easeOut,
+        ease: EASE_SMOOTH,
         delay: i * 0.4,
       },
     },

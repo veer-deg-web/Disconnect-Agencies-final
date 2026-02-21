@@ -2,6 +2,7 @@
 
 import { motion, useAnimation, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 /* =======================
    TYPEWRITER SCRIBBLE
@@ -61,7 +62,7 @@ function TypewriterScribbleHeading({ play }: { play: boolean }) {
     <motion.h2
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: play ? 1 : 0, y: play ? 0 : 20 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, ease: EASE_SMOOTH }}
       className="performance-heading"
       style={headingStyle}
     >
@@ -173,7 +174,7 @@ function Stat({
           y: 0,
           transition: {
             duration: 0.75,
-            ease: [0.22, 1, 0.36, 1],
+            ease: EASE_SMOOTH,
           },
         },
       }}

@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useInView, cubicBezier } from "framer-motion";
-import { useRef,useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import ShinyText from "./ShinyText";
 import SpotlightCard from "./SpotlightCard";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 import {
   SiOpenai,
@@ -12,12 +13,11 @@ import {
   SiGooglecloud,
   SiFigma,
   SiAmazon,
-  SiStripe,
   SiGoogleanalytics,
 } from "react-icons/si";
 
 /* =======================
-   DATA (UNCHANGED INTENT)
+   DATA
 ======================= */
 
 type Service = {
@@ -72,100 +72,66 @@ const services: Service[] = [
   },
 ];
 
-const ease = cubicBezier(0.22, 1, 0.36, 1);
-
 /* =======================
-   COMPONENT
+   SERVICE CARD (extracted to fix hooks-in-map violation)
 ======================= */
 
-export default function ServicesSection() {
-  const ref = useRef<HTMLElement | null>(null);
-  const inView = useInView(ref, { once: true, margin: "-120px" });
-  const router = useRouter();
-
-  return (
-    <section ref={ref} style={{ padding: "120px 20px" }}>
-      {/* HEADING */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, ease }}
-        style={{ textAlign: "center", marginBottom: 80 }}
-      >
-        <h2 className="services-heading">
-          <ShinyText
-            text="Smarter Development."
-            speed={2}
-            color="#b5b5b5"
-            shineColor="#ffffff"
-          />
-          <br />
-          <ShinyText
-            text="Stronger Outcomes."
-            speed={2}
-            color="#b5b5b5"
-            shineColor="#ffffff"
-          />
-        </h2>
-      </motion.div>
-
-      {/* GRID */}
-      <div
-  className="services-grid"
-  style={{
-    display: "grid",
-    gap: 24,
-    maxWidth: 1200,
-    margin: "0 auto",
-  }}
->
-   {services.map((service) => {
+function ServiceCard({
+  service,
+  inView,
+}: {
+  service: Service;
+  inView: boolean;
+}) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [glow, setGlow] = useState({ x: 50, y: 50 });
+  const router = useRouter();
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (window.innerWidth < 768) return;
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (window.innerWidth < 768) return;
 
+      const card = cardRef.current;
+      if (!card) return;
+
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+
+      card.style.transform = `
+        perspective(1200px)
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+        translateY(-8px)
+      `;
+
+      setGlow({
+        x: (x / rect.width) * 100,
+        y: (y / rect.height) * 100,
+      });
+    },
+    []
+  );
+
+  const resetTilt = useCallback(() => {
     const card = cardRef.current;
     if (!card) return;
-
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
-    card.style.transform = `
-      perspective(1200px)
-      rotateX(${rotateX}deg)
-      rotateY(${rotateY}deg)
-      translateY(-8px)
-    `;
-
-    setGlow({
-      x: (x / rect.width) * 100,
-      y: (y / rect.height) * 100,
-    });
-  };
-
-  const resetTilt = () => {
-    const card = cardRef.current;
-    if (!card) return;
-
     card.style.transform =
       "perspective(1200px) rotateX(0deg) rotateY(0deg)";
-  };
+  }, []);
 
   return (
     <motion.div
-      key={service.title}
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease }}
+      transition={{ duration: 0.6, ease: EASE_SMOOTH }}
+      style={WILL_CHANGE_TRANSFORM}
     >
       <div
         ref={cardRef}
@@ -179,7 +145,7 @@ export default function ServicesSection() {
             "transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease",
         }}
       >
-        {/* 🔥 Glow Layer */}
+        {/* Glow Layer */}
         <div
           className="card-glow"
           style={{
@@ -200,9 +166,62 @@ export default function ServicesSection() {
       </div>
     </motion.div>
   );
-})}</div>
+}
 
-      {/* MOBILE TYPE SCALE */}
+/* =======================
+   COMPONENT
+======================= */
+
+export default function ServicesSection() {
+  const ref = useRef<HTMLElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: "-120px" });
+
+  return (
+    <section ref={ref} style={{ padding: "120px 20px" }}>
+      {/* HEADING */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, ease: EASE_SMOOTH }}
+        style={{ textAlign: "center", marginBottom: 80, ...WILL_CHANGE_TRANSFORM }}
+      >
+        <h2 className="services-heading">
+          <ShinyText
+            text="Smarter Development."
+            speed={2}
+            color="#b5b5b5"
+            shineColor="#ffffff"
+          />
+          <br />
+          <ShinyText
+            text="Stronger Outcomes."
+            speed={2}
+            color="#b5b5b5"
+            shineColor="#ffffff"
+          />
+        </h2>
+      </motion.div>
+
+      {/* GRID */}
+      <div
+        className="services-grid"
+        style={{
+          display: "grid",
+          gap: 24,
+          maxWidth: 1200,
+          margin: "0 auto",
+        }}
+      >
+        {services.map((service) => (
+          <ServiceCard
+            key={service.title}
+            service={service}
+            inView={inView}
+          />
+        ))}
+      </div>
+
+      {/* STYLES */}
       <style>{`
         .services-heading {
           font-size: clamp(1.8rem, 4vw, 3rem);
@@ -236,46 +255,44 @@ export default function ServicesSection() {
           line-height: 1.6;
           color: rgba(255,255,255,0.75);
         }
-          .card-glow {
-  position: absolute;
-  inset: -2px;
-  border-radius: 20px;
-  pointer-events: none;
-  transition: background 0.2s ease;
-  z-index: 0;
-  opacity: 0.9;
-}
 
-.service-card {
-  position: relative;
-  z-index: 1;
-  border-radius: 20px;
+        .card-glow {
+          position: absolute;
+          inset: -2px;
+          border-radius: 20px;
+          pointer-events: none;
+          transition: background 0.2s ease;
+          z-index: 0;
+          opacity: 0.9;
+        }
 
-  box-shadow:
-    0 20px 50px rgba(0,0,0,0.6),
-    0 0 0 1px rgba(255,255,255,0.05);
+        .service-card {
+          position: relative;
+          z-index: 1;
+          border-radius: 20px;
+          box-shadow:
+            0 20px 50px rgba(0,0,0,0.6),
+            0 0 0 1px rgba(255,255,255,0.05);
+          transition:
+            transform 0.4s cubic-bezier(0.22,1,0.36,1),
+            box-shadow 0.4s ease;
+        }
 
-  transition:
-    transform 0.4s cubic-bezier(0.22,1,0.36,1),
-    box-shadow 0.4s ease;
-}
+        .services-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 1024px) {
           .services-grid {
-  grid-template-columns: repeat(3, 1fr); /* Desktop: 3 columns */
-}
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
 
-/* Tablet */
-@media (max-width: 1024px) {
-  .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Mobile */
-@media (max-width: 640px) {
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
-}
+        @media (max-width: 640px) {
+          .services-grid {
+            grid-template-columns: 1fr;
+          }
+        }
       `}</style>
     </section>
   );

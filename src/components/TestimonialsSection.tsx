@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
 
 /* =======================
    DATA
@@ -59,7 +60,7 @@ const rightColumn: Testimonial[] = [
    ANIMATION CONFIG
 ======================= */
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const ease = EASE_SMOOTH;
 
 const textVariant = {
   hidden: { opacity: 0, x: -80 },
@@ -130,7 +131,7 @@ export default function TestimonialsSection() {
           {/* COLUMN 1 (always visible) */}
           <motion.div
             className="testimonial-column"
-            style={column}
+            style={{ ...column, ...WILL_CHANGE_TRANSFORM_ONLY }}
             animate={startScroll ? { y: ["0%", "-50%"] } : { y: 0 }}
             transition={{
               duration: 14,
@@ -146,7 +147,7 @@ export default function TestimonialsSection() {
           {/* COLUMN 2 (hidden on mobile) */}
           <motion.div
             className="testimonial-column hide-mobile"
-            style={column}
+            style={{ ...column, ...WILL_CHANGE_TRANSFORM_ONLY }}
             animate={startScroll ? { y: ["-50%", "0%"] } : { y: 0 }}
             transition={{
               duration: 14,

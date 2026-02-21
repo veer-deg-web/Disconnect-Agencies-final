@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import ShinyText from "./ShinyText";
+import { EASE_SMOOTH } from "@/lib/animations";
 
 /* =======================
    TYPES
@@ -24,7 +25,7 @@ interface FAQSectionProps {
    ANIMATIONS
 ======================= */
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const ease = EASE_SMOOTH;
 
 const headingVariant = {
   hidden: { opacity: 0, y: 40 },

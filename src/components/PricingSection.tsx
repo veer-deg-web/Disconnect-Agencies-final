@@ -6,8 +6,9 @@ import {
   useInView,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-
 import GradientText from "./GradientText";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+
 
 /* =======================
    TYPES
@@ -74,7 +75,7 @@ const defaultPlans: Plan[] = [
    ANIMATION CONFIG
 ======================= */
 
-const easeSmooth: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const easeSmooth = EASE_SMOOTH;
 
 const timeline = {
   hidden: {},
@@ -185,6 +186,7 @@ export default function PricingSection({
               variants={cardVariant}
               style={{
                 ...card,
+                ...WILL_CHANGE_TRANSFORM,
                 ...(plan.highlight
                   ? {
                       background: `linear-gradient(180deg, ${accentColor}55, #1a1a1a)`,

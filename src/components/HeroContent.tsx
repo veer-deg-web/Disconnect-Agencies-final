@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, useAnimationControls } from "framer-motion";
 import BookCallButton from "./BookCallButton";
 import ShinyText from "./ShinyText";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 /* ================= ANIMATIONS ================= */
 
@@ -13,7 +14,7 @@ const panDown = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 1, ease: EASE_SMOOTH },
   },
 };
 
@@ -23,7 +24,7 @@ const pillPan = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 1, ease: EASE_SMOOTH },
   },
 };
 
@@ -47,7 +48,7 @@ const riseUp = {
   buttons: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 1, ease: EASE_SMOOTH },
   },
 };
 
@@ -56,7 +57,7 @@ const trustedVariant = {
   trusted: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 1, ease: EASE_SMOOTH },
   },
 };
 
@@ -127,6 +128,7 @@ export default function HeroContent() {
           textAlign: "center",
           paddingLeft: "240px",
           paddingRight: "240px",
+          ...WILL_CHANGE_TRANSFORM,
         }}
       >
         {/* Pill */}
