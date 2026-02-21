@@ -1,30 +1,65 @@
-.our-work-section {
+/* ── WRAPPER — creates the scroll travel ── */
+/* N=3 cards → 300vh → 200vh of scroll travel for cards 2 & 3 */
+.work-stack-wrapper {
+  height: 300vh;
   position: relative;
-  height: 300vh; /* creates scroll */
-  background: #0b0b0b;
 }
 
-.our-work-sticky {
+/* ── STICKY CONTAINER ── */
+.work-stack-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow: hidden;
 }
 
-.our-work-card {
+/* ── OUTER — absolutely fills the sticky container, sets z-index ── */
+.work-stack-outer {
   position: absolute;
   inset: 0;
-  margin: auto;
-  width: min(92vw, 1200px);
-  height: min(70vh, 680px);
-  padding: 32px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.04);
-  will-change: transform;
 }
 
-.our-work-card img {
+/* ── SLIDER — JS sets translateY on this element ── */
+.work-stack-slider {
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── CARD — the visible panel ── */
+.work-stack-card {
+  width: min(90vw, 1100px);
+  height: min(72vh, 660px);
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+/* ── IMAGE ── */
+.work-stack-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 20px;
+  display: block;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .work-stack-card {
+    width: 94vw;
+    height: min(60vh, 480px);
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .work-stack-card {
+    height: clamp(280px, 55vh, 380px);
+    border-radius: 12px;
+  }
 }

@@ -1,79 +1,93 @@
+/* ── OUTER SECTION ── */
 .our-work-section {
   position: relative;
   background: #0b0b0b;
-  padding-top: 120px;
-  padding-bottom: 160px;
+  padding-top: 100px;
 }
 
-/* HEADER */
-
+/* ── HEADER ── */
 .our-work-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
+  padding-inline: 24px;
 }
 
 .eyebrow {
   font-size: 12px;
   letter-spacing: 0.25em;
-  color: #DBFE49;
+  text-transform: uppercase;
+  color: #dbfe49;
   display: inline-block;
   margin-bottom: 14px;
 }
 
 .our-work-header h2 {
-  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
   font-weight: 500;
   color: #ffffff;
+  line-height: 1.1;
 }
 
 .our-work-header h2 span {
-  color: #DBFE49;
+  color: #dbfe49;
 }
 
-/* MARQUEE — FIXED */
-
+/* ── MARQUEE — sits naturally BELOW the sticky stack ── */
 .our-work-marquee {
-  position: relative;
-  margin-top: -120px; /* pulls marquee up */
-  padding-bottom: 40px;
   width: 100%;
-  z-index: 10;
-  pointer-events: none;
   overflow: hidden;
+  padding-block: 48px;
+  pointer-events: none;
+  background: #0b0b0b;
+  /* no negative margin — marquee just lives below the 300vh stack wrapper */
 }
 
 .marquee-track {
   display: flex;
   gap: 80px;
   white-space: nowrap;
-  animation: marquee 10s linear infinite;
+  animation: marquee 12s linear infinite;
 }
 
 .marquee-track span {
-  font-size: clamp(4rem, 12vw, 10rem);
+  font-size: clamp(3.5rem, 10vw, 9rem);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.06);
+  letter-spacing: -0.02em;
 }
 
-/* MARQUEE ANIMATION */
-
+/* ── MARQUEE ANIMATION ── */
 @keyframes marquee {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(-50%);
   }
 }
 
-/* MOBILE */
-
+/* ── MOBILE ── */
 @media (max-width: 768px) {
+  .our-work-section {
+    padding-top: 72px;
+  }
+
   .our-work-header {
     margin-bottom: 40px;
   }
 
+  .our-work-marquee {
+    padding-block: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .our-work-header h2 {
+    font-size: 2.2rem;
+  }
+
   .marquee-track span {
-    font-size: 4rem;
+    font-size: 3rem;
   }
 }
