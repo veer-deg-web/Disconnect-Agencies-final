@@ -11,6 +11,7 @@ import DetailsStep from "./DetailsStep";
 import { CategoryType } from "@/components/data/serviceData";
 
 import BackgroundEllipses from "@/components/BackgroundElipse";
+import FloatingParticles from "@/components/FloatingParticles";
 import "./BookingSteps.css";
 
 interface BookingStepsProps {
@@ -63,6 +64,7 @@ export default function BookingSteps({ initialCategory }: BookingStepsProps) {
   return (
     <main className="booking-steps">
       <BackgroundEllipses />
+      <FloatingParticles count={140} speed={0.3} maxSize={1.8} />
 
       {/* ── STEP PROGRESS INDICATOR ── */}
       <div className="booking-steps__indicator">
