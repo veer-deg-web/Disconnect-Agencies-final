@@ -197,16 +197,15 @@ export default function UIUXPricing() {
                     onClick={handleToggle}
                     style={{
                       ...toggleTrack,
-                      justifyContent: framerOn ? "flex-end" : "flex-start",
-                      background: framerOn ? "rgba(34, 197, 94, 0.2)" : "#111",
+                      background: framerOn ? "rgba(34, 197, 94, 0.2)" : "rgba(255,255,255,0.06)",
                     }}
                   >
                     <motion.span
-                      layout
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      animate={{ x: framerOn ? 24 : 0 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 32 }}
                       style={{
                         ...toggleThumb,
-                        background: framerOn ? "#22c55e" : "#fff",
+                        background: framerOn ? "#22c55e" : "#ffffff",
                       }}
                     />
                   </button>
