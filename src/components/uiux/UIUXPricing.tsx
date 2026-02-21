@@ -2,7 +2,7 @@
 
 import { motion, px, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import BookCallButton from "@/components/BookCallButton"; 
+import BookCallButton from "@/components/BookCallButton";
 /* ---------------- UTILS ---------------- */
 
 const randomBetween = (min: number, max: number) =>
@@ -108,7 +108,7 @@ export default function UIUXPricing() {
           style={headingStyle}
         >
           Pricing that's so{" "}
-          <span style={{ opacity: 0.55, fontStyle: "italic",fontFamily: "instrument-serif" }}>
+          <span style={{ opacity: 0.55, fontStyle: "italic", fontFamily: "instrument-serif" }}>
             simple.
           </span>
         </motion.h2>
@@ -126,7 +126,7 @@ export default function UIUXPricing() {
         {/* ---------- CARD + SPHERE ---------- */}
         <div style={layoutWrap}>
           {/* SPHERE ON LEFT */}
-          
+
 
           {/* CARD ON RIGHT */}
           <motion.div
@@ -137,21 +137,21 @@ export default function UIUXPricing() {
           >
             {/* glow */}
             <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            style={sphereWrap}
-          >
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              style={sphereVideo}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+              style={sphereWrap}
             >
-              <source src="/Sphere.mp4" type="video/mp4" />
-            </video>
-          </motion.div>
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={sphereVideo}
+              >
+                <source src="/Sphere.mp4" type="video/mp4" />
+              </video>
+            </motion.div>
             <div style={cardGlow} />
 
             <div style={cardStyle}>
@@ -173,14 +173,14 @@ export default function UIUXPricing() {
 
               {/* BUTTONS */}
               <div style={buttonRow}>
-                <button 
-                  
+                <button
+
                   onClick={handleSubscribe}
                   style={primaryBtnStyle}
                 >
                   Subscribe
                 </button>
-                 <BookCallButton/> 
+                <BookCallButton />
               </div>
 
               {/* TOGGLE (BELOW BUTTONS) */}
@@ -332,8 +332,8 @@ const layoutWrap = {
 /* CARD */
 
 const cardWrap = {
-  width : "100%",
-  maxWidth : "400px",
+  width: "100%",
+  maxWidth: "400px",
   position: "relative" as const,
   overflow: "hidden",
 };

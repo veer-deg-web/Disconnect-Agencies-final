@@ -9,7 +9,6 @@ import PricingSection from "@/components/PricingSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
 import { Section } from "lucide-react";
 
 
@@ -70,7 +69,7 @@ export default function Home() {
         tiltGlow="#DE5E03"
         tiltIntensity={14}
       />
-      <Footer /></PageBackground>
+    </PageBackground>
 
 
   );

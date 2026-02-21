@@ -6,7 +6,6 @@ import TestimonialsSection from "@/components/Ai/Hero/Testimoninals/Testimonials
 import AntigravitySection from "@/components/AntiGravity/AntigravitySection";
 import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
-import Footer from "@/components/Footer";
 import { faqs } from "@/Data/faq";
 import PricingSection from "@/components/PricingSection";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
@@ -45,7 +44,6 @@ export default function Ai() {
         tiltGlow="#814AC8"
         tiltIntensity={14}
       />
-      <Footer />
     </>
   );
 }

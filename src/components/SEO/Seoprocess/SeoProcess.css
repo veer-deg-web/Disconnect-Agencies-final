@@ -77,8 +77,7 @@
 /* Premium subtle hover */
 .seo-step-card:hover {
   transform: translateY(-6px);
-  box-shadow:
-    0 20px 60px rgba(76, 111, 255, 0.25);
+  box-shadow: 0 20px 60px rgba(76, 111, 255, 0.25);
   border-color: rgba(76, 111, 255, 0.4);
 }
 

@@ -3,6 +3,7 @@ import SmoothScroll from "./providers/SmoothScroll";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
 import HeroNavbar from "@/components/HeroNavbar";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Disconnect Agencies",
@@ -41,6 +42,8 @@ export default function RootLayout({
           }}
         >
           {children}
+          {/* Footer inside locomotive container to ensure it scrolls properly */}
+          <Footer />
         </div>
       </body>
     </html>

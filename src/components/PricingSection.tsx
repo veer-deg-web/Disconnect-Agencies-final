@@ -189,9 +189,9 @@ export default function PricingSection({
                 ...WILL_CHANGE_TRANSFORM,
                 ...(plan.highlight
                   ? {
-                      background: `linear-gradient(180deg, ${accentColor}55, #1a1a1a)`,
-                      border: `2px solid ${accentColor}`,
-                    }
+                    background: `linear-gradient(180deg, ${accentColor}55, #1a1a1a)`,
+                    border: `2px solid ${accentColor}`,
+                  }
                   : {}),
               }}
             >
@@ -246,7 +246,7 @@ export default function PricingSection({
               </div>
 
               <div style={{ marginTop: "auto" }}>
-                
+
               </div>
             </motion.div>
           ))}

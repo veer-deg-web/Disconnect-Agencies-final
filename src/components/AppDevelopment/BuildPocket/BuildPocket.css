@@ -15,7 +15,11 @@
   position: absolute;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(88,105,227,0.15), transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(88, 105, 227, 0.15),
+    transparent 70%
+  );
   top: -200px;
   right: -200px;
   pointer-events: none;
@@ -43,15 +47,15 @@
   padding: 24px;
   border-radius: 18px;
   background: rgba(20, 22, 44, 0.6);
-  border: 1px solid rgba(88,105,227,0.25);
+  border: 1px solid rgba(88, 105, 227, 0.25);
   backdrop-filter: blur(12px);
   transition: all 0.35s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-6px);
-  border-color: #5869E3;
-  box-shadow: 0 15px 50px rgba(88,105,227,0.2);
+  border-color: #5869e3;
+  box-shadow: 0 15px 50px rgba(88, 105, 227, 0.2);
 }
 
 .feature-card h3 {
@@ -73,7 +77,7 @@
   background: linear-gradient(180deg, #111, #0a0a0a);
   border-radius: 24px;
   text-align: center;
-  border: 1px solid rgba(88,105,227,0.15);
+  border: 1px solid rgba(88, 105, 227, 0.15);
 }
 
 .partners__title {
@@ -92,16 +96,16 @@
 
 /* PREMIUM LOGO CARD */
 .logo-box {
-  min-height: 72px;              /* reduced from 110px */
+  min-height: 72px; /* reduced from 110px */
   border-radius: 14px;
 
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 18px;            /* reduced padding */
+  padding: 14px 18px; /* reduced padding */
 
   background: rgba(20, 22, 44, 0.6);
-  border: 1px solid rgba(88,105,227,0.25);
+  border: 1px solid rgba(88, 105, 227, 0.25);
   backdrop-filter: blur(12px);
 
   transition: all 0.3s ease;
@@ -109,20 +113,20 @@
 
 .logo-box:hover {
   transform: translateY(-3px);
-  border-color: #5869E3;
-  box-shadow: 0 8px 24px rgba(88,105,227,0.25);
+  border-color: #5869e3;
+  box-shadow: 0 8px 24px rgba(88, 105, 227, 0.25);
 }
 
 /* Icon left */
 .logo-icon {
   font-size: 26px;
-  color: #5869E3;
+  color: #5869e3;
 }
 
 /* Text column */
 .logo-text {
   display: flex;
-  flex-direction: column;   /* 👈 THIS FIXES IT */
+  flex-direction: column; /* 👈 THIS FIXES IT */
   line-height: 1.2;
 }
 
@@ -149,7 +153,7 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .partners__grid .logo-box:nth-child(n+7) {
+  .partners__grid .logo-box:nth-child(n + 7) {
     display: none;
   }
 }
@@ -175,7 +179,7 @@
     font-size: 20px;
   }
 
-  .partners__grid .logo-box:nth-child(n+5) {
+  .partners__grid .logo-box:nth-child(n + 5) {
     display: none;
   }
 }
@@ -197,10 +201,8 @@
   }
 
   .logo-text small {
-  display: block;           /* 👈 force below */
-  font-size: 11px;
-  color: #9b9b9b;
-}
-  
-
+    display: block; /* 👈 force below */
+    font-size: 11px;
+    color: #9b9b9b;
+  }
 }

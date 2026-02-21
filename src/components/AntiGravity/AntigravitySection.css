@@ -21,8 +21,16 @@
   z-index: 0;
   pointer-events: none;
   /* soft vignette so edges fade gracefully */
-  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 55%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 55%, transparent 100%);
+  mask-image: radial-gradient(
+    ellipse 90% 80% at 50% 50%,
+    black 55%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 80% at 50% 50%,
+    black 55%,
+    transparent 100%
+  );
 }
 
 /* ── CONTENT ─────────────────────────────────────────────── */
@@ -75,7 +83,10 @@
   border: none;
   cursor: pointer;
   letter-spacing: 0.01em;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
 .antigravity-btn:hover {

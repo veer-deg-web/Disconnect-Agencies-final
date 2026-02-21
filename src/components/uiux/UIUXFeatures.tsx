@@ -112,16 +112,16 @@ export default function UIUXFeatures() {
               marginBottom: 16,
             }}
           >
-            Reasons you 
-            <br /> will 
-             <span
+            Reasons you
+            <br /> will
+            <span
               style={{
                 opacity: 0.55,
                 fontStyle: "italic",
                 fontFamily: "Instrument-serif",
               }}
             >
-               {" "} love 
+              {" "} love
             </span> us.
           </motion.h2>
 

@@ -2,7 +2,6 @@ import Hero from "@/components/WebDevelopment/Hero/Hero";
 import SupportSection from "@/components/WebDevelopment/SupportService/SupportService";
 import FAQSection from "@/components/FAQSection";
 import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
 import FeaturesSection from "@/components/WebDevelopment/FeatureGridSection/FeatureGridSection";
 import IntegrationLogosSection from "@/components/WebDevelopment/IntegrationLogoSection/IntegrationLogoSection";
 import PricingSection from "@/components/WebDevelopment/PricingSection/PricingSection";
@@ -13,7 +12,7 @@ import {
   SiNextdotjs,
   SiTypescript,
   SiTailwindcss,
-} from "react-icons/si"; 
+} from "react-icons/si";
 const heroLogos = [
   { node: <SiReact />, title: "React" },
   { node: <SiNextdotjs />, title: "Next.js" },
@@ -25,58 +24,58 @@ export default function WebDevelopmentPage() {
   return (
     <>
       <Hero />
-       <section className="uiux-marquee-section">
-    <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
-  </section>
+      <section className="uiux-marquee-section">
+        <UIUXShowcaseLogos logos={heroLogos} iconGap={200} />
+      </section>
       <SupportSection />
 
-      <SupportedByAI  /> 
-     <FeaturesSection
-  headingLine1="Custom-designed modular"
-  headingLine2="products at a world-class standard"
-  subheading="Each component is designed to work beautifully together, ensuring a seamless experience."
-  items={[
-    {
-      title: "Project Planning",
-      description: "Create, assign, and manage tasks with drag-and-drop views.",
-      logo: "/icons/planning.svg",
-    },
-    {
-      title: "Team Collaboration",
-      description: "Streamline communication and teamwork effortlessly.",
-      logo: "/icons/team.svg",
-    },
-    {
-      title: "Live Insights",
-      description: "Track performance with real-time analytics.",
-      logo: "/icons/insights.svg",
-    },
-    {
-      title: "Easy to Use",
-      description: "Intuitive design lets anyone navigate with ease.",
-      logo: "/icons/easy.svg",
-    },
-    {
-      title: "Limitless Flexibility",
-      description: "Custom workflows that scale with your business.",
-      logo: "/icons/flexible.svg",
-    },
-    {
-      title: "Secure at Scale",
-      description: "Enterprise-grade security baked in.",
-      logo: "/icons/secure.svg",
-    },
-  ]}
-/>
-<IntegrationLogosSection />
-<section id="pricing">
-  <PricingSection />
-</section>
-     
-<FAQSection
+      <SupportedByAI />
+      <FeaturesSection
+        headingLine1="Custom-designed modular"
+        headingLine2="products at a world-class standard"
+        subheading="Each component is designed to work beautifully together, ensuring a seamless experience."
+        items={[
+          {
+            title: "Project Planning",
+            description: "Create, assign, and manage tasks with drag-and-drop views.",
+            logo: "/icons/planning.svg",
+          },
+          {
+            title: "Team Collaboration",
+            description: "Streamline communication and teamwork effortlessly.",
+            logo: "/icons/team.svg",
+          },
+          {
+            title: "Live Insights",
+            description: "Track performance with real-time analytics.",
+            logo: "/icons/insights.svg",
+          },
+          {
+            title: "Easy to Use",
+            description: "Intuitive design lets anyone navigate with ease.",
+            logo: "/icons/easy.svg",
+          },
+          {
+            title: "Limitless Flexibility",
+            description: "Custom workflows that scale with your business.",
+            logo: "/icons/flexible.svg",
+          },
+          {
+            title: "Secure at Scale",
+            description: "Enterprise-grade security baked in.",
+            logo: "/icons/secure.svg",
+          },
+        ]}
+      />
+      <IntegrationLogosSection />
+      <section id="pricing">
+        <PricingSection />
+      </section>
+
+      <FAQSection
         title={`Questions?\nWe're here to assist!`}
         defaultOpenIndex={0}
-         accentColor="#C7FF1A"
+        accentColor="#C7FF1A"
         faqs={[
           {
             question: "Why is a strong brand identity important?",
@@ -105,12 +104,11 @@ export default function WebDevelopmentPage() {
           },
         ]}
       />
-    <CTASection
-  gradient="radial-gradient(80% 120% at 50% 100%, #CFFE25 0%, rgba(207,254,37,0.45) 35%, #0b0b0b 75%)"
-  tiltGlow="#CFFE25"
-  tiltIntensity={12}
-/>
-      <Footer />
+      <CTASection
+        gradient="radial-gradient(80% 120% at 50% 100%, #CFFE25 0%, rgba(207,254,37,0.45) 35%, #0b0b0b 75%)"
+        tiltGlow="#CFFE25"
+        tiltIntensity={12}
+      />
     </>
   );
 }

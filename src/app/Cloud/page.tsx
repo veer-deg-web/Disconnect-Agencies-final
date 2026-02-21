@@ -11,7 +11,6 @@ import DotBackground from "@/components/DotBackground/DotBackground";
 import CTASection from "@/components/CTASection";
 import { Cloudfaq } from "@/Data/Cloudfaq";
 import FAQSection from "@/components/FAQSection";
-import Footer from "@/components/Footer";
 
 export default function CloudPage() {
   return (
@@ -35,8 +34,6 @@ export default function CloudPage() {
         tiltGlow="#DCEC8F"
         tiltIntensity={11}
       />
-      <Footer />
-
     </main>
   );
 }

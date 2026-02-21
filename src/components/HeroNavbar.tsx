@@ -4,7 +4,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { MorphingLoginButton } from "./HeroContent";
+
+const EASE_SMOOTH = [0.22, 1, 0.36, 1] as const;
+
+const headerVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: EASE_SMOOTH as any,
+      delay: 0.1,
+    },
+  },
+};
+
+const navLinkVariants = {
+  initial: { color: "rgba(255,255,255,0.7)" },
+  hover: {
+    color: "#fff",
+    scale: 1.05,
+    transition: { duration: 0.2, ease: "easeOut" } as any,
+  },
+  tap: { scale: 0.95 },
+};
 
 export default function HeroNavbar() {
   const [open, setOpen] = useState(false);
@@ -48,7 +74,10 @@ export default function HeroNavbar() {
         `}
       </style>
 
-      <header
+      <motion.header
+        initial="hidden"
+        animate="visible"
+        variants={headerVariants}
         style={{
           position: "fixed",
           top: 0,
@@ -72,9 +101,11 @@ export default function HeroNavbar() {
           }}
         >
           {/* LOGO */}
-          <div
+          <motion.div
             style={{ flexShrink: 0, cursor: "pointer" }}
             onClick={() => router.push("/")}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Image
               src="/logo.png"
@@ -83,7 +114,7 @@ export default function HeroNavbar() {
               height={36}
               priority
             />
-          </div>
+          </motion.div>
 
           {/* DESKTOP LINKS */}
           <ul
@@ -94,21 +125,17 @@ export default function HeroNavbar() {
               listStyle: "none",
               fontSize: "14px",
               fontWeight: 500,
-              color: "rgba(255,255,255,0.7)",
             }}
           >
             {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
               (item) => (
-                <li
+                <motion.li
                   key={item}
+                  variants={navLinkVariants}
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
                   style={{ cursor: "pointer" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#fff")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color =
-                      "rgba(255,255,255,0.7)")
-                  }
                 >
                   {/* ✅ SERVICES SCROLL */}
                   {item === "Services" ? (
@@ -139,7 +166,7 @@ export default function HeroNavbar() {
                       {item}
                     </span>
                   )}
-                </li>
+                </motion.li>
               )
             )}
           </ul>
@@ -203,54 +230,62 @@ export default function HeroNavbar() {
         </nav>
 
         {/* MOBILE MENU */}
-        {open && (
-          <div
-            style={{
-              background: "#000",
-              padding: "20px 16px",
-              borderTop: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
-              (item) => (
-                <div
-                  key={item}
-                  style={{
-                    padding: "14px 0",
-                    fontSize: "16px",
-                    color: "#fff",
-                    borderBottom:
-                      "1px solid rgba(255,255,255,0.08)",
-                    cursor: "pointer",
-                  }}
-                >
-                  {item === "Services" ? (
-                    <Link
-                      href="/#services"
-                      onClick={() => setOpen(false)}
-                      style={{ color: "#fff", textDecoration: "none" }}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              style={{
+                background: "#000",
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+                overflow: "hidden", // Ensures smooth height transition
+              }}
+            >
+              <div style={{ padding: "20px 16px" }}>
+                {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
+                  (item) => (
+                    <div
+                      key={item}
+                      style={{
+                        padding: "14px 0",
+                        fontSize: "16px",
+                        color: "#fff",
+                        borderBottom:
+                          "1px solid rgba(255,255,255,0.08)",
+                        cursor: "pointer",
+                      }}
                     >
-                      Services
-                    </Link>
-                  ) : item === "Pricing" ? (
-                    <Link
-                      href={`${pathname}#pricing`}
-                      onClick={() => setOpen(false)}
-                      style={{ color: "#fff", textDecoration: "none" }}
-                    >
-                      Pricing
-                    </Link>
-                  ) : (
-                    <span onClick={() => handleNavigate(item)}>
-                      {item}
-                    </span>
-                  )}
-                </div>
-              )
-            )}
-          </div>
-        )}
-      </header>
+                      {item === "Services" ? (
+                        <Link
+                          href="/#services"
+                          onClick={() => setOpen(false)}
+                          style={{ color: "#fff", textDecoration: "none" }}
+                        >
+                          Services
+                        </Link>
+                      ) : item === "Pricing" ? (
+                        <Link
+                          href={`${pathname}#pricing`}
+                          onClick={() => setOpen(false)}
+                          style={{ color: "#fff", textDecoration: "none" }}
+                        >
+                          Pricing
+                        </Link>
+                      ) : (
+                        <span onClick={() => handleNavigate(item)}>
+                          {item}
+                        </span>
+                      )}
+                    </div>
+                  )
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
     </>
   );
 }

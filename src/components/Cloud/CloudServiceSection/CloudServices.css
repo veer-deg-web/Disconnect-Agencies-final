@@ -25,13 +25,13 @@
 .label-dot {
   width: 6px;
   height: 6px;
-  background: #DBFE49;
+  background: #dbfe49;
 }
 
 .label-text {
   font-size: 12px;
   letter-spacing: 2px;
-  color: #DBFE49;
+  color: #dbfe49;
   white-space: nowrap;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .cloud-header h2 span {
-  color: #DBFE49;
+  color: #dbfe49;
 }
 
 /* ================= GRID ================= */
@@ -114,7 +114,7 @@
 
 .cloud-card:hover .service-id,
 .cloud-card:hover .service-icon {
-  color: #DBFE49;
+  color: #dbfe49;
 }
 
 /* ================= RESPONSIVE ================= */

@@ -50,19 +50,19 @@ export default function IntegrationLogosSection() {
           style={textWrap}
         >
           <h2 style={heading}>
-  <ShinyText
-    text="Seamless Integration"
-    speed={2}
-    delay={0}
-    color="#b5b5b5"
-    shineColor="#ffffff"
-    spread={140}
-    direction="left"
-    yoyo={false}
-    pauseOnHover={false}
-    disabled={false}
-  />
-</h2>
+            <ShinyText
+              text="Seamless Integration"
+              speed={2}
+              delay={0}
+              color="#b5b5b5"
+              shineColor="#ffffff"
+              spread={140}
+              direction="left"
+              yoyo={false}
+              pauseOnHover={false}
+              disabled={false}
+            />
+          </h2>
 
           <p style={subheading}>
             Connect effortlessly with your favorite tools and platforms —
