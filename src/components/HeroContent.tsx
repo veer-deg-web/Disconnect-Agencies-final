@@ -10,55 +10,55 @@ import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 /* ================= ANIMATIONS ================= */
 
 const panDown = {
-  hidden: { opacity: 0, y: 28, scale: 1.05 },
+  hidden: { opacity: 0, y: 12, scale: 1.02 },
   hero: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 1, ease: EASE_SMOOTH },
+    transition: { duration: 0.8, ease: EASE_SMOOTH },
   },
 };
 
 const pillPan = {
-  hidden: { opacity: 0, y: 28, scale: 1.05 },
+  hidden: { opacity: 0, y: 12, scale: 1.02 },
   pill: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 1, ease: EASE_SMOOTH },
+    transition: { duration: 0.8, ease: EASE_SMOOTH },
   },
 };
 
 const textContainer = {
   hidden: {},
-  text: { transition: { staggerChildren: 0.035 } },
+  text: { transition: { staggerChildren: 0.025 } },
 };
 
 const textWord = {
   hidden: { opacity: 0 },
-  text: { opacity: 1, transition: { duration: 0.5 } },
+  text: { opacity: 1, transition: { duration: 0.4 } },
 };
 
 const buttonGroup = {
   hidden: {},
-  buttons: { transition: { staggerChildren: 0.4 } },
+  buttons: { transition: { staggerChildren: 0.3 } },
 };
 
 const riseUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 12 },
   buttons: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1, ease: EASE_SMOOTH },
+    transition: { duration: 0.8, ease: EASE_SMOOTH },
   },
 };
 
 const trustedVariant = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 12 },
   trusted: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1, ease: EASE_SMOOTH },
+    transition: { duration: 0.8, ease: EASE_SMOOTH },
   },
 };
 
@@ -71,9 +71,9 @@ export default function HeroContent() {
     const sequence = () => {
       controls.start("hero");
       controls.start("pill");
-      setTimeout(() => controls.start("text"), 400);
-      setTimeout(() => controls.start("buttons"), 800);
-      setTimeout(() => controls.start("trusted"), 1200);
+      setTimeout(() => controls.start("text"), 150);
+      setTimeout(() => controls.start("buttons"), 300);
+      setTimeout(() => controls.start("trusted"), 500);
     };
     sequence();
   }, [controls]);
