@@ -6,24 +6,6 @@
   isolation: isolate; /* ensures clean stacking */
 }
 
-/* Background image (Next Image handles scaling efficiently) */
-.hero-bg {
-  object-fit: cover;
-  z-index: -2;
-}
-
-/* Optional dark overlay */
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.6)
-  );
-  z-index: -1;
-}
-
 /* Navbar */
 .hero-navbar {
   position: relative;
@@ -52,6 +34,38 @@
 @media (max-width: 768px) {
   .hero-inner {
     padding: 0 2rem;
+  }
+
+  .hero-wrap {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .hero-heading {
+    font-size: clamp(36px, 9vw, 48px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .hero-para {
+    font-size: 15px !important;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .hero-buttons > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .glow-pill {
+    width: 100% !important;
+    max-width: 320px;
+    font-size: 13px !important;
   }
 }
 

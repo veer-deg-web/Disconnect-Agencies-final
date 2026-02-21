@@ -1,6 +1,17 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { motion, useMotionValue, useAnimationFrame, useTransform } from 'motion/react';
+import { useState, useCallback, useEffect, useRef, ReactNode } from 'react';
+import { motion, useMotionValue, useAnimationFrame, useTransform } from 'framer-motion';
 import './GradientText.css';
+
+interface GradientTextProps {
+  children: ReactNode;
+  className?: string;
+  colors?: string[];
+  animationSpeed?: number;
+  showBorder?: boolean;
+  direction?: 'horizontal' | 'vertical' | 'diagonal';
+  pauseOnHover?: boolean;
+  yoyo?: boolean;
+}
 
 export default function GradientText({
   children,
@@ -11,15 +22,15 @@ export default function GradientText({
   direction = 'horizontal',
   pauseOnHover = false,
   yoyo = true
-}) {
+}: GradientTextProps) {
   const [isPaused, setIsPaused] = useState(false);
   const progress = useMotionValue(0);
   const elapsedRef = useRef(0);
-  const lastTimeRef = useRef(null);
+  const lastTimeRef = useRef<number | null>(null);
 
   const animationDuration = animationSpeed * 1000;
 
-  useAnimationFrame(time => {
+  useAnimationFrame((time) => {
     if (isPaused) {
       lastTimeRef.current = null;
       return;
@@ -54,7 +65,7 @@ export default function GradientText({
     progress.set(0);
   }, [animationSpeed, progress, yoyo]);
 
-  const backgroundPosition = useTransform(progress, p => {
+  const backgroundPosition = useTransform(progress, (p) => {
     if (direction === 'horizontal') {
       return `${p}% 50%`;
     } else if (direction === 'vertical') {
@@ -89,6 +100,9 @@ export default function GradientText({
       className={`animated-gradient-text ${showBorder ? 'with-border' : ''} ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
       {showBorder && <motion.div className="gradient-overlay" style={{ ...gradientStyle, backgroundPosition }} />}
       <motion.div className="text-content" style={{ ...gradientStyle, backgroundPosition }}>

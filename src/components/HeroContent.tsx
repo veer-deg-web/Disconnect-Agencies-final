@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion, useAnimationControls } from "framer-motion";
+import Image from "next/image";
 import BookCallButton from "./BookCallButton";
 import ShinyText from "./ShinyText";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
@@ -67,54 +68,18 @@ export default function HeroContent() {
   const controls = useAnimationControls();
 
   useEffect(() => {
-    setTimeout(() => controls.start("hero"), 0);
-    setTimeout(() => controls.start("pill"), 250);
-    setTimeout(() => controls.start("text"), 500);
-    setTimeout(() => controls.start("buttons"), 1500);
-    setTimeout(() => controls.start("trusted"), 2500);
+    const sequence = () => {
+      controls.start("hero");
+      controls.start("pill");
+      setTimeout(() => controls.start("text"), 400);
+      setTimeout(() => controls.start("buttons"), 800);
+      setTimeout(() => controls.start("trusted"), 1200);
+    };
+    sequence();
   }, [controls]);
 
   return (
     <>
-      {/* MOBILE OVERRIDES ONLY */}
-      <style>
-        {`
-          @media (max-width: 768px) {
-            .hero-wrap {
-              padding-left: 20px !important;
-              padding-right: 20px !important;
-            }
-
-            .hero-heading {
-              font-size: clamp(36px, 9vw, 48px) !important;
-              line-height: 1.15 !important;
-            }
-
-            .hero-para {
-              font-size: 15px !important;
-            }
-
-            .hero-buttons {
-              flex-direction: column;
-              gap: 14px;
-              width: 100%;
-            }
-
-            .hero-buttons > div {
-              width: 100%;
-              display: flex;
-              justify-content: center;
-            }
-
-            .glow-pill {
-              width: 100% !important;
-              max-width: 320px;
-              font-size: 13px !important;
-            }
-          }
-        `}
-      </style>
-
       <ShootingStars />
 
       <div
@@ -145,17 +110,17 @@ export default function HeroContent() {
           style={{ fontSize: "75px", fontWeight: 600, lineHeight: 1.2 }}
         >
           <ShinyText
-  text="Disconnect Agencies"
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FF5C00"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
+            text="Disconnect Agencies"
+            speed={2}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#FF5C00"
+            spread={120}
+            direction="left"
+            yoyo={false}
+            pauseOnHover={false}
+            disabled={false}
+          />
         </motion.h1>
 
         {/* Paragraph */}
@@ -212,26 +177,32 @@ export default function HeroContent() {
 /* ================= SUB COMPONENTS ================= */
 
 export function MorphingLoginButton() {
-  const [hover, setHover] = useState(false);
+  const [hover, setHover] = React.useState(false);
 
   return (
-    <button
+    <motion.button
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      animate={{
+        width: hover ? "120px" : "73px",
+        backgroundColor: hover ? "#fff" : "rgba(255,255,255,0.25)",
+        color: hover ? "rgb(255,170,90)" : "#fff",
+        borderColor: hover ? "#fff" : "rgba(255,255,255,0.35)",
+      }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
       style={{
         height: "40px",
-        width: hover ? "120px" : "73px",
         borderRadius: "999px",
-        border: hover ? "1px solid #fff" : "1px solid rgba(255,255,255,0.35)",
-        background: hover ? "#fff" : "rgba(255,255,255,0.25)",
-        color: hover ? "rgba(255,170,90)" : "#fff",
+        border: "1px solid",
         fontSize: "14px",
         fontWeight: 500,
-        transition: "all 0.35s ease",
+        cursor: "pointer",
+        overflow: "hidden",
+        whiteSpace: "nowrap"
       }}
     >
       {hover ? "Book a Call" : "Login"}
-    </button>
+    </motion.button>
   );
 }
 
@@ -308,17 +279,17 @@ function ShootingStars() {
 
 function TrustedBy() {
   const images = [
-    "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
-    "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9",
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+    { src: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=64&h=64&fit=crop", alt: "User 1" },
+    { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop", alt: "User 2" },
+    { src: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop", alt: "User 3" },
+    { src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop", alt: "User 4" },
+    { src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop", alt: "User 5" },
   ];
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
       <div style={{ display: "flex" }}>
-        {images.map((src, i) => (
+        {images.map((img, i) => (
           <div
             key={i}
             style={{
@@ -327,11 +298,16 @@ function TrustedBy() {
               marginRight: i === images.length - 1 ? 0 : -6,
               borderRadius: "50%",
               overflow: "hidden",
+              border: "2px solid #000",
+              position: "relative"
             }}
           >
-            <img
-              src={src}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            <Image
+              src={img.src}
+              alt={img.alt}
+              fill
+              className="object-cover"
+              sizes="28px"
             />
           </div>
         ))}

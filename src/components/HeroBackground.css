@@ -1,0 +1,122 @@
+/* =========================================
+   Hero Background System
+   ========================================= */
+
+.hero-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #070707; /* Deep black / charcoal base */
+  overflow: hidden;
+  z-index: 0; /* Keeps it behind your main content */
+  pointer-events: none; /* Allows clicking through to buttons */
+}
+
+/* Base Dot Pattern */
+.hero-bg-dots {
+  position: absolute;
+  inset: 0;
+  /* Faint white/orange dots for tech feel */
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 32px 32px;
+  z-index: 1;
+}
+
+/* Glow Effects */
+.hero-bg-glow-1 {
+  /* Keeping the top-left dark per the design, adding just a subtle ambient depth */
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(
+    circle,
+    rgba(20, 20, 20, 0.8) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 2;
+}
+
+.hero-bg-glow-2 {
+  /* The main vibrant orange glow in the bottom right */
+  position: absolute;
+  bottom: -20vh;
+  right: -10vw;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(
+    circle,
+    rgba(255, 106, 0, 0.25) 0%,
+    rgba(180, 40, 0, 0.1) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 2;
+}
+
+/* Decorative Curved Element */
+.hero-bg-curve {
+  position: absolute;
+  bottom: -15vh; /* Pushed down to hide bottom edge */
+  left: 6vw;
+  width: 40vw;
+  height: 70vh;
+  border-top-left-radius: 180px; /* Smooth sweeping curve */
+
+  /* Layered inset shadows create the 3D track depth
+     - Layer 1: Bright orange top/outer edge highlight
+     - Layer 2: Deep black 12px track core
+     - Layer 3: Dim inner edge highlight */
+  box-shadow:
+    inset 1px 1px 0px 0px rgba(255, 106, 0, 0.9),
+    inset 13px 13px 0px 0px #0c0c0c,
+    inset 14px 14px 0px 0px rgba(255, 106, 0, 0.2);
+
+  z-index: 3;
+}
+
+/* Decorative Diagonal Line */
+.hero-bg-diagonal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200vw; /* Oversized to span all screens */
+  height: 12px; /* Matches curve's track core thickness */
+  background-color: #0c0c0c; /* Deep black core */
+
+  /* Matches the top-left to bottom-right angle */
+  transform: translate(-50%, -50%) rotate(35deg);
+
+  /* Layered shadows for the thin accent lines hugging the diagonal
+     - Top edge: Bright, glowing orange
+     - Bottom edge: Dim, subtle orange */
+  box-shadow:
+    0px -1px 0px 0px rgba(255, 106, 0, 0.9),
+    0px -4px 15px 0px rgba(255, 106, 0, 0.3),
+    /* Soft light bleed */ 0px 1px 0px 0px rgba(255, 106, 0, 0.2);
+
+  z-index: 4;
+}
+
+/* Final Blending Overlay */
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  /* Cinematic vignette focusing darkness on the top-left */
+  background: radial-gradient(
+    circle at top left,
+    rgba(0, 0, 0, 0.6) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  z-index: 5;
+}
