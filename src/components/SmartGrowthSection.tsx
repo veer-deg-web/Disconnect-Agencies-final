@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import ShinyText from "./ShinyText";
-import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+import { EASE_SMOOTH } from "@/lib/animations";
 
 /* ======================
    ANIMATION VARIANTS
@@ -24,16 +24,8 @@ const imageVariant = {
     opacity: 1,
     y: 0,
     transition: {
-      y: {
-        duration: 0.9,
-        ease,
-        delay: i * 0.4,
-      },
-      opacity: {
-        duration: 1.3,
-        ease: EASE_SMOOTH,
-        delay: i * 0.4,
-      },
+      y: { duration: 0.9, ease, delay: i * 0.2 },
+      opacity: { duration: 1.3, ease, delay: i * 0.2 },
     },
   }),
 };
@@ -47,19 +39,6 @@ const textVariant = {
       duration: 0.7,
       ease,
       delay: i * 0.2 + 0.15,
-    },
-  }),
-};
-
-const buttonVariant = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease,
-      delay: i * 0.2 + 0.3,
     },
   }),
 };
@@ -95,19 +74,13 @@ export default function SmartGrowthSection() {
           viewport={{ once: true }}
           style={{ display: "inline-block" }}
         >
-          <   ShinyText
-  text="Smarter Digital Growth Starts Here "
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FFffff"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
-          
+          <ShinyText
+            text="Smarter Digital Growth Starts Here"
+            speed={2}
+            color="#b5b5b5"
+            shineColor="#FFffff"
+            spread={120}
+          />
         </motion.span>
       </h2>
 
@@ -121,15 +94,14 @@ export default function SmartGrowthSection() {
             {/* IMAGE */}
             <div className="image-box">
               <span className="orange-glow" />
-
               <motion.div
                 variants={imageVariant}
                 custom={index}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
               >
-                <img src={item.image} alt="" />
+                <img src={item.image} alt={item.title} />
               </motion.div>
             </div>
 
@@ -140,55 +112,44 @@ export default function SmartGrowthSection() {
                 custom={index}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
               >
                 <h3>{item.title}</h3>
                 <p>{item.desc}</p>
-
-                <motion.div
-                  variants={buttonVariant}
-                  custom={index}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="cta-wrap"
-                >
-                  
-                </motion.div>
               </motion.div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* STYLES */}
       <style jsx>{`
         .section {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 160px 24px;
+          padding: 80px 24px;
           color: white;
-          position: relative;
+          overflow: hidden; /* Prevents horizontal scroll from animations */
         }
 
         .heading {
           text-align: center;
-          font-size: 56px;
+          font-size: clamp(32px, 5vw, 56px); /* Responsive font sizing */
           font-weight: 700;
-          margin-bottom: 120px;
+          margin-bottom: 60px;
           line-height: 1.1;
         }
 
         .features {
           display: flex;
           flex-direction: column;
-          gap: 120px;
+          gap: 100px;
         }
 
         .feature-row {
           display: flex;
           align-items: center;
-          gap: 240px;
+          justify-content: space-between;
+          gap: 40px;
         }
 
         .feature-row.reverse {
@@ -196,93 +157,93 @@ export default function SmartGrowthSection() {
         }
 
         .image-box {
-          width: 420px;
-          height: 300px;
+          flex: 1;
           display: flex;
-          align-items: center;
           justify-content: center;
-          flex-shrink: 0;
           position: relative;
+          max-width: 500px;
         }
 
         .orange-glow {
           position: absolute;
-          inset: -60px;
-          background:
-            radial-gradient(
+          inset: -40px;
+          background: radial-gradient(
               circle at 30% 70%,
-              rgba(255, 115, 0, 0.45),
+              rgba(255, 115, 0, 0.3),
               transparent 60%
             ),
             radial-gradient(
               circle at 70% 30%,
-              rgba(255, 170, 60, 0.35),
+              rgba(255, 170, 60, 0.2),
               transparent 65%
             );
-          filter: blur(60px);
+          filter: blur(50px);
           z-index: 0;
         }
 
         .image-box img {
           width: 100%;
-          height: 100%;
+          height: auto;
+          max-height: 400px;
           object-fit: contain;
           position: relative;
           z-index: 1;
         }
 
         .text-box {
-          max-width: 460px;
+          flex: 1;
+          max-width: 500px;
         }
 
         .text-box h3 {
-          font-size: 32px;
+          font-size: clamp(24px, 3vw, 32px);
           margin-bottom: 16px;
         }
 
         .text-box p {
           font-size: 16px;
           opacity: 0.7;
-          margin-bottom: 24px;
           line-height: 1.6;
         }
 
-        /* =========================
-           MOBILE ONLY CHANGES
-        ========================= */
+        /* Tablet Adjustments */
+        @media (max-width: 1024px) {
+          .feature-row {
+            gap: 60px;
+          }
+          .section {
+            padding: 100px 24px;
+          }
+        }
+
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
+          .section {
+            padding: 60px 20px;
+          }
+
           .heading {
-            font-size: 34px;
-            margin-bottom: 80px;
+            margin-bottom: 40px;
+          }
+
+          .features {
+            gap: 80px;
           }
 
           .feature-row,
           .feature-row.reverse {
-            flex-direction: column;
+            flex-direction: column; /* Stack vertically */
             text-align: center;
-            gap: 48px;
+            gap: 32px;
           }
 
           .image-box {
             width: 100%;
-            height: 260px;
-          }
-
-          .orange-glow {
-            inset: -40px;
+            max-width: 100%;
           }
 
           .text-box {
             max-width: 100%;
-          }
-
-          /* Center BookCallButton */
-          
-        }
-
-        @media (max-width: 360px) {
-          .heading {
-            font-size: 30px;
           }
         }
       `}</style>

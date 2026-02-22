@@ -299,7 +299,6 @@ export default function HeroNavbar() {
                         cursor: "pointer",
                       }}
                     >
-<<<<<<< HEAD
                       {item === "Services" ? (
                         <Link
                           href="/#services"
@@ -329,104 +328,6 @@ export default function HeroNavbar() {
           )}
         </AnimatePresence>
       </motion.header>
-=======
-                      Services
-                    </Link>
-                  ) : item === "Pricing" ? (
-                    <Link
-                      href={`${pathname}#pricing`}
-                      onClick={() => setOpen(false)}
-                      style={{ color: "#fff", textDecoration: "none" }}
-                    >
-                      Pricing
-                    </Link>
-                  ) : (
-                    <span onClick={() => handleNavigate(item)}>
-                      {item}
-                    </span>
-                  )}
-                </div>
-              )
-            )}
-            {/* Login / Logout in mobile menu */}
-            <div
-              style={{
-                padding: "14px 0",
-                fontSize: "16px",
-                color: "#fff",
-                cursor: "pointer",
-              }}
-            >
-              {userName ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px" }}>
-                      Hi, {userName}
-                      {userRole === "admin" && (
-                        <span style={{
-                          marginLeft: "6px",
-                          fontSize: "10px",
-                          background: "rgba(124,58,237,0.3)",
-                          color: "#a78bfa",
-                          border: "1px solid rgba(124,58,237,0.5)",
-                          borderRadius: "4px",
-                          padding: "1px 5px",
-                          fontWeight: 600,
-                          verticalAlign: "middle",
-                        }}>ADMIN</span>
-                      )}
-                    </span>
-                    <button
-                      onClick={handleLogout}
-                      style={{
-                        background: "rgba(255,80,80,0.15)",
-                        border: "1px solid rgba(255,100,100,0.4)",
-                        color: "#ff8080",
-                        borderRadius: "999px",
-                        padding: "6px 18px",
-                        fontSize: "13px",
-                        fontWeight: 500,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                  {userRole === "admin" && (
-                    <a
-                      href="/admin"
-                      onClick={() => setOpen(false)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        color: "#a78bfa",
-                        fontSize: "14px",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        background: "rgba(124,58,237,0.1)",
-                        border: "1px solid rgba(124,58,237,0.35)",
-                        borderRadius: "8px",
-                        padding: "8px 14px",
-                      }}
-                    >
-                      ⚙️ Admin Panel
-                    </a>
-                  )}
-                </div>
-              ) : (
-                <span
-                  onClick={() => { setOpen(false); router.push("/auth"); }}
-                  style={{ color: "rgba(255,170,90,0.9)", fontWeight: 600 }}
-                >
-                  Login
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-      </header>
->>>>>>> 48b7a3addeb201b8a37908428e5dc004fd4ba25e
     </>
   );
 }

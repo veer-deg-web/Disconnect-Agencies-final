@@ -1,7 +1,6 @@
 import "./globals.css";
 import SmoothScroll from "./providers/SmoothScroll";
-import DotBackground from "@/components/DotBackground/DotBackground";
-import "@/components/DotBackground/DotBackground.css";
+
 import HeroNavbar from "@/components/HeroNavbar";
 import Footer from "@/components/Footer";
 
@@ -24,8 +23,7 @@ export default function RootLayout({
           margin: 0,
         }}
       >
-        {/* Background */}
-        <DotBackground />
+
 
         {/* Smooth Scroll */}
         <SmoothScroll />
