@@ -4,7 +4,13 @@
 ───────────────────────────────────────────── */
 
 /* ── Reset / Root ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 .adm-root {
   min-height: 100vh;
@@ -160,6 +166,21 @@
   padding: 6px 20px 4px;
 }
 
+.adm-sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.adm-sidebar-group-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: #5a4d80;
+  padding: 14px 20px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .adm-sidebar-item {
   display: flex;
   align-items: center;
@@ -175,7 +196,6 @@
   border: none;
   width: 100%;
   text-align: left;
-  border-left: 3px solid transparent;
 }
 
 .adm-sidebar-item:hover {
@@ -191,6 +211,34 @@
 
 .adm-sidebar-item svg {
   flex-shrink: 0;
+}
+
+.adm-sidebar-subitem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px 8px 45px;
+  color: #7c6fb0;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  transition: all 0.18s;
+  border-left: 3px solid transparent;
+}
+
+.adm-sidebar-subitem:hover {
+  background: rgba(124, 58, 237, 0.05);
+  color: #c4b5fd;
+}
+
+.adm-sidebar-subitem.active {
+  background: rgba(124, 58, 237, 0.1);
+  color: #a78bfa;
+  border-left-color: #7c3aed;
 }
 
 /* ── Main content ── */
@@ -324,7 +372,10 @@
   min-width: 220px;
 }
 
-.adm-search-wrap svg { color: #5a4d80; flex-shrink: 0; }
+.adm-search-wrap svg {
+  color: #5a4d80;
+  flex-shrink: 0;
+}
 
 .adm-search-input {
   background: transparent;
@@ -335,7 +386,9 @@
   width: 100%;
 }
 
-.adm-search-input::placeholder { color: #4a3f70; }
+.adm-search-input::placeholder {
+  color: #4a3f70;
+}
 
 /* ── FAQ items ── */
 .adm-faq-list {
@@ -352,9 +405,13 @@
   transition: background 0.15s;
 }
 
-.adm-faq-item:last-child { border-bottom: none; }
+.adm-faq-item:last-child {
+  border-bottom: none;
+}
 
-.adm-faq-item:hover { background: rgba(124, 58, 237, 0.04); }
+.adm-faq-item:hover {
+  background: rgba(124, 58, 237, 0.04);
+}
 
 .adm-faq-num {
   min-width: 28px;
@@ -371,7 +428,10 @@
   margin-top: 2px;
 }
 
-.adm-faq-body { flex: 1; min-width: 0; }
+.adm-faq-body {
+  flex: 1;
+  min-width: 0;
+}
 
 .adm-faq-question {
   font-size: 14px;
@@ -406,7 +466,9 @@
   gap: 12px;
 }
 
-.adm-empty svg { opacity: 0.35; }
+.adm-empty svg {
+  opacity: 0.35;
+}
 
 .adm-empty-text {
   font-size: 15px;
@@ -414,7 +476,9 @@
   color: #5a4d80;
 }
 
-.adm-empty-sub { font-size: 13px; }
+.adm-empty-sub {
+  font-size: 13px;
+}
 
 /* ── Loader ── */
 .adm-loader {
@@ -435,7 +499,11 @@
   margin-bottom: 12px;
 }
 
-@keyframes adm-spin { to { transform: rotate(360deg); } }
+@keyframes adm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* ── Buttons ── */
 .adm-btn {
@@ -451,7 +519,10 @@
   white-space: nowrap;
 }
 
-.adm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.adm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .adm-btn--primary {
   background: linear-gradient(135deg, #7c3aed, #5b21b6);
@@ -631,7 +702,9 @@
 }
 
 .adm-input::placeholder,
-.adm-textarea::placeholder { color: #3d3460; }
+.adm-textarea::placeholder {
+  color: #3d3460;
+}
 
 .adm-textarea {
   resize: vertical;
@@ -639,7 +712,9 @@
   line-height: 1.55;
 }
 
-.adm-select option { background: #0e0c1a; }
+.adm-select option {
+  background: #0e0c1a;
+}
 
 /* ── Confirm delete ── */
 .adm-confirm-text {
@@ -669,7 +744,9 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .adm-layout { flex-direction: column; }
+  .adm-layout {
+    flex-direction: column;
+  }
 
   .adm-sidebar {
     width: 100%;
@@ -681,9 +758,21 @@
     border-bottom: 1px solid #1e1535;
   }
 
-  .adm-sidebar-label { display: none; }
+  .adm-sidebar-label {
+    display: none;
+  }
 
-  .adm-sidebar-item {
+  .adm-sidebar-group {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .adm-sidebar-group-title {
+    display: none;
+  }
+
+  .adm-sidebar-item,
+  .adm-sidebar-subitem {
     border-left: none;
     border-bottom: 3px solid transparent;
     padding: 8px 14px;
@@ -691,14 +780,21 @@
     flex-shrink: 0;
   }
 
-  .adm-sidebar-item.active {
+  .adm-sidebar-item.active,
+  .adm-sidebar-subitem.active {
     border-left: none;
     border-bottom-color: #7c3aed;
   }
 
-  .adm-main { padding: 16px; }
+  .adm-main {
+    padding: 16px;
+  }
 
-  .adm-stats { gap: 10px; }
+  .adm-stats {
+    gap: 10px;
+  }
 
-  .adm-stat-card { min-width: 110px; }
+  .adm-stat-card {
+    min-width: 110px;
+  }
 }

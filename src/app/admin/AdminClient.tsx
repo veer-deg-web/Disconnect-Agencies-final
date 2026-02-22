@@ -166,13 +166,12 @@ function DeleteModal({
 /* ─────────────────────────────────────────────
    FAQ SECTION
 ───────────────────────────────────────────── */
-function FaqSection() {
+function FaqSection({ category }: { category: 'all' | Category }) {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState<'all' | Category>('all');
   const [showAdd, setShowAdd] = useState(false);
   const [editFaq, setEditFaq] = useState<Faq | null>(null);
   const [deleteFaq, setDeleteFaq] = useState<Faq | null>(null);
@@ -280,23 +279,6 @@ function FaqSection() {
             &nbsp;({filtered.length})
           </span>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <div className="adm-tabs">
-              <button
-                className={`adm-tab${category === 'all' ? ' active' : ''}`}
-                onClick={() => setCategory('all')}
-              >
-                All
-              </button>
-              {CATEGORIES.map(c => (
-                <button
-                  key={c.value}
-                  className={`adm-tab${category === c.value ? ' active' : ''}`}
-                  onClick={() => setCategory(c.value)}
-                >
-                  {c.label}
-                </button>
-              ))}
-            </div>
             <div className="adm-search-wrap">
               <Search size={13} />
               <input
@@ -383,6 +365,7 @@ export default function AdminClient() {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [userName, setUserName] = useState('');
+  const [category, setCategory] = useState<'all' | Category>('all');
   const [hydrated, setHydrated] = useState(false);
   const [authorized, setAuthorized] = useState(false);
 
@@ -438,15 +421,32 @@ export default function AdminClient() {
         {/* Sidebar */}
         <aside className="adm-sidebar">
           <span className="adm-sidebar-label">Content</span>
-          <button className="adm-sidebar-item active">
-            <HelpCircle size={15} /> FAQ
-            <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />
-          </button>
+          
+          <div className="adm-sidebar-group">
+            <button 
+              className={`adm-sidebar-item ${category === 'all' ? 'active' : ''}`}
+              onClick={() => setCategory('all')}
+            >
+              <HelpCircle size={15} /> All FAQs
+              {category === 'all' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+            </button>
+            <div className="adm-sidebar-group-title">Categories</div>
+            {CATEGORIES.map(c => (
+              <button
+                key={c.value}
+                className={`adm-sidebar-subitem ${category === c.value ? 'active' : ''}`}
+                onClick={() => setCategory(c.value)}
+              >
+                {c.label}
+                {category === c.value && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+              </button>
+            ))}
+          </div>
         </aside>
 
         {/* Main */}
         <main className="adm-main">
-          <FaqSection />
+          <FaqSection category={category} />
         </main>
       </div>
     </div>
