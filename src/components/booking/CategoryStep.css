@@ -73,9 +73,9 @@
 }
 
 .select-trigger:hover {
-  border-color: rgba(124, 58, 237, 0.5);
-  background: rgba(124, 58, 237, 0.08);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+  border-color: rgba(255, 90, 0, 0.5);
+  background: rgba(255, 90, 0, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 90, 0, 0.12);
 }
 
 .arrow {
@@ -106,7 +106,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.7),
-    0 0 40px rgba(124, 58, 237, 0.12);
+    0 0 40px rgba(255, 90, 0, 0.12);
   z-index: 50;
 }
 
@@ -130,7 +130,7 @@
 }
 
 .select-option.active {
-  background: rgba(124, 58, 237, 0.22);
+  background: rgba(255, 90, 0, 0.22);
   color: #ffffff;
 }
 

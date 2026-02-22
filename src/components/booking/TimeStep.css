@@ -4,8 +4,8 @@
 
 .time-layout {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(24px, 4vw, 48px);
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 3vw, 24px);
   align-items: start;
 }
 
@@ -23,7 +23,7 @@
 .time-right {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -39,14 +39,16 @@
 ===================================================== */
 
 .time-date-box {
-  padding: 18px 20px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 90, 0, 0.15);
   backdrop-filter: blur(20px);
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .time-date-label {
@@ -59,7 +61,7 @@
 }
 
 .time-date-value {
-  font-size: clamp(14px, 2.5vw, 16px);
+  font-size: clamp(13px, 2.5vw, 15px);
   font-weight: 500;
   color: #ffffff;
 }
@@ -71,7 +73,7 @@
 .time-grid-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .time-grid-label {
@@ -85,7 +87,7 @@
 .time-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 6px;
 }
 
 @media (max-width: 480px) {
@@ -105,12 +107,12 @@
 ===================================================== */
 
 .time-slot {
-  padding: 11px 6px;
-  border-radius: 14px;
+  padding: 8px 4px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.8);
-  font-size: clamp(12px, 2vw, 14px);
+  font-size: clamp(12px, 2vw, 13px);
   font-weight: 500;
   cursor: pointer;
   text-align: center;
@@ -123,20 +125,20 @@
 }
 
 .time-slot:hover {
-  background: rgba(124, 58, 237, 0.12);
-  border-color: rgba(124, 58, 237, 0.35);
+  background: rgba(255, 90, 0, 0.12);
+  border-color: rgba(255, 90, 0, 0.35);
   color: #ffffff;
 }
 
 .time-slot--selected {
   background: linear-gradient(135deg,
-      rgba(124, 58, 237, 0.4),
-      rgba(168, 85, 247, 0.25));
-  border-color: rgba(124, 58, 237, 0.7);
+      rgba(255, 90, 0, 0.4),
+      rgba(255, 138, 0, 0.25));
+  border-color: rgba(255, 90, 0, 0.7);
   color: #ffffff;
   box-shadow:
-    0 0 0 3px rgba(124, 58, 237, 0.18),
-    0 8px 24px rgba(124, 58, 237, 0.25);
+    0 0 0 3px rgba(255, 90, 0, 0.18),
+    0 8px 24px rgba(255, 90, 0, 0.25);
   font-weight: 600;
 }
 
@@ -147,16 +149,16 @@
 .time-actions {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 8px;
+  margin-top: 0;
 }
 
 .time-back,
 .time-next {
-  padding: 12px 20px;
-  border-radius: 14px;
+  padding: 10px 16px;
+  border-radius: 12px;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   will-change: transform;

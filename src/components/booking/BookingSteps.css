@@ -5,7 +5,7 @@
 .booking-steps {
   position: relative;
   width: 100%;
-  padding-block: clamp(56px, 7vw, 96px);
+  padding: clamp(100px, 10vw, 130px) 0 clamp(30px, 5vw, 50px) 0;
   background: #000000;
   color: #ffffff;
   overflow: hidden;
@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: center;
   gap: 0;
-  margin-bottom: clamp(28px, 4vw, 48px);
+  margin-bottom: clamp(16px, 3vw, 32px);
   padding-inline: clamp(16px, 4vw, 24px);
 }
 
@@ -47,14 +47,14 @@
 }
 
 .step-dot--active {
-  border-color: #7c3aed;
-  background: rgba(124, 58, 237, 0.2);
+  border-color: #ff5a00;
+  background: rgba(255, 90, 0, 0.2);
   color: #ffffff;
 }
 
 .step-dot--done {
-  border-color: #7c3aed;
-  background: #7c3aed;
+  border-color: #ff5a00;
+  background: #ff5a00;
   color: #ffffff;
 }
 
@@ -84,7 +84,7 @@
 .step-connector-fill {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, #7c3aed, #a855f7);
+  background: linear-gradient(to right, #ff5a00, #ff8a00);
   transform-origin: left;
 }
 
@@ -118,7 +118,7 @@
 /* ── MOBILE SAFE (344px) ── */
 @media (max-width: 360px) {
   .booking-steps {
-    padding-block: 48px;
+    padding: 100px 0 32px 0;
   }
 
   .booking-steps__container {

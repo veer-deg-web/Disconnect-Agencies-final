@@ -6,26 +6,22 @@
   width: 100%;
   max-width: 1152px;
 
-  margin-inline: auto; /* cleaner than 0 auto */
-  padding: clamp(20px, 4vw, 40px);
+  margin-inline: auto;
+  /* cleaner than 0 auto */
+  padding: clamp(16px, 3vw, 32px);
 
-  border-radius: clamp(20px, 2vw, 32px);
-
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.03)
-  );
+  background: rgba(12, 10, 22, 0.85);
 
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 90, 0, 0.28);
+  border-radius: clamp(20px, 2vw, 28px);
 
-  /* 🔥 Remove visual floating gap */
+  /* Match auth-card glowing box-shadow */
   box-shadow:
-    0 40px 120px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255,255,255,0.1);
+    0 8px 60px rgba(255, 90, 0, 0.28),
+    0 0 0 1px rgba(255, 90, 0, 0.08);
 
   position: relative;
   overflow: hidden;
@@ -36,17 +32,17 @@
 ===================================================== */
 
 /* If StepWrapper is inside a section */
-.step-wrapper + .step-wrapper {
+.step-wrapper+.step-wrapper {
   margin-top: 0;
 }
 
 /* Remove default spacing from first child */
-.step-wrapper > *:first-child {
+.step-wrapper>*:first-child {
   margin-top: 0;
 }
 
 /* Remove spacing from last child */
-.step-wrapper > *:last-child {
+.step-wrapper>*:last-child {
   margin-bottom: 0;
 }
 
@@ -56,7 +52,7 @@
 
 @media (min-width: 768px) {
   .step-wrapper {
-    padding: clamp(28px, 3vw, 48px);
+    padding: clamp(20px, 3vw, 36px);
   }
 }
 

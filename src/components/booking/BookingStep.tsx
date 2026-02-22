@@ -11,7 +11,7 @@ import DetailsStep from "./DetailsStep";
 import { CategoryType } from "@/components/data/serviceData";
 
 import BackgroundEllipses from "@/components/BackgroundElipse";
-import FloatingParticles from "@/components/FloatingParticles";
+import ParticleCanvas from "@/components/ParticleCanvas";
 import "./BookingSteps.css";
 
 interface BookingStepsProps {
@@ -64,7 +64,12 @@ export default function BookingSteps({ initialCategory }: BookingStepsProps) {
   return (
     <main className="booking-steps">
       <BackgroundEllipses />
-      <FloatingParticles count={140} speed={0.3} maxSize={1.8} />
+      <ParticleCanvas 
+        color="#ff5a00" 
+        shadowColor="#ff8a00" 
+        lineRgb="255,138,0" 
+        background="transparent" 
+      />
 
       {/* ── STEP PROGRESS INDICATOR ── */}
       <div className="booking-steps__indicator">
@@ -77,7 +82,7 @@ export default function BookingSteps({ initialCategory }: BookingStepsProps) {
                 className={`step-dot ${isActive ? "step-dot--active" : ""} ${isComplete ? "step-dot--done" : ""}`}
                 animate={
                   isActive
-                    ? { scale: 1.15, boxShadow: "0 0 0 4px rgba(124,58,237,0.3)" }
+                    ? { scale: 1.15, boxShadow: "0 0 0 4px rgba(255,90,0,0.3)" }
                     : { scale: 1, boxShadow: "0 0 0 0px transparent" }
                 }
                 transition={{ duration: 0.3 }}
