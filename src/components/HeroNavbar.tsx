@@ -2,14 +2,37 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { MorphingLoginButton } from "./HeroContent";
 
 export default function HeroNavbar() {
   const [open, setOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string>('user');
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const sync = () => {
+      setUserName(localStorage.getItem("userName"));
+      setUserRole(localStorage.getItem("userRole") ?? "user");
+    };
+    sync();
+    const interval = setInterval(sync, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userRole");
+    setUserName(null);
+    setUserRole("user");
+    setOpen(false);
+    router.push("/");
+  };
 
   const handleNavigate = (item: string) => {
     setOpen(false);
@@ -145,7 +168,25 @@ export default function HeroNavbar() {
           </ul>
 
           {/* DESKTOP CTA */}
-          <div className="login-btn">
+          <div className="login-btn" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {userName && userRole === 'admin' && (
+              <a
+                href="/admin"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#a78bfa',
+                  textDecoration: 'none',
+                  border: '1px solid rgba(124,58,237,0.45)',
+                  borderRadius: '999px',
+                  padding: '6px 16px',
+                  background: 'rgba(124,58,237,0.12)',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Admin
+              </a>
+            )}
             <MorphingLoginButton />
           </div>
 
@@ -248,6 +289,81 @@ export default function HeroNavbar() {
                 </div>
               )
             )}
+            {/* Login / Logout in mobile menu */}
+            <div
+              style={{
+                padding: "14px 0",
+                fontSize: "16px",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              {userName ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px" }}>
+                      Hi, {userName}
+                      {userRole === "admin" && (
+                        <span style={{
+                          marginLeft: "6px",
+                          fontSize: "10px",
+                          background: "rgba(124,58,237,0.3)",
+                          color: "#a78bfa",
+                          border: "1px solid rgba(124,58,237,0.5)",
+                          borderRadius: "4px",
+                          padding: "1px 5px",
+                          fontWeight: 600,
+                          verticalAlign: "middle",
+                        }}>ADMIN</span>
+                      )}
+                    </span>
+                    <button
+                      onClick={handleLogout}
+                      style={{
+                        background: "rgba(255,80,80,0.15)",
+                        border: "1px solid rgba(255,100,100,0.4)",
+                        color: "#ff8080",
+                        borderRadius: "999px",
+                        padding: "6px 18px",
+                        fontSize: "13px",
+                        fontWeight: 500,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                  {userRole === "admin" && (
+                    <a
+                      href="/admin"
+                      onClick={() => setOpen(false)}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        color: "#a78bfa",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                        background: "rgba(124,58,237,0.1)",
+                        border: "1px solid rgba(124,58,237,0.35)",
+                        borderRadius: "8px",
+                        padding: "8px 14px",
+                      }}
+                    >
+                      ⚙️ Admin Panel
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <span
+                  onClick={() => { setOpen(false); router.push("/auth"); }}
+                  style={{ color: "rgba(255,170,90,0.9)", fontWeight: 600 }}
+                >
+                  Login
+                </span>
+              )}
+            </div>
           </div>
         )}
       </header>

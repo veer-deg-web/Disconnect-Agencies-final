@@ -177,10 +177,89 @@ export default function HeroContent() {
 /* ================= SUB COMPONENTS ================= */
 
 export function MorphingLoginButton() {
+<<<<<<< pravin-backend
+  const [hover, setHover] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const name = localStorage.getItem("userName");
+    setUserName(name);
+
+    const onStorage = () => setUserName(localStorage.getItem("userName"));
+    window.addEventListener("storage", onStorage);
+    // Also poll in same tab for changes after login/logout
+    const interval = setInterval(() => {
+      setUserName(localStorage.getItem("userName"));
+    }, 500);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
+    setUserName(null);
+    router.push("/");
+  };
+
+  if (userName) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <span
+          style={{
+            color: "#fff",
+            fontSize: "14px",
+            fontWeight: 500,
+            maxWidth: "120px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Hi, {userName}
+        </span>
+        <button
+          onClick={handleLogout}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#fff";
+            (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,100,100,1)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.15)";
+            (e.currentTarget as HTMLButtonElement).style.color = "#fff";
+          }}
+          style={{
+            height: "34px",
+            padding: "0 16px",
+            borderRadius: "999px",
+            border: "1px solid rgba(255,255,255,0.35)",
+            background: "rgba(255,255,255,0.15)",
+            color: "#fff",
+            fontSize: "13px",
+            fontWeight: 500,
+            cursor: "pointer",
+            transition: "all 0.25s ease",
+          }}
+        >
+          Logout
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => router.push("/auth")}
+=======
   const [hover, setHover] = React.useState(false);
 
   return (
     <motion.button
+>>>>>>> main
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       animate={{
@@ -197,12 +276,20 @@ export function MorphingLoginButton() {
         fontSize: "14px",
         fontWeight: 500,
         cursor: "pointer",
+<<<<<<< pravin-backend
+        transition: "all 0.35s ease",
+      }}
+    >
+      {hover ? "Sign In" : "Login"}
+    </button>
+=======
         overflow: "hidden",
         whiteSpace: "nowrap"
       }}
     >
       {hover ? "Book a Call" : "Login"}
     </motion.button>
+>>>>>>> main
   );
 }
 

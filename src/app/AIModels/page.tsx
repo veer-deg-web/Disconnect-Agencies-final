@@ -7,7 +7,11 @@ import AntigravitySection from "@/components/AntiGravity/AntigravitySection";
 import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
+<<<<<<< pravin-backend
+import HeroNavbar from "@/components/HeroNavbar";
+=======
 import { faqs } from "@/Data/faq";
+>>>>>>> main
 import PricingSection from "@/components/PricingSection";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import { partnerLogos } from "@/Data/PartnerLogo";
@@ -37,6 +41,17 @@ export default function Ai() {
         /></section>
       <TestimonialsSection />
       <FAQSection
+<<<<<<< pravin-backend
+  category="general"
+  accentColor="#7c3aed"
+/>
+    <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #814AC8 0%, rgba(129,74,200,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#814AC8"
+  tiltIntensity={14}
+/>
+<Footer />
+=======
         faqs={faqs}
         accentColor="#7c3aed"
       />
@@ -46,6 +61,7 @@ export default function Ai() {
         tiltIntensity={14}
       />
       <Footer />
+>>>>>>> main
     </>
   );
 }

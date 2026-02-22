@@ -8,7 +8,6 @@ import CTASection from '@/components/CTASection';
 import Footer from '@/components/Footer';
 import PricingSection from '@/components/PricingSection';
 import FAQSection from '@/components/FAQSection';
-import { faqs } from '@/Data/faq';
 
 
 export default function HomePage() {
@@ -31,9 +30,8 @@ export default function HomePage() {
 />
 </section>
 <FAQSection
-  faqs={faqs}
+  category="general"
   accentColor="#5869E3"
-
 />
      <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #3B4EC3 0%, rgba(59,78,195,0.45) 35%, #0b0b0b 75%)"
