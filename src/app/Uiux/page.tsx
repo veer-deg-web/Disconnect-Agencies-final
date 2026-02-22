@@ -79,7 +79,7 @@ export default function UIUXPage() {
       <UIUXTutorials />
       <FAQSection
         title={`Questions?\nWe're here to assist!`}
-        faqs={faqs}
+        category="general"
         defaultOpenIndex={0}
       />
       <CTASection

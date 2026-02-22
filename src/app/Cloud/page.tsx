@@ -26,7 +26,7 @@ export default function CloudPage() {
       <ProcessSection />
       <TestimonialsSection />
       <FAQSection
-        faqs={Cloudfaq}
+        category="cloud"
         accentColor="#DBFE49"
         title="Answer To Your Queries"
       />

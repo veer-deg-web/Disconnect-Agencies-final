@@ -8,7 +8,6 @@ import CTASection from '@/components/CTASection';
 import Footer from '@/components/Footer';
 import PricingSection from '@/components/PricingSection';
 import FAQSection from '@/components/FAQSection';
-import { faqs } from '@/Data/faq';
 
 
 export default function HomePage() {
@@ -31,7 +30,7 @@ export default function HomePage() {
 />
 </section>
 <FAQSection
-  faqs={faqs}
+  category="general"
   accentColor="#5869E3"
 
 />
