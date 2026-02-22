@@ -6,7 +6,11 @@ import TestimonialsSection from "@/components/Ai/Hero/Testimoninals/Testimonials
 import AntigravitySection from "@/components/AntiGravity/AntigravitySection";
 import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
+<<<<<<< HEAD
 import { faqs } from "@/Data/faq";
+=======
+import Footer from "@/components/Footer";
+>>>>>>> 48b7a3addeb201b8a37908428e5dc004fd4ba25e
 import PricingSection from "@/components/PricingSection";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import { partnerLogos } from "@/Data/PartnerLogo";
@@ -36,7 +40,7 @@ export default function Ai() {
         /></section>
       <TestimonialsSection />
       <FAQSection
-        faqs={faqs}
+        category="general"
         accentColor="#7c3aed"
       />
       <CTASection

@@ -67,6 +67,7 @@ export default function UIUXPage() {
 
       <div style={{ position: "relative", zIndex: 10 }}>
         <UIUXShowcase />
+<<<<<<< HEAD
         <UIUXProcess />
         <UIUXBenefits />
         <UIUXFeatures />
@@ -86,6 +87,29 @@ export default function UIUXPage() {
           tiltGlow="#6214D9"
           tiltIntensity={14}
         />
+=======
+      <UIUXProcess />
+      <UIUXBenefits />
+      <UIUXFeatures />
+      <UIUXSolutions />
+      <section id="pricing">
+        <UIUXPricing />
+      </section>
+       <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
+      <UIUXTutorials />
+      <FAQSection
+        title={`Questions?\nWe're here to assist!`}
+        category="general"
+        defaultOpenIndex={0}
+      />
+      <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #6214D9 0%, rgba(98,20,217,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#6214D9"
+  tiltIntensity={14}
+/>
+      <Footer />
+      
+>>>>>>> 48b7a3addeb201b8a37908428e5dc004fd4ba25e
       </div>
     </>
   );
