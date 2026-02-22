@@ -77,7 +77,7 @@ export default function WebDevelopmentPage() {
         title={`Questions?\nWe're here to assist!`}
         defaultOpenIndex={0}
         accentColor="#C7FF1A"
-        category="general"
+        category="webdev"
       />
     <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #CFFE25 0%, rgba(207,254,37,0.45) 35%, #0b0b0b 75%)"

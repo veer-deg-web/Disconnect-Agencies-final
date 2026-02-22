@@ -25,38 +25,7 @@ const heroLogos = [
   { node: <SiTailwindcss />, title: "Tailwind CSS" },
 ];
 
-const faqs = [
-  {
-    question: "Why wouldn’t I just hire a full-time designer?",
-    answer:
-      "Hiring a full-time designer is expensive and inflexible. With our model, you get top-tier design talent on demand—no long-term commitments, overhead, or downtime.",
-  },
-  {
-    question: "Is there a limit to how many requests I can have?",
-    answer:
-      "No hard limits. You can submit as many requests as you want. We work through them one by one, prioritizing quality and speed.",
-  },
-  {
-    question: "How fast will I receive my designs?",
-    answer:
-      "Most requests are delivered within 24–48 hours depending on complexity. Larger projects may take slightly longer.",
-  },
-  {
-    question: "Who are the designers?",
-    answer:
-      "Our designers are senior-level professionals with experience across startups, agencies, and enterprise products.",
-  },
-  {
-    question: "What if I don’t like the design?",
-    answer:
-      "No worries — we’ll revise it until you’re 100% satisfied. Unlimited revisions are included.",
-  },
-  {
-    question: "Are there any refunds if I don’t like the service?",
-    answer:
-      "If you’re not happy within the first week, we offer a no-questions-asked refund.",
-  },
-];
+
 
 
 export default function UIUXPage() {
@@ -79,7 +48,8 @@ export default function UIUXPage() {
       <UIUXTutorials />
       <FAQSection
         title={`Questions?\nWe're here to assist!`}
-        category="general"
+        category="uiux"
+        accentColor="#7C3AED"
         defaultOpenIndex={0}
       />
       <CTASection

@@ -65,6 +65,7 @@ export default function Home() {
       <FAQSection
   title="FAQ"
   category="general"
+  accentColor="#DE5E03"
   defaultOpenIndex={0}
 />
       <CTASection

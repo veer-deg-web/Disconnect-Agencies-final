@@ -30,7 +30,7 @@ export default function HomePage() {
 />
 </section>
 <FAQSection
-  category="general"
+  category="appdev"
   accentColor="#5869E3"
 
 />

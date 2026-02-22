@@ -9,7 +9,17 @@ import {
 import './Admin.css';
 
 /* ── Types ── */
-type Category = 'general' | 'cloud';
+type Category = 'general' | 'cloud' | 'uiux' | 'webdev' | 'appdev' | 'aimodels' | 'seo';
+
+const CATEGORIES: { value: Category; label: string }[] = [
+  { value: 'general',  label: 'General' },
+  { value: 'cloud',    label: 'Cloud / Agency' },
+  { value: 'uiux',    label: 'UI/UX' },
+  { value: 'webdev',  label: 'Web Dev' },
+  { value: 'appdev',  label: 'App Dev' },
+  { value: 'aimodels',label: 'AI Models' },
+  { value: 'seo',     label: 'SEO' },
+];
 
 interface Faq {
   _id: string;
@@ -67,8 +77,9 @@ function FaqFormModal({
               value={category}
               onChange={e => setCategory(e.target.value as Category)}
             >
-              <option value="general">General (AI Automation)</option>
-              <option value="cloud">Cloud / Agency</option>
+              {CATEGORIES.map(c => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
             </select>
           </div>
           <div className="adm-field">
@@ -232,8 +243,7 @@ function FaqSection() {
     return matchCat && matchSearch;
   });
 
-  const totalGeneral = faqs.filter(f => f.category === 'general').length;
-  const totalCloud = faqs.filter(f => f.category === 'cloud').length;
+
 
   return (
     <div>
@@ -251,8 +261,7 @@ function FaqSection() {
       <div className="adm-stats">
         {[
           { label: 'Total FAQs', value: faqs.length },
-          { label: 'General', value: totalGeneral },
-          { label: 'Cloud / Agency', value: totalCloud },
+          ...CATEGORIES.map(c => ({ label: c.label, value: faqs.filter(f => f.category === c.value).length })),
         ].map(s => (
           <div className="adm-stat-card" key={s.label}>
             <span className="adm-stat-label">{s.label}</span>
@@ -266,19 +275,25 @@ function FaqSection() {
       {/* Table */}
       <div className="adm-table-wrap">
         <div className="adm-table-header">
-          <span className="adm-table-heading">
-            {category === 'all' ? 'All FAQs' : category === 'general' ? 'General FAQs' : 'Cloud / Agency FAQs'}
+           <span className="adm-table-heading">
+            {category === 'all' ? 'All FAQs' : `${CATEGORIES.find(c => c.value === category)?.label ?? category} FAQs`}
             &nbsp;({filtered.length})
           </span>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
             <div className="adm-tabs">
-              {(['all', 'general', 'cloud'] as const).map(c => (
+              <button
+                className={`adm-tab${category === 'all' ? ' active' : ''}`}
+                onClick={() => setCategory('all')}
+              >
+                All
+              </button>
+              {CATEGORIES.map(c => (
                 <button
-                  key={c}
-                  className={`adm-tab${category === c ? ' active' : ''}`}
-                  onClick={() => setCategory(c)}
+                  key={c.value}
+                  className={`adm-tab${category === c.value ? ' active' : ''}`}
+                  onClick={() => setCategory(c.value)}
                 >
-                  {c === 'all' ? 'All' : c === 'general' ? 'General' : 'Cloud'}
+                  {c.label}
                 </button>
               ))}
             </div>
