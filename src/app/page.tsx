@@ -67,7 +67,6 @@ export default function Home() {
   defaultOpenIndex={0}
 />
       <CTASection
-<<<<<<< HEAD
         gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
         tiltGlow="#DE5E03"
         tiltIntensity={14}
@@ -75,14 +74,5 @@ export default function Home() {
     </PageBackground>
 
 
-=======
-  gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
-  tiltGlow="#DE5E03"
-  tiltIntensity={14}
-/>
-      <Footer/></PageBackground>
-    
-    
->>>>>>> 48b7a3addeb201b8a37908428e5dc004fd4ba25e
   );
 }
