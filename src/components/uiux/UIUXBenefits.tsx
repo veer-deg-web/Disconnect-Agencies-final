@@ -11,7 +11,7 @@ const LANGUAGES = [
   "빠르고 · 고품질 · 무제한.",
   "سريع · عالي الجودة · بلا حدود",
   "तेज़, गुणवत्ता और असीमित।",
-  
+
   "Rápido, calidad y sin límites.",
   "Fast, quality & limitless.",
 ];

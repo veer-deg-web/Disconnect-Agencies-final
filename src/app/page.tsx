@@ -11,7 +11,6 @@ import PricingSection from "@/components/PricingSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
 import { Section } from "lucide-react";
 
 
@@ -69,12 +68,12 @@ export default function Home() {
   defaultOpenIndex={0}
 />
       <CTASection
-  gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
-  tiltGlow="#DE5E03"
-  tiltIntensity={14}
-/>
-      <Footer/></PageBackground>
-    
-    
+        gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
+        tiltGlow="#DE5E03"
+        tiltIntensity={14}
+      />
+    </PageBackground>
+
+
   );
 }

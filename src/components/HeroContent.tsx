@@ -6,6 +6,7 @@ import { motion, useAnimationControls } from "framer-motion";
 import BookCallButton from "./BookCallButton";
 import ShinyText from "./ShinyText";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+import "./HeroContent.css";
 
 /* ================= ANIMATIONS ================= */
 
@@ -77,44 +78,6 @@ export default function HeroContent() {
 
   return (
     <>
-      {/* MOBILE OVERRIDES ONLY */}
-      <style>
-        {`
-          @media (max-width: 768px) {
-            .hero-wrap {
-              padding-left: 20px !important;
-              padding-right: 20px !important;
-            }
-
-            .hero-heading {
-              font-size: clamp(36px, 9vw, 48px) !important;
-              line-height: 1.15 !important;
-            }
-
-            .hero-para {
-              font-size: 15px !important;
-            }
-
-            .hero-buttons {
-              flex-direction: column;
-              gap: 14px;
-              width: 100%;
-            }
-
-            .hero-buttons > div {
-              width: 100%;
-              display: flex;
-              justify-content: center;
-            }
-
-            .glow-pill {
-              width: 100% !important;
-              max-width: 320px;
-              font-size: 13px !important;
-            }
-          }
-        `}
-      </style>
 
       <ShootingStars />
 
@@ -146,17 +109,17 @@ export default function HeroContent() {
           style={{ fontSize: "75px", fontWeight: 600, lineHeight: 1.2 }}
         >
           <ShinyText
-  text="Disconnect Agencies"
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FF5C00"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
+            text="Disconnect Agencies"
+            speed={2}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#FF5C00"
+            spread={120}
+            direction="left"
+            yoyo={false}
+            pauseOnHover={false}
+            disabled={false}
+          />
         </motion.h1>
 
         {/* Paragraph */}

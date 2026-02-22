@@ -1,0 +1,33 @@
+@media (max-width: 768px) {
+  .hero-wrap {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .hero-heading {
+    font-size: clamp(36px, 9vw, 48px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .hero-para {
+    font-size: 15px !important;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .hero-buttons > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .glow-pill {
+    width: 100% !important;
+    max-width: 320px;
+    font-size: 13px !important;
+  }
+}

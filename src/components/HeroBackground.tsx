@@ -1,26 +1,61 @@
 "use client";
 
-import React from "react";
+import { motion } from "framer-motion";
 import "./HeroBackground.css";
 
 export default function HeroBackground() {
     return (
-        <div className="hero-bg-container">
+        <motion.div
+            className="hero-bg-container"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+        >
             {/* Base Dot Pattern */}
-            <div className="hero-bg-dots" />
+            <motion.div
+                className="hero-bg-dots"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5, delay: 0.2 }}
+            />
 
             {/* Glow Effects */}
-            <div className="hero-bg-glow-1" />
-            <div className="hero-bg-glow-2" />
+            <motion.div
+                className="hero-bg-glow-1"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 2, delay: 0.4 }}
+            />
+            <motion.div
+                className="hero-bg-glow-2"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 2, delay: 0.6 }}
+            />
 
             {/* Decorative Diagonal Line */}
-            <div className="hero-bg-diagonal" />
+            <motion.div
+                className="hero-bg-diagonal"
+                initial={{ opacity: 0, scaleX: 0, x: "-50%", y: "-50%", rotate: 35 }}
+                animate={{ opacity: 1, scaleX: 1, x: "-50%", y: "-50%", rotate: 35 }}
+                transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
+            />
 
             {/* Decorative Curved Element */}
-            <div className="hero-bg-curve" />
+            <motion.div
+                className="hero-bg-curve"
+                initial={{ opacity: 0, pathLength: 0, rotate: -5 }}
+                animate={{ opacity: 1, pathLength: 1, rotate: 0 }}
+                transition={{ duration: 1.5, delay: 1, ease: "easeOut" }}
+            />
 
             {/* Final Blending Overlay */}
-            <div className="hero-bg-overlay" />
-        </div>
+            <motion.div
+                className="hero-bg-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5, delay: 1.2 }}
+            />
+        </motion.div>
     );
 }

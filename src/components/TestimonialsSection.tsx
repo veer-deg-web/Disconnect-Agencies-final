@@ -211,10 +211,10 @@ function TestimonialCard({ name, role, quote }: Testimonial) {
     <div style={card}>
       <div style={cardHeader}>
         <img
-  src="/Section.png"
-  alt={name}
-  style={avatarImage}
-/>
+          src="/Section.png"
+          alt={name}
+          style={avatarImage}
+        />
         <div>
           <div style={nameStyle}>{name}</div>
           <div style={roleStyle}>{role}</div>

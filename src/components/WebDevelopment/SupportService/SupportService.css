@@ -201,7 +201,7 @@
 
   /* BIG CARD TEXT — IMPORTANT */
   .support-item.large .quote {
-    font-size: 18px;              /* ⬆️ increased */
+    font-size: 18px; /* ⬆️ increased */
     line-height: 1.65;
   }
 
@@ -215,14 +215,14 @@
 
   /* NUMBERS */
   .support-card h3 {
-    font-size: 44px;              /* ⬆️ clearer */
+    font-size: 44px; /* ⬆️ clearer */
     line-height: 1;
   }
 
   /* LOGO — IMPORTANT */
   .brand img {
-    height: 36px;  
-                 /* ⬆️ increased */
+    height: 36px;
+    /* ⬆️ increased */
   }
 
   /* PILLS */

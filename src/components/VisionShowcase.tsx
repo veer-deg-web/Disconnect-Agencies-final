@@ -9,7 +9,7 @@ import {
   SiNextdotjs,
   SiTypescript,
   SiTailwindcss,
-} from "react-icons/si"; 
+} from "react-icons/si";
 const heroLogos = [
   { node: <SiReact />, title: "React" },
   { node: <SiNextdotjs />, title: "Next.js" },
@@ -28,14 +28,14 @@ export default function VisionShowcase() {
 
       {/* TRUSTED BY */}
       <div className="trusted">
-       
 
-       <UIUXShowcaseLogos
-  logos={heroLogos}
-  title="Trusted By Top Innovative Teams"
-  logoSize={60}
-  iconGap={200}
-/>
+
+        <UIUXShowcaseLogos
+          logos={heroLogos}
+          title="Trusted By Top Innovative Teams"
+          logoSize={60}
+          iconGap={200}
+        />
       </div>
 
       {/* CONTENT */}
@@ -43,17 +43,17 @@ export default function VisionShowcase() {
         {/* TEXT */}
         <div className="text">
           <h2> <ShinyText
-  text="Bring us your vision"
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FF5C00"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/></h2>
+            text="Bring us your vision"
+            speed={2}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#FF5C00"
+            spread={120}
+            direction="left"
+            yoyo={false}
+            pauseOnHover={false}
+            disabled={false}
+          /></h2>
           <p>
             We're the full-service development agency that handles design,
             engineering, and launch end to end.
@@ -62,17 +62,17 @@ export default function VisionShowcase() {
 
         {/* TOGGLE */}
         <div className="toggle-wrap">
-        <Cubes
-  gridSize={6}
-  maxAngle={30}
-  radius={3}
-  borderStyle="2px dashed #FF8C32"
-  faceColor="#141414"
-  rippleColor="#FF6B00"
-  rippleSpeed={1.5}
-  autoAnimate
-  rippleOnClick
-/>
+          <Cubes
+            gridSize={6}
+            maxAngle={30}
+            radius={3}
+            borderStyle="2px dashed #FF8C32"
+            faceColor="#141414"
+            rippleColor="#FF6B00"
+            rippleSpeed={1.5}
+            autoAnimate
+            rippleOnClick
+          />
         </div>
       </div>
 
