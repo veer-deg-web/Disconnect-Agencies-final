@@ -34,8 +34,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "src/components/ShimmerFields"  ],
+    "**/*.mts",
+    "src/components/ShimmerFields"
+  ],
   "exclude": [
     "node_modules"
   ]
