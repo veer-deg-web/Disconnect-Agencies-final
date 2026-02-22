@@ -10,10 +10,10 @@ import { useFaq } from "@/lib/useFaq";
    TYPES
 ======================= */
 
-type FaqCategory = "general" | "cloud" | "all";
+type FaqCategory = 'general' | 'cloud' | 'uiux' | 'webdev' | 'appdev' | 'aimodels' | 'seo';
 
 interface FAQSectionProps {
-  /** Which FAQs to load from the backend. Defaults to "general". */
+  /** Which FAQ category to load from the backend. */
   category?: FaqCategory;
   title?: string;
   defaultOpenIndex?: number | null;

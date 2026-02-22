@@ -76,37 +76,7 @@ export default function WebDevelopmentPage() {
         title={`Questions?\nWe're here to assist!`}
         defaultOpenIndex={0}
         accentColor="#C7FF1A"
-<<<<<<< HEAD
-        faqs={[
-          {
-            question: "Why is a strong brand identity important?",
-            answer:
-              "A robust brand identity and website serve as the face of your business, shaping how it is perceived by potential customers. They not only convey professionalism but also establish trust and credibility, vital factors in today’s competitive market.",
-          },
-          {
-            question: "How long before I see results?",
-            answer:
-              "Timelines vary based on project scope, but most clients begin to see measurable progress within weeks after launch.",
-          },
-          {
-            question: "Can I cancel anytime?",
-            answer:
-              "Yes. You can cancel or pause services anytime with proper notice.",
-          },
-          {
-            question: "Do you work with international clients?",
-            answer:
-              "Absolutely. We work with clients across different time zones and continents.",
-          },
-          {
-            question: "What industries do you specialize in?",
-            answer:
-              "We specialize in SaaS, fintech, e-commerce, startups, and enterprise platforms.",
-          },
-        ]}
-=======
-        category="general"
->>>>>>> 48b7a3addeb201b8a37908428e5dc004fd4ba25e
+        category="webdev"
       />
       <CTASection
         gradient="radial-gradient(80% 120% at 50% 100%, #CFFE25 0%, rgba(207,254,37,0.45) 35%, #0b0b0b 75%)"

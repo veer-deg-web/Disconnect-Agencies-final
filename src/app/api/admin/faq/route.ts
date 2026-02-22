@@ -1,47 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import dbConnect from '@/lib/mongodb';
-import Faq from '@/models/Faq';
-import { faqs as generalFaqs } from '@/Data/faq';
-import { Cloudfaq as cloudFaqs } from '@/Data/Cloudfaq';
 
-const JWT_SECRET = process.env.JWT_SECRET ;
+export const dynamic = 'force-dynamic';
 
-/** Verify admin token — must have role: 'admin' in JWT */
-function verifyToken(req: NextRequest): { valid: boolean; isAdmin: boolean; userId?: string } {
+const JWT_SECRET = process.env.JWT_SECRET;
+
+/** Verify admin token — must have role: 'admin' in JWT payload */
+async function verifyToken(req: NextRequest): Promise<{ valid: boolean; isAdmin: boolean }> {
   const auth = req.headers.get('authorization') || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
   if (!token) return { valid: false, isAdmin: false };
   try {
-    const decoded = jwt.verify(token, JWT_SECRET as string) as unknown as { userId: string; role?: string };
-    const isAdmin = decoded.role === 'admin';
-    return { valid: true, isAdmin, userId: decoded.userId };
+    const { default: jwt } = await import('jsonwebtoken');
+    const decoded = jwt.verify(token, JWT_SECRET as string) as { role?: string };
+    return { valid: true, isAdmin: decoded.role === 'admin' };
   } catch {
     return { valid: false, isAdmin: false };
   }
 }
 
-/** Seed FAQs from static files if the collection is empty */
-async function seedIfEmpty() {
-  const count = await Faq.countDocuments();
-  if (count > 0) return;
-  const general = generalFaqs.map((f, i) => ({
-    question: f.question, answer: f.answer, category: 'general' as const, order: i,
-  }));
-  const cloud = cloudFaqs.map((f, i) => ({
-    question: f.question, answer: f.answer, category: 'cloud' as const, order: i,
-  }));
-  await Faq.insertMany([...general, ...cloud]);
+async function getDb() {
+  const [{ default: dbConnect }, { default: Faq }] = await Promise.all([
+    import('@/lib/mongodb'),
+    import('@/models/Faq'),
+  ]);
+  await dbConnect();
+  return Faq;
 }
 
-/* ── GET /api/admin/faq  — list all ── */
+/** Seed all 7 categories from static data on first run */
+async function seedIfEmpty(Faq: Awaited<ReturnType<typeof getDb>>) {
+  const count = await Faq.countDocuments();
+  if (count > 0) return;
+  const { STATIC_FAQS } = await import('@/Data/allFaqs');
+  const docs = (Object.keys(STATIC_FAQS) as (keyof typeof STATIC_FAQS)[]).flatMap((cat) =>
+    STATIC_FAQS[cat].map((f, i) => ({
+      question: f.question, answer: f.answer, category: cat, order: i,
+    }))
+  );
+  await Faq.insertMany(docs);
+}
+
+/* ── GET /api/admin/faq ── */
 export async function GET(req: NextRequest) {
-  const auth = verifyToken(req);
+  const auth = await verifyToken(req);
   if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden: admin only' }, { status: 403 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
-    await dbConnect();
-    await seedIfEmpty();
+    const Faq = await getDb();
+    await seedIfEmpty(Faq);
     const faqs = await Faq.find().sort({ category: 1, order: 1 }).lean();
     return NextResponse.json({ faqs });
   } catch (err: any) {
@@ -49,13 +55,13 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/* ── POST /api/admin/faq  — create ── */
+/* ── POST /api/admin/faq ── */
 export async function POST(req: NextRequest) {
-  const auth = verifyToken(req);
+  const auth = await verifyToken(req);
   if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden: admin only' }, { status: 403 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
-    await dbConnect();
+    const Faq = await getDb();
     const { question, answer, category } = await req.json();
     if (!question?.trim() || !answer?.trim() || !category)
       return NextResponse.json({ error: 'question, answer and category are required' }, { status: 400 });
@@ -67,13 +73,13 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/* ── PUT /api/admin/faq  — update ── */
+/* ── PUT /api/admin/faq ── */
 export async function PUT(req: NextRequest) {
-  const auth = verifyToken(req);
+  const auth = await verifyToken(req);
   if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden: admin only' }, { status: 403 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
-    await dbConnect();
+    const Faq = await getDb();
     const { id, question, answer, category } = await req.json();
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
     const faq = await Faq.findByIdAndUpdate(
@@ -88,13 +94,13 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-/* ── DELETE /api/admin/faq  — delete ── */
+/* ── DELETE /api/admin/faq ── */
 export async function DELETE(req: NextRequest) {
-  const auth = verifyToken(req);
+  const auth = await verifyToken(req);
   if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden: admin only' }, { status: 403 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
-    await dbConnect();
+    const Faq = await getDb();
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
     const faq = await Faq.findByIdAndDelete(id);

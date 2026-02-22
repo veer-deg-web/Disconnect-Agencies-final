@@ -43,7 +43,7 @@ export default function HomePage() {
 />
 </section>
 <FAQSection
-  category="general"
+  category="appdev"
   accentColor="#5869E3"
 >>>>>>> 48b7a3addeb201b8a37908428e5dc004fd4ba25e
 

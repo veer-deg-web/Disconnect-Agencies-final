@@ -40,7 +40,7 @@ export default function Ai() {
         /></section>
       <TestimonialsSection />
       <FAQSection
-        category="general"
+        category="aimodels"
         accentColor="#7c3aed"
       />
       <CTASection

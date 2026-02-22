@@ -5,6 +5,7 @@ import SEOServicesSection from "@/components/SEO/Services/SeoServiceSection";
 import UIUXPricing from "@/components/uiux/UIUXPricing";
 import FeaturedServicesSection from "@/components/SEO/FeaturedServiceSection/FeaturedSevicesSection";
 import ReviewsSection from "@/components/SEO/Review/ReviewsSection";
+import FAQSection from "@/components/FAQSection";
 
 export default function SEOPage() {
   return (
@@ -17,11 +18,18 @@ export default function SEOPage() {
         <UIUXPricing />
       </section>
       <ReviewsSection />
-      <CTASection
-        gradient="radial-gradient(80% 120% at 50% 100%, #3755CD 0%, rgba(55,85,205,0.45) 35%, #0b0b0b 75%)"
-        tiltGlow="#3755CD"
-        tiltIntensity={14}
+      <FAQSection
+        title={`Questions?\nWe're here to assist!`}
+        category="seo"
+        accentColor="#3755CD"
+        defaultOpenIndex={0}
       />
+    <CTASection
+  gradient="radial-gradient(80% 120% at 50% 100%, #3755CD 0%, rgba(55,85,205,0.45) 35%, #0b0b0b 75%)"
+  tiltGlow="#3755CD"
+  tiltIntensity={14}
+/>
+      <Footer />
     </main>
   );
 }
