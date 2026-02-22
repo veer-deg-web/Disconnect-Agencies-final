@@ -54,8 +54,8 @@ const ParticleCanvas = () => {
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = '#7c3aed';
-        ctx.shadowColor = '#a78bfa';
+        ctx.fillStyle = '#ff5a00';
+        ctx.shadowColor = '#ff8a00';
         ctx.shadowBlur = 5;
         ctx.fill();
         ctx.shadowBlur = 0;
@@ -67,7 +67,7 @@ const ParticleCanvas = () => {
           const dy = particles[a].y - particles[b].y;
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < LINK) {
-            ctx.strokeStyle = `rgba(124,58,237,${(1 - d / LINK) * 0.35})`;
+            ctx.strokeStyle = `rgba(255,138,0,${(1 - d / LINK) * 0.35})`;
             ctx.lineWidth = 0.6;
             ctx.beginPath();
             ctx.moveTo(particles[a].x, particles[a].y);
@@ -273,6 +273,35 @@ export default function AuthClient() {
   const [showPw, setShowPw] = useState(false);
   const [showCPw, setShowCPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  const cardRefDesktop = useRef<HTMLDivElement>(null);
+  const cardRefMobile = useRef<HTMLDivElement>(null);
+
+  /* 3D Tilt Effect handlers */
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, ref: React.RefObject<HTMLDivElement | null>) => {
+    const card = ref.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rotateX = ((y / rect.height) - 0.5) * 8;
+    const rotateY = ((x / rect.width) - 0.5) * -8;
+
+    card.style.transform = `
+      perspective(1200px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      translateY(-4px)
+    `;
+  };
+
+  const resetTilt = (ref: React.RefObject<HTMLDivElement | null>) => {
+    if (!ref.current) return;
+    ref.current.style.transform =
+      "perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px)";
+  };
 
   /* email OTP */
   const [otpModal, setOtpModal] = useState(false);
@@ -476,7 +505,12 @@ export default function AuthClient() {
 
       {/* ────────── DESKTOP ────────── */}
       <div className="auth-page auth-desktop">
-        <div className={`auth-card-desktop${mode === 'signup' ? ' is-signup' : ''}`}>
+        <div 
+          ref={cardRefDesktop}
+          className={`auth-card-desktop${mode === 'signup' ? ' is-signup' : ''}`}
+          onMouseMove={(e) => handleMouseMove(e, cardRefDesktop)}
+          onMouseLeave={() => resetTilt(cardRefDesktop)}
+        >
 
           {/* Sign-in form — visible by default, hidden when signup */}
           <div className="auth-form-panel auth-form-panel--signin">
@@ -505,13 +539,13 @@ export default function AuthClient() {
             <div className="auth-overlay-inner">
               <div className="auth-overlay-dots" />
               <div className="auth-overlay-side auth-overlay-side--left">
-                <div className="auth-logo auth-logo--overlay"><span>DA</span></div>
+                <div className="auth-logo auth-logo--overlay"><img src="/logo.png" alt="Disconnect Agencies" /></div>
                 <h2>Welcome Back!</h2>
                 <p>Already have an account?<br />Sign in to continue.</p>
                 <OutlineBtn onClick={() => setMode('signin')}>Sign In</OutlineBtn>
               </div>
               <div className="auth-overlay-side auth-overlay-side--right">
-                <div className="auth-logo auth-logo--overlay"><span>DA</span></div>
+                <div className="auth-logo auth-logo--overlay"><img src="/logo.png" alt="Disconnect Agencies" /></div>
                 <h2>New Here?</h2>
                 <p>Create a free account and<br />start your journey today.</p>
                 <OutlineBtn onClick={() => setMode('signup')}>Sign Up</OutlineBtn>
@@ -531,8 +565,13 @@ export default function AuthClient() {
           <button onClick={() => router.back()} className="auth-back-btn-mobile">
             <ArrowLeft size={14} /> Back
           </button>
-          <div className="auth-card-mobile">
-            <div className="auth-logo auth-logo--mobile"><span>DA</span></div>
+          <div 
+            ref={cardRefMobile}
+            className="auth-card-mobile"
+            onMouseMove={(e) => handleMouseMove(e, cardRefMobile)}
+            onMouseLeave={() => resetTilt(cardRefMobile)}
+          >
+            <div className="auth-logo auth-logo--mobile"><img src="/logo.png" alt="Disconnect Agencies" /></div>
             <h1 className="auth-mobile-title">
               {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
             </h1>
