@@ -34,7 +34,6 @@ export default function SupportedByAISection() {
     offset: ["start end", "end start"],
   });
 
-  // Slightly reduced range for mobile friendliness
   const row1X = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
   const row2X = useTransform(scrollYProgress, [0, 1], ["6%", "-6%"]);
 
@@ -65,15 +64,13 @@ export default function SupportedByAISection() {
       </div>
 
       {/* ROWS */}
-      <div style={rowsWrap}>
-        <motion.div style={{ ...row, x: row1X }}>
-          {[...ROW_1, ...ROW_1].map(renderCard)}
-        </motion.div>
+      <motion.div style={{ ...row, x: row1X }}>
+        {ROW_1.map(renderCard)}
+      </motion.div>
 
-        <motion.div style={{ ...row, marginTop: 16, x: row2X }}>
-          {[...ROW_2, ...ROW_2].map(renderCard)}
-        </motion.div>
-      </div>
+      <motion.div style={{ ...row, x: row2X, marginTop: 28 }}>
+        {ROW_2.map(renderCard)}
+      </motion.div>
     </section>
   );
 }
@@ -84,7 +81,16 @@ export default function SupportedByAISection() {
 
 function renderCard(person: any, i: number) {
   return (
-    <div key={i} style={card}>
+    <div
+      key={i}
+      style={card}
+      onMouseEnter={(e) =>
+        (e.currentTarget.style.transform = "translateY(-6px)")
+      }
+      onMouseLeave={(e) =>
+        (e.currentTarget.style.transform = "translateY(0px)")
+      }
+    >
       <img src={person.img} alt={person.name} style={avatar} />
       <div>
         <div style={name}>{person.name}</div>
@@ -99,61 +105,61 @@ function renderCard(person: any, i: number) {
 ======================= */
 
 const section: React.CSSProperties = {
-  padding: "clamp(80px, 12vw, 120px) 16px",
+  padding: "clamp(100px, 14vw, 160px) 40px",
   background: "radial-gradient(circle at top, #141414, #000)",
   color: "#fff",
   overflow: "hidden",
 };
 
 const textWrap: React.CSSProperties = {
-  maxWidth: 460,
-  marginBottom: 48,
-  fontSize: "clamp(22px, 6vw, 36px)",
+  maxWidth: 560,
+  marginBottom: 60,
+  fontSize: "clamp(26px, 5vw, 42px)",
 };
 
 const subText: React.CSSProperties = {
-  fontSize: "clamp(13px, 3.5vw, 14px)",
+  fontSize: "clamp(14px, 3.5vw, 15px)",
   opacity: 0.65,
-  marginTop: 12,
+  marginTop: 18,
   lineHeight: 1.6,
-};
-
-const rowsWrap: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
 };
 
 const row: React.CSSProperties = {
   display: "flex",
-  gap: 14,
-  width: "max-content",
+  gap: 24,
+  flexWrap: "wrap",   // 🔥 important
+  maxWidth: 1400,     // 🔥 prevents 5th card
 };
 
 const card: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: 12,
-  padding: "12px 14px",
-  borderRadius: 12,
+  gap: 18,
+  padding: "22px 28px",
+  borderRadius: 22,
+  flex: "1 1 300px",  // 🔥 ensures max 4
+  maxWidth: 320,
   background:
-    "linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
+    "linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
   border: "1px solid rgba(255,255,255,0.08)",
-  minWidth: 180, // ⬅️ mobile-safe
+  backdropFilter: "blur(14px)",
+  boxShadow: "0 12px 40px rgba(0,0,0,0.4)",
+  transition: "transform 0.4s ease",
 };
 
 const avatar: React.CSSProperties = {
-  width: 34,
-  height: 34,
+  width: 50,
+  height: 50,
   borderRadius: "50%",
   objectFit: "cover",
 };
 
 const name: React.CSSProperties = {
-  fontSize: 13,
+  fontSize: 16,
   fontWeight: 500,
 };
 
 const role: React.CSSProperties = {
-  fontSize: 11.5,
-  opacity: 0.6,
+  fontSize: 13,
+  opacity: 0.65,
 };
