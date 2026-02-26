@@ -1,8 +1,10 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
+import React, { useRef, useCallback } from "react";
 import ShinyText from "@/components/ShinyText";
 import SpotlightCard from "@/components/SpotlightCard";
+import "./FeatureGridSection.css";
 
 /* ============================
    TYPES
@@ -11,7 +13,7 @@ import SpotlightCard from "@/components/SpotlightCard";
 export interface FeatureItem {
   title: string;
   description: string;
-  logo: string;
+  logo: React.ReactNode;
 }
 
 interface FeaturesSectionProps {
@@ -22,15 +24,17 @@ interface FeaturesSectionProps {
 }
 
 /* ============================
-   ANIMATIONS (TS SAFE)
+   ANIMATIONS
 ============================ */
+
+const easeSmooth: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const headingVariant: Variants = {
   hidden: { opacity: 0, y: 56 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.9, ease: easeSmooth },
   },
 };
 
@@ -49,16 +53,7 @@ const cardVariant: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const contentVariant: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.7, ease: easeSmooth },
   },
 };
 
@@ -66,83 +61,43 @@ const contentVariant: Variants = {
    COMPONENT
 ============================ */
 
-export default function FeaturesSection({
+export default function FeatureGridSection({
   headingLine1,
   headingLine2,
   subheading,
   items,
 }: FeaturesSectionProps) {
   return (
-    <section style={sectionStyle}>
-      {/* HEADING */}
+    <section className="feature-section">
       <motion.div
+        className="feature-heading-wrap"
         variants={headingVariant}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-120px" }}
-        style={headingWrap}
       >
-        <div style={headingLine}>
-          <ShinyText
-            text={headingLine1}
-            speed={2}
-            color="#eaeaea"
-            shineColor="#ffffff"
-            spread={180}
-          />
+        <div className="feature-heading-line">
+          <ShinyText text={headingLine1} speed={2} color="#eaeaea" />
         </div>
 
-        <div style={{ ...headingLine, marginTop: 12 }}>
-          <ShinyText
-            text={headingLine2}
-            speed={2}
-            color="#eaeaea"
-            shineColor="#ffffff"
-            spread={180}
-          />
+        <div className="feature-heading-line second">
+          <ShinyText text={headingLine2} speed={2} color="#eaeaea" />
         </div>
 
-        {subheading && <p style={subHeading}>{subheading}</p>}
+        {subheading && (
+          <p className="feature-subheading">{subheading}</p>
+        )}
       </motion.div>
 
-      {/* GRID */}
       <motion.div
+        className="feature-grid"
         variants={gridVariant}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-120px" }}
-        style={gridStyle}
       >
         {items.map((item, index) => (
-          <motion.div key={index} variants={cardVariant}>
-            <SpotlightCard
-              className="custom-spotlight-card"
-              spotlightColor="rgba(0, 229, 255, 0.2)"
-            >
-              <div style={cardStyle}>
-                {/* LOGO */}
-                <div style={logoWrap}>
-                  <img src={item.logo} alt="" style={logoImg} />
-                </div>
-
-                {/* CARD TITLE */}
-                <motion.h3 variants={contentVariant} style={cardTitle}>
-                  <ShinyText
-                    text={item.title}
-                    speed={1.4}
-                    color="#ffffff"
-                    shineColor="#ffffff"
-                    spread={90}
-                  />
-                </motion.h3>
-
-                {/* CARD DESCRIPTION */}
-                <motion.p variants={contentVariant} style={cardText}>
-                  {item.description}
-                </motion.p>
-              </div>
-            </SpotlightCard>
-          </motion.div>
+          <FeatureCard key={index} item={item} />
         ))}
       </motion.div>
     </section>
@@ -150,78 +105,61 @@ export default function FeaturesSection({
 }
 
 /* ============================
-   STYLES
+   FEATURE CARD
 ============================ */
 
-const sectionStyle: React.CSSProperties = {
-  padding: "190px 24px",
-  background: "#000",
-  color: "#fff",
-};
+function FeatureCard({ item }: { item: FeatureItem }) {
+  const cardRef = useRef<HTMLDivElement>(null);
 
-const headingWrap: React.CSSProperties = {
-  textAlign: "center",
-  maxWidth: 960,
-  margin: "0 auto 120px",
-};
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (window.innerWidth < 768) return;
 
-const headingLine: React.CSSProperties = {
-  fontSize: "clamp(42px, 6.5vw, 66px)",
-  lineHeight: 1.12,
-  fontWeight: 600,
-};
+      const card = cardRef.current;
+      if (!card) return;
 
-const subHeading: React.CSSProperties = {
-  marginTop: 28,
-  fontSize: 15,
-  opacity: 0.7,
-  lineHeight: 1.7,
-};
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-const gridStyle: React.CSSProperties = {
-  maxWidth: 1200,
-  margin: "0 auto",
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-  gap: 28,
-};
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
 
-const cardStyle: React.CSSProperties = {
-  position: "relative",
-  height: "100%",
-  background:
-    "linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01))",
-  border: "1px solid rgba(255,255,255,0.14)",
-  borderRadius: 22,
-  padding: "42px 32px",
-  minHeight: 220,
-  backdropFilter: "blur(14px)",
-};
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
 
-const logoWrap: React.CSSProperties = {
-  width: 38,
-  height: 38,
-  borderRadius: 10,
-  background: "rgba(180,255,60,0.12)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  marginBottom: 22,
-};
+      card.style.transform = `
+        perspective(1200px)
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+        translateY(-8px)
+      `;
+    },
+    []
+  );
 
-const logoImg: React.CSSProperties = {
-  width: 20,
-  height: 20,
-};
+  const resetTilt = () => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transform =
+      "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+  };
 
-const cardTitle: React.CSSProperties = {
-  fontSize: 20,
-  fontWeight: 600,
-  marginBottom: 14,
-};
-
-const cardText: React.CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.65,
-  opacity: 0.75,
-};
+  return (
+    <motion.div
+      className="feature-card-wrap"
+      variants={cardVariant}
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetTilt}
+    >
+      <SpotlightCard
+        spotlightColor="rgba(217,255,63,0.25)"
+        className="feature-card"
+      >
+        <div className="feature-logo">{item.logo}</div>
+        <h3 className="feature-card-title">{item.title}</h3>
+        <p className="feature-card-text">{item.description}</p>
+      </SpotlightCard>
+    </motion.div>
+  );
+}

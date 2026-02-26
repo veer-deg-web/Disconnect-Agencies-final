@@ -1,9 +1,10 @@
+import{ featureItems } from "@/Data/WebDevFeatures/Data";
 import Hero from "@/components/WebDevelopment/Hero/Hero";
 import SupportSection from "@/components/WebDevelopment/SupportService/SupportService";
 import FAQSection from "@/components/FAQSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
-import FeaturesSection from "@/components/WebDevelopment/FeatureGridSection/FeatureGridSection";
+import FeatureGridSection from "@/components/WebDevelopment/FeatureGridSection/FeatureGridSection";
 import IntegrationLogosSection from "@/components/WebDevelopment/IntegrationLogoSection/IntegrationLogoSection";
 import PricingSection from "@/components/WebDevelopment/PricingSection/PricingSection";
 import SupportedByAI from "@/components/WebDevelopment/SupportedByAi/SupportedByAi";
@@ -15,6 +16,8 @@ import {
   SiTailwindcss,
 } from "react-icons/si"; 
 import ClientFeedback from "@/components/WebDevelopment/Testimonial/ClientFeedback";
+import FeatureSection from "@/components/WebDevelopment/FeatureSection/FeatureSection";
+
 const heroLogos = [
   { node: <SiReact />, title: "React" },
   { node: <SiNextdotjs />, title: "Next.js" },
@@ -31,43 +34,14 @@ export default function WebDevelopmentPage() {
   </section>
       <SupportSection />
 
-      <SupportedByAI  /> 
-     <FeaturesSection
+     
+     <FeatureSection />
+     <SupportedByAI  /> 
+     <FeatureGridSection
   headingLine1="Custom-designed modular"
   headingLine2="products at a world-class standard"
-  subheading="Each component is designed to work beautifully together, ensuring a seamless experience."
-  items={[
-    {
-      title: "Project Planning",
-      description: "Create, assign, and manage tasks with drag-and-drop views.",
-      logo: "/icons/planning.svg",
-    },
-    {
-      title: "Team Collaboration",
-      description: "Streamline communication and teamwork effortlessly.",
-      logo: "/icons/team.svg",
-    },
-    {
-      title: "Live Insights",
-      description: "Track performance with real-time analytics.",
-      logo: "/icons/insights.svg",
-    },
-    {
-      title: "Easy to Use",
-      description: "Intuitive design lets anyone navigate with ease.",
-      logo: "/icons/easy.svg",
-    },
-    {
-      title: "Limitless Flexibility",
-      description: "Custom workflows that scale with your business.",
-      logo: "/icons/flexible.svg",
-    },
-    {
-      title: "Secure at Scale",
-      description: "Enterprise-grade security baked in.",
-      logo: "/icons/secure.svg",
-    },
-  ]}
+  subheading="Each component is designed to work beautifully together."
+  items={featureItems}
 />
 <IntegrationLogosSection />
 <section id="pricing">
