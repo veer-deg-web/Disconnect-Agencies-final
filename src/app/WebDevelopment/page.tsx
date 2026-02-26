@@ -14,6 +14,7 @@ import {
   SiTypescript,
   SiTailwindcss,
 } from "react-icons/si"; 
+import ClientFeedback from "@/components/WebDevelopment/Testimonial/ClientFeedback";
 const heroLogos = [
   { node: <SiReact />, title: "React" },
   { node: <SiNextdotjs />, title: "Next.js" },
@@ -72,6 +73,7 @@ export default function WebDevelopmentPage() {
 <section id="pricing">
   <PricingSection />
 </section>
+<ClientFeedback />
      
 <FAQSection
         title={`Questions?\nWe're here to assist!`}
