@@ -10,6 +10,8 @@ type Props = {
   backgroundColor?: string
   windowGlow?: string
   bounceDuration?: number
+  isActive?: boolean
+  fitContainer?: boolean
 }
 
 export default function Support247Window({
@@ -19,6 +21,8 @@ export default function Support247Window({
   backgroundColor = "#05070b",
   windowGlow = "rgba(255,255,255,0.08)",
   bounceDuration = 2,
+  isActive = true,
+  fitContainer = false,
 }: Props) {
   const textRef = useRef<SVGTextElement | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -54,9 +58,10 @@ export default function Support247Window({
     <div
       style={{
         width: "100%",
+        height: fitContainer ? "100%" : undefined,
         display: "flex",
         justifyContent: "center",
-        padding: "clamp(8px, 2.8vw, 28px)",
+        padding: fitContainer ? 0 : "clamp(8px, 2.8vw, 28px)",
         background: backgroundColor,
       }}
     >
@@ -73,7 +78,8 @@ export default function Support247Window({
           border: "1px solid rgba(255,255,255,0.08)",
           boxShadow: `0 0 80px ${windowGlow}`,
           overflow: "hidden",
-          minHeight: isCompact ? 220 : undefined,
+          minHeight: fitContainer ? 0 : isCompact ? 220 : undefined,
+          height: fitContainer ? "100%" : undefined,
         }}
       >
         {/* MAC BUTTONS */}
@@ -93,11 +99,11 @@ export default function Support247Window({
         <div
             style={{
               position: "relative",
-              minHeight: "clamp(180px, 34vw, 340px)",
+              minHeight: fitContainer ? "100%" : "clamp(180px, 34vw, 340px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "clamp(12px, 3vw, 24px)",
+            padding: fitContainer ? "10px" : "clamp(12px, 3vw, 24px)",
           }}
         >
           {/* BACKGROUND SVG */}
@@ -146,9 +152,9 @@ export default function Support247Window({
 
           {/* SUPPORT PILL */}
           <motion.div
-            animate={{ y: [0, -14, 0] }}
+            animate={{ y: isActive ? [0, -14, 0] : 0 }}
             transition={{
-              repeat: Infinity,
+              repeat: isActive ? Infinity : 0,
               duration: bounceDuration,
               ease: "easeInOut",
             }}

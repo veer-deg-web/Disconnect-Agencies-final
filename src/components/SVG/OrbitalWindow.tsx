@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   SiReact,
   SiNextdotjs,
@@ -18,6 +18,8 @@ type Props = {
   outerSpeed?: number
   middleSpeed?: number
   innerSpeed?: number
+  isActive?: boolean
+  fitContainer?: boolean
 }
 
 export default function OrbitalWindow({
@@ -27,6 +29,8 @@ export default function OrbitalWindow({
   outerSpeed = 40,
   middleSpeed = 25,
   innerSpeed = 15,
+  isActive = true,
+  fitContainer = false,
 }: Props) {
   const [isTablet, setIsTablet] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -37,6 +41,7 @@ export default function OrbitalWindow({
   const viewBoxHeight = 600
   const centerX = 450
   const centerY = 300
+  const svgRef = useRef<SVGSVGElement | null>(null)
 
   /* ================= MOBILE DETECT ================= */
   useEffect(() => {
@@ -53,12 +58,10 @@ export default function OrbitalWindow({
 
   /* ================= MOUSE TRACK ================= */
   useEffect(() => {
-    if (isTablet) return
+    if (isTablet || !isActive) return
 
     const handle = (e: MouseEvent) => {
-      const rect = document
-        .getElementById("orbital-svg")
-        ?.getBoundingClientRect()
+      const rect = svgRef.current?.getBoundingClientRect()
 
       if (!rect) return
 
@@ -70,7 +73,7 @@ export default function OrbitalWindow({
 
     window.addEventListener("mousemove", handle)
     return () => window.removeEventListener("mousemove", handle)
-  }, [isTablet])
+  }, [isTablet, isActive])
 
   /* ================= RADII ================= */
   const outerRadius = isCompact ? 132 : isMobile ? 170 : isTablet ? 205 : 240
@@ -158,11 +161,11 @@ export default function OrbitalWindow({
   ) => {
     return (
       <motion.g
-        animate={{ rotate: reverse ? -360 : 360 }}
+        animate={{ rotate: isActive ? (reverse ? -360 : 360) : 0 }}
         transition={{
-          repeat: Infinity,
+          repeat: isActive ? Infinity : 0,
           ease: "linear",
-          duration: speed,
+          duration: isActive ? speed : 0.6,
         }}
         style={{
           originX: centerX / viewBoxWidth,
@@ -212,11 +215,18 @@ export default function OrbitalWindow({
   }
 
   return (
-    <div style={{ width: "100%", maxWidth: "1200px", margin: "0 auto" }}>
+    <div
+      style={{
+        width: "100%",
+        maxWidth: fitContainer ? "none" : "1200px",
+        height: fitContainer ? "100%" : undefined,
+        margin: "0 auto",
+      }}
+    >
       <motion.svg
-        id="orbital-svg"
+        ref={svgRef}
         viewBox="0 0 900 600"
-        style={{ width: "100%", height: "auto" }}
+        style={{ width: "100%", height: fitContainer ? "100%" : "auto" }}
       >
         {/* WINDOW */}
         <rect
@@ -238,10 +248,10 @@ export default function OrbitalWindow({
             r={p.size}
             fill={themeColor}
             opacity="0.2"
-            animate={{ y: [p.y, p.y - 30, p.y] }}
+            animate={{ y: isActive ? [p.y, p.y - 30, p.y] : p.y }}
             transition={{
               duration: p.duration,
-              repeat: Infinity,
+              repeat: isActive ? Infinity : 0,
               ease: "easeInOut",
             }}
           />

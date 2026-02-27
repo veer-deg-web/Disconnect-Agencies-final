@@ -11,6 +11,8 @@ type PremiumWindowProps = {
   minimal?: boolean
   parallax?: boolean
   intensity?: number
+  isActive?: boolean
+  fitContainer?: boolean
 }
 
 export default function PremiumWindow({
@@ -21,6 +23,8 @@ export default function PremiumWindow({
   minimal = false,
   parallax = true,
   intensity = 12,
+  isActive = true,
+  fitContainer = false,
 }: PremiumWindowProps) {
   const [rotate, setRotate] = useState({ x: 0, y: 0 })
   const [isTablet, setIsTablet] = useState(false)
@@ -61,7 +65,8 @@ export default function PremiumWindow({
     <div
       style={{
         width: "100%",
-        maxWidth: "1200px",
+        maxWidth: fitContainer ? "none" : "1200px",
+        height: fitContainer ? "100%" : undefined,
         margin: "0 auto",
         perspective: isTablet ? "1000px" : "1400px",
       }}
@@ -70,13 +75,13 @@ export default function PremiumWindow({
         viewBox="0 0 900 600"
         style={{
           width: "100%",
-          height: "auto",
+          height: fitContainer ? "100%" : "auto",
           transformStyle: "preserve-3d",
         }}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{
-          opacity: 1,
-          scale: 1,
+          opacity: isActive ? 1 : 0.92,
+          scale: isActive ? 1 : 0.98,
           rotateX: isTablet || isCompact ? 0 : rotate.x,
           rotateY: isTablet || isCompact ? 0 : rotate.y,
         }}
@@ -113,7 +118,7 @@ export default function PremiumWindow({
           stroke="url(#glassEdge)"
           strokeWidth="1.5"
           initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+          animate={{ pathLength: isActive ? 1 : 0 }}
           transition={{ duration: 1.6, ease: "easeInOut" }}
         />
 
@@ -129,12 +134,12 @@ export default function PremiumWindow({
           strokeWidth="2"
           initial={{ pathLength: 0 }}
           animate={{
-            pathLength: 1,
-            strokeOpacity: [0.2, 0.6, 0.2],
+            pathLength: isActive ? 1 : 0,
+            strokeOpacity: isActive ? [0.2, 0.6, 0.2] : 0.2,
           }}
           transition={{
             duration: 2,
-            strokeOpacity: { repeat: Infinity, duration: 4 },
+            strokeOpacity: { repeat: isActive ? Infinity : 0, duration: 4 },
           }}
         />
 
@@ -146,8 +151,8 @@ export default function PremiumWindow({
           height="560"
           rx="28"
           fill="url(#gridPattern)"
-          animate={{ x: [0, -50] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          animate={{ x: isActive ? [0, -50] : 0 }}
+          transition={{ duration: 20, repeat: isActive ? Infinity : 0, ease: "linear" }}
           opacity="0.25"
         />
 
@@ -162,11 +167,11 @@ export default function PremiumWindow({
             r="10"
             fill={c}
             initial={{ scale: 0 }}
-            animate={{ scale: [1, 1.12, 1] }}
+            animate={{ scale: isActive ? [1, 1.12, 1] : 1 }}
             transition={{
               delay: 0.6 + i * 0.1,
               duration: 4,
-              repeat: Infinity,
+              repeat: isActive ? Infinity : 0,
             }}
           />
         ))}
@@ -212,12 +217,12 @@ export default function PremiumWindow({
           opacity="0.15"
           initial={{ scale: 0 }}
           animate={{
-            scale: 1,
-            y: [0, -18, 0],
+            scale: isActive ? 1 : 0.92,
+            y: isActive ? [0, -18, 0] : 0,
           }}
           transition={{
             scale: { duration: 1.2 },
-            y: { duration: 6, repeat: Infinity },
+            y: { duration: 6, repeat: isActive ? Infinity : 0 },
           }}
         />
       </motion.svg>

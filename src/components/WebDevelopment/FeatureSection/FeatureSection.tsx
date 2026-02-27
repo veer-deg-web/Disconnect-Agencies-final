@@ -1,6 +1,7 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
+import { useRef } from "react"
 import PremiumWindow from "@/components/SVG/PremiumWindow"
 import OrbitalWindow from "@/components/SVG/OrbitalWindow"
 import Support247Window from "@/components/SVG/Support247"
@@ -9,6 +10,14 @@ import "./FeatureSection.css"
 const easeSmooth: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 export default function FeaturesSection() {
+  const premiumRef = useRef<HTMLDivElement | null>(null)
+  const orbitalRef = useRef<HTMLDivElement | null>(null)
+  const supportRef = useRef<HTMLDivElement | null>(null)
+
+  const premiumInView = useInView(premiumRef, { amount: 0.35, once: true })
+  const orbitalInView = useInView(orbitalRef, { amount: 0.35, once: true })
+  const supportInView = useInView(supportRef, { amount: 0.35, once: true })
+
   return (
     <section className="features">
 
@@ -65,8 +74,8 @@ export default function FeaturesSection() {
           </motion.div>
 
           {/* PREMIUM WINDOW */}
-          <div className="features__svg">
-            <PremiumWindow themeColor="#D9FF3F" />
+          <div ref={premiumRef} className="features__svg features__svg--premium">
+            <PremiumWindow themeColor="#D9FF3F" isActive={premiumInView} fitContainer />
           </div>
 
         </div>
@@ -76,8 +85,8 @@ export default function FeaturesSection() {
 
           {/* ORBIT */}
           <div className="features__column">
-            <div className="features__svg">
-              <OrbitalWindow themeColor="#D9FF3F" />
+            <div ref={orbitalRef} className="features__svg features__svg--orbital">
+              <OrbitalWindow themeColor="#D9FF3F" isActive={orbitalInView} fitContainer />
             </div>
 
             <h4 className="features__cardTitle">Easy Integration</h4>
@@ -88,8 +97,8 @@ export default function FeaturesSection() {
 
           {/* SUPPORT */}
           <div className="features__column">
-            <div className="features__svg">
-              <Support247Window themeColor="#D9FF3F" />
+            <div ref={supportRef} className="features__svg features__svg--support">
+              <Support247Window themeColor="#D9FF3F" isActive={supportInView} fitContainer />
             </div>
 
             <h4 className="features__cardTitle">Trusted Support Team</h4>

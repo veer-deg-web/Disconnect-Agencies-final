@@ -102,17 +102,25 @@
 
 .features__svg {
   width: 100%;
+  min-height: 220px;
   height: clamp(220px, 34vw, 420px);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 18px;
+}
+
+.features__svg > * {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
 }
 
 .features__column {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .features__cardTitle {
@@ -146,6 +154,127 @@
   }
 }
 
+/* iPad / touch tablets (including iPad Pro) */
+@media (max-width: 1366px) and (hover: none) and (pointer: coarse) {
+  .features {
+    padding: 96px 18px;
+  }
+
+  .features__title {
+    font-size: clamp(34px, 5.8vw, 48px);
+    line-height: 1.16;
+  }
+
+  .features__subtitle {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .features__wrapper {
+    margin-top: 56px;
+    max-width: 980px;
+    padding: 46px 22px;
+    border-radius: 24px;
+  }
+
+  .features__row {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .features__row + .features__row {
+    margin-top: 46px;
+  }
+
+  .features__heading {
+    font-size: clamp(26px, 4.2vw, 34px);
+    margin-bottom: 12px;
+  }
+
+  .features__cardTitle {
+    margin-top: 16px;
+    font-size: clamp(22px, 3.8vw, 28px);
+  }
+
+  .features__cardDesc,
+  .features__desc {
+    font-size: 14px;
+    line-height: 1.52;
+  }
+
+  .features__svg {
+    height: clamp(190px, 34vw, 280px);
+  }
+
+  .features__svg--premium,
+  .features__svg--orbital {
+    min-height: 200px;
+    height: clamp(200px, 36vw, 290px);
+  }
+
+  .features__svg--support {
+    min-height: 210px;
+    height: clamp(210px, 34vw, 280px);
+  }
+}
+
+/* Tablet portrait */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .features__wrapper {
+    max-width: 860px;
+    padding: 38px 18px;
+  }
+
+  .features__row { gap: 24px; }
+
+  .features__row + .features__row {
+    margin-top: 34px;
+  }
+
+  .features__svg {
+    height: clamp(170px, 30vw, 220px);
+  }
+
+  .features__svg--premium,
+  .features__svg--orbital {
+    min-height: 175px;
+    height: clamp(175px, 31vw, 230px);
+  }
+
+  .features__svg--support {
+    min-height: 180px;
+  }
+}
+
+/* Tablet landscape */
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+  .features__wrapper {
+    max-width: 980px;
+    padding: 44px 22px;
+  }
+
+  .features__row { gap: 28px; }
+
+  .features__row + .features__row {
+    margin-top: 40px;
+  }
+
+  .features__svg {
+    height: clamp(180px, 24vw, 250px);
+  }
+
+  .features__svg--premium,
+  .features__svg--orbital {
+    min-height: 190px;
+    height: clamp(190px, 25vw, 260px);
+  }
+
+  .features__svg--support {
+    min-height: 200px;
+  }
+}
+
 @media (max-width: 1180px) {
   .features {
     padding: 110px 16px;
@@ -167,8 +296,8 @@
   }
 
   .features__row {
-    grid-template-columns: 1fr;
-    gap: 38px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
   }
 
   .features__row + .features__row {
@@ -189,7 +318,46 @@
   }
 
   .features__svg {
-    height: clamp(220px, 52vw, 360px);
+    height: clamp(170px, 32vw, 220px);
+  }
+
+  .features__svg--support {
+    min-height: 190px;
+    height: clamp(170px, 32vw, 220px);
+  }
+}
+
+@media (max-width: 767px) {
+  .features__row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Stack second block too, so all 3 SVGs are on separate rows in mobile */
+  .features__row:nth-of-type(2) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .features__row:nth-of-type(2) .features__svg {
+    height: clamp(150px, 52vw, 200px);
+    border-radius: 14px;
+  }
+
+  .features__row:nth-of-type(2) .features__cardTitle {
+    margin-top: 14px;
+    font-size: clamp(18px, 6.5vw, 24px);
+  }
+
+  .features__row:nth-of-type(2) .features__cardDesc {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .features__svg--support {
+    min-height: 130px;
+    height: clamp(150px, 52vw, 200px);
   }
 }
 
@@ -238,7 +406,7 @@
   }
 
   .features__svg {
-    height: clamp(170px, 62vw, 250px);
+    height: clamp(150px, 52vw, 200px);
   }
 }
 
@@ -269,7 +437,11 @@
     margin-top: 34px;
   }
 
-  .features__svg {
-    height: 160px;
+  .features__svg { height: 136px; }
+
+  .features__row:nth-of-type(2) .features__svg {
+    height: 112px;
   }
+
+  .features__svg--support { min-height: 112px; height: 112px; }
 }

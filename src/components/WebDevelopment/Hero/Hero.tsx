@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import { useRouter } from "next/navigation";
 import './Hero.css';
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 
@@ -40,6 +41,21 @@ const item: Variants = {
 ========================= */
 
 export default function Hero() {
+  const router = useRouter();
+
+  const goToBookCall = () => {
+    router.push("/bookcall");
+  };
+
+  const goToPricing = () => {
+    const section = document.getElementById("pricing");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    router.push("/WebDevelopment#pricing");
+  };
+
   return (
     <section className="hero-webdev">
       {/* Background Video */}
@@ -94,10 +110,10 @@ export default function Hero() {
 
         {/* Buttons */}
         <motion.div className="hero-actions" variants={item}>
-          <button className="btn-primary">
-            → Get Started Now
+          <button className="btn-primary" onClick={goToBookCall}>
+            Get Started Now
           </button>
-          <button className="btn-secondary">
+          <button className="btn-secondary" onClick={goToPricing}>
             See Pricing
           </button>
         </motion.div>
