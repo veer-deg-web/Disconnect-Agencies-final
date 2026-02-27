@@ -1,18 +1,20 @@
 // Define all valid category keys
 export type CategoryType =
-  | "website"
-  | "application"
+  | "aimodels"
+  | "appdev"
+  | "webdev"
   | "uiux"
   | "seo"
-  | "fullstack";
+  | "cloud";
 
 // Export list of categories
 export const categories: CategoryType[] = [
-  "website",
-  "application",
+  "aimodels",
+  "appdev",
+  "webdev",
   "uiux",
   "seo",
-  "fullstack",
+  "cloud",
 ];
 
 // Define the service data object with proper typing
@@ -25,17 +27,23 @@ export const serviceData: Record<
     image: string;
   }
 > = {
-  website: {
-    title: "Website Development",
+  aimodels: {
+    title: "AI Models & Automation",
     duration: "30 Minutes",
-    price: "$100,000",
-    image: "/assets/Home/serviceData/photo/websitebg.png",
+    price: "$120,000",
+    image: "/assets/Home/serviceData/photo/fullstackbg.png",
   },
-  application: {
-    title: "Application Development",
+  appdev: {
+    title: "App Development",
     duration: "30 Minutes",
     price: "$150,000",
     image: "/assets/Home/serviceData/photo/applicationbg.png",
+  },
+  webdev: {
+    title: "Web Development",
+    duration: "30 Minutes",
+    price: "$100,000",
+    image: "/assets/Home/serviceData/photo/websitebg.png",
   },
   uiux: {
     title: "UI/UX Design",
@@ -44,15 +52,15 @@ export const serviceData: Record<
     image: "/assets/Home/serviceData/photo/uiuxbg.png",
   },
   seo: {
-    title: "SEO Optimization",
+    title: "SEO & Growth Optimization",
     duration: "30 Minutes",
     price: "$50,000",
     image: "/assets/Home/serviceData/photo/seobg.png",
   },
-  fullstack: {
-    title: "Full Stack Development",
+  cloud: {
+    title: "Cloud Services",
     duration: "30 Minutes",
-    price: "$200,000",
+    price: "$130,000",
     image: "/assets/Home/serviceData/photo/fullstackbg.png",
   },
 };

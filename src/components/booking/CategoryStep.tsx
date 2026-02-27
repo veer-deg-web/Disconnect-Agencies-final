@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
@@ -19,6 +19,19 @@ export default function CategoryStep({
   next,
 }: CategoryStepProps) {
   const [open, setOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onPointerDown = (event: MouseEvent) => {
+      if (!selectRef.current) return;
+      if (!selectRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, []);
 
   return (
     <StepWrapper>
@@ -32,10 +45,11 @@ export default function CategoryStep({
           <h1 className="category-title">Choose Category</h1>
 
           {/* Custom Dropdown */}
-          <div className="custom-select">
+          <div className="custom-select" ref={selectRef}>
             <button
+              type="button"
               className="select-trigger"
-              onClick={() => setOpen(!open)}
+              onClick={() => setOpen((prev) => !prev)}
             >
               {serviceData[category].title}
               <span className={`arrow ${open ? "rotate" : ""}`}>▾</span>
@@ -72,7 +86,7 @@ export default function CategoryStep({
             </AnimatePresence>
           </div>
 
-          <button onClick={next} className="category-btn">
+          <button type="button" onClick={next} className="category-btn">
             Continue →
           </button>
         </div>

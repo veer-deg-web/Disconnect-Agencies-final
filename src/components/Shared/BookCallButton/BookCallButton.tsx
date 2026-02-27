@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+import { usePathname } from "next/navigation";
+import { CategoryType } from "@/components/data/serviceData";
 
 type BookCallButtonProps = {
   circleColor?: string;
@@ -13,9 +14,25 @@ export default function BookCallButton({
   circleColor = "#f97316",
 }: BookCallButtonProps) {
   const [hover, setHover] = useState(false);
+  const pathname = usePathname();
+
+  const lowerPath = (pathname || "").toLowerCase();
+  const categoryByPath: Array<{ path: string; category: CategoryType }> = [
+    { path: "/webdevelopment", category: "webdev" },
+    { path: "/appdevelopment", category: "appdev" },
+    { path: "/aimodels", category: "aimodels" },
+    { path: "/uiux", category: "uiux" },
+    { path: "/seo", category: "seo" },
+    { path: "/cloud", category: "cloud" },
+  ];
+
+  const matched = categoryByPath.find(({ path }) => lowerPath.startsWith(path));
+  const href = matched
+    ? `/book-call?category=${matched.category}`
+    : "/book-call";
 
   return (
-    <Link href="/book-call" prefetch>
+    <Link href={href} prefetch>
       <motion.div
         whileHover={{ y: -2, scale: 1.02 }}
         whileTap={{ scale: 0.97 }}

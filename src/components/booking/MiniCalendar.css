@@ -65,8 +65,8 @@
 
 /* Selected day */
 .mini-calendar__day--active {
-  background: #ff5a00;
-  color: #ffffff;
+  background: var(--booking-primary);
+  color: var(--booking-on-primary);
 }
 
 /* =====================================================

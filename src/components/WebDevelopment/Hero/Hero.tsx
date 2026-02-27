@@ -44,7 +44,7 @@ export default function Hero() {
   const router = useRouter();
 
   const goToBookCall = () => {
-    router.push("/bookcall");
+    router.push("/book-call?category=webdev");
   };
 
   const goToPricing = () => {

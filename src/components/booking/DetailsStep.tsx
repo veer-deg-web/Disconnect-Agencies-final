@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
 import "./DetailsStep.css";
@@ -75,25 +76,30 @@ export default function DetailsStep({ category, date, time, back }: any) {
             className="details-textarea"
           />
 
-          {/* SUBMIT */}
-          <button
-            disabled={!isFormValid}
-            className={`details-submit ${
-              isFormValid ? "submit-active" : "submit-disabled"
-            }`}
-          >
-            Schedule Call
-          </button>
-
           {/* SUMMARY */}
           <p className="details-summary">
             You selected: {category} • {formattedDate} • {time}
           </p>
 
-          {/* BACK */}
-          <button onClick={back} className="details-back">
-            ← Back
-          </button>
+          {/* ACTIONS */}
+          <div className="details-actions">
+            <button
+              type="button"
+              onClick={back}
+              className="booking-icon-btn"
+              aria-label="Go to previous step"
+            >
+              <IoChevronBack />
+            </button>
+            <button
+              type="button"
+              disabled={!isFormValid}
+              className="booking-icon-btn"
+              aria-label="Submit booking"
+            >
+              <IoChevronForward />
+            </button>
+          </div>
         </div>
       </div>
     </StepWrapper>

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
 import MiniCalendar from "./MiniCalendar";
@@ -83,22 +84,26 @@ export default function TimeStep({ category, date, time, setTime, next, back }: 
           {/* ACTIONS */}
           <div className="time-actions">
             <motion.button
+              type="button"
               onClick={back}
-              className="time-back"
+              className="booking-icon-btn"
+              aria-label="Go to previous step"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
             >
-              ← Back
+              <IoChevronBack />
             </motion.button>
 
             <motion.button
+              type="button"
               onClick={next}
               disabled={!time}
-              className={`time-next ${!time ? "time-next--disabled" : ""}`}
+              className="booking-icon-btn"
+              aria-label="Go to next step"
               whileHover={time ? { scale: 1.02 } : {}}
               whileTap={time ? { scale: 0.97 } : {}}
             >
-              Continue →
+              <IoChevronForward />
             </motion.button>
           </div>
         </div>

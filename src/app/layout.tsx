@@ -17,10 +17,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        data-scroll-container
         style={{
           fontFamily: "'Inter', sans-serif",
           padding: 0,
           margin: 0,
+          position: "relative",
+          zIndex: 1,
         }}
       >
         {/* Background */}
@@ -31,17 +34,7 @@ export default function RootLayout({
 
         {/* Navbar */}
         <HeroNavbar />
-
-        {/* Locomotive Container */}
-        <div
-          data-scroll-container
-          style={{
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );

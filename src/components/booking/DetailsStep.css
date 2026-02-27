@@ -82,11 +82,11 @@
 
 .details-input:focus,
 .details-textarea:focus {
-  border-color: rgba(255, 90, 0, 0.6);
-  background: rgba(255, 90, 0, 0.06);
+  border-color: rgba(var(--booking-primary-rgb), 0.6);
+  background: rgba(var(--booking-primary-rgb), 0.06);
   box-shadow:
-    0 0 0 3px rgba(255, 90, 0, 0.15),
-    0 4px 20px rgba(255, 90, 0, 0.1);
+    0 0 0 3px rgba(var(--booking-primary-rgb), 0.15),
+    0 4px 20px rgba(var(--booking-primary-rgb), 0.1);
 }
 
 /* =====================================================
@@ -116,7 +116,14 @@
 ===================================================== */
 
 .details-submit {
-  width: 100%;
+  width: auto;
+  min-width: 180px;
+  max-width: 240px;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
   padding: 14px 24px;
   border-radius: 16px;
   font-weight: 600;
@@ -131,18 +138,31 @@
 }
 
 .submit-active {
-  background: #ffffff;
-  color: #000000;
+  background: linear-gradient(
+    135deg,
+    var(--booking-secondary),
+    var(--booking-primary)
+  );
+  border: 1px solid rgba(var(--booking-secondary-rgb), 0.55);
+  color: var(--booking-on-primary);
   cursor: pointer;
+  box-shadow:
+    0 5px 0 rgba(var(--booking-primary-rgb), 0.9),
+    0 12px 24px rgba(var(--booking-primary-rgb), 0.28);
 }
 
 .submit-active:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.2);
+  filter: brightness(1.02);
+  box-shadow:
+    0 5px 0 rgba(var(--booking-primary-rgb), 0.9),
+    0 14px 30px rgba(var(--booking-primary-rgb), 0.34);
 }
 
 .submit-active:active {
-  transform: translateY(0);
+  transform: translateY(3px);
+  box-shadow:
+    0 2px 0 rgba(var(--booking-primary-rgb), 0.95),
+    0 6px 12px rgba(var(--booking-primary-rgb), 0.24);
 }
 
 .submit-disabled {
@@ -162,6 +182,14 @@
   line-height: 1.5;
 }
 
+.details-actions {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 /* =====================================================
    BACK BUTTON
 ===================================================== */
@@ -169,18 +197,22 @@
 .details-back {
   padding: 12px 20px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(var(--booking-primary-rgb), 0.25);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 14px;
-  width: 100%;
+  width: auto;
+  min-width: 150px;
+  max-width: 220px;
+  align-self: flex-start;
   text-align: center;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .details-back:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--booking-primary-rgb), 0.14);
+  border-color: rgba(var(--booking-secondary-rgb), 0.45);
 }
 
 /* =====================================================
@@ -196,5 +228,21 @@
   .details-textarea {
     padding: 12px 14px;
     font-size: 14px;
+  }
+
+  .details-submit,
+  .details-back {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 780px) {
+  .details-submit,
+  .details-back {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
   }
 }

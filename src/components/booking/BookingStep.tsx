@@ -1,8 +1,7 @@
 "use client";
-import type { Variants } from "framer-motion";
 
-import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { CSSProperties, useState, useRef } from "react";
+import { motion } from "framer-motion";
 
 import CategoryStep from "./CategoryStep";
 import CalendarStep from "./CalendarStep";
@@ -10,7 +9,6 @@ import TimeStep from "./TimeStep";
 import DetailsStep from "./DetailsStep";
 import { CategoryType } from "@/components/data/serviceData";
 
-import BackgroundEllipses from "@/components/Shared/BackgroundElipse/BackgroundElipse";
 import ParticleCanvas from "@/components/Shared/ParticleCanvas/ParticleCanvas";
 import "./BookingSteps.css";
 
@@ -23,24 +21,58 @@ type StepType = typeof STEPS[number];
 
 const STEP_LABELS = ["Service", "Date", "Time", "Details"];
 
-/* slide direction: +1 = forward, -1 = back */
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
-const stepVariants: Variants = {
-  enter: (dir: number) => ({
-    opacity: 0,
-    x: dir > 0 ? 48 : -48,
-  }),
-  center: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.38, ease: EASE },
+const CATEGORY_THEMES: Record<
+  CategoryType,
+  {
+    primary: string;
+    secondary: string;
+    primaryRgb: string;
+    secondaryRgb: string;
+    onPrimary: string;
+  }
+> = {
+  aimodels: {
+    primary: "#814AC8",
+    secondary: "#814AC8",
+    primaryRgb: "129,74,200",
+    secondaryRgb: "129,74,200",
+    onPrimary: "#ffffff",
   },
-  exit: (dir: number) => ({
-    opacity: 0,
-    x: dir > 0 ? -48 : 48,
-    transition: { duration: 0.28, ease: EASE },
-  }),
+  appdev: {
+    primary: "#6271E9",
+    secondary: "#6271E9",
+    primaryRgb: "98,113,233",
+    secondaryRgb: "98,113,233",
+    onPrimary: "#ffffff",
+  },
+  webdev: {
+    primary: "#CFFE25",
+    secondary: "#CFFE25",
+    primaryRgb: "207,254,37",
+    secondaryRgb: "207,254,37",
+    onPrimary: "#0b0b0b",
+  },
+  uiux: {
+    primary: "#6214D9",
+    secondary: "#6214D9",
+    primaryRgb: "98,20,217",
+    secondaryRgb: "98,20,217",
+    onPrimary: "#ffffff",
+  },
+  seo: {
+    primary: "#3152D7",
+    secondary: "#3152D7",
+    primaryRgb: "49,82,215",
+    secondaryRgb: "49,82,215",
+    onPrimary: "#ffffff",
+  },
+  cloud: {
+    primary: "#D5FF43",
+    secondary: "#D5FF43",
+    primaryRgb: "213,255,67",
+    secondaryRgb: "213,255,67",
+    onPrimary: "#0b0b0b",
+  },
 };
 
 export default function BookingSteps({ initialCategory }: BookingStepsProps) {
@@ -51,6 +83,7 @@ export default function BookingSteps({ initialCategory }: BookingStepsProps) {
   const dir = useRef(1); // direction of last navigation
 
   const currentIndex = STEPS.indexOf(step);
+  const currentTheme = CATEGORY_THEMES[category];
 
   const goNext = (next: StepType) => {
     dir.current = 1;
@@ -62,12 +95,22 @@ export default function BookingSteps({ initialCategory }: BookingStepsProps) {
   };
 
   return (
-    <main className="booking-steps">
-      <BackgroundEllipses />
+    <main
+      className="booking-steps"
+      style={
+        {
+          "--booking-primary": currentTheme.primary,
+          "--booking-secondary": currentTheme.secondary,
+          "--booking-primary-rgb": currentTheme.primaryRgb,
+          "--booking-secondary-rgb": currentTheme.secondaryRgb,
+          "--booking-on-primary": currentTheme.onPrimary,
+        } as CSSProperties
+      }
+    >
       <ParticleCanvas 
-        color="#ff5a00" 
-        shadowColor="#ff8a00" 
-        lineRgb="255,138,0" 
+        color={currentTheme.primary}
+        shadowColor={currentTheme.secondary}
+        lineRgb={currentTheme.secondaryRgb}
         background="transparent" 
       />
 
@@ -82,8 +125,8 @@ export default function BookingSteps({ initialCategory }: BookingStepsProps) {
                 className={`step-dot ${isActive ? "step-dot--active" : ""} ${isComplete ? "step-dot--done" : ""}`}
                 animate={
                   isActive
-                    ? { scale: 1.15, boxShadow: "0 0 0 4px rgba(255,90,0,0.3)" }
-                    : { scale: 1, boxShadow: "0 0 0 0px transparent" }
+                    ? { scale: 1.08, boxShadow: "0 8px 20px rgba(0,0,0,0.35)" }
+                    : { scale: 1, boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }
                 }
                 transition={{ duration: 0.3 }}
               >
@@ -120,54 +163,40 @@ export default function BookingSteps({ initialCategory }: BookingStepsProps) {
       </div>
 
       {/* ── STEP CONTENT ── */}
-      <div className="booking-steps__container">
-        <AnimatePresence mode="wait" custom={dir.current}>
-          <motion.div
-            key={step}
-            custom={dir.current}
-            variants={stepVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            style={{ width: "100%" }}
-          >
-            {step === "category" && (
-              <CategoryStep
-                category={category}
-                setCategory={setCategory}
-                next={() => goNext("calendar")}
-              />
-            )}
-            {step === "calendar" && (
-              <CalendarStep
-                category={category}
-                date={date}
-                setDate={setDate}
-                next={() => goNext("time")}
-                back={() => goBack("category")}
-              />
-            )}
-            {step === "time" && date && (
-              <TimeStep
-                category={category}
-                date={date}
-                time={time}
-                setTime={setTime}
-                next={() => goNext("details")}
-                back={() => goBack("calendar")}
-              />
-            )}
-            {step === "details" && date && (
-              <DetailsStep
-                category={category}
-                date={date}
-                time={time}
-                back={() => goBack("time")}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      {step === "category" && (
+        <CategoryStep
+          category={category}
+          setCategory={setCategory}
+          next={() => goNext("calendar")}
+        />
+      )}
+      {step === "calendar" && (
+        <CalendarStep
+          category={category}
+          date={date}
+          setDate={setDate}
+          next={() => goNext("time")}
+          back={() => goBack("category")}
+        />
+      )}
+      {step === "time" && date && (
+        <TimeStep
+          category={category}
+          date={date}
+          time={time}
+          setTime={setTime}
+          next={() => goNext("details")}
+          back={() => goBack("calendar")}
+        />
+      )}
+      {step === "details" && date && (
+        <DetailsStep
+          category={category}
+          date={date}
+          time={time}
+          back={() => goBack("time")}
+        />
+      )}
     </main>
   );
 }

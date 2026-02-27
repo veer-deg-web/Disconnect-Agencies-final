@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
 import "./CalendarStep.css";
@@ -138,16 +139,23 @@ export default function CalendarStep({
 
             {/* ACTIONS */}
             <div className="calendar-actions">
-              <button onClick={back} className="btn-secondary">
-                ← Back
+              <button
+                type="button"
+                onClick={back}
+                className="booking-icon-btn"
+                aria-label="Go to previous step"
+              >
+                <IoChevronBack />
               </button>
 
               <button
+                type="button"
                 onClick={next}
                 disabled={!date}
-                className={`btn-primary ${!date ? "btn-disabled" : ""}`}
+                className="booking-icon-btn"
+                aria-label="Go to next step"
               >
-                Continue →
+                <IoChevronForward />
               </button>
             </div>
 

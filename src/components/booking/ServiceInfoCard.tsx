@@ -74,7 +74,7 @@ export default function ServiceInfoCard({ category }: ServiceInfoCardProps) {
         style={{
           background: `radial-gradient(
             600px circle at ${glowPosition.x}% ${glowPosition.y}%,
-            rgba(255,90,0,0.35),
+            rgba(var(--booking-primary-rgb), 0.35),
             transparent 60%
           )`,
         }}

@@ -52,7 +52,7 @@ export default function SEOServicesSection() {
             growth — not vanity metrics.
           </p>
 
-          <button className="hire-btn">Hire now</button>
+          <button className="hire-btn">Hire us now</button>
         </div>
       </motion.div>
 
