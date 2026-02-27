@@ -3,7 +3,7 @@ export default function Loading() {
     <div className="global-loader-container">
       <div className="global-loader-pulse">
         <img 
-          src="/assets/Home/loading/photo/logo.png" 
+          src="/assets/Home/loading/photo/logo.webp" 
           alt="Loading..." 
           className="global-loader-logo"
         />

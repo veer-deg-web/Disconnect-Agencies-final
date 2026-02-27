@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 import "./OurWorkStack.css";
 
 const cards = [
-  { src: "/assets/Cloud/WorkSection/photo/Stack1.png", alt: "Work 1" },
-  { src: "/assets/Cloud/WorkSection/photo/Stack2.png", alt: "Work 2" },
-  { src: "/assets/Cloud/WorkSection/photo/Stack3.png", alt: "Work 3" },
+  { src: "/assets/Cloud/WorkSection/photo/Stack1.webp", alt: "Work 1" },
+  { src: "/assets/Cloud/WorkSection/photo/Stack2.webp", alt: "Work 2" },
+  { src: "/assets/Cloud/WorkSection/photo/Stack3.webp", alt: "Work 3" },
 ];
 
 const N = cards.length; // 3

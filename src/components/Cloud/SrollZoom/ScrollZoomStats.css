@@ -43,7 +43,7 @@
 .sz-section-bg {
   position: absolute;
   inset: 0;
-  background-image: url("/assets/Cloud/SrollZoom/photo/moss-bg.png");
+  background-image: url("/assets/Cloud/SrollZoom/photo/moss-bg.webp");
   background-size: cover;
   background-position: center;
   filter: blur(0px);

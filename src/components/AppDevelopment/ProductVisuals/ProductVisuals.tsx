@@ -31,14 +31,14 @@ export default function ProductVisuals() {
         {/* VISUAL */}
         <div className="visual-wrapper">
           <img
-            src="/assets/AppDevelopment/ProductVisuals/photo/Frame.png"
+            src="/assets/AppDevelopment/ProductVisuals/photo/Frame.webp"
             alt="App preview"
             className="phone"
           />
 
           <div className="card-left">
             <TiltedCard
-              imageSrc="/assets/AppDevelopment/ProductVisuals/photo/tilted-card1.png"
+              imageSrc="/assets/AppDevelopment/ProductVisuals/photo/tilted-card1.webp"
               altText="Goals widget"
               containerHeight="500px"
               containerWidth="400px"
@@ -52,7 +52,7 @@ export default function ProductVisuals() {
 
           <div className="card-right">
             <TiltedCard
-              imageSrc="/assets/AppDevelopment/ProductVisuals/photo/tilted-card2.png"
+              imageSrc="/assets/AppDevelopment/ProductVisuals/photo/tilted-card2.webp"
               altText="AI assistant widget"
               containerHeight="200px"
               containerWidth="260px"
@@ -66,7 +66,7 @@ export default function ProductVisuals() {
 
           <div className="card-bottom">
             <TiltedCard
-              imageSrc="/assets/AppDevelopment/ProductVisuals/photo/tilted-card3.png"
+              imageSrc="/assets/AppDevelopment/ProductVisuals/photo/tilted-card3.webp"
               altText="Traffic analytics widget"
               containerHeight="200px"
               containerWidth="414px"

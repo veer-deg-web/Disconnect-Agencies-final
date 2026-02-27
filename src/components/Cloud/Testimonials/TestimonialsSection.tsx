@@ -91,7 +91,7 @@ export default function TestimonialsSection() {
                   <span className="tag">{item.tag}</span>
                   <p className="quote">“{item.text}”</p>
                   <div className="author">
-                    <img src="/assets/Cloud/Testimonials/photo/Section.png" alt="" />
+                    <img src="/assets/Cloud/Testimonials/photo/Section.webp" alt="" />
                     <div>
                       <strong>{item.name}</strong>
                       <span>{item.role}</span>
@@ -100,7 +100,7 @@ export default function TestimonialsSection() {
                 </div>
               ) : (
                 <div className="testimonial-card square">
-                  <img src="/assets/Cloud/Testimonials/photo/Section.png" alt="" />
+                  <img src="/assets/Cloud/Testimonials/photo/Section.webp" alt="" />
                   <strong>{item.name}</strong>
                   <span>{item.role}</span>
                 </div>

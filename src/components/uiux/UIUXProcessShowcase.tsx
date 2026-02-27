@@ -2,9 +2,9 @@
 
 export default function UIUXProcessShowcase() {
   const rows = [
-    { src: "/assets/Uiux/UIUXProcessShowcase/photo/slide1.png", direction: "ltr" },
-    { src: "/assets/Uiux/UIUXProcessShowcase/photo/slide2.png", direction: "rtl" },
-    { src: "/assets/Uiux/UIUXProcessShowcase/photo/slide3.png", direction: "ltr" },
+    { src: "/assets/Uiux/UIUXProcessShowcase/photo/slide1.webp", direction: "ltr" },
+    { src: "/assets/Uiux/UIUXProcessShowcase/photo/slide2.webp", direction: "rtl" },
+    { src: "/assets/Uiux/UIUXProcessShowcase/photo/slide3.webp", direction: "ltr" },
   ];
 
   return (

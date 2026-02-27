@@ -211,7 +211,7 @@ export default function UIUXProcess() {
               }}
             >
               <img
-                src="/assets/Uiux/UIUXBenefits/photo/uiux-preview.png"
+                src="/assets/Uiux/UIUXBenefits/photo/uiux-preview.webp"
                 alt="UI UX Preview"
                 style={{
                   position: "absolute",

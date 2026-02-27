@@ -9,17 +9,17 @@ import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 ======================= */
 
 const ROW_1 = [
-  { name: "David Chen", role: "Marketing Officer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
-  { name: "James Patel", role: "UX Designer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
-  { name: "Liam Johnson", role: "Software Engineer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
-  { name: "Emma Brooks", role: "Operations", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "David Chen", role: "Marketing Officer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
+  { name: "James Patel", role: "UX Designer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
+  { name: "Liam Johnson", role: "Software Engineer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
+  { name: "Emma Brooks", role: "Operations", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
 ];
 
 const ROW_2 = [
-  { name: "Noah Ramirez", role: "Product Manager", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
-  { name: "Olivia Martinez", role: "Head of Sales", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
-  { name: "Aisha Rahman", role: "Digital Strategist", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
-  { name: "Ethan Brown", role: "Brand Lead", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "Noah Ramirez", role: "Product Manager", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
+  { name: "Olivia Martinez", role: "Head of Sales", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
+  { name: "Aisha Rahman", role: "Digital Strategist", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
+  { name: "Ethan Brown", role: "Brand Lead", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.webp" },
 ];
 
 type Person = {

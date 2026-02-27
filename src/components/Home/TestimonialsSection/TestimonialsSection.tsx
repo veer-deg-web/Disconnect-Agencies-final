@@ -211,7 +211,7 @@ function TestimonialCard({ name, role, quote }: Testimonial) {
     <div style={card}>
       <div style={cardHeader}>
         <img
-  src="/assets/Home/TestimonialsSection/photo/Section.png"
+  src="/assets/Home/TestimonialsSection/photo/Section.webp"
   alt={name}
   style={avatarImage}
 />

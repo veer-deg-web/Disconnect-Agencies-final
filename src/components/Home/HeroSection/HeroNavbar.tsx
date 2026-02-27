@@ -146,7 +146,7 @@ export default function HeroNavbar() {
             onClick={() => router.push("/")}
           >
             <Image
-              src="/assets/Home/HeroNavbar/photo/logo.png"
+              src="/assets/Home/HeroNavbar/photo/logo.webp"
               alt="Disconnect"
               width={116}
               height={36}
