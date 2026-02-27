@@ -1,36 +1,50 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import type { IconType } from "react-icons";
+import {
+  SiFigma,
+  SiFramer,
+  SiAdobephotoshop,
+  SiAdobeillustrator,
+  SiNotion,
+  SiJira,
+  SiSlack,
+  SiWebflow,
+  SiGoogleanalytics,
+  SiBehance,
+} from "react-icons/si";
 
 /* ---------------- DATA ---------------- */
 
-const TOP_ROW = [
-  "/assets/Uiux/UIUXSolutions/photo/Category 1.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 2.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 3.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 4.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 5.png",
+type SolutionItem = {
+  icon: IconType;
+  title: string;
+  subtitle: string;
+};
+
+const TOP_ROW: SolutionItem[] = [
+  { icon: SiFigma, title: "Figma", subtitle: "Interface Design" },
+  { icon: SiFramer, title: "Framer", subtitle: "Interactive Prototypes" },
+  { icon: SiAdobephotoshop, title: "Photoshop", subtitle: "Visual Editing" },
+  { icon: SiAdobeillustrator, title: "Illustrator", subtitle: "Brand Assets" },
+  { icon: SiWebflow, title: "Webflow", subtitle: "No-code Build" },
 ];
 
-const BOTTOM_ROW = [
-  "/assets/Uiux/UIUXSolutions/photo/Category 6.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 7.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 8.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 9.png",
-  "/assets/Uiux/UIUXSolutions/photo/Category 10.png",
+const BOTTOM_ROW: SolutionItem[] = [
+  { icon: SiNotion, title: "Notion", subtitle: "Design Docs" },
+  { icon: SiJira, title: "Jira", subtitle: "Sprint Workflow" },
+  { icon: SiSlack, title: "Slack", subtitle: "Team Collaboration" },
+  { icon: SiGoogleanalytics, title: "Analytics", subtitle: "UX Insights" },
+  { icon: SiBehance, title: "Behance", subtitle: "Portfolio System" },
 ];
 
 /* ---------------- COMPONENT ---------------- */
 
 export default function UIUXSolutions() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { margin: "-120px" });
-  const [cycleKey, setCycleKey] = useState(0);
-
-  useEffect(() => {
-    if (inView) setCycleKey((k) => k + 1);
-  }, [inView]);
+  useInView(ref, { margin: "-120px" });
 
   return (
     <>
@@ -62,9 +76,10 @@ export default function UIUXSolutions() {
               padding: 10px 16px !important;
             }
 
-            .marquee-img-wrap {
-              height: 44px !important;
-              padding: 0 8px !important;
+            .marquee-row {
+              min-height: 52px !important;
+              padding: 8px 10px !important;
+              gap: 10px !important;
             }
           }
         `}
@@ -80,7 +95,6 @@ export default function UIUXSolutions() {
         }}
       >
         <div
-          key={cycleKey}
           style={{
             maxWidth: 1200,
             margin: "0 auto",
@@ -167,7 +181,7 @@ function SeamlessMarquee({
   items,
   direction,
 }: {
-  items: string[];
+  items: SolutionItem[];
   direction: "left" | "right";
 }) {
   return (
@@ -193,34 +207,53 @@ function SeamlessMarquee({
           repeat: Infinity,
         }}
       >
-        {[...items, ...items].map((src, i) => (
+        {[...items, ...items].map((item, i) => {
+          const Icon = item.icon;
+          return (
           <div key={i} className="marquee-chip" style={chipStyle}>
             <div
-              className="marquee-img-wrap"
+              className="marquee-row"
               style={{
-                height: 56,
-                padding: "0 12px",
+                minHeight: 58,
+                padding: "8px 14px",
                 borderRadius: 14,
-                overflow: "hidden",
                 background: "rgba(255,255,255,0.06)",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "flex-start",
+                gap: 12,
               }}
             >
-              <img
-                src={src}
-                alt="category"
+              <div
                 style={{
-                  height: "100%",
-                  width: "auto",
-                  objectFit: "contain",
-                  display: "block",
+                  width: 18,
+                  height: 18,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#e5e7eb",
+                  flexShrink: 0,
                 }}
-              />
+              >
+                <Icon size={18} />
+              </div>
+              <div style={{ textAlign: "left", lineHeight: 1.2 }}>
+                <div style={{ color: "#fff", fontSize: 13, fontWeight: 600 }}>
+                  {item.title}
+                </div>
+                <div
+                  style={{
+                    color: "rgba(255,255,255,0.62)",
+                    fontSize: 11,
+                    marginTop: 2,
+                  }}
+                >
+                  {item.subtitle}
+                </div>
+              </div>
             </div>
           </div>
-        ))}
+        )})}
       </motion.div>
     </div>
   );
@@ -271,8 +304,8 @@ const chipStyle = {
   alignItems: "center",
   justifyContent: "center",
   padding: "14px 22px",
-  borderRadius: 999,
+  borderRadius: 14,
   backdropFilter: "blur(12px)",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.12)",
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.08)",
 };
