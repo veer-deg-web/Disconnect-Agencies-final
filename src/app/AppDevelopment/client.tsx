@@ -14,10 +14,16 @@ export default function HomePage() {
   return (
     <main>
       <HeroSection />
+      <section id="feature">
       <ProductVisuals/>
+      </section>
+      <section id="benefits">
       <BuildPocket/>
+      </section>
       <StickyProcess/>
+      <section id="testimonials">
       <Reviews/>
+      </section>
      <section id="pricing">
         <PricingSection
   headingTitle="AI-Powered Pricing Built to Scale"
@@ -29,11 +35,13 @@ export default function HomePage() {
   accentColor="#5869E3"
 />
 </section>
+<section id="faq">
 <FAQSection
   category="appdev"
   accentColor="#5869E3"
 
 />
+</section>
      <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #3B4EC3 0%, rgba(59,78,195,0.45) 35%, #0b0b0b 75%)"
   tiltGlow="#3B4EC3"

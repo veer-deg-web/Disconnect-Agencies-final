@@ -16,14 +16,18 @@ export default function Ai() {
     <>
       <HeroSection />
       <UIUXShowcaseLogos logos={partnerLogos} iconGap={200} title="Over 50+ businesses trusts us ." />
+      <section id="feature">
       <ServicesSection />
+      </section>
       <ProcessSection />
       <AntigravitySection
         label="For Developers"
         title={"Achieve\nNew Heights"}
         buttonText="Download"
       />
+      <section id="benefits">
       <BenefitsSection />
+      </section>
       <section id="pricing">
         <PricingSection
           headingTitle="AI-Powered Pricing Built to Scale"
@@ -34,11 +38,15 @@ export default function Ai() {
           ]}
           accentColor="#7C3AED"
         /></section>
+      <section id="testimonials">
       <TestimonialsSection />
+      </section>
+      <section id="faq">
       <FAQSection
         category="aimodels"
         accentColor="#7c3aed"
       />
+      </section>
       <CTASection
         gradient="radial-gradient(80% 120% at 50% 100%, #814AC8 0%, rgba(129,74,200,0.45) 35%, #0b0b0b 75%)"
         tiltGlow="#814AC8"

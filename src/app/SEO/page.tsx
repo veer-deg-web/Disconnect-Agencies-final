@@ -12,19 +12,27 @@ export default function SEOPage() {
   return (
     <main>
       <HeroSection />
+      <section id="benefits">
       <SeoProcess />
+      </section>
       <SEOServicesSection />
+      <section id="feature">
       <FeaturedServicesSection />
+      </section>
       <section id="pricing">
         <UIUXPricing />
       </section>
+      <section id="testimonials">
       <ReviewsSection />
+      </section>
+      <section id="faq">
       <FAQSection
         title={`Questions?\nWe're here to assist!`}
         category="seo"
         accentColor="#3755CD"
         defaultOpenIndex={0}
       />
+      </section>
     <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #3755CD 0%, rgba(55,85,205,0.45) 35%, #0b0b0b 75%)"
   tiltGlow="#3755CD"

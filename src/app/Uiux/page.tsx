@@ -36,22 +36,28 @@ export default function UIUXPage() {
  
 
 <div style={{ position: "relative", zIndex: 10 }}>
-        <UIUXShowcase />
+      <UIUXShowcase />
       <UIUXProcess />
+      <section id="benefits">
       <UIUXBenefits />
+      </section>
+      <section id="feature">
       <UIUXFeatures />
+      </section>
       <UIUXSolutions />
       <section id="pricing">
         <UIUXPricing />
       </section>
        <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
       <UIUXTutorials />
+      <section id="faq">
       <FAQSection
         title={`Questions?\nWe're here to assist!`}
         category="uiux"
         accentColor="#7C3AED"
         defaultOpenIndex={0}
       />
+      </section>
       <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #6214D9 0%, rgba(98,20,217,0.45) 35%, #0b0b0b 75%)"
   tiltGlow="#6214D9"

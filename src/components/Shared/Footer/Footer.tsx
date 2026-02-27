@@ -1,8 +1,59 @@
 "use client";
 
 import React from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Footer() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    router.push(`${pathname}#${id}`);
+  };
+
+  const scrollToAny = (ids: string[]) => {
+    for (const id of ids) {
+      const section = document.getElementById(id);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
+    router.push(`${pathname}#${ids[0]}`);
+  };
+
+  const handleFooterNav = (item: string) => {
+    if (item === "Home") {
+      router.push("/");
+      return;
+    }
+    if (item === "Feature") {
+      scrollToAny(["feature", "features", "services"]);
+      return;
+    }
+    if (item === "Benefits") {
+      scrollToAny(["benefits", "benefit"]);
+      return;
+    }
+    if (item === "Pricing") {
+      scrollToSection("pricing");
+      return;
+    }
+    if (item === "Testimonials") {
+      scrollToAny(["testimonials", "testimonial", "reviews"]);
+      return;
+    }
+    if (item === "FAQ") {
+      scrollToAny(["faq"]);
+      return;
+    }
+  };
+
   return (
     <>
       {/* MOBILE OVERRIDES — 344px SAFE */}
@@ -66,17 +117,22 @@ export default function Footer() {
               "Testimonials",
               "FAQ",
             ].map((item) => (
-              <a
+              <button
                 key={item}
-                href="#"
+                type="button"
+                onClick={() => handleFooterNav(item)}
                 style={{
                   textDecoration: "none",
                   color: "inherit",
                   padding: "6px 4px", // better tap area
+                  background: "transparent",
+                  border: "none",
+                  font: "inherit",
+                  cursor: "pointer",
                 }}
               >
                 {item}
-              </a>
+              </button>
             ))}
           </nav>
 

@@ -50,24 +50,32 @@ export default function Home() {
       <main className="relative min-h-screen text-white overflow-hidden">
         <HeroSection />
       </main>
+      <section id="feature">
       <VisionShowcase />
+      </section>
       <section id="services">
       <ServicesSection/>
       </section>
       <GrowthShowcaseSection />
+      <section id="benefits">
       <SmartGrowthSection />
+      </section>
       
       <PerformanceMetrics />
       <section id="pricing">
       <PricingSection/>
 </section>
+      <section id="testimonials">
       <TestimonialsSection/>
+      </section>
+      <section id="faq">
       <FAQSection
   title="FAQ"
   category="general"
   accentColor="#DE5E03"
   defaultOpenIndex={0}
 />
+      </section>
       <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
   tiltGlow="#DE5E03"

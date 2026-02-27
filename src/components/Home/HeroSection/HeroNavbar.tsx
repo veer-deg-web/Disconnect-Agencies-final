@@ -50,6 +50,16 @@ export default function HeroNavbar() {
     if (item === "login") router.push("/auth");
   };
 
+  const handlePricingClick = () => {
+    setOpen(false);
+    const section = document.getElementById("pricing");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    router.push(`${pathname}#pricing`);
+  };
+
   return (
     <>
       <style>
@@ -147,17 +157,22 @@ export default function HeroNavbar() {
                       Services
                     </Link>
                   ) : item === "Pricing" ? (
-                    /* ✅ PRICING SCROLL (CURRENT PAGE) */
-                    <Link
-                      href={`${pathname}#pricing`}
-                      onClick={() => setOpen(false)}
+                    <button
+                      type="button"
+                      onClick={handlePricingClick}
                       style={{
                         color: "inherit",
                         textDecoration: "none",
+                        background: "transparent",
+                        border: "none",
+                        padding: 0,
+                        margin: 0,
+                        font: "inherit",
+                        cursor: "pointer",
                       }}
                     >
                       Pricing
-                    </Link>
+                    </button>
                   ) : (
                     <span onClick={() => handleNavigate(item)}>
                       {item}
@@ -275,13 +290,22 @@ export default function HeroNavbar() {
                       Services
                     </Link>
                   ) : item === "Pricing" ? (
-                    <Link
-                      href={`${pathname}#pricing`}
-                      onClick={() => setOpen(false)}
-                      style={{ color: "#fff", textDecoration: "none" }}
+                    <button
+                      type="button"
+                      onClick={handlePricingClick}
+                      style={{
+                        color: "#fff",
+                        textDecoration: "none",
+                        background: "transparent",
+                        border: "none",
+                        padding: 0,
+                        margin: 0,
+                        font: "inherit",
+                        cursor: "pointer",
+                      }}
                     >
                       Pricing
-                    </Link>
+                    </button>
                   ) : (
                     <span onClick={() => handleNavigate(item)}>
                       {item}

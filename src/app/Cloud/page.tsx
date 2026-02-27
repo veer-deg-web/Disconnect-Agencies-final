@@ -18,18 +18,26 @@ export default function CloudPage() {
     <main>
       <DotBackground color="rgba(219, 254, 73, 0.18)" />
       <HeroSection />
+      <section id="feature">
       <CloudServicesSection />
+      </section>
       <OurWorkFinal />
       <ScrollZoomStats />
       <MoreAboutSection />
+      <section id="benefits">
       <Awards />
+      </section>
       <ProcessSection />
+      <section id="testimonials">
       <TestimonialsSection />
+      </section>
+      <section id="faq">
       <FAQSection
         category="cloud"
         accentColor="#DBFE49"
         title="Answer To Your Queries"
       />
+      </section>
       <CTASection
         gradient="radial-gradient(80% 120% at 50% 100%, #DCEC8F 0%, rgba(220,236,143,0.5) 35%, #0b0b0b 75%)"
         tiltGlow="#DCEC8F"

@@ -35,8 +35,12 @@ export default function WebDevelopmentPage() {
       <SupportSection />
 
      
+     <section id="feature">
      <FeatureSection />
+     </section>
+     <section id="benefits">
      <SupportedByAI  /> 
+     </section>
      <FeatureGridSection
   headingLine1="Custom-designed modular"
   headingLine2="products at a world-class standard"
@@ -47,14 +51,18 @@ export default function WebDevelopmentPage() {
 <section id="pricing">
   <PricingSection />
 </section>
+<section id="testimonials">
 <ClientFeedback />
+</section>
      
+<section id="faq">
 <FAQSection
         title={`Questions?\nWe're here to assist!`}
         defaultOpenIndex={0}
         accentColor="#C7FF1A"
         category="webdev"
       />
+</section>
     <CTASection
   gradient="radial-gradient(80% 120% at 50% 100%, #CFFE25 0%, rgba(207,254,37,0.45) 35%, #0b0b0b 75%)"
   tiltGlow="#CFFE25"
