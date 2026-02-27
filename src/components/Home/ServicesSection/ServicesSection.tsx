@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
@@ -126,6 +126,17 @@ function ServiceCard({
       "perspective(1200px) rotateX(0deg) rotateY(0deg)";
   }, []);
 
+  useEffect(() => {
+    const restore = () => resetTilt();
+    window.addEventListener("pageshow", restore);
+    return () => window.removeEventListener("pageshow", restore);
+  }, [resetTilt]);
+
+  const handleCardClick = () => {
+    resetTilt();
+    router.push(service.route);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -137,7 +148,7 @@ function ServiceCard({
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={resetTilt}
-        onClick={() => router.push(service.route)}
+        onClick={handleCardClick}
         style={{
           position: "relative",
           transformStyle: "preserve-3d",
