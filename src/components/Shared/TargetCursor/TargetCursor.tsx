@@ -6,6 +6,7 @@ import './TargetCursor.css';
 
 interface TargetCursorProps {
   targetSelector?: string;
+  scopeSelector?: string;
   spinDuration?: number;
   hideDefaultCursor?: boolean;
   hoverDuration?: number;
@@ -14,6 +15,7 @@ interface TargetCursorProps {
 
 const TargetCursor = ({
   targetSelector = '.cursor-target',
+  scopeSelector,
   spinDuration = 2,
   hideDefaultCursor = true,
   hoverDuration = 0.2,
@@ -31,6 +33,7 @@ const TargetCursor = ({
   const targetCornerPositionsRef = useRef<{ x: number; y: number }[] | null>(null);
   const tickerFnRef = useRef<() => void>(() => { });
   const activeStrengthRef = useRef({ current: 0 });
+  const scopeRef = useRef<HTMLElement | null>(null);
 
   const constants = useMemo(
     () => ({
@@ -76,6 +79,7 @@ const TargetCursor = ({
 
     const cursor = cursorRef.current;
     cornersRef.current = cursor.querySelectorAll('.target-cursor-corner');
+    scopeRef.current = scopeSelector ? document.querySelector(scopeSelector) as HTMLElement | null : null;
 
     let activeTarget: HTMLElement | null = null;
     let currentLeaveHandler: (() => void) | null = null;
@@ -88,11 +92,25 @@ const TargetCursor = ({
       currentLeaveHandler = null;
     };
 
+    const isInScope = (element: Element | null) => {
+      if (!scopeRef.current) return true;
+      return !!element && scopeRef.current.contains(element);
+    };
+
+    const getScopedTarget = (element: HTMLElement | null) => {
+      if (!element || !isInScope(element)) return null;
+      const candidate = element.closest(targetSelector) as HTMLElement | null;
+      if (!candidate) return null;
+      if (!scopeRef.current) return candidate;
+      return scopeRef.current.contains(candidate) ? candidate : null;
+    };
+
     gsap.set(cursor, {
       xPercent: -50,
       yPercent: -50,
       x: window.innerWidth / 2,
-      y: window.innerHeight / 2
+      y: window.innerHeight / 2,
+      autoAlpha: scopeRef.current ? 0 : 1
     });
 
     const createSpinTimeline = () => {
@@ -142,7 +160,20 @@ const TargetCursor = ({
 
     tickerFnRef.current = tickerFn;
 
-    const moveHandler = (e: MouseEvent) => moveCursor(e.clientX, e.clientY);
+    const moveHandler = (e: MouseEvent) => {
+      const inScope = !scopeRef.current || (() => {
+        const rect = scopeRef.current!.getBoundingClientRect();
+        return e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+      })();
+
+      gsap.to(cursorRef.current, { autoAlpha: inScope ? 1 : 0, duration: 0.12, overwrite: true });
+
+      if (!inScope && currentLeaveHandler) {
+        currentLeaveHandler();
+      }
+
+      moveCursor(e.clientX, e.clientY);
+    };
     window.addEventListener('mousemove', moveHandler);
 
     const scrollHandler = () => {
@@ -152,7 +183,7 @@ const TargetCursor = ({
       const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
       const isStillOverTarget =
         elementUnderMouse &&
-        (elementUnderMouse === activeTarget || (elementUnderMouse as HTMLElement).closest(targetSelector) === activeTarget);
+        (elementUnderMouse === activeTarget || getScopedTarget(elementUnderMouse as HTMLElement) === activeTarget);
       if (!isStillOverTarget) {
         if (currentLeaveHandler) {
           currentLeaveHandler();
@@ -177,16 +208,7 @@ const TargetCursor = ({
     window.addEventListener('mouseup', mouseUpHandler);
 
     const enterHandler = (e: MouseEvent) => {
-      const directTarget = e.target as HTMLElement;
-      const allTargets: HTMLElement[] = [];
-      let current = directTarget;
-      while (current && current !== document.body) {
-        if (current.matches(targetSelector)) {
-          allTargets.push(current);
-        }
-        current = current.parentElement as HTMLElement;
-      }
-      const target = allTargets[0] || null;
+      const target = getScopedTarget(e.target as HTMLElement);
       if (!target || !cursorRef.current || !cornersRef.current) return;
       if (activeTarget === target) return;
       if (activeTarget) {
@@ -319,7 +341,7 @@ const TargetCursor = ({
       targetCornerPositionsRef.current = null;
       activeStrengthRef.current.current = 0;
     };
-  }, [targetSelector, spinDuration, moveCursor, constants, hideDefaultCursor, isMobile, hoverDuration, parallaxOn, mounted]);
+  }, [targetSelector, scopeSelector, spinDuration, moveCursor, constants, hideDefaultCursor, isMobile, hoverDuration, parallaxOn, mounted]);
 
   useEffect(() => {
     if (isMobile || !cursorRef.current || !spinTl.current) return;

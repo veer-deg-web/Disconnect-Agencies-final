@@ -22,6 +22,9 @@ interface SplashCursorProps {
   COLOR_UPDATE_SPEED?: number;
   BACK_COLOR?: ColorRGB;
   TRANSPARENT?: boolean;
+  scopeSelector?: string;
+  position?: 'fixed' | 'absolute';
+  zIndex?: number;
 }
 
 interface Pointer {
@@ -66,13 +69,17 @@ export default function SplashCursor({
   SHADING = true,
   COLOR_UPDATE_SPEED = 10,
   BACK_COLOR = { r: 0.5, g: 0, b: 0 },
-  TRANSPARENT = true
+  TRANSPARENT = true,
+  scopeSelector,
+  position = 'fixed',
+  zIndex = 2
 }: SplashCursorProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const scopeElement = scopeSelector ? (document.querySelector(scopeSelector) as HTMLElement | null) : null;
 
     let pointers: Pointer[] = [pointerPrototype()];
 
@@ -1188,32 +1195,57 @@ export default function SplashCursor({
       return ((value - min) % range) + min;
     }
 
-    window.addEventListener('mousedown', e => {
+    const getScopedPosition = (clientX: number, clientY: number) => {
+      if (!scopeElement) {
+        return {
+          x: scaleByPixelRatio(clientX),
+          y: scaleByPixelRatio(clientY)
+        };
+      }
+
+      const rect = scopeElement.getBoundingClientRect();
+      const isInside =
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom;
+
+      if (!isInside) return null;
+
+      return {
+        x: scaleByPixelRatio(clientX - rect.left),
+        y: scaleByPixelRatio(clientY - rect.top)
+      };
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
       const pointer = pointers[0];
-      const posX = scaleByPixelRatio(e.clientX);
-      const posY = scaleByPixelRatio(e.clientY);
-      updatePointerDownData(pointer, -1, posX, posY);
+      const pos = getScopedPosition(e.clientX, e.clientY);
+      if (!pos) return;
+      updatePointerDownData(pointer, -1, pos.x, pos.y);
       clickSplat(pointer);
-    });
+    };
+    window.addEventListener('mousedown', handleMouseDown);
 
     function handleFirstMouseMove(e: MouseEvent) {
       const pointer = pointers[0];
-      const posX = scaleByPixelRatio(e.clientX);
-      const posY = scaleByPixelRatio(e.clientY);
+      const pos = getScopedPosition(e.clientX, e.clientY);
+      if (!pos) return;
       const color = generateColor();
       updateFrame();
-      updatePointerMoveData(pointer, posX, posY, color);
+      updatePointerMoveData(pointer, pos.x, pos.y, color);
       document.body.removeEventListener('mousemove', handleFirstMouseMove);
     }
     document.body.addEventListener('mousemove', handleFirstMouseMove);
 
-    window.addEventListener('mousemove', e => {
+    const handleMouseMove = (e: MouseEvent) => {
       const pointer = pointers[0];
-      const posX = scaleByPixelRatio(e.clientX);
-      const posY = scaleByPixelRatio(e.clientY);
+      const pos = getScopedPosition(e.clientX, e.clientY);
+      if (!pos) return;
       const color = pointer.color;
-      updatePointerMoveData(pointer, posX, posY, color);
-    });
+      updatePointerMoveData(pointer, pos.x, pos.y, color);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
 
     function handleFirstTouchStart(e: TouchEvent) {
       const touches = e.targetTouches;
@@ -1228,41 +1260,46 @@ export default function SplashCursor({
     }
     document.body.addEventListener('touchstart', handleFirstTouchStart);
 
-    window.addEventListener(
-      'touchstart',
-      e => {
-        const touches = e.targetTouches;
-        const pointer = pointers[0];
-        for (let i = 0; i < touches.length; i++) {
-          const posX = scaleByPixelRatio(touches[i].clientX);
-          const posY = scaleByPixelRatio(touches[i].clientY);
-          updatePointerDownData(pointer, touches[i].identifier, posX, posY);
-        }
-      },
-      false
-    );
+    const handleTouchStart = (e: TouchEvent) => {
+      const touches = e.targetTouches;
+      const pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        const pos = getScopedPosition(touches[i].clientX, touches[i].clientY);
+        if (!pos) continue;
+        updatePointerDownData(pointer, touches[i].identifier, pos.x, pos.y);
+      }
+    };
+    window.addEventListener('touchstart', handleTouchStart, false);
 
-    window.addEventListener(
-      'touchmove',
-      e => {
-        const touches = e.targetTouches;
-        const pointer = pointers[0];
-        for (let i = 0; i < touches.length; i++) {
-          const posX = scaleByPixelRatio(touches[i].clientX);
-          const posY = scaleByPixelRatio(touches[i].clientY);
-          updatePointerMoveData(pointer, posX, posY, pointer.color);
-        }
-      },
-      false
-    );
+    const handleTouchMove = (e: TouchEvent) => {
+      const touches = e.targetTouches;
+      const pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        const pos = getScopedPosition(touches[i].clientX, touches[i].clientY);
+        if (!pos) continue;
+        updatePointerMoveData(pointer, pos.x, pos.y, pointer.color);
+      }
+    };
+    window.addEventListener('touchmove', handleTouchMove, false);
 
-    window.addEventListener('touchend', e => {
+    const handleTouchEnd = (e: TouchEvent) => {
       const touches = e.changedTouches;
       const pointer = pointers[0];
       for (let i = 0; i < touches.length; i++) {
         updatePointerUpData(pointer);
       }
-    });
+    };
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      document.body.removeEventListener('mousemove', handleFirstMouseMove);
+      document.body.removeEventListener('touchstart', handleFirstTouchStart);
+    };
   }, [
     SIM_RESOLUTION,
     DYE_RESOLUTION,
@@ -1277,16 +1314,17 @@ export default function SplashCursor({
     SHADING,
     COLOR_UPDATE_SPEED,
     BACK_COLOR,
-    TRANSPARENT
+    TRANSPARENT,
+    scopeSelector
   ]);
 
   return (
     <div
       style={{
-        position: 'fixed',
+        position,
         top: 0,
         left: 0,
-        zIndex: 50,
+        zIndex,
         pointerEvents: 'none',
         width: '100%',
         height: '100%'
@@ -1296,8 +1334,8 @@ export default function SplashCursor({
         ref={canvasRef}
         id="fluid"
         style={{
-          width: '100vw',
-          height: '100vh',
+          width: '100%',
+          height: '100%',
           display: 'block'
         }}
       />

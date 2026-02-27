@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import "./BuildPocket.css";
-import TargetCursor from "@/components/Shared/TargetCursor/TargetCursor";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 
 import {
@@ -52,14 +51,6 @@ const logos = [
 export default function BuildPocket() {
   return (
     <section className="build-pocket">
-
-      {/* Scoped Cursor */}
-      <TargetCursor
-  spinDuration={3}
-  hideDefaultCursor={false}
-  parallaxOn={false}
-  hoverDuration={0.3}
-/>
 
       <div className="build-pocket__top">
 

@@ -13,6 +13,7 @@ import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import Hyperspeed from "@/components/Shared/Hyperspeed/Hyperspeed";
+import SplashCursor from "@/components/SplashCursor";
 
 const heroLogos = [
   { node: <SiReact />, title: "React" },
@@ -72,6 +73,7 @@ export default function HeroSection() {
       <div className="hero__background">
         <Hyperspeed effectOptions={hyperspeedOptions} />
       </div>
+      <SplashCursor scopeSelector=".hero" position="absolute" zIndex={2} />
 
 
       {/* ================= TEXT ================= */}
