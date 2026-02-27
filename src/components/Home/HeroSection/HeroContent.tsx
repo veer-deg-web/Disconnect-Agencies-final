@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useAnimationControls } from "framer-motion";
-import BookCallButton from "./BookCallButton";
-import ShinyText from "./ShinyText";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 /* ================= ANIMATIONS ================= */

@@ -6,7 +6,7 @@ import {
   useInView,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import GradientText from "./GradientText";
+import GradientText from "@/components/Shared/GradientText/GradientText";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 

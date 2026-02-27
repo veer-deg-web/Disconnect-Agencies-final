@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ShinyText from "@/components/ShinyText";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import "./HeroSection.css";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;

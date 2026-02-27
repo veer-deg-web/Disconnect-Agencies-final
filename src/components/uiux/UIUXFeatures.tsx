@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import BookCallButton from "@/components/BookCallButton";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 
 export default function UIUXFeatures() {
   const sectionRef = useRef<HTMLDivElement>(null);

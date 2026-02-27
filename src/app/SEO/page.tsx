@@ -1,12 +1,12 @@
 import HeroSection from "@/components/SEO/HeroSection/HeroSection";  
-import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
+import CTASection from "@/components/Shared/CTASection/CTASection";
+import Footer from "@/components/Shared/Footer/Footer";
 import SeoProcess from "@/components/SEO/Seoprocess/SEOProcessSection";
 import SEOServicesSection from "@/components/SEO/Services/SeoServiceSection";
 import UIUXPricing from "@/components/uiux/UIUXPricing";
 import FeaturedServicesSection from "@/components/SEO/FeaturedServiceSection/FeaturedSevicesSection";
 import ReviewsSection from "@/components/SEO/Review/ReviewsSection";
-import FAQSection from "@/components/FAQSection";
+import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 
 export default function SEOPage() {
   return (

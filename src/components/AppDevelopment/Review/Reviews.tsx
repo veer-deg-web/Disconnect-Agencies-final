@@ -2,7 +2,7 @@
 
 import "./Reviews.css";
 
-import GradientText from "@/components/GradientText";
+import GradientText from "@/components/Shared/GradientText/GradientText";
 
 
 /* ---------------- FEATURED REVIEW ---------------- */

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import BookCallButton from "@/components/BookCallButton";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 
 /* =======================
    HEADING LANGUAGES

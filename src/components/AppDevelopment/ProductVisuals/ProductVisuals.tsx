@@ -1,8 +1,8 @@
 "use client";
 
 import "./ProductVisuals.css";
-import TiltedCard from "@/components/TiltedCard";
-import SpotlightCard from "@/components/SpotlightCard";
+import TiltedCard from "@/components/Shared/TiltedCard/TiltedCard";
+import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 
 import {
   SiAppstore,

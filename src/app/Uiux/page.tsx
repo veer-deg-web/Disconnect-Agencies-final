@@ -8,9 +8,9 @@ import UIUXPricing from "@/components/uiux/UIUXPricing";
 
 import UIUXTutorials from "@/components/uiux/UIUXTutorials";
 
-import Footer from "@/components/Footer";
-import FAQSection from "@/components/FAQSection";
-import CTASection from "@/components/CTASection";
+import Footer from "@/components/Shared/Footer/Footer";
+import FAQSection from "@/components/Shared/FAQSection/FAQSection";
+import CTASection from "@/components/Shared/CTASection/CTASection";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";import {
   SiReact,
   SiNextdotjs,

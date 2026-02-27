@@ -9,10 +9,10 @@ import {
   SiTailwindcss,
 } from "react-icons/si";
 
-import BookCallButton from "@/components/BookCallButton";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
-import ShinyText from "@/components/ShinyText";
-import Hyperspeed from "@/components/Hyperspeed";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
+import Hyperspeed from "@/components/Shared/Hyperspeed/Hyperspeed";
 
 const heroLogos = [
   { node: <SiReact />, title: "React" },

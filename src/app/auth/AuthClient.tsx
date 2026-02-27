@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import './Auth.css';
 
-import ParticleCanvas from '@/components/ParticleCanvas';
+import ParticleCanvas from '@/components/Shared/ParticleCanvas/ParticleCanvas';
 
 /* ─────────────────────────────────────────────
    REUSABLE INPUT

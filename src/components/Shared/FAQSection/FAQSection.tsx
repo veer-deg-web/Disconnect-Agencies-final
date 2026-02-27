@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import ShinyText from "./ShinyText";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import { EASE_SMOOTH } from "@/lib/animations";
 import { useFaq } from "@/lib/useFaq";
 

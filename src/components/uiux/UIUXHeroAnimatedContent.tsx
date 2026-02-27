@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import BookCallButton from "@/components/BookCallButton";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 
 export default function UIUXHeroAnimatedContent() {
   return (

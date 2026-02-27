@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Cubes from "./Cubes";
-import ShinyText from './ShinyText';
-import UIUXShowcaseLogos from "./uiux/UIUXShowcaseLogos";
+import Cubes from "@/components/Shared/Cubes/Cubes";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
+import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import {
   SiReact,
   SiNextdotjs,

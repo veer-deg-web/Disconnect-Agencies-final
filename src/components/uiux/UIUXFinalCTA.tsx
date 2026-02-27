@@ -1,4 +1,4 @@
-import BookCallButton from "@/components/BookCallButton";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 
 export default function UIUXFinalCTA() {
   return (

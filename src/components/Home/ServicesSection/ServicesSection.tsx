@@ -3,8 +3,8 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import ShinyText from "./ShinyText";
-import SpotlightCard from "./SpotlightCard";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
+import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 import {

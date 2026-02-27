@@ -2,7 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import './Hero.css';
-import ShinyText from "../../ShinyText";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 
 
 

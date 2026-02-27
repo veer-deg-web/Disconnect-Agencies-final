@@ -1,17 +1,17 @@
 import GrowthShowcaseSection from "@/components/Home/GrowthShowcaseSection/GrowthShowcaseSection";
-import HeroSection  from "@/components/HeroSection";
-import PageBackground from "@/components/PageBackground";
+import HeroSection  from "@/components/Home/HeroSection/HeroSection";
+import PageBackground from "@/components/Home/PageBackground/PageBackground";
 
-import ServicesSection from "@/components/ServicesSection";
-import SmartGrowthSection from "@/components/SmartGrowthSection";
-import VisionShowcase from "@/components/VisionShowcase";
+import ServicesSection from "@/components/Home/ServicesSection/ServicesSection";
+import SmartGrowthSection from "@/components/Home/SmartGrowthSection/SmartGrowthSection";
+import VisionShowcase from "@/components/Home/VisionShowcase/VisionShowcase";
 
-import PerformanceMetrics from "@/components/PerformaceMetrics";
+import PerformanceMetrics from "@/components/Home/PerformanceMetrics/PerformanceMetrics";
 import PricingSection from "@/components/PricingSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import FAQSection from "@/components/FAQSection";
-import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
+import TestimonialsSection from "@/components/Home/TestimonialsSection/TestimonialsSection";
+import FAQSection from "@/components/Shared/FAQSection/FAQSection";
+import CTASection from "@/components/Shared/CTASection/CTASection";
+import Footer from "@/components/Shared/Footer/Footer";
 import { Section } from "lucide-react";
 
 

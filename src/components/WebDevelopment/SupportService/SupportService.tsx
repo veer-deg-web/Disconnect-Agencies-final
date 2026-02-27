@@ -2,7 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { useEffect, useState } from "react";
-import SpotlightCard from "@/components/SpotlightCard";
+import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import "./SupportService.css";
 
 /* ================= ANIMATIONS ================= */

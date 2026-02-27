@@ -2,8 +2,8 @@
 
 import { motion, type Variants } from "framer-motion";
 import React, { useRef, useCallback } from "react";
-import ShinyText from "@/components/ShinyText";
-import SpotlightCard from "@/components/SpotlightCard";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
+import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import "./FeatureGridSection.css";
 
 /* ============================

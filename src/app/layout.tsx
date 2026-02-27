@@ -2,7 +2,7 @@ import "./globals.css";
 import SmoothScroll from "./providers/SmoothScroll";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
-import HeroNavbar from "@/components/HeroNavbar";
+import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
 
 export const metadata = {
   title: "Disconnect Agencies",

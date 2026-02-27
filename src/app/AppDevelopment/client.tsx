@@ -4,10 +4,10 @@ import HeroSection from '@/components/AppDevelopment/HeroSection/HeroSection';
 import ProductVisuals from '@/components/AppDevelopment/ProductVisuals/ProductVisuals';
 import Reviews from '@/components/AppDevelopment/Review/Reviews';
 import StickyProcess from '@/components/AppDevelopment/StickyProcess/StickyProcess';
-import CTASection from '@/components/CTASection';
-import Footer from '@/components/Footer';
+import CTASection from '@/components/Shared/CTASection/CTASection';
+import Footer from '@/components/Shared/Footer/Footer';
 import PricingSection from '@/components/PricingSection';
-import FAQSection from '@/components/FAQSection';
+import FAQSection from '@/components/Shared/FAQSection/FAQSection';
 
 
 export default function HomePage() {

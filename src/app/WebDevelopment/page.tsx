@@ -1,9 +1,9 @@
 import{ featureItems } from "@/Data/WebDevFeatures/Data";
 import Hero from "@/components/WebDevelopment/Hero/Hero";
 import SupportSection from "@/components/WebDevelopment/SupportService/SupportService";
-import FAQSection from "@/components/FAQSection";
-import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
+import FAQSection from "@/components/Shared/FAQSection/FAQSection";
+import CTASection from "@/components/Shared/CTASection/CTASection";
+import Footer from "@/components/Shared/Footer/Footer";
 import FeatureGridSection from "@/components/WebDevelopment/FeatureGridSection/FeatureGridSection";
 import IntegrationLogosSection from "@/components/WebDevelopment/IntegrationLogoSection/IntegrationLogoSection";
 import PricingSection from "@/components/WebDevelopment/PricingSection/PricingSection";

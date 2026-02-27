@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import BookCallButton from "./BookCallButton";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 
 export default function ProperToggle() {
   return (

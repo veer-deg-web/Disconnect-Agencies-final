@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ShinyText from "./ShinyText";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 /* ======================

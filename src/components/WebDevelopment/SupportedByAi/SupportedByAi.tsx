@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import ShinyText from "@/components/ShinyText";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 
 /* =======================
    DATA

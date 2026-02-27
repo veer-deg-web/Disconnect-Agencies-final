@@ -1,6 +1,6 @@
 "use client";
 
-import LogoLoop from "@/components/LogoLoop";
+import LogoLoop from "@/components/Shared/LogoLoop/LogoLoop";
 import React from "react";
 
 export type LogoItem = {

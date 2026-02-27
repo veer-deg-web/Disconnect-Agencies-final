@@ -10,8 +10,8 @@ import TimeStep from "./TimeStep";
 import DetailsStep from "./DetailsStep";
 import { CategoryType } from "@/components/data/serviceData";
 
-import BackgroundEllipses from "@/components/BackgroundElipse";
-import ParticleCanvas from "@/components/ParticleCanvas";
+import BackgroundEllipses from "@/components/Shared/BackgroundElipse/BackgroundElipse";
+import ParticleCanvas from "@/components/Shared/ParticleCanvas/ParticleCanvas";
 import "./BookingSteps.css";
 
 interface BookingStepsProps {

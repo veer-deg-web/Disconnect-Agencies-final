@@ -8,10 +8,10 @@ import ProcessSection from "@/components/Cloud/Process/ProcessSection";
 import TestimonialsSection from "@/components/Cloud/Testimonials/TestimonialsSection";
 import HeroSection from "@/components/Cloud/Hero/HeroSection";
 import DotBackground from "@/components/DotBackground/DotBackground";
-import CTASection from "@/components/CTASection";
+import CTASection from "@/components/Shared/CTASection/CTASection";
 import { Cloudfaq } from "@/Data/Cloudfaq";
-import FAQSection from "@/components/FAQSection";
-import Footer from "@/components/Footer";
+import FAQSection from "@/components/Shared/FAQSection/FAQSection";
+import Footer from "@/components/Shared/Footer/Footer";
 
 export default function CloudPage() {
   return (

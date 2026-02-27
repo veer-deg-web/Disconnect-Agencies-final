@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ShinyText from "@/components/ShinyText";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import ReviewsMarquee from "./ReviewsMarquee";
 import "./Hero.css";
 

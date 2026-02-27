@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import LogoLoop from "@/components/LogoLoop";
+import LogoLoop from "@/components/Shared/LogoLoop/LogoLoop";
 import {
   SiReact,
   SiNextdotjs,
   SiTypescript,
   SiTailwindcss,
 } from "react-icons/si";
-import ShinyText from "@/components/ShinyText";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 
 /* =======================
    DATA

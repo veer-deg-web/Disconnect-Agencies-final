@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./StickyProcess.css";
-import Cubes from "@/components/Cubes";
+import Cubes from "@/components/Shared/Cubes/Cubes";
 
 const steps = [
   {

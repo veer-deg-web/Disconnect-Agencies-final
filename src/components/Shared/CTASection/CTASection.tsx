@@ -2,8 +2,8 @@
 
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import BookCallButton from "@/components/BookCallButton";
-import ShinyText from "./ShinyText";
+import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
+import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 /* =====================
