@@ -22,6 +22,12 @@ const ROW_2 = [
   { name: "Ethan Brown", role: "Brand Lead", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
 ];
 
+type Person = {
+  name: string;
+  role: string;
+  img: string;
+};
+
 /* =======================
    COMPONENT
 ======================= */
@@ -79,7 +85,7 @@ export default function SupportedByAISection() {
    CARD
 ======================= */
 
-function renderCard(person: any, i: number) {
+function renderCard(person: Person, i: number) {
   return (
     <div
       key={i}
@@ -92,10 +98,8 @@ function renderCard(person: any, i: number) {
       }
     >
       <img src={person.img} alt={person.name} style={avatar} />
-      <div>
-        <div style={name}>{person.name}</div>
-        <div style={role}>{person.role}</div>
-      </div>
+      <div style={name}>{person.name}</div>
+      <div style={role}>{person.role}</div>
     </div>
   );
 }
@@ -105,7 +109,7 @@ function renderCard(person: any, i: number) {
 ======================= */
 
 const section: React.CSSProperties = {
-  padding: "clamp(100px, 14vw, 160px) 40px",
+  padding: "clamp(72px, 14vw, 160px) clamp(10px, 3.8vw, 40px)",
   background: "radial-gradient(circle at top, #141414, #000)",
   color: "#fff",
   overflow: "hidden",
@@ -113,53 +117,76 @@ const section: React.CSSProperties = {
 
 const textWrap: React.CSSProperties = {
   maxWidth: 560,
-  marginBottom: 60,
-  fontSize: "clamp(26px, 5vw, 42px)",
+  marginBottom: "clamp(26px, 7vw, 60px)",
+  fontSize: "clamp(22px, 5vw, 42px)",
 };
 
 const subText: React.CSSProperties = {
-  fontSize: "clamp(14px, 3.5vw, 15px)",
+  fontSize: "clamp(13px, 3.6vw, 15px)",
   opacity: 0.65,
-  marginTop: 18,
-  lineHeight: 1.6,
+  marginTop: 14,
+  lineHeight: 1.55,
 };
 
 const row: React.CSSProperties = {
   display: "flex",
-  gap: 24,
-  flexWrap: "wrap",   // 🔥 important
-  maxWidth: 1400,     // 🔥 prevents 5th card
+  gap: "clamp(10px, 2.2vw, 24px)",
+  flexWrap: "nowrap",
+  width: "100%",
+  overflowX: "auto",
+  overflowY: "hidden",
+  scrollbarWidth: "none",
+  msOverflowStyle: "none",
+  WebkitOverflowScrolling: "touch",
+  paddingBottom: 4,
+  alignItems: "stretch",
+  scrollSnapType: "x proximity",
 };
 
 const card: React.CSSProperties = {
-  display: "flex",
+  display: "grid",
+  gridTemplateColumns: "auto 1fr",
+  gridTemplateRows: "auto auto",
+  columnGap: "clamp(8px, 2vw, 18px)",
+  rowGap: 2,
   alignItems: "center",
-  gap: 18,
-  padding: "22px 28px",
-  borderRadius: 22,
-  flex: "1 1 300px",  // 🔥 ensures max 4
-  maxWidth: 320,
+  padding: "clamp(12px, 2.6vw, 22px) clamp(12px, 3vw, 28px)",
+  borderRadius: 20,
+  flex: "0 0 clamp(208px, 26vw, 320px)",
+  minWidth: 0,
   background:
     "linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
   border: "1px solid rgba(255,255,255,0.08)",
   backdropFilter: "blur(14px)",
   boxShadow: "0 12px 40px rgba(0,0,0,0.4)",
   transition: "transform 0.4s ease",
+  scrollSnapAlign: "start",
 };
 
 const avatar: React.CSSProperties = {
-  width: 50,
-  height: 50,
+  width: "clamp(34px, 6vw, 50px)",
+  height: "clamp(34px, 6vw, 50px)",
   borderRadius: "50%",
   objectFit: "cover",
+  gridRow: "1 / span 2",
 };
 
 const name: React.CSSProperties = {
-  fontSize: 16,
+  fontSize: "clamp(13px, 2.9vw, 16px)",
   fontWeight: 500,
+  gridColumn: 2,
+  gridRow: 1,
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 };
 
 const role: React.CSSProperties = {
-  fontSize: 13,
+  fontSize: "clamp(11px, 2.6vw, 13px)",
   opacity: 0.65,
+  gridColumn: 2,
+  gridRow: 2,
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 };

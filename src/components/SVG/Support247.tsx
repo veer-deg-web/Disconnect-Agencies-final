@@ -25,6 +25,8 @@ export default function Support247Window({
 
   const [pillWidth, setPillWidth] = useState(260)
   const [fontSize, setFontSize] = useState(420)
+  const [iconSize, setIconSize] = useState(28)
+  const [isCompact, setIsCompact] = useState(false)
 
   /* ================= RESPONSIVE CALC ================= */
 
@@ -34,12 +36,13 @@ export default function Support247Window({
 
       const width = containerRef.current.offsetWidth
 
-      // Scale font based on container width
-      const newFont = Math.max(180, width * 1.2)
+      // Keep headline and pill readable on very narrow screens (e.g. ~280px cover displays).
+      const newFont = Math.min(390, Math.max(110, width * 0.95))
       setFontSize(newFont)
 
-      // Scale pill width proportionally
-      setPillWidth(width * 0.55)
+      setPillWidth(Math.min(width * 0.8, 340))
+      setIconSize(width <= 320 ? 20 : width <= 420 ? 24 : 28)
+      setIsCompact(width <= 420)
     }
 
     update()
@@ -53,7 +56,7 @@ export default function Support247Window({
         width: "100%",
         display: "flex",
         justifyContent: "center",
-        padding: "clamp(16px, 4vw, 40px)",
+        padding: "clamp(8px, 2.8vw, 28px)",
         background: backgroundColor,
       }}
     >
@@ -70,6 +73,7 @@ export default function Support247Window({
           border: "1px solid rgba(255,255,255,0.08)",
           boxShadow: `0 0 80px ${windowGlow}`,
           overflow: "hidden",
+          minHeight: isCompact ? 220 : undefined,
         }}
       >
         {/* MAC BUTTONS */}
@@ -87,13 +91,13 @@ export default function Support247Window({
 
         {/* CONTENT AREA */}
         <div
-          style={{
-            position: "relative",
-            minHeight: "clamp(280px, 45vw, 420px)",
+            style={{
+              position: "relative",
+              minHeight: "clamp(180px, 34vw, 340px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "clamp(20px, 5vw, 40px)",
+            padding: "clamp(12px, 3vw, 24px)",
           }}
         >
           {/* BACKGROUND SVG */}
@@ -154,18 +158,19 @@ export default function Support247Window({
               maxWidth: "90%",
               background: themeColor,
               color: "#000",
-              padding: "clamp(14px, 3vw, 22px) 0",
+              padding: "clamp(10px, 2.6vw, 16px) 0",
               borderRadius: "999px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: "12px",
               fontWeight: 600,
-              fontSize: "clamp(16px, 3vw, 22px)",
+              fontSize: "clamp(13px, 2.4vw, 18px)",
               boxShadow: `0 0 80px ${themeColor}66`,
+              whiteSpace: "nowrap",
             }}
           >
-            <RobotIcon color="#000" size={28} />
+            <RobotIcon color="#000" size={iconSize} />
             {pillText}
           </motion.div>
         </div>

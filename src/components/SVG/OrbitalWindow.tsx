@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   SiReact,
   SiNextdotjs,
@@ -28,7 +28,9 @@ export default function OrbitalWindow({
   middleSpeed = 25,
   innerSpeed = 15,
 }: Props) {
+  const [isTablet, setIsTablet] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isCompact, setIsCompact] = useState(false)
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
 
   const viewBoxWidth = 900
@@ -38,7 +40,12 @@ export default function OrbitalWindow({
 
   /* ================= MOBILE DETECT ================= */
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 400)
+    const check = () => {
+      const w = window.innerWidth
+      setIsTablet(w <= 1024)
+      setIsMobile(w <= 720)
+      setIsCompact(w <= 320)
+    }
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
@@ -46,6 +53,8 @@ export default function OrbitalWindow({
 
   /* ================= MOUSE TRACK ================= */
   useEffect(() => {
+    if (isTablet) return
+
     const handle = (e: MouseEvent) => {
       const rect = document
         .getElementById("orbital-svg")
@@ -61,22 +70,26 @@ export default function OrbitalWindow({
 
     window.addEventListener("mousemove", handle)
     return () => window.removeEventListener("mousemove", handle)
-  }, [])
+  }, [isTablet])
 
   /* ================= RADII ================= */
-  const outerRadius = isMobile ? 160 : 240
-  const middleRadius = isMobile ? 120 : 180
-  const innerRadius = isMobile ? 85 : 120
+  const outerRadius = isCompact ? 132 : isMobile ? 170 : isTablet ? 205 : 240
+  const middleRadius = isCompact ? 98 : isMobile ? 128 : isTablet ? 155 : 180
+  const innerRadius = isCompact ? 66 : isMobile ? 88 : isTablet ? 104 : 120
 
   /* ================= PARTICLES ================= */
-  const particles = Array.from({ length: isMobile ? 25 : 60 }).map(
-    (_, i) => ({
-      id: i,
-      x: Math.random() * viewBoxWidth,
-      y: Math.random() * viewBoxHeight,
-      size: Math.random() * 2 + 1,
-      duration: Math.random() * 10 + 10,
-    })
+  const particles = useMemo(
+    () =>
+      Array.from({ length: isCompact ? 12 : isMobile ? 20 : isTablet ? 34 : 60 }).map(
+        (_, i) => ({
+          id: i,
+          x: Math.random() * viewBoxWidth,
+          y: Math.random() * viewBoxHeight,
+          size: Math.random() * 2 + 1,
+          duration: Math.random() * 10 + 10,
+        })
+      ),
+    [isCompact, isMobile, isTablet]
   )
 
   /* ================= MAGNETIC OFFSET ================= */
@@ -161,17 +174,22 @@ export default function OrbitalWindow({
           const baseX = centerX + radius * Math.cos(angle)
           const baseY = centerY + radius * Math.sin(angle)
 
-          const { x, y } = magneticOffset(baseX, baseY)
+          const { x, y } = isTablet ? { x: baseX, y: baseY } : magneticOffset(baseX, baseY)
           const Icon = icons[i % icons.length]
 
           return (
             <g key={i}>
-              <circle cx={x} cy={y} r={isMobile ? 18 : 26} fill="#111" />
+              <circle
+                cx={x}
+                cy={y}
+                r={isCompact ? 14 : isMobile ? 18 : 26}
+                fill="#111"
+              />
               <foreignObject
-                x={x - (isMobile ? 10 : 14)}
-                y={y - (isMobile ? 10 : 14)}
-                width={isMobile ? 20 : 28}
-                height={isMobile ? 20 : 28}
+                x={x - (isCompact ? 8 : isMobile ? 10 : 14)}
+                y={y - (isCompact ? 8 : isMobile ? 10 : 14)}
+                width={isCompact ? 16 : isMobile ? 20 : 28}
+                height={isCompact ? 16 : isMobile ? 20 : 28}
               >
                 <div
                   style={{
@@ -183,7 +201,7 @@ export default function OrbitalWindow({
                     color: themeColor,
                   }}
                 >
-                  <Icon size={isMobile ? 14 : 18} />
+                  <Icon size={isCompact ? 10 : isMobile ? 14 : 18} />
                 </div>
               </foreignObject>
             </g>
@@ -246,14 +264,14 @@ export default function OrbitalWindow({
           <circle
             cx={centerX}
             cy={centerY}
-            r={isMobile ? 45 : 60}
+            r={isCompact ? 34 : isMobile ? 45 : 60}
             fill={themeColor}
           />
           <foreignObject
-            x={centerX - (isMobile ? 20 : 30)}
-            y={centerY - (isMobile ? 20 : 30)}
-            width={isMobile ? 40 : 60}
-            height={isMobile ? 40 : 60}
+            x={centerX - (isCompact ? 16 : isMobile ? 20 : 30)}
+            y={centerY - (isCompact ? 16 : isMobile ? 20 : 30)}
+            width={isCompact ? 32 : isMobile ? 40 : 60}
+            height={isCompact ? 32 : isMobile ? 40 : 60}
           >
             <div
               style={{

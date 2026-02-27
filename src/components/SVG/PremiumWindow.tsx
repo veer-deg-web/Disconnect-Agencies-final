@@ -23,6 +23,8 @@ export default function PremiumWindow({
   intensity = 12,
 }: PremiumWindowProps) {
   const [rotate, setRotate] = useState({ x: 0, y: 0 })
+  const [isTablet, setIsTablet] = useState(false)
+  const [isCompact, setIsCompact] = useState(false)
 
   const finalGlow = glowColor || themeColor
   const finalGrid = gridColor || themeColor
@@ -31,7 +33,18 @@ export default function PremiumWindow({
      PARALLAX
   =============================== */
   useEffect(() => {
-    if (!parallax) return
+    const check = () => {
+      const w = window.innerWidth
+      setIsTablet(w <= 1024)
+      setIsCompact(w <= 420)
+    }
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
+
+  useEffect(() => {
+    if (!parallax || isTablet || isCompact) return
 
     const handleMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window
@@ -42,7 +55,7 @@ export default function PremiumWindow({
 
     window.addEventListener("mousemove", handleMove)
     return () => window.removeEventListener("mousemove", handleMove)
-  }, [parallax, intensity])
+  }, [parallax, intensity, isTablet, isCompact])
 
   return (
     <div
@@ -50,7 +63,7 @@ export default function PremiumWindow({
         width: "100%",
         maxWidth: "1200px",
         margin: "0 auto",
-        perspective: "1400px",
+        perspective: isTablet ? "1000px" : "1400px",
       }}
     >
       <motion.svg
@@ -64,8 +77,8 @@ export default function PremiumWindow({
         animate={{
           opacity: 1,
           scale: 1,
-          rotateX: rotate.x,
-          rotateY: rotate.y,
+          rotateX: isTablet || isCompact ? 0 : rotate.x,
+          rotateY: isTablet || isCompact ? 0 : rotate.y,
         }}
         transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
       >

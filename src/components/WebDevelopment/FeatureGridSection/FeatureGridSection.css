@@ -3,31 +3,43 @@
 ============================ */
 
 .feature-section {
-  padding: 190px 24px;
+  padding: clamp(82px, 14vw, 190px) clamp(8px, 3.5vw, 24px);
   background: #05070b;
   color: #fff;
+  box-sizing: border-box;
 }
 
 .feature-heading-wrap {
   text-align: center;
   max-width: 960px;
-  margin: 0 auto 120px;
+  margin: 0 auto clamp(40px, 8.5vw, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .feature-heading-line {
-  font-size: clamp(42px, 6.5vw, 66px);
+  font-size: clamp(28px, 6.5vw, 66px);
   line-height: 1.12;
   font-weight: 600;
-  white-space: nowrap;        /* Prevent unwanted wrap */
+  white-space: nowrap;
+  overflow-wrap: anywhere;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .feature-heading-line.second {
-  margin-top: 12px;
+  margin-top: clamp(6px, 1.6vw, 12px);
+}
+
+.feature-heading-line .shiny-text {
+  text-align: center;
 }
 
 .feature-subheading {
-  margin-top: 28px;
-  font-size: 15px;
+  margin-top: clamp(14px, 3.5vw, 28px);
+  font-size: clamp(13px, 2.5vw, 15px);
   opacity: 0.7;
   line-height: 1.7;
 }
@@ -40,9 +52,11 @@
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2.5vw, 28px);
+  justify-content: center;
 }
+
 /* ============================
    CARD WRAP (Tilt Container)
 ============================ */
@@ -51,6 +65,7 @@
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  min-width: 0;
 }
 
 /* ============================
@@ -58,23 +73,19 @@
 ============================ */
 
 .feature-card {
-  padding: 42px 32px;
-  min-height: 220px;
-  border-radius: 22px;
-
+  padding: clamp(18px, 4vw, 42px) clamp(14px, 3.2vw, 32px);
+  min-height: clamp(170px, 26vw, 220px);
+  border-radius: clamp(14px, 2.6vw, 22px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
   background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.045),
     rgba(255, 255, 255, 0.01)
   );
-
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(14px);
-
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(255, 255, 255, 0.05);
-
   transition:
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.4s ease;
@@ -90,36 +101,20 @@
     0 0 40px rgba(217, 255, 63, 0.25),
     0 0 0 1px rgba(217, 255, 63, 0.15);
 }
-/* ============================
-   CARD
-============================ */
-
-.feature-card {
-  padding: 42px 32px;
-  min-height: 220px;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.045),
-    rgba(255, 255, 255, 0.01)
-  );
-}
 
 /* ============================
    LOGO
 ============================ */
 
 .feature-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: clamp(34px, 5vw, 44px);
+  height: clamp(34px, 5vw, 44px);
+  border-radius: clamp(8px, 2vw, 10px);
   background: rgba(217, 255, 63, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 22px;
+  margin-bottom: clamp(12px, 2.2vw, 22px);
   color: #d9ff3f;
 }
 
@@ -128,13 +123,86 @@
 ============================ */
 
 .feature-card-title {
-  font-size: 20px;
+  font-size: clamp(16px, 3.5vw, 20px);
   font-weight: 600;
-  margin-bottom: 14px;
+  margin-bottom: clamp(8px, 1.6vw, 14px);
+  overflow-wrap: anywhere;
 }
 
 .feature-card-text {
-  font-size: 14px;
+  font-size: clamp(12px, 2.8vw, 14px);
   line-height: 1.65;
   opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 1024px) {
+  .feature-heading-line {
+    white-space: normal;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .feature-section {
+    padding: 72px 12px;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .feature-card-wrap {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .feature-section {
+    padding: 62px 8px;
+  }
+
+  .feature-heading-line {
+    font-size: clamp(24px, 9.3vw, 30px);
+    line-height: 1.16;
+  }
+
+  .feature-subheading {
+    line-height: 1.55;
+  }
+
+  .feature-card {
+    min-height: 156px;
+  }
+}
+
+@media (max-width: 320px) {
+  .feature-section {
+    padding: 52px 6px;
+  }
+
+  .feature-heading-line {
+    font-size: 22px;
+  }
+
+  .feature-subheading {
+    font-size: 12px;
+  }
+
+  .feature-card {
+    padding: 14px 10px;
+    min-height: 146px;
+  }
+
+  .feature-logo {
+    margin-bottom: 10px;
+  }
 }
