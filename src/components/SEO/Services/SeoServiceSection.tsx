@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import "./SeoServices.css";
@@ -30,6 +31,7 @@ const services = [
 
 export default function SEOServicesSection() {
   const [active, setActive] = useState(0);
+  const router = useRouter();
 
   return (
     <section className="seo-services">
@@ -52,7 +54,12 @@ export default function SEOServicesSection() {
             growth — not vanity metrics.
           </p>
 
-          <button className="hire-btn">Hire us now</button>
+          <button
+            className="hire-btn"
+            onClick={() => router.push("/book-call?category=seo")}
+          >
+            Hire us now
+          </button>
         </div>
       </motion.div>
 

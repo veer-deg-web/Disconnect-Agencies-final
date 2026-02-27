@@ -44,7 +44,7 @@ const ACT_OUT        = 0.04;  // activation loss per frame off hover
 const AntigravitySection = ({
   label = "Available at no charge",
   title,
-  buttonText = "Download",
+  buttonText,
 }: AntigravityProps) => {
   const canvasRef   = useRef<HTMLCanvasElement>(null);
   const sectionRef  = useRef<HTMLElement>(null);

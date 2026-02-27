@@ -23,7 +23,6 @@ export default function Ai() {
       <AntigravitySection
         label="For Developers"
         title={"Achieve\nNew Heights"}
-        buttonText="Download"
       />
       <section id="benefits">
       <BenefitsSection />
