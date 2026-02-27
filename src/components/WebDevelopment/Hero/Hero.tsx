@@ -51,7 +51,7 @@ export default function Hero() {
         playsInline
       >
         {/* Replace with your actual video */}
-        <source src="/earth-video.mp4" type="video/mp4" />
+        <source src="/assets/WebDevelopment/Hero/video/earth-video.mp4" type="video/mp4" />
       </video>
 
       {/* Overlay */}

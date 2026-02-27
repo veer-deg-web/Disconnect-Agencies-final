@@ -69,18 +69,18 @@ export default function SmartGrowthSection() {
     {
       title: "Transparent Project Performance Tracking",
       desc: "Monitor your product's progress with real-time updates, clear milestones, and easy-to-read development insights.",
-      image: "/file.png",
+      image: "/assets/Home/SmartGrowthSection/photo/file.png",
     },
     {
       title: "Seamless Digital Transformation",
       desc: "Craft a balanced digital ecosystem across websites, applications, UI/UX, and SEO.",
-      image: "/bar.png",
+      image: "/assets/Home/SmartGrowthSection/photo/bar.png",
       reverse: true,
     },
     {
       title: "Smart Project Risk Management",
       desc: "Predict challenges early with data-driven insights, ensuring smoother development and minimized risks.",
-      image: "/dot2.png",
+      image: "/assets/Home/SmartGrowthSection/photo/dot2.png",
     },
   ];
 

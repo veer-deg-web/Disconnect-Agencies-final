@@ -37,10 +37,10 @@ const itemVariants: Variants = {
 ========================= */
 
 const cards = [
-  "/moreaboutus1.png",
-  "/moreaboutus2.png",
-  "/scrollzoom.png",
-  "/moreaboutus4.png",
+  "/assets/Cloud/MoreAboutUs/photo/moreaboutus1.png",
+  "/assets/Cloud/MoreAboutUs/photo/moreaboutus2.png",
+  "/assets/Cloud/MoreAboutUs/photo/scrollzoom.png",
+  "/assets/Cloud/MoreAboutUs/photo/moreaboutus4.png",
 ];
 
 /* =========================

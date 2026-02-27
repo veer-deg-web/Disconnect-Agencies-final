@@ -194,7 +194,7 @@ export default function UIUXTutorials() {
                 }}
               >
                 <source
-                  src="/Limitless+Tutorial+Preview+(Square).mp4"
+                  src="/assets/Uiux/UIUXTutorials/video/Limitless+Tutorial+Preview+(Square).mp4"
                   type="video/mp4"
                 />
               </video>

@@ -28,7 +28,7 @@ export default function ScrollZoomStats() {
       <div className="sz-sticky">
         {/* Global background */}
         <motion.img
-          src="/scrollzoom.png"
+          src="/assets/Cloud/SrollZoom/photo/scrollzoom.png"
           className="sz-global-bg"
           style={{ scale }}
           alt=""

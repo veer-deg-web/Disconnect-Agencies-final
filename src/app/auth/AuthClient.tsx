@@ -459,13 +459,13 @@ export default function AuthClient() {
             <div className="auth-overlay-inner">
               <div className="auth-overlay-dots" />
               <div className="auth-overlay-side auth-overlay-side--left">
-                <div className="auth-logo auth-logo--overlay"><img src="/logo.png" alt="Disconnect Agencies" /></div>
+                <div className="auth-logo auth-logo--overlay"><img src="/assets/auth/AuthClient/photo/logo.png" alt="Disconnect Agencies" /></div>
                 <h2>Welcome Back!</h2>
                 <p>Already have an account?<br />Sign in to continue.</p>
                 <OutlineBtn onClick={() => setMode('signin')}>Sign In</OutlineBtn>
               </div>
               <div className="auth-overlay-side auth-overlay-side--right">
-                <div className="auth-logo auth-logo--overlay"><img src="/logo.png" alt="Disconnect Agencies" /></div>
+                <div className="auth-logo auth-logo--overlay"><img src="/assets/auth/AuthClient/photo/logo.png" alt="Disconnect Agencies" /></div>
                 <h2>New Here?</h2>
                 <p>Create a free account and<br />start your journey today.</p>
                 <OutlineBtn onClick={() => setMode('signup')}>Sign Up</OutlineBtn>
@@ -491,7 +491,7 @@ export default function AuthClient() {
             onMouseMove={(e) => handleMouseMove(e, cardRefMobile)}
             onMouseLeave={() => resetTilt(cardRefMobile)}
           >
-            <div className="auth-logo auth-logo--mobile"><img src="/logo.png" alt="Disconnect Agencies" /></div>
+            <div className="auth-logo auth-logo--mobile"><img src="/assets/auth/AuthClient/photo/logo.png" alt="Disconnect Agencies" /></div>
             <h1 className="auth-mobile-title">
               {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
             </h1>

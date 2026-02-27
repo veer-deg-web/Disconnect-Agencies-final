@@ -39,7 +39,7 @@ export default function UIUXShowcase() {
       >
         {/* VIDEO */}
         <video
-          src="/bg-video.mp4"
+          src="/assets/Uiux/UIUXShowcase/video/bg-video.mp4"
           autoPlay
           muted
           loop

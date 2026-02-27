@@ -15,28 +15,28 @@ const steps = [
     title: "Smart Analyzing",
     description:
       "We assess your needs and identify AI solutions to streamline workflows and improve efficiency.",
-    video: "/step1.mov",
+    video: "/assets/AIModels/ProcessSection/video/step1.mov",
   },
   {
     step: "Step 2",
     title: "AI Development",
     description:
       "Our team builds intelligent automation systems tailored to your business processes.",
-    video: "/step2.mov",
+    video: "/assets/AIModels/ProcessSection/video/step2.mov",
   },
   {
     step: "Step 3",
     title: "Seamless Integration",
     description:
       "We integrate AI solutions smoothly into your existing systems with minimal disruption.",
-    video: "/step3.mov",
+    video: "/assets/AIModels/ProcessSection/video/step3.mov",
   },
   {
     step: "Step 4",
     title: "Continuous Optimization",
     description:
       "We continuously monitor and optimize performance to ensure long-term scalability.",
-    video: "/step4.mov",
+    video: "/assets/AIModels/ProcessSection/video/step4.mov",
   },
 ];
 

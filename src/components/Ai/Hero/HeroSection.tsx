@@ -12,7 +12,7 @@ export default function HeroSection() {
       {/* BACKGROUND VIDEO */}
       <motion.video
         className="hero-bg-video"
-        src="/Hero-Ai.mov"
+        src="/assets/AIModels/Hero/video/Hero-Ai.mov"
         autoPlay
         muted
         loop

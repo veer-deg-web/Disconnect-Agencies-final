@@ -9,17 +9,17 @@ import ShinyText from "@/components/ShinyText";
 ======================= */
 
 const ROW_1 = [
-  { name: "David Chen", role: "Marketing Officer", img: "/Section.png" },
-  { name: "James Patel", role: "UX Designer", img: "/Section.png" },
-  { name: "Liam Johnson", role: "Software Engineer", img: "/Section.png" },
-  { name: "Emma Brooks", role: "Operations", img: "/Section.png" },
+  { name: "David Chen", role: "Marketing Officer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "James Patel", role: "UX Designer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "Liam Johnson", role: "Software Engineer", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "Emma Brooks", role: "Operations", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
 ];
 
 const ROW_2 = [
-  { name: "Noah Ramirez", role: "Product Manager", img: "/Section.png" },
-  { name: "Olivia Martinez", role: "Head of Sales", img: "/Section.png" },
-  { name: "Aisha Rahman", role: "Digital Strategist", img: "/Section.png" },
-  { name: "Ethan Brown", role: "Brand Lead", img: "/Section.png" },
+  { name: "Noah Ramirez", role: "Product Manager", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "Olivia Martinez", role: "Head of Sales", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "Aisha Rahman", role: "Digital Strategist", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
+  { name: "Ethan Brown", role: "Brand Lead", img: "/assets/WebDevelopment/SupportedByAi/photo/Section.png" },
 ];
 
 /* =======================

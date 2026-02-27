@@ -116,7 +116,7 @@ export default function SupportSection() {
             </motion.div>
 
             <div className="brand">
-              <img src="/logo.png" alt="disconnect" />
+              <img src="/assets/WebDevelopment/SupportService/photo/logo.png" alt="disconnect" />
             </div>
           </SpotlightCard>
         </motion.div>

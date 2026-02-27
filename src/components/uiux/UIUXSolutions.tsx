@@ -6,19 +6,19 @@ import { useEffect, useRef, useState } from "react";
 /* ---------------- DATA ---------------- */
 
 const TOP_ROW = [
-  "/category 1.png",
-  "/category 2.png",
-  "/category 3.png",
-  "/category 4.png",
-  "/category 5.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 1.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 2.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 3.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 4.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 5.png",
 ];
 
 const BOTTOM_ROW = [
-  "/category 6.png",
-  "/category 7.png",
-  "/category 8.png",
-  "/category 9.png",
-  "/category 10.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 6.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 7.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 8.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 9.png",
+  "/assets/Uiux/UIUXSolutions/photo/Category 10.png",
 ];
 
 /* ---------------- COMPONENT ---------------- */

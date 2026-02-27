@@ -10,28 +10,28 @@ const testimonials = [
       "AI automation transformed our operations by eliminating repetitive tasks and improving efficiency. Scaling our workflow has never been easier!",
     name: "James Carter",
     role: "CEO at TechFlow Solutions",
-    avatar: "/Section.png",
+    avatar: "/assets/AIModels/Testimoninals/photo/Section.png",
   },
   {
     text:
       "With AI, we cut manual work and improved accuracy. Our team now focuses on high-impact tasks while automation handles the rest.",
     name: "Sophia Martinez",
     role: "Operations Manager at NexaCorp",
-    avatar: "/Section.png",
+    avatar: "/assets/AIModels/Testimoninals/photo/Section.png",
   },
   {
     text:
       "AI-driven insights doubled our sales efficiency. We now engage leads at the right time with smarter, data-backed decisions.",
     name: "David Reynolds",
     role: "Head of Sales at GrowthPeak",
-    avatar: "/Section.png",
+    avatar: "/assets/AIModels/Testimoninals/photo/Section.png",
   },
   {
     text:
       "Customer support is now seamless. Our response times dropped drastically and satisfaction levels reached an all-time high.",
     name: "Emily Wong",
     role: "Customer Success Lead at SupportHive",
-    avatar: "/Section.png",
+    avatar: "/assets/AIModels/Testimoninals/photo/Section.png",
   },
 ];
 

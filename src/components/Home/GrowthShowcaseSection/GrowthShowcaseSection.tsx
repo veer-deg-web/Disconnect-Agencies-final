@@ -75,7 +75,7 @@ export default function GrowthShowcaseSection() {
                 viewport={{ once: true }}
               >
                 <Image
-                  src="/Visual.png"
+                  src="/assets/Home/GrowthShowcaseSection/photo/Visual.png"
                   alt="Visual representation"
                   fill
                   sizes="(max-width: 900px) 100vw, 240px"
@@ -107,7 +107,7 @@ export default function GrowthShowcaseSection() {
                 viewport={{ once: true }}
               >
                 <Image
-                  src="/dot.png"
+                  src="/assets/Home/GrowthShowcaseSection/photo/dot.png"
                   alt="Decorative dots"
                   width={180}
                   height={90}
@@ -136,7 +136,7 @@ export default function GrowthShowcaseSection() {
                 viewport={{ once: true }}
               >
                 <Image
-                  src="/Image@2x.png"
+                  src="/assets/Home/GrowthShowcaseSection/photo/Image@2x.png"
                   alt="Orbit visual"
                   fill
                   sizes="(max-width: 900px) 100vw, 280px"

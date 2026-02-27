@@ -74,7 +74,7 @@ export default function UIUXHeroSection() {
             opacity: 0.7,
           }}
         >
-          <source src="/uiux-hero.mp4" type="video/mp4" />
+          <source src="/assets/Uiux/UIUXHeroSection/video/uiux-hero.mp4" type="video/mp4" />
         </video>
 
         {/* edge vignette so text stays readable over the video */}
