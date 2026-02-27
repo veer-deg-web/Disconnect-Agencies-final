@@ -1,5 +1,4 @@
 import UIUXHeroSection from "@/components/uiux/UIUXHeroSection";
-import UIUXShowcase from "@/components/uiux/UIUXShowcase";
 import UIUXProcess from "@/components/uiux/UIUXProcess";
 import UIUXBenefits from "@/components/uiux/UIUXBenefits";
 import UIUXFeatures from "@/components/uiux/UIUXFeatures";
@@ -36,7 +35,6 @@ export default function UIUXPage() {
  
 
 <div style={{ position: "relative", zIndex: 10 }}>
-      <UIUXShowcase />
       <UIUXProcess />
       <section id="benefits">
       <UIUXBenefits />

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Cubes from "@/components/Shared/Cubes/Cubes";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
@@ -17,8 +16,6 @@ const heroLogos = [
   { node: <SiTailwindcss />, title: "Tailwind CSS" },
 ];
 
-
-const brands = ["Vaultic", "Altoris", "Quantora", "Fundara", "Wealthro"];
 
 export default function VisionShowcase() {
   return (
@@ -93,6 +90,7 @@ export default function VisionShowcase() {
             transparent 1px
           );
           background-size: 24px 24px;
+          pointer-events: none;
         }
 
         /* TRUSTED */
@@ -153,6 +151,8 @@ export default function VisionShowcase() {
         .toggle-wrap {
           display: flex;
           justify-content: center;
+          transform: translateZ(0);
+          will-change: transform;
         }
 
         /* TEXT */

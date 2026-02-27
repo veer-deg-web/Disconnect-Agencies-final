@@ -171,8 +171,14 @@ export default function UIUXProcess() {
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.45 }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
                 <motion.div
+                  className="process-step-icon"
                   whileHover={{
                     scale: 1.25,
                     filter:
@@ -219,6 +225,21 @@ export default function UIUXProcess() {
             opacity: 0.4;
             box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
           }
+        }
+
+        .process-step-icon {
+          width: 72px;
+          height: 72px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transform-origin: center;
+        }
+
+        .process-step-icon :global(svg) {
+          display: block;
+          width: 44px;
+          height: 44px;
         }
       `}</style>
     </>

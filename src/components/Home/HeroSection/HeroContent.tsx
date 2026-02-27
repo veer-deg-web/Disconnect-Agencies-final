@@ -62,6 +62,14 @@ const trustedVariant = {
   },
 };
 
+const TRUSTED_IMAGES = [
+  "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=64&q=60",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&q=60",
+  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=64&q=60",
+  "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=64&q=60",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&q=60",
+];
+
 /* ================= COMPONENT ================= */
 
 export default function HeroContent() {
@@ -199,12 +207,27 @@ export function MorphingLoginButton() {
   /* sync auth state from localStorage */
   useEffect(() => {
     const sync = () => {
-      setUserName(localStorage.getItem("userName"));
-      setUserRole(localStorage.getItem("userRole") ?? "user");
+      const nextUserName = localStorage.getItem("userName");
+      const nextUserRole = localStorage.getItem("userRole") ?? "user";
+
+      setUserName((prev) => (prev === nextUserName ? prev : nextUserName));
+      setUserRole((prev) => (prev === nextUserRole ? prev : nextUserRole));
     };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") sync();
+    };
+
     sync();
-    const id = setInterval(sync, 600);
-    return () => clearInterval(id);
+    window.addEventListener("storage", sync);
+    window.addEventListener("focus", sync);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener("focus", sync);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -440,30 +463,25 @@ function ShootingStars() {
 /* ================= TRUSTED ================= */
 
 function TrustedBy() {
-  const images = [
-    "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
-    "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9",
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
-  ];
-
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "12px", willChange: "transform" }}>
       <div style={{ display: "flex" }}>
-        {images.map((src, i) => (
+        {TRUSTED_IMAGES.map((src, i) => (
           <div
             key={i}
             style={{
               width: 28,
               height: 28,
-              marginRight: i === images.length - 1 ? 0 : -6,
+              marginRight: i === TRUSTED_IMAGES.length - 1 ? 0 : -6,
               borderRadius: "50%",
               overflow: "hidden",
             }}
           >
             <img
               src={src}
+              alt={`Trusted profile ${i + 1}`}
+              loading="eager"
+              decoding="async"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>

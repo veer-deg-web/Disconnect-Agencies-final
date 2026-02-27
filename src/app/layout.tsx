@@ -38,6 +38,7 @@ export default function RootLayout({
           style={{
             position: "relative",
             zIndex: 1,
+            backgroundColor: "#000000",
           }}
         >
           {children}

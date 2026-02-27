@@ -13,7 +13,7 @@ import { partnerLogos } from "@/Data/PartnerLogo";
 
 export default function Ai() {
   return (
-    <>
+    <main style={{ backgroundColor: "#000000" }}>
       <HeroSection />
       <UIUXShowcaseLogos logos={partnerLogos} iconGap={200} title="Over 50+ businesses trusts us ." />
       <section id="feature">
@@ -53,6 +53,6 @@ export default function Ai() {
         tiltIntensity={14}
       />
       <Footer />
-    </>
+    </main>
   );
 }

@@ -7,7 +7,6 @@ import Awards from "@/components/Cloud/Awards/Awards";
 import ProcessSection from "@/components/Cloud/Process/ProcessSection";
 import TestimonialsSection from "@/components/Cloud/Testimonials/TestimonialsSection";
 import HeroSection from "@/components/Cloud/Hero/HeroSection";
-import DotBackground from "@/components/DotBackground/DotBackground";
 import CTASection from "@/components/Shared/CTASection/CTASection";
 import { Cloudfaq } from "@/Data/Cloudfaq";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
@@ -15,8 +14,7 @@ import Footer from "@/components/Shared/Footer/Footer";
 
 export default function CloudPage() {
   return (
-    <main>
-      <DotBackground color="rgba(219, 254, 73, 0.18)" />
+    <main style={{ backgroundColor: "#000000" }}>
       <HeroSection />
       <section id="feature">
       <CloudServicesSection />

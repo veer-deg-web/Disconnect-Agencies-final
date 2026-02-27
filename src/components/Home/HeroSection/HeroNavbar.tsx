@@ -14,12 +14,27 @@ export default function HeroNavbar() {
 
   useEffect(() => {
     const sync = () => {
-      setUserName(localStorage.getItem("userName"));
-      setUserRole(localStorage.getItem("userRole") ?? "user");
+      const nextUserName = localStorage.getItem("userName");
+      const nextUserRole = localStorage.getItem("userRole") ?? "user";
+
+      setUserName((prev) => (prev === nextUserName ? prev : nextUserName));
+      setUserRole((prev) => (prev === nextUserRole ? prev : nextUserRole));
     };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") sync();
+    };
+
     sync();
-    const interval = setInterval(sync, 500);
-    return () => clearInterval(interval);
+    window.addEventListener("storage", sync);
+    window.addEventListener("focus", sync);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener("focus", sync);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   const handleLogout = () => {
