@@ -99,8 +99,8 @@ export default function HeroSection() {
           </p>
 
           <div className="hero-actions">
-            <a className="btn-primary">Get in touch →</a>
-            <a className="btn-secondary">View services</a>
+            <a className="btn-primary" href="/book-call?category=aimodels">Get in touch →</a>
+            <a className="btn-secondary" href="#feature">View services</a>
           </div>
         </motion.div>
       </div>

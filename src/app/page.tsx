@@ -1,6 +1,7 @@
 import GrowthShowcaseSection from "@/components/Home/GrowthShowcaseSection/GrowthShowcaseSection";
 import HeroSection  from "@/components/Home/HeroSection/HeroSection";
 import PageBackground from "@/components/Home/PageBackground/PageBackground";
+import ScrollToQuerySection from "@/components/Home/ScrollToQuerySection";
 
 import ServicesSection from "@/components/Home/ServicesSection/ServicesSection";
 import SmartGrowthSection from "@/components/Home/SmartGrowthSection/SmartGrowthSection";
@@ -47,6 +48,7 @@ const faqs = [
 export default function Home() {
   return (
     <PageBackground>
+      <ScrollToQuerySection />
       <main className="relative min-h-screen text-white overflow-hidden">
         <HeroSection />
       </main>

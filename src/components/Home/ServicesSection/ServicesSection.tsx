@@ -270,6 +270,7 @@ export default function ServicesSection() {
           position: relative;
           z-index: 1;
           border-radius: 20px;
+          border: none !important;
           box-shadow:
             0 20px 50px rgba(0,0,0,0.6);
           transition:

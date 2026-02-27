@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { MorphingLoginButton } from "./HeroContent";
@@ -42,10 +41,21 @@ export default function HeroNavbar() {
       return;
     }
 
+    if (item === "Benefit") {
+      const section =
+        document.getElementById("benefits") ||
+        document.getElementById("benefit");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      router.push(`${pathname}#benefits`);
+      return;
+    }
+
     // ❌ removed old Pricing route
     // if (item === "Pricing") router.push("/pricing");
 
-    if (item === "Benefit") router.push("/benefit");
     if (item === "Book A Call") router.push("/book-call");
     if (item === "login") router.push("/auth");
   };
@@ -58,6 +68,16 @@ export default function HeroNavbar() {
       return;
     }
     router.push(`${pathname}#pricing`);
+  };
+
+  const handleServicesClick = () => {
+    setOpen(false);
+    const section = document.getElementById("services");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    router.push("/?scroll=services");
   };
 
   return (
@@ -144,18 +164,23 @@ export default function HeroNavbar() {
                       "rgba(255,255,255,0.7)")
                   }
                 >
-                  {/* ✅ SERVICES SCROLL */}
                   {item === "Services" ? (
-                    <Link
-                      href="/#services"
-                      onClick={() => setOpen(false)}
+                    <button
+                      type="button"
+                      onClick={handleServicesClick}
                       style={{
                         color: "inherit",
                         textDecoration: "none",
+                        background: "transparent",
+                        border: "none",
+                        padding: 0,
+                        margin: 0,
+                        font: "inherit",
+                        cursor: "pointer",
                       }}
                     >
                       Services
-                    </Link>
+                    </button>
                   ) : item === "Pricing" ? (
                     <button
                       type="button"
@@ -282,13 +307,22 @@ export default function HeroNavbar() {
                   }}
                 >
                   {item === "Services" ? (
-                    <Link
-                      href="/#services"
-                      onClick={() => setOpen(false)}
-                      style={{ color: "#fff", textDecoration: "none" }}
+                    <button
+                      type="button"
+                      onClick={handleServicesClick}
+                      style={{
+                        color: "#fff",
+                        textDecoration: "none",
+                        background: "transparent",
+                        border: "none",
+                        padding: 0,
+                        margin: 0,
+                        font: "inherit",
+                        cursor: "pointer",
+                      }}
                     >
                       Services
-                    </Link>
+                    </button>
                   ) : item === "Pricing" ? (
                     <button
                       type="button"

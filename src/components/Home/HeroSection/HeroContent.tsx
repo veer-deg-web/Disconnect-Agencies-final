@@ -68,11 +68,27 @@ export default function HeroContent() {
   const controls = useAnimationControls();
 
   useEffect(() => {
-    setTimeout(() => controls.start("hero"), 0);
-    setTimeout(() => controls.start("pill"), 250);
-    setTimeout(() => controls.start("text"), 500);
-    setTimeout(() => controls.start("buttons"), 1500);
-    setTimeout(() => controls.start("trusted"), 2500);
+    let active = true;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    const queue = (state: string, delay: number) => {
+      const id = setTimeout(() => {
+        if (!active) return;
+        void controls.start(state);
+      }, delay);
+      timers.push(id);
+    };
+
+    queue("hero", 0);
+    queue("pill", 250);
+    queue("text", 500);
+    queue("buttons", 1500);
+    queue("trusted", 2500);
+
+    return () => {
+      active = false;
+      timers.forEach(clearTimeout);
+    };
   }, [controls]);
 
   return (
