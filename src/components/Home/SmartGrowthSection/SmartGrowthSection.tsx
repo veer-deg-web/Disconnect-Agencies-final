@@ -166,29 +166,29 @@ export default function SmartGrowthSection() {
         .section {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 160px 24px;
+          padding: clamp(88px, 12vw, 160px) clamp(16px, 4vw, 24px);
           color: white;
           position: relative;
         }
 
         .heading {
           text-align: center;
-          font-size: 56px;
+          font-size: clamp(34px, 6vw, 56px);
           font-weight: 700;
-          margin-bottom: 120px;
+          margin-bottom: clamp(56px, 9vw, 120px);
           line-height: 1.1;
         }
 
         .features {
           display: flex;
           flex-direction: column;
-          gap: 120px;
+          gap: clamp(56px, 8vw, 120px);
         }
 
         .feature-row {
           display: flex;
           align-items: center;
-          gap: 240px;
+          gap: clamp(32px, 8vw, 140px);
         }
 
         .feature-row.reverse {
@@ -196,8 +196,9 @@ export default function SmartGrowthSection() {
         }
 
         .image-box {
-          width: 420px;
-          height: 300px;
+          width: clamp(300px, 36vw, 420px);
+          aspect-ratio: 7 / 5;
+          height: auto;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -232,11 +233,11 @@ export default function SmartGrowthSection() {
         }
 
         .text-box {
-          max-width: 460px;
+          max-width: clamp(320px, 42vw, 460px);
         }
 
         .text-box h3 {
-          font-size: 32px;
+          font-size: clamp(24px, 3.2vw, 32px);
           margin-bottom: 16px;
         }
 
@@ -245,6 +246,39 @@ export default function SmartGrowthSection() {
           opacity: 0.7;
           margin-bottom: 24px;
           line-height: 1.6;
+        }
+
+        @media (max-width: 1100px) {
+          .feature-row {
+            gap: 56px;
+          }
+
+          .image-box {
+            width: clamp(280px, 40vw, 380px);
+          }
+        }
+
+        @media (max-width: 900px) {
+          .section {
+            padding-top: 96px;
+            padding-bottom: 96px;
+          }
+
+          .feature-row,
+          .feature-row.reverse {
+            flex-direction: column;
+            text-align: center;
+            gap: 36px;
+          }
+
+          .image-box {
+            width: min(100%, 440px);
+            aspect-ratio: 16 / 10;
+          }
+
+          .text-box {
+            max-width: 100%;
+          }
         }
 
         /* =========================
@@ -260,12 +294,13 @@ export default function SmartGrowthSection() {
           .feature-row.reverse {
             flex-direction: column;
             text-align: center;
-            gap: 48px;
+            gap: 34px;
           }
 
           .image-box {
-            width: 100%;
-            height: 260px;
+            width: min(100%, 420px);
+            aspect-ratio: 16 / 10;
+            height: auto;
           }
 
           .orange-glow {
