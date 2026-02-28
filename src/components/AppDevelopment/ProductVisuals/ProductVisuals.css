@@ -52,6 +52,7 @@
   max-width: 1100px;
   margin: 0 auto;
   height: 640px;
+  isolation: isolate;
 }
 
 /* ================= PHONE ================= */
@@ -88,26 +89,81 @@
   z-index: 10;
 }
 
+.card-left > div,
+.card-right > div,
+.card-bottom > div {
+  transform-origin: center;
+}
+
+/* ================= LARGE TABLET ================= */
+
+@media (max-width: 1280px) {
+  .visual-wrapper {
+    max-width: 980px;
+    height: 600px;
+  }
+
+  .phone {
+    width: 320px;
+    top: 48%;
+  }
+
+  .card-right {
+    right: 90px;
+  }
+
+  .card-bottom {
+    right: 16px;
+  }
+
+  .card-left > div {
+    transform: scale(0.9);
+  }
+
+  .card-right > div {
+    transform: scale(0.9);
+  }
+
+  .card-bottom > div {
+    transform: scale(0.92);
+  }
+}
+
 /* ================= TABLET ================= */
 
 @media (max-width: 1024px) {
   .visual-wrapper {
-    transform: scale(0.85);
+    transform: scale(0.8);
     transform-origin: top center;
-    height: 560px;
-  }
-}
-
-/* ================= MOBILE STACK ================= */
-
-@media (max-width: 600px) {
-
-  .product-visuals {
-    padding: 100px 20px 120px;
+    height: 520px;
   }
 
   .product-visuals__content {
-    margin-bottom: 60px;
+    margin-bottom: 70px;
+  }
+
+  .card-left > div {
+    transform: scale(0.8);
+  }
+
+  .card-right > div {
+    transform: scale(0.8);
+  }
+
+  .card-bottom > div {
+    transform: scale(0.84);
+  }
+}
+
+/* ================= STACK EARLIER ================= */
+
+@media (max-width: 860px) {
+  .product-visuals {
+    padding: 96px 20px 110px;
+  }
+
+  .product-visuals__content {
+    margin-bottom: 56px;
   }
 
   .visual-wrapper {
@@ -115,7 +171,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
+    gap: 22px;
     transform: none;
   }
 
@@ -124,7 +180,7 @@
     left: auto;
     top: auto;
     transform: none;
-    width: 240px;
+    width: min(280px, 72vw);
     margin: 0 auto;
   }
 
@@ -141,9 +197,44 @@
   .card-left > div,
   .card-right > div,
   .card-bottom > div {
+    width: min(92%, 360px);
+    max-width: 92%;
+    transform: scale(0.86);
+  }
+
+  .card-bottom > div {
+    width: min(92%, 390px);
+  }
+}
+
+/* ================= MOBILE STACK ================= */
+
+@media (max-width: 600px) {
+
+  .product-visuals {
+    padding: 100px 20px 120px;
+  }
+
+  .product-visuals__content {
+    margin-bottom: 60px;
+  }
+
+  .visual-wrapper { gap: 24px; }
+
+  .phone {
+    width: 240px;
+  }
+
+  .card-left > div,
+  .card-right > div,
+  .card-bottom > div {
+    width: min(90%, 330px);
     max-width: 90%;
-    transform: scale(0.92);
-    transform-origin: center;
+    transform: scale(0.8);
+  }
+
+  .card-bottom > div {
+    width: min(90%, 350px);
   }
 }
 
@@ -158,8 +249,9 @@
   .card-left > div,
   .card-right > div,
   .card-bottom > div {
-    max-width: 85%;
-    transform: scale(0.88);
+    width: min(86%, 300px);
+    max-width: 86%;
+    transform: scale(0.72);
   }
 }
 
