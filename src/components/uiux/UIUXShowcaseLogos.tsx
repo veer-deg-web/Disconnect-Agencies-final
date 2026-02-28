@@ -1,7 +1,7 @@
 "use client";
 
 import LogoLoop from "@/components/Shared/LogoLoop/LogoLoop";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 export type LogoItem = {
   node: React.ReactNode;
@@ -22,6 +22,27 @@ export default function UIUXShowcaseLogos({
   iconGap = 64,
   logoSize = 44, // default size
 }: UIUXShowcaseLogosProps) {
+  const [viewportWidth, setViewportWidth] = useState(1440);
+
+  useEffect(() => {
+    const onResize = () => setViewportWidth(window.innerWidth);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const responsiveScale = useMemo(() => {
+    if (viewportWidth <= 420) return 0.58;
+    if (viewportWidth <= 600) return 0.68;
+    if (viewportWidth <= 900) return 0.78;
+    if (viewportWidth <= 1100) return 0.88;
+    if (viewportWidth <= 1280) return 0.94;
+    return 1; // desktop unchanged
+  }, [viewportWidth]);
+
+  const computedLogoSize = Math.max(30, Math.round(logoSize * responsiveScale));
+  const computedIconGap = Math.max(44, Math.round(iconGap * responsiveScale));
+
   return (
     <section
       style={{
@@ -64,8 +85,8 @@ export default function UIUXShowcaseLogos({
           logos={[...logos, ...logos, ...logos]}
           speed={80}
           direction="left"
-          logoHeight={logoSize}   // ✅ dynamic
-          gap={iconGap}           // spacing
+          logoHeight={computedLogoSize}
+          gap={computedIconGap}
           hoverSpeed={0}
           scaleOnHover
           fadeOut={false}

@@ -12,6 +12,10 @@ export default function PageBackground({
       <style jsx>{`
         .page-bg {
           min-height: 100vh;
+          width: 100%;
+          max-width: 100vw;
+          overflow-x: hidden;
+          overflow-x: clip;
           background-color: black;
 
           background-image: radial-gradient(

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { MorphingLoginButton } from "./HeroContent";
 
 export default function HeroNavbar() {
@@ -99,6 +100,53 @@ export default function HeroNavbar() {
     <>
       <style>
         {`
+          .nav {
+            box-sizing: border-box;
+            width: 100%;
+          }
+
+          .nav-links {
+            align-items: center;
+          }
+
+          @media (max-width: 1200px) {
+            .nav {
+              padding: 0 24px !important;
+            }
+
+            .nav-links {
+              gap: 28px !important;
+            }
+          }
+
+          @media (max-width: 980px) {
+            .nav {
+              padding: 0 18px !important;
+            }
+
+            .nav-links {
+              gap: 18px !important;
+              font-size: 13px !important;
+            }
+          }
+
+          @media (max-width: 860px) {
+            .nav {
+              max-width: 100% !important;
+              padding: 0 14px !important;
+              height: 64px !important;
+            }
+
+            .nav-links,
+            .login-btn {
+              display: none !important;
+            }
+
+            .hamburger {
+              display: flex !important;
+            }
+          }
+
           @media (max-width: 768px) {
             .nav {
               max-width: 100% !important;
@@ -123,6 +171,8 @@ export default function HeroNavbar() {
           top: 0,
           left: 0,
           width: "100%",
+          maxWidth: "100vw",
+          overflowX: "clip",
           zIndex: 50,
           background: "rgba(0,0,0,0.65)",
           backdropFilter: "blur(12px)",
@@ -255,57 +305,73 @@ export default function HeroNavbar() {
               display: "none",
               width: "44px",
               height: "44px",
-              padding: "10px",
+              padding: 0,
               marginLeft: "auto",
               background: "transparent",
               border: "none",
               cursor: "pointer",
-              flexDirection: "column",
-              justifyContent: "center",
-              gap: "6px",
+              position: "relative",
+              overflow: "visible",
             }}
           >
             <span
               style={{
-                width: "100%",
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                width: "24px",
                 height: "2px",
                 background: "#fff",
                 transition: "0.25s",
                 transform: open
-                  ? "rotate(45deg) translateY(8px)"
-                  : "none",
+                  ? "translate(-50%, -50%) rotate(45deg)"
+                  : "translate(-50%, calc(-50% - 7px)) rotate(0deg)",
               }}
             />
             <span
               style={{
-                width: "100%",
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                width: "24px",
                 height: "2px",
                 background: "#fff",
                 opacity: open ? 0 : 1,
                 transition: "0.25s",
+                transform: "translate(-50%, -50%)",
               }}
             />
             <span
               style={{
-                width: "100%",
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                width: "24px",
                 height: "2px",
                 background: "#fff",
                 transition: "0.25s",
                 transform: open
-                  ? "rotate(-45deg) translateY(-8px)"
-                  : "none",
+                  ? "translate(-50%, -50%) rotate(-45deg)"
+                  : "translate(-50%, calc(-50% + 7px)) rotate(0deg)",
               }}
             />
           </button>
         </nav>
 
         {/* MOBILE MENU */}
-        {open && (
-          <div
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              key="mobile-menu"
+              initial={{ opacity: 0, y: -12, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: -10, height: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             style={{
               background: "#000",
               padding: "20px 16px",
               borderTop: "1px solid rgba(255,255,255,0.08)",
+              overflow: "hidden",
             }}
           >
             {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
@@ -438,8 +504,9 @@ export default function HeroNavbar() {
                 </span>
               )}
             </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </>
   );
