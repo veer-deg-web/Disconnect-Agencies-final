@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import "./BuildPocket.css";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
+import TargetCursor from "@/components/Shared/TargetCursor/TargetCursor";
 
 import {
   SiReact,
@@ -51,6 +52,13 @@ const logos = [
 export default function BuildPocket() {
   return (
     <section className="build-pocket">
+      <TargetCursor
+        scopeSelector=".build-pocket"
+        spinDuration={3}
+        hideDefaultCursor={false}
+        parallaxOn={false}
+        hoverDuration={0.3}
+      />
 
       <div className="build-pocket__top">
 
