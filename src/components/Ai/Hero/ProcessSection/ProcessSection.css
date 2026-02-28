@@ -178,6 +178,7 @@
 
 .process-arrow {
   position: absolute;
+  top: 58%;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -205,11 +206,11 @@
 }
 
 .process-arrow.left {
-  left: -64px;
+  left: -76px;
 }
 
 .process-arrow.right {
-  right: -64px;
+  right: -76px;
 }
 
 /* =========================
@@ -218,12 +219,14 @@
 
 @media (max-width: 900px) {
   .process-arrow.left {
-    left: 8px;
-    bottom: -60px;
+    left: 4px;
+    top: auto;
+    bottom: -78px;
   }
 
   .process-arrow.right {
-    right: 8px;
-    bottom: -60px;
+    right: 4px;
+    top: auto;
+    bottom: -78px;
   }
 }

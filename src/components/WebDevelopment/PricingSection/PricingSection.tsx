@@ -2,9 +2,15 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function PricingSection() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    router.push("/book-call?category=webdev");
+  };
 
   return (
     <section style={section}>
@@ -84,7 +90,9 @@ export default function PricingSection() {
             <li>Dedicated Support Team</li>
           </ul>
 
-          <button style={outlineBtn}>Get Started Now</button>
+          <button style={outlineBtn} onClick={handleGetStarted}>
+            Get Started Now
+          </button>
         </motion.div>
 
         {/* ENTERPRISE */}
@@ -116,7 +124,9 @@ export default function PricingSection() {
             <li>Dedicated Support Team</li>
           </ul>
 
-          <button style={solidBtn}>Get Started Now</button>
+          <button style={solidBtn} onClick={handleGetStarted}>
+            Get Started Now
+          </button>
         </motion.div>
       </div>
     </section>
