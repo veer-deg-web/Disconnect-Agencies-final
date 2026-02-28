@@ -42,6 +42,10 @@
   white-space: nowrap;
   font-weight: 700;
   margin-right: 8px;
+  background: linear-gradient(135deg, #5869e3 0%, #7c3aed 50%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .review-text {

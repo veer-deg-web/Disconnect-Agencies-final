@@ -2,30 +2,19 @@
 
 import "./Reviews.css";
 
-import GradientText from "@/components/Shared/GradientText/GradientText";
-
 
 /* ---------------- FEATURED REVIEW ---------------- */
 
 const featuredReview = {
   text: (
     <div className="reviews__inline-flex">
-  <GradientText
-   colors={[
- "#5869E3", "#7C3AED", "#22D3EE"]}
-    animationSpeed={8}
-    showBorder={false}
-    className="gradient-word"
-  >
-    Disconnect
-  </GradientText>
-
-  <span className="review-text">
-    completely transformed our app idea into a real product. I didn’t realize
-    how much a smooth UI and proper development mattered until I saw the final
-    result. Now I feel confident launching and scaling our app.
-  </span>
-</div>
+      <span className="review-text">
+        <span className="gradient-word">Disconnect</span>
+        {" "}has completely transformed our app idea into a real product. I didn’t realize
+        how much a smooth UI and proper development mattered until I saw the final
+        result. Now I feel confident launching and scaling our app.
+      </span>
+    </div>
   ),
   author: "Mary Smith",
   date: "May 16, 2025",
