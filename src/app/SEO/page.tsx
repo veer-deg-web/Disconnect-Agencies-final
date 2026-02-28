@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import HeroSection from "@/components/SEO/HeroSection/HeroSection";  
 import CTASection from "@/components/Shared/CTASection/CTASection";
 import Footer from "@/components/Shared/Footer/Footer";
@@ -8,9 +9,43 @@ import FeaturedServicesSection from "@/components/SEO/FeaturedServiceSection/Fea
 import ReviewsSection from "@/components/SEO/Review/ReviewsSection";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 
+export const metadata: Metadata = {
+  title: "SEO Services | Disconnect Agencies",
+  description:
+    "Technical SEO, on-page optimization, content strategy, and growth-focused search performance services.",
+  alternates: { canonical: "/SEO" },
+  openGraph: {
+    title: "SEO Services | Disconnect Agencies",
+    description:
+      "Data-driven SEO services built to increase visibility, rankings, and conversions.",
+    type: "website",
+    url: "/SEO",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SEO Services | Disconnect Agencies",
+    description:
+      "Data-driven SEO services built to increase visibility, rankings, and conversions.",
+  },
+};
+
 export default function SEOPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "SEO Services",
+    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    description:
+      "Technical SEO, on-page optimization, and content growth services.",
+    url: "/SEO",
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <HeroSection />
       <section id="benefits">
       <SeoProcess />

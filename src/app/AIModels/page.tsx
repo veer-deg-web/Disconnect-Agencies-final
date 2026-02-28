@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import BenefitsSection from "@/components/Ai/Hero/Benefits/BenefitsSection";
 import HeroSection from "@/components/Ai/Hero/HeroSection";
 import ProcessSection from "@/components/Ai/Hero/ProcessSection/ProcessSection";
@@ -11,9 +12,43 @@ import PricingSection from "@/components/PricingSection";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import { partnerLogos } from "@/Data/PartnerLogo";
 
+export const metadata: Metadata = {
+  title: "AI Models & Automation Services | Disconnect Agencies",
+  description:
+    "Custom AI models, workflow automation, and intelligent systems built to improve business efficiency and scale.",
+  alternates: { canonical: "/AIModels" },
+  openGraph: {
+    title: "AI Models & Automation Services | Disconnect Agencies",
+    description:
+      "AI automation, integration, and optimization services for modern teams.",
+    type: "website",
+    url: "/AIModels",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Models & Automation Services | Disconnect Agencies",
+    description:
+      "AI automation, integration, and optimization services for modern teams.",
+  },
+};
+
 export default function Ai() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "AI Models & Automation Services",
+    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    description:
+      "Custom AI development, integration, and optimization for business workflows.",
+    url: "/AIModels",
+  };
+
   return (
     <main style={{ backgroundColor: "#000000" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <HeroSection />
       <UIUXShowcaseLogos logos={partnerLogos} iconGap={200} title="Over 50+ businesses trusts us ." />
       <section id="feature">

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import{ featureItems } from "@/Data/WebDevFeatures/Data";
 import Hero from "@/components/WebDevelopment/Hero/Hero";
 import SupportSection from "@/components/WebDevelopment/SupportService/SupportService";
@@ -25,9 +26,43 @@ const heroLogos = [
   { node: <SiTailwindcss />, title: "Tailwind CSS" },
 ];
 
+export const metadata: Metadata = {
+  title: "Web Development Services | Disconnect Agencies",
+  description:
+    "Reliable and conversion-focused web development services for modern businesses, from design to launch.",
+  alternates: { canonical: "/WebDevelopment" },
+  openGraph: {
+    title: "Web Development Services | Disconnect Agencies",
+    description:
+      "Custom websites and web products engineered for performance, scalability, and growth.",
+    type: "website",
+    url: "/WebDevelopment",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Web Development Services | Disconnect Agencies",
+    description:
+      "Custom websites and web products engineered for performance, scalability, and growth.",
+  },
+};
+
 export default function WebDevelopmentPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Web Development Services",
+    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    description:
+      "Custom web development, frontend engineering, and scalable web architecture.",
+    url: "/WebDevelopment",
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Hero />
        <section className="uiux-marquee-section">
     <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>

@@ -1,4 +1,3 @@
-"use client";
 import BuildPocket from '@/components/AppDevelopment/BuildPocket/BuiltPocket';
 import HeroSection from '@/components/AppDevelopment/HeroSection/HeroSection';
 import ProductVisuals from '@/components/AppDevelopment/ProductVisuals/ProductVisuals';

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import CloudServicesSection from "@/components/Cloud/CloudServiceSection/CloudServicesSection";
 import OurWorkStack from "@/components/Cloud/WorkSection/OurWorkStack";
 import OurWorkFinal from "@/components/Cloud/WorkSection/OurWorkFinal";
@@ -12,9 +13,43 @@ import { Cloudfaq } from "@/Data/Cloudfaq";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import Footer from "@/components/Shared/Footer/Footer";
 
+export const metadata: Metadata = {
+  title: "Cloud Services | Disconnect Agencies",
+  description:
+    "Cloud architecture, migration, optimization, and scalable infrastructure services for modern products.",
+  alternates: { canonical: "/Cloud" },
+  openGraph: {
+    title: "Cloud Services | Disconnect Agencies",
+    description:
+      "Secure and scalable cloud engineering for high-growth businesses.",
+    type: "website",
+    url: "/Cloud",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cloud Services | Disconnect Agencies",
+    description:
+      "Secure and scalable cloud engineering for high-growth businesses.",
+  },
+};
+
 export default function CloudPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Cloud Services",
+    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    description:
+      "End-to-end cloud services including architecture, deployment, and optimization.",
+    url: "/Cloud",
+  };
+
   return (
     <main style={{ backgroundColor: "#000000" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <HeroSection />
       <section id="feature">
       <CloudServicesSection />

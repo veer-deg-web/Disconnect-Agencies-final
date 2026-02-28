@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import UIUXHeroSection from "@/components/uiux/UIUXHeroSection";
 import UIUXProcess from "@/components/uiux/UIUXProcess";
 import UIUXBenefits from "@/components/uiux/UIUXBenefits";
@@ -24,12 +25,42 @@ const heroLogos = [
   { node: <SiTailwindcss />, title: "Tailwind CSS" },
 ];
 
-
-
-
+export const metadata: Metadata = {
+  title: "UI/UX Design Services | Disconnect Agencies",
+  description:
+    "User-focused UI/UX design services with research, wireframes, visual design, and conversion-driven experiences.",
+  alternates: { canonical: "/Uiux" },
+  openGraph: {
+    title: "UI/UX Design Services | Disconnect Agencies",
+    description:
+      "Modern interface design and product UX systems crafted for engagement and growth.",
+    type: "website",
+    url: "/Uiux",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "UI/UX Design Services | Disconnect Agencies",
+    description:
+      "Modern interface design and product UX systems crafted for engagement and growth.",
+  },
+};
 export default function UIUXPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "UI/UX Design Services",
+    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    description:
+      "Design systems, user experience strategy, and conversion-optimized interfaces.",
+    url: "/Uiux",
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     
       <UIUXHeroSection />
  

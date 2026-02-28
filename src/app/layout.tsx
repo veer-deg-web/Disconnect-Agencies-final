@@ -1,11 +1,15 @@
 import "./globals.css";
+import type { Metadata } from "next";
 import SmoothScroll from "./providers/SmoothScroll";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
 import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
 
-export const metadata = {
-  title: "Disconnect Agencies",
+export const metadata: Metadata = {
+  title: {
+    default: "Disconnect Agencies",
+    template: "%s | Disconnect Agencies",
+  },
   description: "Disconnect Agencies",
 };
 

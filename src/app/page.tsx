@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import GrowthShowcaseSection from "@/components/Home/GrowthShowcaseSection/GrowthShowcaseSection";
 import HeroSection  from "@/components/Home/HeroSection/HeroSection";
 import PageBackground from "@/components/Home/PageBackground/PageBackground";
@@ -13,7 +14,26 @@ import TestimonialsSection from "@/components/Home/TestimonialsSection/Testimoni
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import CTASection from "@/components/Shared/CTASection/CTASection";
 import Footer from "@/components/Shared/Footer/Footer";
-import { Section } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Disconnect Agencies | Full-Service Design & Development Agency",
+  description:
+    "Disconnect Agencies helps founders and teams design, build, and scale products across web, app, UI/UX, SEO, cloud, and AI.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Disconnect Agencies | Full-Service Design & Development Agency",
+    description:
+      "End-to-end product design, engineering, and launch support for modern businesses.",
+    type: "website",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Disconnect Agencies | Full-Service Design & Development Agency",
+    description:
+      "End-to-end product design, engineering, and launch support for modern businesses.",
+  },
+};
 
 
 const faqs = [
@@ -46,8 +66,21 @@ const faqs = [
 
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Disconnect Agencies",
+    url: "/",
+    description:
+      "Full-service product agency for design, development, AI, SEO, and cloud solutions.",
+  };
+
   return (
     <PageBackground>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ScrollToQuerySection />
       <main className="relative min-h-screen text-white overflow-hidden">
         <HeroSection />
