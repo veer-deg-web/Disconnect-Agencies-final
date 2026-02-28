@@ -1,12 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { IoChevronBack } from "react-icons/io5";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
+import { CategoryType, serviceData } from "@/components/data/serviceData";
 import "./DetailsStep.css";
 
-export default function DetailsStep({ category, date, time, back }: any) {
+interface DetailsStepProps {
+  category: CategoryType;
+  date: Date;
+  time: string | null;
+  back: () => void;
+}
+
+export default function DetailsStep({ category, date, time, back }: DetailsStepProps) {
   const selectedDate = new Date(date);
 
   const formattedDate = selectedDate.toLocaleDateString("en-US", {
@@ -18,6 +26,10 @@ export default function DetailsStep({ category, date, time, back }: any) {
   // FORM STATE
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [notes, setNotes] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState("");
 
   // ERROR STATE
   const [nameError, setNameError] = useState("");
@@ -36,7 +48,54 @@ export default function DetailsStep({ category, date, time, back }: any) {
     return "";
   };
 
-  const isFormValid = nameError === "" && emailError === "" && name && email;
+  const isFormValid =
+    nameError === "" &&
+    emailError === "" &&
+    !!name.trim() &&
+    !!email.trim() &&
+    !!time &&
+    !isSubmitting;
+
+  const handleSchedule = async () => {
+    if (!time || !isFormValid) return;
+
+    setIsSubmitting(true);
+    setSubmitError("");
+    setSubmitSuccess("");
+
+    try {
+      const res = await fetch("/api/bookings/schedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          category,
+          date: selectedDate.toISOString(),
+          time,
+          notes: notes.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to schedule call");
+      }
+
+      setSubmitSuccess("Call scheduled. Confirmation email has been sent.");
+      setName("");
+      setEmail("");
+      setNotes("");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setSubmitError(err.message);
+      } else {
+        setSubmitError("Failed to schedule call");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <StepWrapper>
@@ -74,12 +133,16 @@ export default function DetailsStep({ category, date, time, back }: any) {
           <textarea
             placeholder="Any special assistance you need? (Optional)"
             className="details-textarea"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
           />
 
           {/* SUMMARY */}
           <p className="details-summary">
-            You selected: {category} • {formattedDate} • {time}
+            You selected: {serviceData[category].title} • {formattedDate} • {time}
           </p>
+          {submitError && <p className="details-error">{submitError}</p>}
+          {submitSuccess && <p className="details-success">{submitSuccess}</p>}
 
           {/* ACTIONS */}
           <div className="details-actions">
@@ -94,10 +157,11 @@ export default function DetailsStep({ category, date, time, back }: any) {
             <button
               type="button"
               disabled={!isFormValid}
-              className="booking-icon-btn"
-              aria-label="Submit booking"
+              className={`details-submit-btn ${isFormValid ? "active" : "disabled"}`}
+              aria-label="Schedule call"
+              onClick={handleSchedule}
             >
-              <IoChevronForward />
+              {isSubmitting ? "Scheduling..." : "Schedule Call"}
             </button>
           </div>
         </div>

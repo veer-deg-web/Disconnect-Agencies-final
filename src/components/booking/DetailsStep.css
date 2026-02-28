@@ -111,6 +111,14 @@
   padding-left: 4px;
 }
 
+.details-success {
+  font-size: 12px;
+  color: #86efac;
+  margin-bottom: 4px;
+  margin-top: -2px;
+  padding-left: 4px;
+}
+
 /* =====================================================
    SUBMIT BUTTON
 ===================================================== */
@@ -188,6 +196,60 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 14px;
+}
+
+.details-submit-btn {
+  border: none;
+  outline: none;
+  min-width: 200px;
+  height: 50px;
+  border-radius: 14px;
+  padding: 0 22px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+.details-submit-btn.active {
+  cursor: pointer;
+  color: var(--booking-on-primary);
+  background: linear-gradient(
+    145deg,
+    var(--booking-secondary) 0%,
+    var(--booking-primary) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 7px 0 rgba(var(--booking-primary-rgb), 0.95),
+    0 18px 28px rgba(var(--booking-primary-rgb), 0.28);
+}
+
+.details-submit-btn.active:hover {
+  filter: brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 7px 0 rgba(var(--booking-primary-rgb), 0.95),
+    0 22px 34px rgba(var(--booking-primary-rgb), 0.34);
+}
+
+.details-submit-btn.active:active {
+  transform: translateY(4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 3px 0 rgba(var(--booking-primary-rgb), 0.95),
+    0 9px 15px rgba(var(--booking-primary-rgb), 0.22);
+}
+
+.details-submit-btn.disabled {
+  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
 }
 
 /* =====================================================
@@ -236,6 +298,11 @@
     max-width: none;
     min-width: 0;
   }
+
+  .details-submit-btn {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 @media (max-width: 780px) {
@@ -243,6 +310,16 @@
   .details-back {
     width: 100%;
     max-width: none;
+    min-width: 0;
+  }
+
+  .details-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .details-submit-btn {
+    width: 100%;
     min-width: 0;
   }
 }
