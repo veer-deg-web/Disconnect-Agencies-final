@@ -97,7 +97,7 @@ export default function CTASection({
           @media (max-width: 768px) {
             .cta-section {
               height: auto !important;
-              padding: 80px 16px !important;
+              padding: 40px 16px 80px !important;
             }
 
             .cta-card {
@@ -125,7 +125,8 @@ export default function CTASection({
         viewport={{ once: true, amount: 0.35 }}
         style={{
           width: "100%",
-          height: "100vh",
+          height: "auto",
+          padding: "80px 24px 120px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

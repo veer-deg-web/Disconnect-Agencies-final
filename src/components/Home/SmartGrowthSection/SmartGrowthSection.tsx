@@ -166,7 +166,7 @@ export default function SmartGrowthSection() {
         .section {
           max-width: 1200px;
           margin: 0 auto;
-          padding: clamp(88px, 12vw, 160px) clamp(16px, 4vw, 24px);
+          padding: clamp(60px, 10vw, 110px) clamp(16px, 4vw, 24px);
           color: white;
           position: relative;
         }
@@ -175,20 +175,20 @@ export default function SmartGrowthSection() {
           text-align: center;
           font-size: clamp(34px, 6vw, 56px);
           font-weight: 700;
-          margin-bottom: clamp(56px, 9vw, 120px);
+          margin-bottom: clamp(40px, 7vw, 80px);
           line-height: 1.1;
         }
 
         .features {
           display: flex;
           flex-direction: column;
-          gap: clamp(56px, 8vw, 120px);
+          gap: clamp(40px, 7vw, 80px);
         }
 
         .feature-row {
           display: flex;
           align-items: center;
-          gap: clamp(32px, 8vw, 140px);
+          gap: clamp(24px, 6vw, 90px);
         }
 
         .feature-row.reverse {
@@ -250,7 +250,7 @@ export default function SmartGrowthSection() {
 
         @media (max-width: 1100px) {
           .feature-row {
-            gap: 56px;
+            gap: 40px;
           }
 
           .image-box {
@@ -260,15 +260,15 @@ export default function SmartGrowthSection() {
 
         @media (max-width: 900px) {
           .section {
-            padding-top: 96px;
-            padding-bottom: 96px;
+            padding-top: 60px;
+            padding-bottom: 60px;
           }
 
           .feature-row,
           .feature-row.reverse {
             flex-direction: column;
             text-align: center;
-            gap: 36px;
+            gap: 24px;
           }
 
           .image-box {
@@ -287,14 +287,14 @@ export default function SmartGrowthSection() {
         @media (max-width: 768px) {
           .heading {
             font-size: 34px;
-            margin-bottom: 80px;
+            margin-bottom: 50px;
           }
 
           .feature-row,
           .feature-row.reverse {
             flex-direction: column;
             text-align: center;
-            gap: 34px;
+            gap: 24px;
           }
 
           .image-box {

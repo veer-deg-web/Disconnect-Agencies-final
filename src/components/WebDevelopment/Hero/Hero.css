@@ -1,7 +1,8 @@
 .hero-webdev {
   position: relative;
   height: 100vh;
-  min-height: 882px; /* worst-case mobile */
+  min-height: 882px;
+  /* worst-case mobile */
   overflow: hidden;
   background: black;
 }
@@ -20,11 +21,9 @@
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0,0,0,0.2) 0%,
-    rgba(0,0,0,0.8) 70%
-  );
+  background: radial-gradient(ellipse at center,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.8) 70%);
   z-index: 1;
 }
 
@@ -33,7 +32,7 @@
   z-index: 2;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 140px 20px 0;
+  padding: 100px 20px 0;
   text-align: center;
   color: white;
 }
@@ -45,7 +44,7 @@
   gap: 10px;
   padding: 10px 16px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   font-size: 14px;
   margin-bottom: 28px;
@@ -60,8 +59,15 @@
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
 }
 
 /* Title */
@@ -78,7 +84,7 @@
   margin: 0 auto 40px;
   font-size: 16px;
   line-height: 1.6;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 /* Buttons */
@@ -87,7 +93,7 @@
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
-  margin-top: 180px;
+  margin-top: 100px;
 }
 
 .btn-primary {
@@ -109,7 +115,7 @@
 /* -------- MOBILE (344px worst case) -------- */
 @media (max-width: 360px) {
   .hero-webdev__content {
-    padding-top: 120px;
+    padding-top: 80px;
   }
 
   .hero-webdev__title {

@@ -225,7 +225,7 @@ export default function FAQSection({
 ======================= */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "160px 24px",
+  padding: "80px 24px",
   background: "radial-gradient(circle at center, #141414, #000)",
 };
 
@@ -233,7 +233,7 @@ const headingStyle: React.CSSProperties = {
   textAlign: "center",
   fontSize: "clamp(36px, 5vw, 52px)",
   fontWeight: 700,
-  marginBottom: 80,
+  marginBottom: 50,
 };
 
 const listStyle: React.CSSProperties = {

@@ -1,6 +1,6 @@
 .features {
   width: 100%;
-  padding: 140px 20px;
+  padding: 100px 20px;
   background: #05070b;
   color: white;
   box-sizing: border-box;
@@ -28,8 +28,8 @@
 
 .features__wrapper {
   max-width: 1400px;
-  margin: 120px auto 0 auto;
-  padding: 90px 70px;
+  margin: 80px auto 0 auto;
+  padding: 60px 50px;
   position: relative;
   border-radius: 36px;
   background: rgba(0, 0, 0, 0.55);
@@ -47,23 +47,21 @@
   position: absolute;
   inset: 0;
   border-radius: 36px;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.07) 0%,
-    transparent 35%
-  );
+  background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.07) 0%,
+      transparent 35%);
   pointer-events: none;
 }
 
 .features__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 70px;
+  gap: 50px;
   align-items: center;
 }
 
-.features__row + .features__row {
-  margin-top: 120px;
+.features__row+.features__row {
+  margin-top: 80px;
 }
 
 .features__textBlock,
@@ -111,7 +109,7 @@
   border-radius: 18px;
 }
 
-.features__svg > * {
+.features__svg>* {
   width: 100%;
   max-width: 100%;
   height: 100%;
@@ -137,16 +135,16 @@
 
 @media (max-width: 1200px) {
   .features__wrapper {
-    margin-top: 90px;
-    padding: 70px 32px;
+    margin-top: 60px;
+    padding: 50px 32px;
   }
 
   .features__row {
     gap: 48px;
   }
 
-  .features__row + .features__row {
-    margin-top: 84px;
+  .features__row+.features__row {
+    margin-top: 60px;
   }
 
   .features__svg {
@@ -183,7 +181,7 @@
     gap: 30px;
   }
 
-  .features__row + .features__row {
+  .features__row+.features__row {
     margin-top: 46px;
   }
 
@@ -226,9 +224,11 @@
     padding: 38px 18px;
   }
 
-  .features__row { gap: 24px; }
+  .features__row {
+    gap: 24px;
+  }
 
-  .features__row + .features__row {
+  .features__row+.features__row {
     margin-top: 34px;
   }
 
@@ -254,9 +254,11 @@
     padding: 44px 22px;
   }
 
-  .features__row { gap: 28px; }
+  .features__row {
+    gap: 28px;
+  }
 
-  .features__row + .features__row {
+  .features__row+.features__row {
     margin-top: 40px;
   }
 
@@ -300,7 +302,7 @@
     gap: 24px;
   }
 
-  .features__row + .features__row {
+  .features__row+.features__row {
     margin-top: 58px;
   }
 
@@ -433,15 +435,20 @@
     gap: 24px;
   }
 
-  .features__row + .features__row {
+  .features__row+.features__row {
     margin-top: 34px;
   }
 
-  .features__svg { height: 136px; }
+  .features__svg {
+    height: 136px;
+  }
 
   .features__row:nth-of-type(2) .features__svg {
     height: 112px;
   }
 
-  .features__svg--support { min-height: 112px; height: 112px; }
+  .features__svg--support {
+    min-height: 112px;
+    height: 112px;
+  }
 }

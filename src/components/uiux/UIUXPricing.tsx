@@ -76,7 +76,7 @@ export default function UIUXPricing() {
     <section
       ref={ref}
       style={{
-        padding: "140px 24px",
+        padding: "100px 24px",
         background: "#000",
         overflow: "hidden",
       }}
@@ -315,7 +315,7 @@ const headingStyle = {
 
 const subStyle = {
   maxWidth: 640,
-  margin: "0 auto 72px",
+  margin: "0 auto 50px",
   color: "#9ca3af",
   fontSize: 16,
 };
@@ -324,7 +324,7 @@ const layoutWrap = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  gap: 80,
+  gap: 50,
   flexWrap: "wrap" as const,
   flexDirection: "row-reverse" as const,
 };

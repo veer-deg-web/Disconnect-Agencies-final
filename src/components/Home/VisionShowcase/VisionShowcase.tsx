@@ -98,7 +98,7 @@ export default function VisionShowcase() {
           position: relative;
           z-index: 2;
           text-align: center;
-          padding-top: 80px;
+          padding-top: 50px;
         }
 
         .trusted p {
@@ -140,11 +140,11 @@ export default function VisionShowcase() {
           position: relative;
           z-index: 2;
           max-width: 1200px;
-          margin: 100px auto 0;
+          margin: 60px auto 0;
           padding: 0 24px;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 80px;
+          gap: 50px;
           align-items: center;
         }
 
@@ -176,7 +176,7 @@ export default function VisionShowcase() {
         @media (max-width: 900px) {
           .grid {
             grid-template-columns: 1fr;
-            gap: 56px;
+            gap: 40px;
           }
 
           .text {

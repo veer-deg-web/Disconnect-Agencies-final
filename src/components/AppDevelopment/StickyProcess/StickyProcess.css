@@ -1,5 +1,5 @@
 .sticky-process {
-  padding: clamp(90px, 10vw, 140px) 6%;
+  padding: clamp(60px, 8vw, 100px) 6%;
   background: radial-gradient(#111 1px, transparent 1px);
   background-size: 22px 22px;
 }
@@ -8,7 +8,7 @@
 .sticky-process__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 8vw, 100px);
+  gap: clamp(30px, 6vw, 70px);
   max-width: 1200px;
   margin: 0 auto;
   align-items: center;
@@ -64,7 +64,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid rgba(88,105,227,0.3);
+  border: 1px solid rgba(88, 105, 227, 0.3);
   background: #14162c;
   color: white;
   cursor: pointer;
@@ -73,7 +73,7 @@
 
 .carousel-controls button:hover {
   background: #5869E3;
-  box-shadow: 0 0 12px rgba(88,105,227,0.5);
+  box-shadow: 0 0 12px rgba(88, 105, 227, 0.5);
 }
 
 /* PROGRESS BAR */
@@ -81,14 +81,14 @@
   margin-top: 24px;
   height: 3px;
   width: 100%;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg,#5869E3,#7B8CFF);
+  background: linear-gradient(90deg, #5869E3, #7B8CFF);
   transition: width 0.4s ease;
 }
 
@@ -138,7 +138,7 @@
   .sticky-process__inner {
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 40px;
     align-items: center;
   }
 

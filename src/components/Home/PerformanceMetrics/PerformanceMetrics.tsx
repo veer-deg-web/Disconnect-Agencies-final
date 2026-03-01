@@ -130,7 +130,7 @@ export default function PerformanceMetrics() {
 
         @media (max-width: 768px) {
           .performance-heading-wrap {
-            margin-bottom: 60px;
+            margin-bottom: 40px;
           }
 
           .performance-heading {
@@ -140,7 +140,7 @@ export default function PerformanceMetrics() {
 
           .stats-grid {
             grid-template-columns: 1fr !important;
-            gap: 48px !important;
+            gap: 32px !important;
           }
         }
 
@@ -192,7 +192,7 @@ function Stat({
 
 const sectionStyle: React.CSSProperties = {
   background: "radial-gradient(circle at top, #151515 0%, #000 70%)",
-  padding: "160px 24px",
+  padding: "100px 24px",
   color: "#fff",
   textAlign: "center",
 };
@@ -209,7 +209,7 @@ const statsGridStyle: React.CSSProperties = {
   margin: "0 auto",
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
-  gap: 80,
+  gap: 50,
 };
 
 const statItemStyle: React.CSSProperties = {

@@ -3,7 +3,7 @@
 .product-visuals {
   position: relative;
   width: 100%;
-  padding: 140px 6% 180px;
+  padding: 100px 6% 120px;
   background: radial-gradient(circle at center, #11152a 0%, #05060f 70%);
   overflow: hidden;
 }
@@ -13,7 +13,7 @@
   position: absolute;
   width: 900px;
   height: 900px;
-  background: radial-gradient(circle, rgba(88,105,227,0.15), transparent 70%);
+  background: radial-gradient(circle, rgba(88, 105, 227, 0.15), transparent 70%);
   top: -300px;
   left: 50%;
   transform: translateX(-50%);
@@ -24,7 +24,7 @@
 
 .product-visuals__content {
   max-width: 900px;
-  margin: 0 auto 100px;
+  margin: 0 auto 60px;
   text-align: center;
 }
 
@@ -89,9 +89,9 @@
   z-index: 10;
 }
 
-.card-left > div,
-.card-right > div,
-.card-bottom > div {
+.card-left>div,
+.card-right>div,
+.card-bottom>div {
   transform-origin: center;
 }
 
@@ -116,15 +116,15 @@
     right: 16px;
   }
 
-  .card-left > div {
+  .card-left>div {
     transform: scale(0.9);
   }
 
-  .card-right > div {
+  .card-right>div {
     transform: scale(0.9);
   }
 
-  .card-bottom > div {
+  .card-bottom>div {
     transform: scale(0.92);
   }
 }
@@ -139,18 +139,18 @@
   }
 
   .product-visuals__content {
-    margin-bottom: 70px;
+    margin-bottom: 40px;
   }
 
-  .card-left > div {
+  .card-left>div {
     transform: scale(0.8);
   }
 
-  .card-right > div {
+  .card-right>div {
     transform: scale(0.8);
   }
 
-  .card-bottom > div {
+  .card-bottom>div {
     transform: scale(0.84);
   }
 }
@@ -159,11 +159,11 @@
 
 @media (max-width: 860px) {
   .product-visuals {
-    padding: 96px 20px 110px;
+    padding: 70px 20px 80px;
   }
 
   .product-visuals__content {
-    margin-bottom: 56px;
+    margin-bottom: 40px;
   }
 
   .visual-wrapper {
@@ -194,15 +194,15 @@
     justify-content: center;
   }
 
-  .card-left > div,
-  .card-right > div,
-  .card-bottom > div {
+  .card-left>div,
+  .card-right>div,
+  .card-bottom>div {
     width: min(92%, 360px);
     max-width: 92%;
     transform: scale(0.86);
   }
 
-  .card-bottom > div {
+  .card-bottom>div {
     width: min(92%, 390px);
   }
 }
@@ -212,28 +212,30 @@
 @media (max-width: 600px) {
 
   .product-visuals {
-    padding: 100px 20px 120px;
+    padding: 70px 20px 80px;
   }
 
   .product-visuals__content {
-    margin-bottom: 60px;
+    margin-bottom: 40px;
   }
 
-  .visual-wrapper { gap: 24px; }
+  .visual-wrapper {
+    gap: 24px;
+  }
 
   .phone {
     width: 240px;
   }
 
-  .card-left > div,
-  .card-right > div,
-  .card-bottom > div {
+  .card-left>div,
+  .card-right>div,
+  .card-bottom>div {
     width: min(90%, 330px);
     max-width: 90%;
     transform: scale(0.8);
   }
 
-  .card-bottom > div {
+  .card-bottom>div {
     width: min(90%, 350px);
   }
 }
@@ -246,9 +248,9 @@
     width: 210px;
   }
 
-  .card-left > div,
-  .card-right > div,
-  .card-bottom > div {
+  .card-left>div,
+  .card-right>div,
+  .card-bottom>div {
     width: min(86%, 300px);
     max-width: 86%;
     transform: scale(0.72);
@@ -260,7 +262,7 @@
 /* ================================================= */
 
 .we-help {
-  padding: 140px 6%;
+  padding: 100px 6%;
   background: radial-gradient(circle at center, #0b1022 0%, #05060f 80%);
   position: relative;
 }
@@ -270,7 +272,7 @@
   position: absolute;
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(88,105,227,0.12), transparent 70%);
+  background: radial-gradient(circle, rgba(88, 105, 227, 0.12), transparent 70%);
   bottom: -250px;
   right: -200px;
   pointer-events: none;
@@ -280,7 +282,7 @@
   text-align: center;
   font-size: clamp(28px, 3vw, 44px);
   font-weight: 700;
-  margin-bottom: 80px;
+  margin-bottom: 50px;
   letter-spacing: -0.02em;
 }
 
@@ -299,7 +301,7 @@
   padding: 36px;
   border-radius: 24px;
   background: rgba(20, 25, 55, 0.55);
-  border: 1px solid rgba(88,105,227,0.25);
+  border: 1px solid rgba(88, 105, 227, 0.25);
   backdrop-filter: blur(16px);
 
   transform-style: preserve-3d;
@@ -312,17 +314,13 @@
 /* PREMIUM 3D TILT */
 .we-card:hover {
   transform:
-    perspective(1200px)
-    rotateX(6deg)
-    rotateY(-6deg)
-    translateY(-12px)
-    scale(1.02);
+    perspective(1200px) rotateX(6deg) rotateY(-6deg) translateY(-12px) scale(1.02);
 
   border-color: #5869E3;
 
   box-shadow:
-    0 35px 100px rgba(88,105,227,0.35),
-    0 15px 40px rgba(0,0,0,0.4);
+    0 35px 100px rgba(88, 105, 227, 0.35),
+    0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
 /* Disable heavy tilt on mobile */

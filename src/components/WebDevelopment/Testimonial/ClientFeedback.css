@@ -7,7 +7,7 @@
   width: 100%;
   min-height: 100vh;
   background: #0b0f0c;
-  padding: 120px 6%;
+  padding: 80px 6%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -19,10 +19,8 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(
-    rgba(217, 255, 63, 0.08) 1px,
-    transparent 1px
-  );
+  background-image: radial-gradient(rgba(217, 255, 63, 0.08) 1px,
+      transparent 1px);
   background-size: 28px 28px;
   opacity: 0.4;
   pointer-events: none;
@@ -37,7 +35,7 @@
   font-weight: 600;
   color: #ffffff;
   text-align: center;
-  margin-bottom: 90px;
+  margin-bottom: 60px;
   z-index: 2;
   max-width: 800px;
   line-height: 1.2;
@@ -59,9 +57,10 @@
 
 .feedback-container {
   display: flex;
-  gap: 60px;
+  gap: 40px;
   width: 100%;
-  align-items: stretch; /* Equal height */
+  align-items: stretch;
+  /* Equal height */
 }
 
 /* ===============================
@@ -166,7 +165,7 @@
 ================================ */
 
 .dots {
-  margin-top: 60px;
+  margin-top: 40px;
   display: flex;
   justify-content: center;
   gap: 14px;
@@ -209,7 +208,7 @@
 
   .section-heading {
     font-size: 34px;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
   }
 }
 
