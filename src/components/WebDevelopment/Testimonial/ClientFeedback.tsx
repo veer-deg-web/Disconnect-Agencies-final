@@ -1,8 +1,9 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { SiStripe, SiGooglecloud, SiApple } from "react-icons/si";
+import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
 import "./ClientFeedback.css";
 
 const easeSmooth: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -61,13 +62,31 @@ const testimonials: Testimonial[] = [
 
 export default function ClientFeedback() {
   const [active, setActive] = useState(0);
+  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+
+  const finalTestimonials = useMemo(() => {
+    const formatted = dynTestimonials
+      .filter((t) => t.category === "WebDev" || !t.category || t.category === "General")
+      .map((t, idx) => ({
+        id: testimonials.length + idx + 1,
+        name: t.user.name,
+        position: t.position || 'Verified Customer',
+        company: t.company || 'User',
+        rating: t.rating || 5.0,
+        image: t.user.avatar || "/assets/WebDevelopment/Testimonial/photo/client1.webp",
+        logo: null,
+        text: t.content
+      }));
+    return [...testimonials, ...formatted];
+  }, [dynTestimonials]);
+
   useEffect(() => {
   const interval = setInterval(() => {
-    setActive((prev) => (prev + 1) % testimonials.length);
-  }, 8000); // 5 seconds
+    setActive((prev) => (prev + 1) % finalTestimonials.length);
+  }, 8000); // 8 seconds
 
   return () => clearInterval(interval);
-}, []);
+}, [finalTestimonials.length]);
 
   return (
     <section className="feedback-section">
@@ -93,8 +112,8 @@ export default function ClientFeedback() {
               animate="show"
             >
               <img
-                src={testimonials[active].image}
-                alt={testimonials[active].name}
+                src={finalTestimonials[active].image}
+                alt={finalTestimonials[active].name}
                 className="feedback-image"
               />
             </motion.div>
@@ -108,29 +127,29 @@ export default function ClientFeedback() {
             >
               <div className="rating">
                 <span className="star">★</span>
-                <span>{testimonials[active].rating} / 5</span>
+                <span>{finalTestimonials[active].rating} / 5</span>
               </div>
 
               <p className="feedback-text">
-                "{testimonials[active].text}"
+                "{finalTestimonials[active].text}"
               </p>
 
               {/* Bottom Right Block */}
               <div className="company-block">
                 <div className="company-logo">
-                  {testimonials[active].logo}
+                  {finalTestimonials[active].logo}
                 </div>
 
                 <div className="company-name">
-                  {testimonials[active].company}
+                  {finalTestimonials[active].company}
                 </div>
 
                 <div className="person-name">
-                  {testimonials[active].name}
+                  {finalTestimonials[active].name}
                 </div>
 
                 <div className="person-position">
-                  {testimonials[active].position}
+                  {finalTestimonials[active].position}
                 </div>
               </div>
             </motion.div>
@@ -139,7 +158,7 @@ export default function ClientFeedback() {
 
         {/* DOTS */}
         <div className="dots">
-          {testimonials.map((_, index) => (
+          {finalTestimonials.map((_, index) => (
             <button
               key={index}
               onClick={() => setActive(index)}

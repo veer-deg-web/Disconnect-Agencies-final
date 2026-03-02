@@ -1,11 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function Footer() {
   const router = useRouter();
   const pathname = usePathname();
+  
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedName = localStorage.getItem("userName");
+    if (token && storedName) {
+      setUserName(storedName);
+    }
+  }, []);
 
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
@@ -135,6 +145,36 @@ export default function Footer() {
               </button>
             ))}
           </nav>
+
+          {/* FEEDBACK SECTION FOR LOGGED IN USERS */}
+          {userName && (
+            <div style={{ width: "100%", maxWidth: "500px", marginTop: "16px", marginBottom: "16px", textAlign: "center" }}>
+              <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: "12px", padding: "20px", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <h4 style={{ margin: "0 0 12px 0", fontSize: "16px", fontWeight: 500, color: "#fff" }}>Enjoying Disconnect?</h4>
+                <p style={{ margin: "0 0 16px 0", fontSize: "14px", color: "rgba(255,255,255,0.6)" }}>
+                  Have thoughts or suggestions? We'd love to hear from you. Your feedback might be featured directly on our page!
+                </p>
+                <button
+                  onClick={() => router.push("/feedback")}
+                  style={{
+                    padding: "10px 24px",
+                    background: "#fff",
+                    color: "#000",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    transition: "opacity 0.2s"
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = "0.9"}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}
+                >
+                  Write Feedback
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* COPYRIGHT */}
           <p

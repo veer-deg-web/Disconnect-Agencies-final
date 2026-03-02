@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
+import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
 
 /* =======================
    DATA
@@ -95,6 +96,27 @@ export default function TestimonialsSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-120px" });
   const [startScroll, setStartScroll] = useState(false);
+  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+
+  const { finalLeftColumn, finalRightColumn } = useMemo(() => {
+    const formatted: Testimonial[] = dynTestimonials
+      .filter((t) => t.category === "Home" || !t.category || t.category === "General")
+      .map((t) => ({
+        name: t.user.name,
+        role: "Verified User",
+        quote: t.content,
+        avatar: t.user.avatar,
+        position: t.position,
+        company: t.company,
+        rating: t.rating
+      }));
+
+    const mid = Math.ceil(formatted.length / 2);
+    return {
+      finalLeftColumn: [...leftColumn, ...formatted.slice(0, mid)],
+      finalRightColumn: [...rightColumn, ...formatted.slice(mid)]
+    };
+  }, [dynTestimonials]);
 
   return (
     <section ref={ref} style={sectionStyle}>
@@ -139,7 +161,7 @@ export default function TestimonialsSection() {
               ease: "linear",
             }}
           >
-            {[...leftColumn, ...leftColumn].map((item, i) => (
+            {[...finalLeftColumn, ...finalLeftColumn].map((item, i) => (
               <TestimonialCard key={`left-${i}`} {...item} />
             ))}
           </motion.div>
@@ -155,7 +177,7 @@ export default function TestimonialsSection() {
               ease: "linear",
             }}
           >
-            {[...rightColumn, ...rightColumn].map((item, i) => (
+            {[...finalRightColumn, ...finalRightColumn].map((item, i) => (
               <TestimonialCard key={`right-${i}`} {...item} />
             ))}
           </motion.div>
@@ -206,15 +228,23 @@ export default function TestimonialsSection() {
    CARD
 ======================= */
 
-function TestimonialCard({ name, role, quote }: Testimonial) {
+function TestimonialCard({ name, role, quote, avatar }: Testimonial & { avatar?: string }) {
   return (
     <div style={card}>
       <div style={cardHeader}>
-        <img
-  src="/assets/Home/TestimonialsSection/photo/Section.webp"
-  alt={name}
-  style={avatarImage}
-/>
+        {avatar ? (
+          <img
+            src={avatar}
+            alt={name}
+            style={avatarImage}
+          />
+        ) : (
+          <img
+            src="/assets/Home/TestimonialsSection/photo/Section.webp"
+            alt={name}
+            style={avatarImage}
+          />
+        )}
         <div>
           <div style={nameStyle}>{name}</div>
           <div style={roleStyle}>{role}</div>

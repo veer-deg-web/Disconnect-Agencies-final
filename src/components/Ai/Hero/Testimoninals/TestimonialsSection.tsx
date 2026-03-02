@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
+import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
 import "./TestimonialsSection.css";
 
 const testimonials = [
@@ -11,6 +13,7 @@ const testimonials = [
     name: "James Carter",
     role: "CEO at TechFlow Solutions",
     avatar: "/assets/AIModels/Testimoninals/photo/Section.webp",
+    rating: 5,
   },
   {
     text:
@@ -18,6 +21,7 @@ const testimonials = [
     name: "Sophia Martinez",
     role: "Operations Manager at NexaCorp",
     avatar: "/assets/AIModels/Testimoninals/photo/Section.webp",
+    rating: 5,
   },
   {
     text:
@@ -25,6 +29,7 @@ const testimonials = [
     name: "David Reynolds",
     role: "Head of Sales at GrowthPeak",
     avatar: "/assets/AIModels/Testimoninals/photo/Section.webp",
+    rating: 5,
   },
   {
     text:
@@ -32,10 +37,26 @@ const testimonials = [
     name: "Emily Wong",
     role: "Customer Success Lead at SupportHive",
     avatar: "/assets/AIModels/Testimoninals/photo/Section.webp",
+    rating: 5,
   },
 ];
 
 export default function TestimonialsSection() {
+  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+
+  const finalTestimonials = useMemo(() => {
+    const formatted = dynTestimonials
+      .filter((t) => t.category === "AI" || !t.category || t.category === "General")
+      .map(t => ({
+        text: t.content,
+        name: t.user.name,
+        role: t.position && t.company ? `${t.position} @ ${t.company}` : 'Verified User',
+        avatar: t.user.avatar || "/assets/AIModels/Testimoninals/photo/Section.webp",
+        rating: t.rating || 5
+      }));
+    return [...testimonials, ...formatted];
+  }, [dynTestimonials]);
+
   return (
     <section className="testimonials-section">
       {/* LABEL */}
@@ -73,7 +94,7 @@ export default function TestimonialsSection() {
 
       {/* GRID */}
       <div className="testimonials-grid">
-        {testimonials.map((item, i) => (
+        {finalTestimonials.map((item, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 30 }}
@@ -88,7 +109,7 @@ export default function TestimonialsSection() {
               <div className="testimonial-content">
                 {/* STARS */}
                 <div className="testimonial-stars">
-                  ★★★★★
+                  {'★'.repeat(item.rating || 5)}{'☆'.repeat(10 - (item.rating || 5))}
                 </div>
 
                 {/* TEXT */}

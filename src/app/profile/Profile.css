@@ -1,0 +1,482 @@
+.profile-page-wrapper {
+    min-height: 100vh;
+    background-color: #0b0b0b;
+    color: #fff;
+    padding: 100px 20px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.profile-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.profile-container.loading {
+    display: flex;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.back-btn,
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.back-btn:hover,
+.logout-btn:hover {
+    color: #fff;
+}
+
+.logout-btn {
+    color: #ef4444;
+}
+
+.logout-btn:hover {
+    color: #f87171;
+}
+
+.profile-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 32px;
+}
+
+.profile-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.avatar-edit-btn,
+.avatar-remove-btn {
+    position: absolute;
+    bottom: 0;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.avatar-edit-btn {
+    right: 0;
+    background: #3b82f6;
+    color: white;
+}
+
+.avatar-edit-btn:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+}
+
+.avatar-remove-btn {
+    left: 0;
+    background: #ef4444;
+    color: white;
+}
+
+.avatar-remove-btn:hover {
+    background: #dc2626;
+    transform: scale(1.05);
+}
+
+
+.avatar-hint {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.form-group input {
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.form-group input.disabled-input {
+    background: rgba(255, 255, 255, 0.02);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+}
+
+.save-btn {
+    margin-top: 12px;
+    padding: 14px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex;
+    justify-content: center;
+}
+
+.save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.save-btn:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-error,
+.profile-success {
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.profile-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.profile-success {
+    background: rgba(34, 197, 94, 0.1);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.spinner.small {
+    width: 16px;
+    height: 16px;
+    border-top-color: #000;
+    border-color: rgba(0, 0, 0, 0.1);
+    border-top-color: #000;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (min-width: 640px) {
+    .profile-content {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .avatar-section {
+        flex: 0 0 160px;
+    }
+
+    .info-section {
+        flex: 1;
+    }
+}
+
+/* Tabs */
+.profile-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 16px;
+    overflow-x: auto;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+    color: #000;
+    background: #fff;
+}
+
+/* List Grids */
+.tab-pane {
+    width: 100%;
+}
+
+.list-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.list-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list-card h4 {
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: #fff;
+    gap: 12px;
+}
+
+.category-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: normal;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.list-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.list-card .card-content {
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.list-card strong {
+    color: #fff;
+    font-weight: 500;
+}
+
+.list-card span.pending {
+    color: #fbbf24;
+    font-weight: 600;
+}
+
+.list-card span.completed {
+    color: #34d399;
+    font-weight: 600;
+}
+
+.meeting-link {
+    display: inline-block;
+    color: #60a5fa;
+    text-decoration: none;
+    font-size: 14px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.meeting-link:hover {
+    text-decoration: underline;
+    color: #93c5fd;
+}
+
+/* Edit UI */
+.card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.card-actions button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-actions button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.card-actions button.danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.edit-form textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-actions input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 6px;
+}
+
+.cancel-btn,
+.save-mini-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.save-mini-btn {
+    background: #fff;
+    color: #000;
+}
+
+.save-mini-btn:hover {
+    background: #e5e5e5;
+}

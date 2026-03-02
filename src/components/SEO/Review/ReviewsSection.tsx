@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import ReviewCard from "./ReviewCard";
+import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
 import "./Reviews.css";
 
 const reviews = [
@@ -44,6 +46,22 @@ const reviews = [
 ];
 
 export default function ReviewsSection() {
+  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+
+  const finalReviews = useMemo(() => {
+    const formatted = dynTestimonials
+      .filter((t) => t.category === "SEO" || !t.category || t.category === "General")
+      .map(t => ({
+        name: t.user.name,
+        role: t.position || 'Verified Customer',
+        company: t.company || 'User',
+        avatar: t.user.avatar || "/assets/SEO/Review/photo/Section.webp",
+        rating: `${t.rating || 10}/10`,
+        quote: t.content
+      }));
+    return [...reviews, ...formatted];
+  }, [dynTestimonials]);
+
   return (
     <section className="seo-reviews-section">
       {/* HEADER */}
@@ -72,7 +90,7 @@ export default function ReviewsSection() {
           visible: { transition: { staggerChildren: 0.15 } },
         }}
       >
-        {reviews.map((review, i) => (
+        {finalReviews.map((review, i) => (
           <motion.div
             key={i}
             variants={{

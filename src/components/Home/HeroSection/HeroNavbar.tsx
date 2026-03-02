@@ -9,6 +9,7 @@ import { MorphingLoginButton } from "./HeroContent";
 export default function HeroNavbar() {
   const [open, setOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>('user');
   const router = useRouter();
   const pathname = usePathname();
@@ -16,9 +17,11 @@ export default function HeroNavbar() {
   useEffect(() => {
     const sync = () => {
       const nextUserName = localStorage.getItem("userName");
+      const nextUserAvatar = localStorage.getItem("userAvatar") || null;
       const nextUserRole = localStorage.getItem("userRole") ?? "user";
 
       setUserName((prev) => (prev === nextUserName ? prev : nextUserName));
+      setUserAvatar((prev) => (prev === nextUserAvatar ? prev : nextUserAvatar));
       setUserRole((prev) => (prev === nextUserRole ? prev : nextUserRole));
     };
 
@@ -43,7 +46,9 @@ export default function HeroNavbar() {
     localStorage.removeItem("user");
     localStorage.removeItem("userName");
     localStorage.removeItem("userRole");
+    localStorage.removeItem("userAvatar");
     setUserName(null);
+    setUserAvatar(null);
     setUserRole("user");
     setOpen(false);
     router.push("/");
@@ -275,6 +280,44 @@ export default function HeroNavbar() {
 
           {/* DESKTOP CTA */}
           <div className="login-btn" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {userName && (
+              <div 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginRight: '8px'
+                }}
+              >
+                <div 
+                  onClick={() => router.push('/profile')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    cursor: 'pointer',
+                    padding: '4px 12px 4px 4px',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '999px',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
+                >
+                  {userAvatar ? (
+                    <img src={userAvatar} alt="Profile" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
+                      {userName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <span style={{ fontSize: '13px', color: '#fff', fontWeight: 500 }}>Profile</span>
+                  </div>
+                </div>
+              </div>
+            )}
             {userName && userRole === 'admin' && (
               <a
                 href="/admin"
@@ -441,22 +484,31 @@ export default function HeroNavbar() {
               {userName ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px" }}>
-                      Hi, {userName}
-                      {userRole === "admin" && (
-                        <span style={{
-                          marginLeft: "6px",
-                          fontSize: "10px",
-                          background: "rgba(124,58,237,0.3)",
-                          color: "#a78bfa",
-                          border: "1px solid rgba(124,58,237,0.5)",
-                          borderRadius: "4px",
-                          padding: "1px 5px",
-                          fontWeight: 600,
-                          verticalAlign: "middle",
-                        }}>ADMIN</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      {userAvatar ? (
+                        <img src={userAvatar} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                      ) : (
+                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', color: '#fff' }}>
+                          {userName.charAt(0).toUpperCase()}
+                        </div>
                       )}
-                    </span>
+                      <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px", display: "flex", flexDirection: "column" }}>
+                        <span>Hi, {userName}</span>
+                        {userRole === "admin" && (
+                          <span style={{
+                            fontSize: "10px",
+                            background: "rgba(124,58,237,0.3)",
+                            color: "#a78bfa",
+                            border: "1px solid rgba(124,58,237,0.5)",
+                            borderRadius: "4px",
+                            padding: "1px 5px",
+                            fontWeight: 600,
+                            marginTop: "2px",
+                            width: "fit-content"
+                          }}>ADMIN</span>
+                        )}
+                      </span>
+                    </div>
                     <button
                       onClick={handleLogout}
                       style={{
@@ -473,6 +525,28 @@ export default function HeroNavbar() {
                       Logout
                     </button>
                   </div>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <a
+                      href="/profile"
+                      onClick={() => setOpen(false)}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        textDecoration: "none",
+                        background: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: "8px",
+                        padding: "8px 14px",
+                        flex: 1,
+                        justifyContent: "center"
+                      }}
+                    >
+                      👤 Profile
+                    </a>
                   {userRole === "admin" && (
                     <a
                       href="/admin"
@@ -489,11 +563,14 @@ export default function HeroNavbar() {
                         border: "1px solid rgba(124,58,237,0.35)",
                         borderRadius: "8px",
                         padding: "8px 14px",
+                        flex: 1,
+                        justifyContent: "center"
                       }}
                     >
                       ⚙️ Admin Panel
                     </a>
                   )}
+                  </div>
                 </div>
               ) : (
                 <span

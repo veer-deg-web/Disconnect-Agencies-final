@@ -8,7 +8,8 @@ import {
   useAnimationFrame,
   useMotionValue,
 } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
+import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
 import "./TestimonialsSection.css";
 
 const testimonials = [
@@ -44,6 +45,21 @@ const testimonials = [
 export default function TestimonialsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
+  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+
+  const finalTestimonials = useMemo(() => {
+    const formatted = dynTestimonials
+      .filter((t) => t.category === "Cloud" || !t.category || t.category === "General")
+      .map(t => ({
+        type: "wide",
+        tag: "Customer Feedback",
+        text: t.content,
+        name: t.user.name,
+        role: t.position && t.company ? `${t.position} @ ${t.company}` : 'Verified User',
+        avatar: t.user.avatar
+      }));
+    return [...testimonials, ...formatted];
+  }, [dynTestimonials]);
 
   /* ---------------- SCROLL-BASED REVEAL ---------------- */
   const { scrollYProgress } = useScroll({
@@ -84,14 +100,14 @@ export default function TestimonialsSection() {
         onMouseLeave={() => setHovered(false)}
       >
         <motion.div className="testimonials-track" style={{ x }}>
-          {[...testimonials, ...testimonials].map((item, i) => (
+          {[...finalTestimonials, ...finalTestimonials].map((item, i) => (
             <div key={i} className="testimonial-item">
               {item.type === "wide" ? (
                 <div className="testimonial-card wide">
                   <span className="tag">{item.tag}</span>
                   <p className="quote">“{item.text}”</p>
                   <div className="author">
-                    <img src="/assets/Cloud/Testimonials/photo/Section.webp" alt="" />
+                    <img src={(item as any).avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
                     <div>
                       <strong>{item.name}</strong>
                       <span>{item.role}</span>
@@ -100,7 +116,7 @@ export default function TestimonialsSection() {
                 </div>
               ) : (
                 <div className="testimonial-card square">
-                  <img src="/assets/Cloud/Testimonials/photo/Section.webp" alt="" />
+                  <img src={(item as any).avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
                   <strong>{item.name}</strong>
                   <span>{item.role}</span>
                 </div>

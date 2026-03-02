@@ -35,6 +35,20 @@ const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'seo', label: 'SEO' },
 ];
 
+interface FeedbackRecord {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+    avatar?: string;
+  };
+  content: string;
+  isTestimonial: boolean;
+  category?: Category | string;
+  createdAt: string;
+}
+
 interface Faq {
   _id: string;
   question: string;
@@ -690,6 +704,205 @@ function BookingAdminSection() {
   );
 }
 
+/* ─────────────────────────────────────────────
+   FEEDBACK ADMIN SECTION
+───────────────────────────────────────────── */
+function FeedbackAdminSection() {
+  const [feedbacks, setFeedbacks] = useState<FeedbackRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [ok, setOk] = useState('');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      const res = await fetch('/api/admin/feedback', { headers: authHeader() });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load feedbacks');
+      setFeedbacks(data.feedbacks || []);
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError('Failed to load feedbacks');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const toggleTestimonial = async (id: string, currentStatus: boolean, newCategory?: string) => {
+    setSavingId(id);
+    setError('');
+    setOk('');
+
+    try {
+      const payload: any = { id, isTestimonial: !currentStatus };
+      if (newCategory) payload.category = newCategory;
+
+      const res = await fetch('/api/admin/feedback', {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update feedback');
+      
+      setFeedbacks((prev) => prev.map((f) => (f._id === id ? data.feedback : f)));
+      setOk('Feedback updated successfully.');
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError('Failed to update feedback');
+    } finally {
+      setSavingId(null);
+    }
+  };
+
+  const deleteFeedback = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this feedback?')) return;
+    
+    setSavingId(id);
+    setError('');
+    setOk('');
+
+    try {
+      const res = await fetch('/api/admin/feedback', {
+        method: 'DELETE',
+        headers: authHeader(),
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to delete feedback');
+      
+      setFeedbacks((prev) => prev.filter((f) => f._id !== id));
+      setOk('Feedback deleted successfully.');
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError('Failed to delete feedback');
+    } finally {
+      setSavingId(null);
+    }
+  };
+
+  return (
+    <div>
+      <div className="adm-page-header">
+        <div>
+          <h1 className="adm-page-title">Feedback & Testimonials</h1>
+          <p className="adm-page-subtitle">Manage user feedback and feature them as testimonials</p>
+        </div>
+      </div>
+
+      {error && <div className="adm-error-bar">{error}</div>}
+      {ok && <div className="adm-ok-bar">{ok}</div>}
+
+      <div className="adm-table-wrap" style={{ marginTop: '24px' }}>
+        <div className="adm-table-header">
+          <span className="adm-table-heading">All Feedbacks ({feedbacks.length})</span>
+        </div>
+
+        {loading ? (
+          <div className="adm-loader">
+            <div className="adm-spinner" />
+            <div>Loading feedbacks…</div>
+          </div>
+        ) : feedbacks.length === 0 ? (
+          <div className="adm-empty">
+            <HelpCircle size={42} />
+            <p className="adm-empty-text">No feedbacks found</p>
+          </div>
+        ) : (
+          <div className="adm-faq-list">
+            {feedbacks.map((f, i) => (
+              <div className="adm-faq-item" key={f._id} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                <div style={{ flexShrink: 0, marginTop: '4px' }}>
+                   {f.user?.avatar ? (
+                     <img src={f.user.avatar} alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                   ) : (
+                     <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                       {f.user?.name ? f.user.name.charAt(0).toUpperCase() : '?'}
+                     </div>
+                   )}
+                </div>
+                <div className="adm-faq-body" style={{ flex: 1 }}>
+                  <p className="adm-faq-question" style={{ marginBottom: '4px' }}>
+                    {f.user?.name || 'Unknown User'} 
+                    <span style={{ fontSize: '12px', fontWeight: 'normal', color: 'rgba(255,255,255,0.4)', marginLeft: '8px' }}>
+                      ({f.user?.email || 'No email'}) • {new Date(f.createdAt).toLocaleDateString()}
+                    </span>
+                  </p>
+                  <p className="adm-faq-answer" style={{ color: "rgba(255,255,255,0.85)" }}>{f.content}</p>
+                  
+                  {/* Category Selection Dropdown */}
+                  <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>Category:</span>
+                    <select 
+                      className="adm-select" 
+                      style={{ padding: '4px 8px', fontSize: '13px', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                      value={f.category || 'General'}
+                      onChange={(e) => {
+                        const newCat = e.target.value;
+                        // Optimistically update local state & submit API req to persist new category quietly without changing testimonial state
+                        setFeedbacks(prev => prev.map(item => item._id === f._id ? { ...item, category: newCat } : item));
+                        
+                        // Fire-and-forget background update
+                        fetch('/api/admin/feedback', {
+                          method: 'PUT',
+                          headers: authHeader(),
+                          body: JSON.stringify({ id: f._id, isTestimonial: f.isTestimonial, category: newCat }),
+                        }).catch(console.error);
+                      }}
+                    >
+                      <option value="General">General</option>
+                      <option value="Home">Home</option>
+                      <option value="Cloud">Cloud</option>
+                      <option value="WebDev">WebDev</option>
+                      <option value="SEO">SEO</option>
+                      <option value="AI">AI</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="adm-faq-actions" style={{ flexDirection: 'column', gap: '8px' }}>
+                  <button 
+                    className="adm-btn adm-btn--outline" 
+                    onClick={() => toggleTestimonial(f._id, f.isTestimonial, f.category)}
+                    disabled={savingId === f._id}
+                    title={f.isTestimonial ? "Remove from Testimonials" : "Feature as Testimonial"}
+                    style={{ 
+                      borderColor: f.isTestimonial ? "rgba(34,197,94,0.5)" : "rgba(255,255,255,0.2)",
+                      color: f.isTestimonial ? "#86efac" : "inherit"
+                    }}
+                  >
+                    {savingId === f._id ? (
+                      <div className="adm-spinner" style={{ width: '14px', height: '14px', borderWidth: '2px' }} />
+                    ) : f.isTestimonial ? (
+                      <><CheckCircle2 size={13} /> Featured</>
+                    ) : (
+                      <><Circle size={13} /> Feature</>
+                    )}
+                  </button>
+                  <button 
+                    className="adm-btn adm-btn--danger" 
+                    onClick={() => deleteFeedback(f._id)}
+                    disabled={savingId === f._id}
+                    title="Delete Feedback"
+                  >
+                    <Trash2 size={13} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════
    MAIN ADMIN CLIENT
 ═══════════════════════════════════════════════════════ */
@@ -697,7 +910,7 @@ export default function AdminClient() {
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [category, setCategory] = useState<'all' | Category>('all');
-  const [section, setSection] = useState<AdminSection>('faq');
+  const [section, setSection] = useState<AdminSection | 'feedback'>('faq');
   const [hydrated, setHydrated] = useState(false);
   const [authorized, setAuthorized] = useState(false);
 
@@ -770,6 +983,14 @@ export default function AdminClient() {
               {section === 'bookings' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
             </button>
 
+            <button
+              className={`adm-sidebar-item ${section === 'feedback' ? 'active' : ''}`}
+              onClick={() => setSection('feedback')}
+            >
+              <HelpCircle size={15} /> Feedback
+              {section === 'feedback' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+            </button>
+
             <div className="adm-sidebar-group-title">Categories</div>
             {CATEGORIES.map((c) => (
               <button
@@ -788,7 +1009,9 @@ export default function AdminClient() {
         </aside>
 
         <main className="adm-main">
-          {section === 'faq' ? <FaqSection category={category} /> : <BookingAdminSection />}
+          {section === 'faq' && <FaqSection category={category} />}
+          {section === 'bookings' && <BookingAdminSection />}
+          {section === 'feedback' && <FeedbackAdminSection />}
         </main>
       </div>
     </div>

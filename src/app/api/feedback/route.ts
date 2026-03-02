@@ -1,0 +1,69 @@
+import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
+import dbConnect from '../../../lib/mongodb';
+import Feedback from '../../../models/Feedback';
+import User from '../../../models/User';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
+
+export async function POST(req: Request) {
+    try {
+        const authHeader = req.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+
+        const body = await req.json();
+        const { content, category, rating, position, company } = body;
+
+        if (!content || !content.trim()) {
+            return NextResponse.json({ error: 'Feedback content is required' }, { status: 400 });
+        }
+
+        await dbConnect();
+
+        // Verify user exists
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        const newFeedback = new Feedback({
+            user: decoded.userId,
+            content,
+            category,
+            rating: rating ? Number(rating) : undefined,
+            position,
+            company
+        });
+
+        await newFeedback.save();
+
+        return NextResponse.json(
+            { message: 'Feedback submitted successfully', feedback: newFeedback },
+            { status: 201 }
+        );
+    } catch (error: any) {
+        console.error('Submit Feedback Error:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
+
+export async function GET(req: Request) {
+    try {
+        await dbConnect();
+
+        // Fetch only feedbacks that are approved as testimonials
+        const testimonials = await Feedback.find({ isTestimonial: true })
+            .populate('user', 'name avatar') // Populate user details
+            .sort({ createdAt: -1 });
+
+        return NextResponse.json({ testimonials }, { status: 200 });
+    } catch (error: any) {
+        console.error('Fetch Testimonials Error:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
