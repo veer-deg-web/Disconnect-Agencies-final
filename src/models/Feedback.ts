@@ -18,7 +18,7 @@ const FeedbackSchema = new Schema<IFeedback>(
         content: { type: String, required: true, trim: true },
         isTestimonial: { type: Boolean, default: false },
         category: { type: String, trim: true },
-        rating: { type: Number, min: 1, max: 10 },
+        rating: { type: Number, min: 1, max: 5 },
         position: { type: String, trim: true },
         company: { type: String, trim: true },
     },

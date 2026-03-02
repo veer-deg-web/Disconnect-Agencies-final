@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useMemo } from "react";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { CheckCircle2 } from "lucide-react";
 import "./TestimonialsSection.css";
 
 const testimonials = [
@@ -52,7 +53,8 @@ export default function TestimonialsSection() {
         name: t.user.name,
         role: t.position && t.company ? `${t.position} @ ${t.company}` : 'Verified User',
         avatar: t.user.avatar || "/assets/AIModels/Testimoninals/photo/Section.webp",
-        rating: t.rating || 5
+        rating: t.rating || 5,
+        isVerified: t.user.isVerified
       }));
     return [...testimonials, ...formatted];
   }, [dynTestimonials]);
@@ -124,7 +126,10 @@ export default function TestimonialsSection() {
                     alt={item.name}
                   />
                   <div>
-                    <strong>{item.name}</strong>
+                    <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {item.name}
+                      {(item as any).isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
+                    </strong>
                     <span>{item.role}</span>
                   </div>
                 </div>

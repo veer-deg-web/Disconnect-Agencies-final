@@ -58,7 +58,7 @@ export async function GET(req: Request) {
 
         // Fetch only feedbacks that are approved as testimonials
         const testimonials = await Feedback.find({ isTestimonial: true })
-            .populate('user', 'name avatar') // Populate user details
+            .populate('user', 'name avatar isVerified') // Populate user details
             .sort({ createdAt: -1 });
 
         return NextResponse.json({ testimonials }, { status: 200 });

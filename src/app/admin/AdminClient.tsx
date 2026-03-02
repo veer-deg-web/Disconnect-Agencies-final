@@ -18,12 +18,13 @@ import {
   Check,
   Circle,
   CheckCircle2,
+  User,
 } from 'lucide-react';
 import './Admin.css';
 
 /* ── Types ── */
 type Category = 'general' | 'cloud' | 'uiux' | 'webdev' | 'appdev' | 'aimodels' | 'seo';
-type AdminSection = 'faq' | 'bookings';
+type AdminSection = 'faq' | 'bookings' | 'users';
 
 const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'general', label: 'General' },
@@ -42,10 +43,24 @@ interface FeedbackRecord {
     name: string;
     email: string;
     avatar?: string;
+    isVerified?: boolean;
   };
   content: string;
   isTestimonial: boolean;
   category?: Category | string;
+  rating?: number;
+  createdAt: string;
+}
+
+interface UserRecord {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  avatar?: string;
+  role: string;
+  isVerified: boolean;
+  isSuspended: boolean;
   createdAt: string;
 }
 
@@ -705,6 +720,177 @@ function BookingAdminSection() {
 }
 
 /* ─────────────────────────────────────────────
+   USER ADMIN SECTION
+   (SUSPEND, VERIFY, DELETE)
+───────────────────────────────────────────── */
+function UserAdminSection() {
+  const [users, setUsers] = useState<UserRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/admin/users', { headers: authHeader() });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load users');
+      console.log('Admin Panel - Loaded users:', data.users);
+      setUsers(data.users || []);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const toggleVerify = async (id: string, current: boolean) => {
+    setBusyId(id);
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: authHeader(),
+        body: JSON.stringify({ id, isVerified: !current }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setUsers(prev => prev.map(u => u._id === id ? data.user : u));
+    } catch (err: any) { alert(err.message); }
+    finally { setBusyId(null); }
+  };
+
+  const toggleSuspend = async (id: string, current: boolean) => {
+    setBusyId(id);
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: authHeader(),
+        body: JSON.stringify({ id, isSuspended: !current }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setUsers(prev => prev.map(u => u._id === id ? data.user : u));
+    } catch (err: any) { alert(err.message); }
+    finally { setBusyId(null); }
+  };
+
+  const deleteUser = async (id: string) => {
+    if (!window.confirm('Delete this user permanently?')) return;
+    setBusyId(id);
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'DELETE',
+        headers: authHeader(),
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error);
+      }
+      setUsers(prev => prev.filter(u => u._id !== id));
+    } catch (err: any) { alert(err.message); }
+    finally { setBusyId(null); }
+  };
+
+  const filtered = users.filter(u => 
+    (u.name || "").toLowerCase().includes(search.toLowerCase()) || 
+    (u.email || "").toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div>
+      <div className="adm-page-header">
+        <div>
+          <h1 className="adm-page-title">User Management</h1>
+          <p className="adm-page-subtitle">Verify, suspend or delete application users</p>
+        </div>
+      </div>
+
+      <div className="adm-search-wrap" style={{ maxWidth: '400px', marginBottom: '20px' }}>
+        <Search size={13} />
+        <input 
+          className="adm-search-input" 
+          placeholder="Search by name or email…" 
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
+
+      {error && <div className="adm-error-bar">{error}</div>}
+
+      <div className="adm-table-wrap">
+        <table className="adm-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Contact</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+               <tr><td colSpan={4}><div className="adm-loader">Loading...</div></td></tr>
+            ) : filtered.length === 0 ? (
+               <tr><td colSpan={4}><div className="adm-empty">No users found</div></td></tr>
+            ) : filtered.map(u => (
+              <tr key={u._id}>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {u.avatar ? (
+                      <img src={u.avatar} style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                    ) : (
+                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {u.name[0]}
+                      </div>
+                    )}
+                    <div>
+                      <div style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {u.name}
+                        {u.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
+                      </div>
+                      <div style={{ fontSize: '12px', opacity: 0.6 }}>{u.role}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>{u.email}</div>
+                  <div style={{ fontSize: '12px', opacity: 0.6 }}>{u.phone}</div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    {u.isSuspended && <span className="adm-status-pill pending" style={{ color: '#ef4444' }}>Suspended</span>}
+                    {u.isVerified && <span className="adm-status-pill done">Verified</span>}
+                    {!u.isVerified && !u.isSuspended && <span className="adm-status-pill" style={{ opacity: 0.4 }}>Active</span>}
+                  </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="adm-btn adm-btn--outline" onClick={() => toggleVerify(u._id, u.isVerified)} disabled={busyId === u._id} title="Toggle Verification">
+                       {u.isVerified ? 'Unverify' : 'Verify'}
+                    </button>
+                    <button className="adm-btn adm-btn--outline" onClick={() => toggleSuspend(u._id, u.isSuspended)} disabled={busyId === u._id} title="Toggle Suspension">
+                       {u.isSuspended ? 'Unsuspend' : 'Suspend'}
+                    </button>
+                    <button className="adm-btn adm-btn--danger" onClick={() => deleteUser(u._id)} disabled={busyId === u._id}>
+                       <Trash2 size={13} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
    FEEDBACK ADMIN SECTION
 ───────────────────────────────────────────── */
 function FeedbackAdminSection() {
@@ -831,6 +1017,7 @@ function FeedbackAdminSection() {
                 <div className="adm-faq-body" style={{ flex: 1 }}>
                   <p className="adm-faq-question" style={{ marginBottom: '4px' }}>
                     {f.user?.name || 'Unknown User'} 
+                    {f.user?.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '4px' }} />}
                     <span style={{ fontSize: '12px', fontWeight: 'normal', color: 'rgba(255,255,255,0.4)', marginLeft: '8px' }}>
                       ({f.user?.email || 'No email'}) • {new Date(f.createdAt).toLocaleDateString()}
                     </span>
@@ -991,6 +1178,14 @@ export default function AdminClient() {
               {section === 'feedback' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
             </button>
 
+            <button
+              className={`adm-sidebar-item ${section === 'users' ? 'active' : ''}`}
+              onClick={() => setSection('users')}
+            >
+              <User size={15} /> Users
+              {section === 'users' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+            </button>
+
             <div className="adm-sidebar-group-title">Categories</div>
             {CATEGORIES.map((c) => (
               <button
@@ -1012,6 +1207,7 @@ export default function AdminClient() {
           {section === 'faq' && <FaqSection category={category} />}
           {section === 'bookings' && <BookingAdminSection />}
           {section === 'feedback' && <FeedbackAdminSection />}
+          {section === 'users' && <UserAdminSection />}
         </main>
       </div>
     </div>

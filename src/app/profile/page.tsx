@@ -53,6 +53,7 @@ export default function ProfilePage() {
   const [editingFeedbackId, setEditingFeedbackId] = useState<string | null>(null);
   const [editFeedbackContent, setEditFeedbackContent] = useState('');
   const [editFeedbackRating, setEditFeedbackRating] = useState<number>(5);
+  const [feedbackHoverRating, setFeedbackHoverRating] = useState<number>(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -387,16 +388,26 @@ export default function ProfilePage() {
                                             rows={4}
                                         />
                                         <div className="edit-actions">
-                                            <input 
-                                                type="number" 
-                                                min={1} max={10} 
-                                                value={editFeedbackRating} 
-                                                onChange={(e) => setEditFeedbackRating(Number(e.target.value))}
-                                                style={{ width: '60px', padding: '4px' }}
-                                                title="Rating (1-10)"
-                                            />
-                                            <button onClick={() => setEditingFeedbackId(null)} className="cancel-btn"><X size={14}/></button>
-                                            <button onClick={() => handleUpdateFeedback(f._id)} className="save-mini-btn"><Save size={14}/></button>
+                                            <div style={{ display: 'flex', gap: '4px', fontSize: '18px', cursor: 'pointer' }}>
+                                              {[1, 2, 3, 4, 5].map((star) => (
+                                                <span
+                                                  key={star}
+                                                  onClick={() => setEditFeedbackRating(star)}
+                                                  onMouseEnter={() => setFeedbackHoverRating(star)}
+                                                  onMouseLeave={() => setFeedbackHoverRating(0)}
+                                                  style={{
+                                                    color: (feedbackHoverRating || editFeedbackRating) >= star ? "#fbbf24" : "rgba(255,255,255,0.2)",
+                                                    transition: "color 0.2s"
+                                                  }}
+                                                >
+                                                  ★
+                                                </span>
+                                              ))}
+                                            </div>
+                                            <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+                                              <button onClick={() => setEditingFeedbackId(null)} className="cancel-btn"><X size={14}/></button>
+                                              <button onClick={() => handleUpdateFeedback(f._id)} className="save-mini-btn"><Save size={14}/></button>
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
@@ -404,7 +415,7 @@ export default function ProfilePage() {
                                         <p className="card-content">"{f.content}"</p>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
                                             <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>
-                                                {f.category || 'General'} • {f.rating || 5}/10 ⭐
+                                                {f.category || 'General'} • {f.rating || 5}/5 ★
                                             </span>
                                             <div className="card-actions">
                                                 <button onClick={() => {

@@ -16,6 +16,8 @@ export interface IUser extends Document {
   forgotPasswordOtp?: string;
   forgotPasswordOtpExpiry?: Date;
   forgotPasswordIdentifier?: string;
+  isVerified: boolean;
+  isSuspended: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +39,8 @@ const UserSchema = new Schema<IUser>(
     forgotPasswordOtp: { type: String },
     forgotPasswordOtpExpiry: { type: Date },
     forgotPasswordIdentifier: { type: String },
+    isVerified: { type: Boolean, default: false },
+    isSuspended: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

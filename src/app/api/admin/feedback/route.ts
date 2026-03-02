@@ -26,7 +26,7 @@ export async function GET(req: Request) {
         await dbConnect();
 
         const feedbacks = await Feedback.find()
-            .populate('user', 'name email avatar')
+            .populate('user', 'name email avatar isVerified')
             .sort({ createdAt: -1 });
 
         return NextResponse.json({ feedbacks }, { status: 200 });
@@ -60,7 +60,7 @@ export async function PUT(req: Request) {
             id,
             updateData,
             { new: true }
-        ).populate('user', 'name email avatar');
+        ).populate('user', 'name email avatar isVerified');
 
         if (!feedback) {
             return NextResponse.json({ error: 'Feedback not found' }, { status: 404 });

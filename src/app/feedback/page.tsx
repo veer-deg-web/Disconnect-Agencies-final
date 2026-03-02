@@ -13,7 +13,8 @@ export default function FeedbackPage() {
   
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("Home");
-  const [rating, setRating] = useState<number>(10);
+  const [rating, setRating] = useState<number>(5);
+  const [hoverRating, setHoverRating] = useState<number>(0);
   const [position, setPosition] = useState("");
   const [company, setCompany] = useState("");
   
@@ -64,7 +65,7 @@ export default function FeedbackPage() {
         setContent("");
         setPosition("");
         setCompany("");
-        setRating(10);
+        setRating(5);
         setCategory("Home");
       } else {
         setStatus("error");
@@ -103,14 +104,23 @@ export default function FeedbackPage() {
 
           {/* Rating */}
           <div className="fb-field">
-            <label>Rating (Out of 10) - <strong>{rating}</strong></label>
-            <input 
-              type="range" 
-              min="1" 
-              max="10" 
-              value={rating} 
-              onChange={(e) => setRating(parseInt(e.target.value))} 
-            />
+            <label>Rating - <strong>{rating} Stars</strong></label>
+            <div style={{ display: 'flex', gap: '8px', fontSize: '24px', cursor: 'pointer', margin: '8px 0' }}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  style={{
+                    color: (hoverRating || rating) >= star ? "#fbbf24" : "rgba(255,255,255,0.2)",
+                    transition: "color 0.2s"
+                  }}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* Position & Company Row */}

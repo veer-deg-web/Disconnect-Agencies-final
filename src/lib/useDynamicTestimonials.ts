@@ -5,6 +5,7 @@ export interface DynamicTestimonial {
     user: {
         name: string;
         avatar?: string;
+        isVerified?: boolean;
     };
     content: string;
     category?: string;

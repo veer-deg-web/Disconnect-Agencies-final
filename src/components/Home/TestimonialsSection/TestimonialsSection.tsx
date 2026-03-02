@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
 import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { CheckCircle2 } from "lucide-react";
 
 /* =======================
    DATA
@@ -13,6 +14,7 @@ type Testimonial = {
   name: string;
   role: string;
   quote: string;
+  isVerified?: boolean;
 };
 
 const leftColumn: Testimonial[] = [
@@ -105,6 +107,7 @@ export default function TestimonialsSection() {
         name: t.user.name,
         role: "Verified User",
         quote: t.content,
+        isVerified: t.user.isVerified,
         avatar: t.user.avatar,
         position: t.position,
         company: t.company,
@@ -228,7 +231,7 @@ export default function TestimonialsSection() {
    CARD
 ======================= */
 
-function TestimonialCard({ name, role, quote, avatar }: Testimonial & { avatar?: string }) {
+function TestimonialCard({ name, role, quote, avatar, isVerified }: Testimonial & { avatar?: string }) {
   return (
     <div style={card}>
       <div style={cardHeader}>
@@ -246,7 +249,10 @@ function TestimonialCard({ name, role, quote, avatar }: Testimonial & { avatar?:
           />
         )}
         <div>
-          <div style={nameStyle}>{name}</div>
+          <div style={nameStyle}>
+            {name}
+            {isVerified && <CheckCircle2 size={13} fill="#3b82f6" color="#fff" style={{ display: 'inline-block', marginLeft: '6px', verticalAlign: 'middle' }} />}
+          </div>
           <div style={roleStyle}>{role}</div>
         </div>
       </div>

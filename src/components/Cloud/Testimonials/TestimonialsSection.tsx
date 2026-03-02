@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
 import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { CheckCircle2 } from "lucide-react";
 import "./TestimonialsSection.css";
 
 const testimonials = [
@@ -56,7 +57,8 @@ export default function TestimonialsSection() {
         text: t.content,
         name: t.user.name,
         role: t.position && t.company ? `${t.position} @ ${t.company}` : 'Verified User',
-        avatar: t.user.avatar
+        avatar: t.user.avatar,
+        isVerified: t.user.isVerified
       }));
     return [...testimonials, ...formatted];
   }, [dynTestimonials]);
@@ -109,7 +111,10 @@ export default function TestimonialsSection() {
                   <div className="author">
                     <img src={(item as any).avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
                     <div>
-                      <strong>{item.name}</strong>
+                      <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {item.name}
+                        {(item as any).isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
+                      </strong>
                       <span>{item.role}</span>
                     </div>
                   </div>
@@ -117,7 +122,10 @@ export default function TestimonialsSection() {
               ) : (
                 <div className="testimonial-card square">
                   <img src={(item as any).avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
-                  <strong>{item.name}</strong>
+                  <strong style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '8px' }}>
+                    {item.name}
+                    {(item as any).isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
+                  </strong>
                   <span>{item.role}</span>
                 </div>
               )}
