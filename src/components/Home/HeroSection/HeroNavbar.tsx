@@ -280,44 +280,7 @@ export default function HeroNavbar() {
 
           {/* DESKTOP CTA */}
           <div className="login-btn" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {userName && (
-              <div 
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginRight: '8px'
-                }}
-              >
-                <div 
-                  onClick={() => router.push('/profile')}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    cursor: 'pointer',
-                    padding: '4px 12px 4px 4px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '999px',
-                    transition: 'background 0.2s',
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
-                >
-                  {userAvatar ? (
-                    <img src={userAvatar} alt="Profile" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
-                      {userName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: '13px', color: '#fff', fontWeight: 500 }}>Profile</span>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Replaced static avatar with unified MorphingLoginButton from HeroContent */}
             {userName && userRole === 'admin' && (
               <a
                 href="/admin"

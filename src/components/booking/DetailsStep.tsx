@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoChevronBack } from "react-icons/io5";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
@@ -31,7 +31,22 @@ export default function DetailsStep({ category, date, time, back }: DetailsStepP
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState("");
 
-  // ERROR STATE
+  // Pre-fill from localStorage if logged in
+  useEffect(() => {
+    const savedName = localStorage.getItem("userName");
+    const savedUser = localStorage.getItem("user");
+    
+    if (savedName) setName(savedName);
+    
+    if (savedUser) {
+      try {
+        const userObj = JSON.parse(savedUser);
+        if (userObj.email) setEmail(userObj.email);
+      } catch (e) {
+        console.error("Error parsing user from localStorage", e);
+      }
+    }
+  }, []);  // ERROR STATE
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
 

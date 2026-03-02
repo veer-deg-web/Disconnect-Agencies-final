@@ -201,6 +201,7 @@ export function MorphingLoginButton() {
   const [hover,     setHover]     = useState(false);
   const [cardOpen,  setCardOpen]  = useState(false);
   const [userName,  setUserName]  = useState<string | null>(null);
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [userRole,  setUserRole]  = useState<string>("user");
   const router = useRouter();
 
@@ -209,9 +210,11 @@ export function MorphingLoginButton() {
     const sync = () => {
       const nextUserName = localStorage.getItem("userName");
       const nextUserRole = localStorage.getItem("userRole") ?? "user";
+      const nextUserAvatar = localStorage.getItem("userAvatar") || null;
 
       setUserName((prev) => (prev === nextUserName ? prev : nextUserName));
       setUserRole((prev) => (prev === nextUserRole ? prev : nextUserRole));
+      setUserAvatar((prev) => (prev === nextUserAvatar ? prev : nextUserAvatar));
     };
 
     const onVisibility = () => {
@@ -231,12 +234,17 @@ export function MorphingLoginButton() {
   }, []);
 
   const handleLogout = () => {
-    ["token", "user", "userName", "userRole"].forEach((k) =>
+    ["token", "user", "userName", "userRole", "userAvatar"].forEach((k) =>
       localStorage.removeItem(k)
     );
     setUserName(null);
     setUserRole("user");
+    setUserAvatar(null);
     setCardOpen(false);
+    
+    // Fire storage event to sync all listeners
+    window.dispatchEvent(new Event("storage"));
+    
     router.push("/");
   };
 
@@ -278,27 +286,32 @@ export function MorphingLoginButton() {
       onMouseEnter={() => setCardOpen(true)}
       onMouseLeave={() => setCardOpen(false)}
     >
-      {/* Avatar circle */}
+      {/* Avatar Pill Trigger */}
       <div
+        onClick={() => router.push('/profile')}
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: "50%",
-          background: "linear-gradient(135deg, #FF7A18, #AF002D)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 14,
-          fontWeight: 700,
-          color: "#fff",
-          cursor: "pointer",
-          border: cardOpen ? "2px solid #fff" : "2px solid rgba(255,255,255,0.35)",
-          transition: "border 0.25s ease, box-shadow 0.25s ease",
-          boxShadow: cardOpen ? "0 0 0 3px rgba(255,122,24,0.35)" : "none",
-          userSelect: "none",
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          cursor: 'pointer',
+          padding: '4px 12px 4px 4px',
+          background: 'rgba(255, 255, 255, 0.05)',
+          border: cardOpen ? "1px solid rgba(255, 255, 255, 0.3)" : '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '999px',
+          transition: 'all 0.2s',
+          userSelect: "none"
         }}
       >
-        {initials}
+        {userAvatar ? (
+          <img src={userAvatar} alt="Profile" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF7A18, #AF002D)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600, color: '#fff' }}>
+            {initials}
+          </div>
+        )}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <span style={{ fontSize: '13px', color: '#fff', fontWeight: 500 }}>Hi, {userName.split(' ')[0]}</span>
+        </div>
       </div>
 
       {/* Hover dropdown card */}
@@ -324,23 +337,27 @@ export function MorphingLoginButton() {
       >
         {/* User info */}
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #FF7A18, #AF002D)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 13,
-              fontWeight: 700,
-              color: "#fff",
-              flexShrink: 0,
-            }}
-          >
-            {initials}
-          </div>
+          {userAvatar ? (
+            <img src={userAvatar} alt="Profile" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: 'cover', flexShrink: 0 }} />
+          ) : (
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #FF7A18, #AF002D)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 13,
+                fontWeight: 700,
+                color: "#fff",
+                flexShrink: 0,
+              }}
+            >
+              {initials}
+            </div>
+          )}
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", lineHeight: 1.2 }}>
               {userName}

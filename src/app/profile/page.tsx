@@ -92,14 +92,14 @@ export default function ProfilePage() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    if (activeTab === 'bookings' && bookings.length === 0) {
+    if (activeTab === 'bookings') {
         fetch('/api/user/bookings', { headers: { Authorization: `Bearer ${token}` } })
             .then(res => res.json())
             .then(data => { if (data.bookings) setBookings(data.bookings); })
             .catch(console.error);
     }
 
-    if (activeTab === 'feedbacks' && feedbacks.length === 0) {
+    if (activeTab === 'feedbacks') {
         fetch('/api/user/feedback', { headers: { Authorization: `Bearer ${token}` } })
             .then(res => res.json())
             .then(data => { if (data.feedbacks) setFeedbacks(data.feedbacks); })
@@ -111,6 +111,8 @@ export default function ProfilePage() {
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userAvatar');
+    window.dispatchEvent(new Event("storage"));
     router.push('/');
   };
 
