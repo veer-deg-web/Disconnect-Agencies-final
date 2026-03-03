@@ -62,13 +62,12 @@ const testimonials: Testimonial[] = [
 
 export default function ClientFeedback() {
   const [active, setActive] = useState(0);
-  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+  const { testimonials: dynTestimonials } = useDynamicTestimonials("WebDev", true);
 
   const finalTestimonials = useMemo(() => {
     const formatted = dynTestimonials
-      .filter((t) => t.category === "WebDev" || !t.category || t.category === "General")
       .map((t, idx) => ({
-        id: testimonials.length + idx + 1,
+        id: idx + 1,
         name: t.user.name,
         position: t.position || 'Verified Customer',
         company: t.company || 'User',
@@ -76,8 +75,9 @@ export default function ClientFeedback() {
         image: t.user.avatar || "/assets/WebDevelopment/Testimonial/photo/client1.webp",
         logo: null,
         text: t.content
-      }));
-    return [...testimonials, ...formatted];
+      }))
+      .slice(0, 3);
+    return formatted.length > 0 ? formatted : testimonials; // Fallback to dummy if empty to prevent crash
   }, [dynTestimonials]);
 
   useEffect(() => {

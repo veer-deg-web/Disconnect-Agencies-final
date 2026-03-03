@@ -47,6 +47,7 @@ interface FeedbackRecord {
   };
   content: string;
   isTestimonial: boolean;
+  isFeatured?: boolean;
   category?: Category | string;
   rating?: number;
   createdAt: string;
@@ -927,7 +928,7 @@ function FeedbackAdminSection() {
     setOk('');
 
     try {
-      const payload: any = { id, isTestimonial: !currentStatus };
+      const payload: any = { id, isFeatured: !currentStatus };
       if (newCategory) payload.category = newCategory;
 
       const res = await fetch('/api/admin/feedback', {
@@ -1040,7 +1041,7 @@ function FeedbackAdminSection() {
                         fetch('/api/admin/feedback', {
                           method: 'PUT',
                           headers: authHeader(),
-                          body: JSON.stringify({ id: f._id, isTestimonial: f.isTestimonial, category: newCat }),
+                          body: JSON.stringify({ id: f._id, isFeatured: f.isFeatured, category: newCat }),
                         }).catch(console.error);
                       }}
                     >
@@ -1048,6 +1049,7 @@ function FeedbackAdminSection() {
                       <option value="Home">Home</option>
                       <option value="Cloud">Cloud</option>
                       <option value="WebDev">WebDev</option>
+                      <option value="AppDev">AppDev</option>
                       <option value="SEO">SEO</option>
                       <option value="AI">AI</option>
                     </select>
@@ -1056,17 +1058,17 @@ function FeedbackAdminSection() {
                 <div className="adm-faq-actions" style={{ flexDirection: 'column', gap: '8px' }}>
                   <button 
                     className="adm-btn adm-btn--outline" 
-                    onClick={() => toggleTestimonial(f._id, f.isTestimonial, f.category)}
+                    onClick={() => toggleTestimonial(f._id, f.isFeatured || false, f.category)}
                     disabled={savingId === f._id}
-                    title={f.isTestimonial ? "Remove from Testimonials" : "Feature as Testimonial"}
+                    title={f.isFeatured ? "Remove from Testimonials" : "Feature as Testimonial"}
                     style={{ 
-                      borderColor: f.isTestimonial ? "rgba(34,197,94,0.5)" : "rgba(255,255,255,0.2)",
-                      color: f.isTestimonial ? "#86efac" : "inherit"
+                      borderColor: f.isFeatured ? "rgba(34,197,94,0.5)" : "rgba(255,255,255,0.2)",
+                      color: f.isFeatured ? "#86efac" : "inherit"
                     }}
                   >
                     {savingId === f._id ? (
                       <div className="adm-spinner" style={{ width: '14px', height: '14px', borderWidth: '2px' }} />
-                    ) : f.isTestimonial ? (
+                    ) : f.isFeatured ? (
                       <><CheckCircle2 size={13} /> Featured</>
                     ) : (
                       <><Circle size={13} /> Feature</>

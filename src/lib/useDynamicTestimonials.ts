@@ -12,16 +12,23 @@ export interface DynamicTestimonial {
     rating?: number;
     position?: string;
     company?: string;
+    createdAt: string;
 }
 
-export function useDynamicTestimonials() {
+export function useDynamicTestimonials(category?: string, isFeatured?: boolean) {
     const [testimonials, setTestimonials] = useState<DynamicTestimonial[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchTestimonials = async () => {
             try {
-                const res = await fetch('/api/feedback');
+                const params = new URLSearchParams();
+                if (category) params.append('category', category);
+                if (isFeatured !== undefined) params.append('isFeatured', isFeatured.toString());
+
+                const qs = params.toString() ? `?${params.toString()}` : '';
+                const res = await fetch(`/api/feedback${qs}`);
+
                 if (res.ok) {
                     const data = await res.json();
                     setTestimonials(data.testimonials || []);
@@ -34,7 +41,7 @@ export function useDynamicTestimonials() {
         };
 
         fetchTestimonials();
-    }, []);
+    }, [category, isFeatured]);
 
     return { testimonials, loading };
 }

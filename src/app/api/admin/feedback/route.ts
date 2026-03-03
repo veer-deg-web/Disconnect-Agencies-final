@@ -43,7 +43,7 @@ export async function PUT(req: Request) {
     try {
         verifyAdmin(req);
         const body = await req.json();
-        const { id, isTestimonial, category } = body;
+        const { id, isTestimonial, isFeatured, category } = body;
 
         if (!id || typeof isTestimonial !== 'boolean') {
             return NextResponse.json({ error: 'Missing or invalid fields' }, { status: 400 });
@@ -54,6 +54,9 @@ export async function PUT(req: Request) {
         const updateData: any = { isTestimonial };
         if (category !== undefined) {
             updateData.category = category;
+        }
+        if (isFeatured !== undefined) {
+            updateData.isFeatured = isFeatured;
         }
 
         const feedback = await Feedback.findByIdAndUpdate(

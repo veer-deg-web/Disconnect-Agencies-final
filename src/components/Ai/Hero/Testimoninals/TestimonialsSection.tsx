@@ -43,11 +43,10 @@ const testimonials = [
 ];
 
 export default function TestimonialsSection() {
-  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+  const { testimonials: dynTestimonials } = useDynamicTestimonials("AI", true);
 
   const finalTestimonials = useMemo(() => {
     const formatted = dynTestimonials
-      .filter((t) => t.category === "AI" || !t.category || t.category === "General")
       .map(t => ({
         text: t.content,
         name: t.user.name,
@@ -55,8 +54,9 @@ export default function TestimonialsSection() {
         avatar: t.user.avatar || "/assets/AIModels/Testimoninals/photo/Section.webp",
         rating: t.rating || 5,
         isVerified: t.user.isVerified
-      }));
-    return [...testimonials, ...formatted];
+      }))
+      .slice(0, 4);
+    return formatted.length > 0 ? formatted : testimonials; // Dummy fallback if empty
   }, [dynTestimonials]);
 
   return (

@@ -13,44 +13,15 @@ import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
 import "./TestimonialsSection.css";
 
-const testimonials = [
-  {
-    type: "wide",
-    tag: "Impressive Showcase!",
-    text:
-      "A rebrand is not typically done in a chaotic, archaic industry like ours, so their work has really transformed how we present ourselves.",
-    name: "Conor Bradley",
-    role: "Senior Marketing, Spotify",
-  },
-  { type: "square", name: "Adrian Lee", role: "President, Cezs Jsc" },
-  {
-    type: "wide",
-    tag: "Love to work on the next project",
-    text:
-      "The Agenz team truly amplified our messaging through their expert use of visuals.",
-    name: "Zlatan Amberland",
-    role: "PM at Dumar Inc",
-  },
-  { type: "square", name: "Maria Gonzales", role: "Founder, Nova Labs" },
-  {
-    type: "wide",
-    tag: "Amazing Team!",
-    text:
-      "Clear communication, strong execution, and an eye for detail that really sets them apart.",
-    name: "Oliver Smith",
-    role: "Product Lead, Stripe",
-  },
-  { type: "square", name: "James Carter", role: "CTO, Cloudify" },
-];
+// Feedback entirely fetched via API.
 
 export default function TestimonialsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
-  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+  const { testimonials: dynTestimonials } = useDynamicTestimonials("Cloud", true);
 
   const finalTestimonials = useMemo(() => {
     const formatted = dynTestimonials
-      .filter((t) => t.category === "Cloud" || !t.category || t.category === "General")
       .map(t => ({
         type: "wide",
         tag: "Customer Feedback",
@@ -59,8 +30,9 @@ export default function TestimonialsSection() {
         role: t.position && t.company ? `${t.position} @ ${t.company}` : 'Verified User',
         avatar: t.user.avatar,
         isVerified: t.user.isVerified
-      }));
-    return [...testimonials, ...formatted];
+      }))
+      .slice(0, 6);
+    return formatted; // Entirely dynamic
   }, [dynTestimonials]);
 
   /* ---------------- SCROLL-BASED REVEAL ---------------- */

@@ -56,8 +56,22 @@ export async function GET(req: Request) {
     try {
         await dbConnect();
 
+        const { searchParams } = new URL(req.url);
+        const category = searchParams.get('category');
+        const isFeatured = searchParams.get('isFeatured');
+
+        const query: any = { isTestimonial: true };
+
+        if (category && category !== 'All') {
+            query.category = category;
+        }
+
+        if (isFeatured === 'true') {
+            query.isFeatured = true;
+        }
+
         // Fetch only feedbacks that are approved as testimonials
-        const testimonials = await Feedback.find({ isTestimonial: true })
+        const testimonials = await Feedback.find(query)
             .populate('user', 'name avatar isVerified') // Populate user details
             .sort({ createdAt: -1 });
 

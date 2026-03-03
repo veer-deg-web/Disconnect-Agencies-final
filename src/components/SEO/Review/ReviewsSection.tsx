@@ -46,11 +46,10 @@ const reviews = [
 ];
 
 export default function ReviewsSection() {
-  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+  const { testimonials: dynTestimonials } = useDynamicTestimonials("SEO", true);
 
   const finalReviews = useMemo(() => {
     const formatted = dynTestimonials
-      .filter((t) => t.category === "SEO" || !t.category || t.category === "General")
       .map(t => ({
         name: t.user.name,
         role: t.position || 'Verified Customer',
@@ -58,8 +57,9 @@ export default function ReviewsSection() {
         avatar: t.user.avatar || "/assets/SEO/Review/photo/Section.webp",
         rating: `${t.rating || 10}/10`,
         quote: t.content
-      }));
-    return [...reviews, ...formatted];
+      }))
+      .slice(0, 4);
+    return formatted.length > 0 ? formatted : reviews; // Dummy fallback if empty
   }, [dynTestimonials]);
 
   return (

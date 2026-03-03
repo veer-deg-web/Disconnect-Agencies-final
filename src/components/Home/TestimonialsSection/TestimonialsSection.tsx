@@ -16,48 +16,7 @@ type Testimonial = {
   quote: string;
   isVerified?: boolean;
 };
-
-const leftColumn: Testimonial[] = [
-  {
-    name: "Ethan Carter",
-    role: "Wealth Advisor",
-    quote:
-      "I use it daily to fine-tune portfolio strategies—it saves hours and adds accuracy.",
-  },
-  {
-    name: "Sofia Miller",
-    role: "Freelance Designer",
-    quote:
-      "As someone new to finance, I felt empowered by how intuitive and intelligent this tool is.",
-  },
-  {
-    name: "Daniel Brooks",
-    role: "Private Investor",
-    quote:
-      "Accurate, automated, and surprisingly insightful—exactly what I needed.",
-  },
-];
-
-const rightColumn: Testimonial[] = [
-  {
-    name: "Isabelle Turner",
-    role: "Operations Director",
-    quote:
-      "Real-time tracking and transparency made our internal reporting far easier.",
-  },
-  {
-    name: "Noah Hayes",
-    role: "AI Engineer",
-    quote:
-      "The algorithms feel human—finally tech that understands market behavior.",
-  },
-  {
-    name: "Jenna Wallace",
-    role: "Startup Founder",
-    quote:
-      "Our team relies on this daily to make confident strategic decisions.",
-  },
-];
+// Arrays removed as everything is fetched via API now
 
 /* =======================
    ANIMATION CONFIG
@@ -98,26 +57,27 @@ export default function TestimonialsSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-120px" });
   const [startScroll, setStartScroll] = useState(false);
-  const { testimonials: dynTestimonials } = useDynamicTestimonials();
+  const { testimonials: dynTestimonials } = useDynamicTestimonials("Home", true);
 
   const { finalLeftColumn, finalRightColumn } = useMemo(() => {
     const formatted: Testimonial[] = dynTestimonials
-      .filter((t) => t.category === "Home" || !t.category || t.category === "General")
       .map((t) => ({
         name: t.user.name,
-        role: "Verified User",
+        role: t.position && t.company ? `${t.position} @ ${t.company}` : "Verified User",
         quote: t.content,
         isVerified: t.user.isVerified,
         avatar: t.user.avatar,
         position: t.position,
         company: t.company,
         rating: t.rating
-      }));
+      }))
+      .slice(0, 6); // Hard limit to 6 for 2-column layout (3 each)
 
     const mid = Math.ceil(formatted.length / 2);
+    // Duplicate the array just to ensure infinite scrolling marquee logic stays intact
     return {
-      finalLeftColumn: [...leftColumn, ...formatted.slice(0, mid)],
-      finalRightColumn: [...rightColumn, ...formatted.slice(mid)]
+      finalLeftColumn: formatted.slice(0, mid),
+      finalRightColumn: formatted.slice(mid)
     };
   }, [dynTestimonials]);
 
