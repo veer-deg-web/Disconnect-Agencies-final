@@ -20,6 +20,24 @@ import {
   CheckCircle2,
   User,
 } from 'lucide-react';
+import StoreProvider from '@/store/StoreProvider';
+import {
+  useGetFaqsQuery,
+  useAddFaqMutation,
+  useUpdateFaqMutation,
+  useDeleteFaqMutation,
+  useGetBookingSettingsQuery,
+  useUpdateBookingSettingsMutation,
+  useGetBookingsQuery,
+  useUpdateBookingMutation,
+  useDeleteBookingMutation,
+  useGetUsersQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+  useGetFeedbacksQuery,
+  useUpdateFeedbackMutation,
+  useDeleteFeedbackMutation
+} from '@/store/adminApi';
 import './Admin.css';
 
 /* ── Types ── */
@@ -225,86 +243,54 @@ function DeleteModal({
    FAQ SECTION
 ───────────────────────────────────────────── */
 function FaqSection({ category }: { category: 'all' | Category }) {
-  const [faqs, setFaqs] = useState<Faq[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
+  const { data, error: queryError, isLoading } = useGetFaqsQuery();
+  const [addFaq, { isLoading: isAdding }] = useAddFaqMutation();
+  const [updateFaq, { isLoading: isUpdating }] = useUpdateFaqMutation();
+  const [deleteFaqMutation, { isLoading: isDeleting }] = useDeleteFaqMutation();
+
+  const faqs: Faq[] = data?.faqs || [];
+  const loading = isLoading;
+  const saving = isAdding || isUpdating || isDeleting;
+  const errorObj = queryError as any;
+  const errorOut = errorObj?.data?.error || errorObj?.error || '';
+
+  const [errorLocal, setErrorLocal] = useState('');
   const [search, setSearch] = useState('');
   const [showAdd, setShowAdd] = useState(false);
   const [editFaq, setEditFaq] = useState<Faq | null>(null);
   const [deleteFaq, setDeleteFaq] = useState<Faq | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/admin/faq', { headers: authHeader() });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to load');
-      setFaqs(data.faqs);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to load FAQs');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { load(); }, [load]);
+  const error = errorOut || errorLocal;
 
   const handleAdd = async (body: { question: string; answer: string; category: Category }) => {
-    setSaving(true);
     try {
-      const res = await fetch('/api/admin/faq', {
-        method: 'POST', headers: authHeader(), body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to add');
-      setFaqs((prev) => [...prev, data.faq]);
+      setErrorLocal('');
+      await addFaq(body).unwrap();
       setShowAdd(false);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to add FAQ');
-    } finally {
-      setSaving(false);
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to add FAQ');
     }
   };
 
   const handleEdit = async (body: { question: string; answer: string; category: Category }) => {
     if (!editFaq) return;
-    setSaving(true);
     try {
-      const res = await fetch('/api/admin/faq', {
-        method: 'PUT', headers: authHeader(), body: JSON.stringify({ id: editFaq._id, ...body }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to update');
-      setFaqs((prev) => prev.map((f) => (f._id === editFaq._id ? data.faq : f)));
+      setErrorLocal('');
+      await updateFaq({ id: editFaq._id, ...body }).unwrap();
       setEditFaq(null);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to edit FAQ');
-    } finally {
-      setSaving(false);
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to edit FAQ');
     }
   };
 
   const handleDelete = async () => {
     if (!deleteFaq) return;
-    setSaving(true);
     try {
-      const res = await fetch('/api/admin/faq', {
-        method: 'DELETE', headers: authHeader(), body: JSON.stringify({ id: deleteFaq._id }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to delete');
-      setFaqs((prev) => prev.filter((f) => f._id !== deleteFaq._id));
+      setErrorLocal('');
+      await deleteFaqMutation(deleteFaq._id).unwrap();
       setDeleteFaq(null);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to delete FAQ');
-    } finally {
-      setSaving(false);
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to delete FAQ');
     }
   };
 
@@ -416,54 +402,42 @@ function FaqSection({ category }: { category: 'all' | Category }) {
    BOOKING ADMIN SECTION
 ───────────────────────────────────────────── */
 function BookingAdminSection() {
-  const [settings, setSettings] = useState<BookingSettings>({ meetingLink: '', adminEmails: [] });
+  const { data: settingsData, isLoading: isLoadingSettings } = useGetBookingSettingsQuery();
+  const { data: bookingsData, isLoading: isLoadingBookings } = useGetBookingsQuery();
+  
+  const [updateSettings, { isLoading: isSavingSettings }] = useUpdateBookingSettingsMutation();
+  const [updateBookingMutation, { isLoading: isUpdatingBooking }] = useUpdateBookingMutation();
+  const [deleteBookingMutation, { isLoading: isDeletingBooking }] = useDeleteBookingMutation();
+
+  const settings: BookingSettings = settingsData?.settings || { meetingLink: '', adminEmails: [] };
+  const bookings: BookingRecord[] = bookingsData?.bookings || [];
+
   const [draftLink, setDraftLink] = useState('');
   const [draftEmail, setDraftEmail] = useState('');
-  const [bookings, setBookings] = useState<BookingRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [bookingBusyId, setBookingBusyId] = useState<string | null>(null);
   const [remarksDraft, setRemarksDraft] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [ok, setOk] = useState('');
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    setOk('');
-
-    try {
-      const [settingsRes, bookingsRes] = await Promise.all([
-        fetch('/api/admin/booking-settings', { headers: authHeader() }),
-        fetch('/api/admin/bookings', { headers: authHeader() }),
-      ]);
-
-      const settingsData = await settingsRes.json();
-      const bookingsData = await bookingsRes.json();
-
-      if (!settingsRes.ok) throw new Error(settingsData.error || 'Failed to load booking settings');
-      if (!bookingsRes.ok) throw new Error(bookingsData.error || 'Failed to load bookings');
-
-      setSettings(settingsData.settings);
+  // Sync draft strings when data loads
+  useEffect(() => {
+    if (settingsData?.settings) {
       setDraftLink(settingsData.settings.meetingLink || '');
-      const safeBookings = (bookingsData.bookings || []) as BookingRecord[];
-      setBookings(safeBookings);
+    }
+  }, [settingsData]);
+
+  useEffect(() => {
+    if (bookingsData?.bookings) {
       const initialRemarks: Record<string, string> = {};
-      safeBookings.forEach((booking) => {
+      bookingsData.bookings.forEach((booking: BookingRecord) => {
         initialRemarks[booking._id] = booking.adminRemark || '';
       });
       setRemarksDraft(initialRemarks);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to load booking section');
-    } finally {
-      setLoading(false);
     }
-  }, []);
+  }, [bookingsData]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  const loading = isLoadingSettings || isLoadingBookings;
+  const saving = isSavingSettings || isUpdatingBooking || isDeletingBooking;
 
   const addAdminEmail = () => {
     const safe = draftEmail.trim().toLowerCase();
@@ -478,44 +452,31 @@ function BookingAdminSection() {
     }
 
     setError('');
-    setSettings((prev) => ({ ...prev, adminEmails: [...prev.adminEmails, safe] }));
+    // We update via local state mutation then sync to API
+    saveSettingsLocally({ ...settings, adminEmails: [...settings.adminEmails, safe] });
     setDraftEmail('');
   };
 
   const removeAdminEmail = (email: string) => {
-    setSettings((prev) => ({
-      ...prev,
-      adminEmails: prev.adminEmails.filter((value) => value !== email),
-    }));
+    saveSettingsLocally({ ...settings, adminEmails: settings.adminEmails.filter((value) => value !== email) });
+  };
+
+  const saveSettingsLocally = async (newSettings: BookingSettings) => {
+    setError('');
+    setOk('');
+    try {
+      await updateSettings(newSettings).unwrap();
+      setOk('Booking settings saved successfully.');
+    } catch (err: any) {
+      setError(err?.data?.error || err.message || 'Failed to save settings');
+    }
   };
 
   const saveSettings = async () => {
-    setSaving(true);
-    setError('');
-    setOk('');
-
-    try {
-      const res = await fetch('/api/admin/booking-settings', {
-        method: 'PUT',
-        headers: authHeader(),
-        body: JSON.stringify({
-          meetingLink: draftLink,
-          adminEmails: settings.adminEmails,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to save settings');
-
-      setSettings(data.settings);
-      setDraftLink(data.settings.meetingLink || '');
-      setOk('Booking settings saved successfully.');
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to save settings');
-    } finally {
-      setSaving(false);
-    }
+    saveSettingsLocally({
+      meetingLink: draftLink,
+      adminEmails: settings.adminEmails,
+    });
   };
 
   const updateBooking = async (
@@ -528,19 +489,10 @@ function BookingAdminSection() {
     setOk('');
 
     try {
-      const res = await fetch('/api/admin/bookings', {
-        method: 'PUT',
-        headers: authHeader(),
-        body: JSON.stringify({ id, ...payload }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to update booking');
-
-      setBookings((prev) => prev.map((b) => (b._id === id ? data.booking : b)));
+      await updateBookingMutation({ id, ...payload }).unwrap();
       setOk(successMessage);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to update booking');
+    } catch (err: any) {
+      setError(err?.data?.error || err.message || 'Failed to update booking');
     } finally {
       setBookingBusyId(null);
     }
@@ -564,19 +516,10 @@ function BookingAdminSection() {
     setError('');
     setOk('');
     try {
-      const res = await fetch('/api/admin/bookings', {
-        method: 'DELETE',
-        headers: authHeader(),
-        body: JSON.stringify({ id }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to delete booking');
-
-      setBookings((prev) => prev.filter((b) => b._id !== id));
+      await deleteBookingMutation(id).unwrap();
       setOk('Booking deleted.');
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to delete booking');
+    } catch (err: any) {
+      setError(err?.data?.error || err.message || 'Failed to delete booking');
     } finally {
       setBookingBusyId(null);
     }
@@ -725,76 +668,54 @@ function BookingAdminSection() {
    (SUSPEND, VERIFY, DELETE)
 ───────────────────────────────────────────── */
 function UserAdminSection() {
-  const [users, setUsers] = useState<UserRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: usersData, isLoading: loading, error: queryError } = useGetUsersQuery();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [deleteUserMutation, { isLoading: isDeleting }] = useDeleteUserMutation();
+
+  const users: UserRecord[] = usersData?.users || [];
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [error, setError] = useState('');
+  const [errorLocal, setErrorLocal] = useState('');
   const [search, setSearch] = useState('');
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/admin/users', { headers: authHeader() });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to load users');
-      console.log('Admin Panel - Loaded users:', data.users);
-      setUsers(data.users || []);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { load(); }, [load]);
+  const errorObj = queryError as any;
+  const errorOut = errorObj?.data?.error || errorObj?.error || '';
+  const error = errorOut || errorLocal;
 
   const toggleVerify = async (id: string, current: boolean) => {
     setBusyId(id);
+    setErrorLocal('');
     try {
-      const res = await fetch('/api/admin/users', {
-        method: 'PATCH',
-        headers: authHeader(),
-        body: JSON.stringify({ id, isVerified: !current }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setUsers(prev => prev.map(u => u._id === id ? data.user : u));
-    } catch (err: any) { alert(err.message); }
-    finally { setBusyId(null); }
+      await updateUser({ id, isVerified: !current }).unwrap();
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to toggle verification');
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const toggleSuspend = async (id: string, current: boolean) => {
     setBusyId(id);
+    setErrorLocal('');
     try {
-      const res = await fetch('/api/admin/users', {
-        method: 'PATCH',
-        headers: authHeader(),
-        body: JSON.stringify({ id, isSuspended: !current }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setUsers(prev => prev.map(u => u._id === id ? data.user : u));
-    } catch (err: any) { alert(err.message); }
-    finally { setBusyId(null); }
+      await updateUser({ id, isSuspended: !current }).unwrap();
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to toggle suspension');
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const deleteUser = async (id: string) => {
     if (!window.confirm('Delete this user permanently?')) return;
     setBusyId(id);
+    setErrorLocal('');
     try {
-      const res = await fetch('/api/admin/users', {
-        method: 'DELETE',
-        headers: authHeader(),
-        body: JSON.stringify({ id }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error);
-      }
-      setUsers(prev => prev.filter(u => u._id !== id));
-    } catch (err: any) { alert(err.message); }
-    finally { setBusyId(null); }
+      await deleteUserMutation(id).unwrap();
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to delete user');
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const filtered = users.filter(u => 
@@ -895,55 +816,33 @@ function UserAdminSection() {
    FEEDBACK ADMIN SECTION
 ───────────────────────────────────────────── */
 function FeedbackAdminSection() {
-  const [feedbacks, setFeedbacks] = useState<FeedbackRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: feedbackData, isLoading: loading, error: queryError } = useGetFeedbacksQuery();
+  const [updateFeedback, { isLoading: isUpdating }] = useUpdateFeedbackMutation();
+  const [deleteFeedbackMutation, { isLoading: isDeleting }] = useDeleteFeedbackMutation();
+
+  const feedbacks: FeedbackRecord[] = feedbackData?.feedbacks || [];
   const [savingId, setSavingId] = useState<string | null>(null);
-  const [error, setError] = useState('');
-  const [ok, setOk] = useState('');
+  const [errorLocal, setErrorLocal] = useState('');
+  const [okLocal, setOkLocal] = useState('');
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    
-    try {
-      const res = await fetch('/api/admin/feedback', { headers: authHeader() });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to load feedbacks');
-      setFeedbacks(data.feedbacks || []);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to load feedbacks');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  const errorObj = queryError as any;
+  const errorOut = errorObj?.data?.error || errorObj?.error || '';
+  const error = errorOut || errorLocal;
+  const ok = okLocal;
 
   const toggleTestimonial = async (id: string, currentStatus: boolean, newCategory?: string) => {
     setSavingId(id);
-    setError('');
-    setOk('');
+    setErrorLocal('');
+    setOkLocal('');
 
     try {
       const payload: any = { id, isFeatured: !currentStatus };
       if (newCategory) payload.category = newCategory;
 
-      const res = await fetch('/api/admin/feedback', {
-        method: 'PUT',
-        headers: authHeader(),
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to update feedback');
-      
-      setFeedbacks((prev) => prev.map((f) => (f._id === id ? data.feedback : f)));
-      setOk('Feedback updated successfully.');
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to update feedback');
+      await updateFeedback(payload).unwrap();
+      setOkLocal('Feedback updated successfully.');
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to update feedback');
     } finally {
       setSavingId(null);
     }
@@ -953,26 +852,22 @@ function FeedbackAdminSection() {
     if (!window.confirm('Are you sure you want to delete this feedback?')) return;
     
     setSavingId(id);
-    setError('');
-    setOk('');
+    setErrorLocal('');
+    setOkLocal('');
 
     try {
-      const res = await fetch('/api/admin/feedback', {
-        method: 'DELETE',
-        headers: authHeader(),
-        body: JSON.stringify({ id }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to delete feedback');
-      
-      setFeedbacks((prev) => prev.filter((f) => f._id !== id));
-      setOk('Feedback deleted successfully.');
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Failed to delete feedback');
+      await deleteFeedbackMutation(id).unwrap();
+      setOkLocal('Feedback deleted successfully.');
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to delete feedback');
     } finally {
       setSavingId(null);
     }
+  };
+
+  const updateCategoryInstantly = async (id: string, isFeatured: boolean | undefined, newCategory: string) => {
+      // Fire-and-forget background update by RTK query (cache gets naturally invalidated and repopulated)
+      updateFeedback({ id, isFeatured: !!isFeatured, category: newCategory }).catch(console.error);
   };
 
   return (
@@ -1034,15 +929,7 @@ function FeedbackAdminSection() {
                       value={f.category || 'General'}
                       onChange={(e) => {
                         const newCat = e.target.value;
-                        // Optimistically update local state & submit API req to persist new category quietly without changing testimonial state
-                        setFeedbacks(prev => prev.map(item => item._id === f._id ? { ...item, category: newCat } : item));
-                        
-                        // Fire-and-forget background update
-                        fetch('/api/admin/feedback', {
-                          method: 'PUT',
-                          headers: authHeader(),
-                          body: JSON.stringify({ id: f._id, isFeatured: f.isFeatured, category: newCat }),
-                        }).catch(console.error);
+                        updateCategoryInstantly(f._id, f.isFeatured, newCat);
                       }}
                     >
                       <option value="General">General</option>
@@ -1133,10 +1020,11 @@ export default function AdminClient() {
   if (!authorized) return null;
 
   return (
-    <div className="adm-root">
-      <header className="adm-header">
-        <div className="adm-header-left">
-          <div className="adm-header-logo">DA</div>
+    <StoreProvider>
+      <div className="adm-root">
+        <header className="adm-header">
+          <div className="adm-header-left">
+            <div className="adm-header-logo">DA</div>
           <span className="adm-header-title">Disconnect Agencies</span>
           <span className="adm-header-badge">Admin</span>
         </div>
@@ -1212,6 +1100,7 @@ export default function AdminClient() {
           {section === 'users' && <UserAdminSection />}
         </main>
       </div>
-    </div>
+      </div>
+    </StoreProvider>
   );
 }
