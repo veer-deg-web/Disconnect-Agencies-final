@@ -1,157 +1,107 @@
-interface GoogleTokenResponse {
-  access_token: string;
-}
+import { google } from 'googleapis';
+import { randomUUID } from 'crypto';
 
-interface CreateMeetInput {
-  customerName: string;
-  customerEmail: string;
-  serviceTitle: string;
-  date: Date;
-  timeSlot: string;
-  notes?: string;
-}
+/**
+ * Creates a Google Calendar event with a Google Meet link and returns the meet URL.
+ *
+ * Required env vars:
+ *   GOOGLE_SERVICE_ACCOUNT_EMAIL  – service account client_email
+ *   GOOGLE_PRIVATE_KEY            – service account private_key (with \n escaped as \\n in env)
+ *   GOOGLE_CALENDAR_ID            – usually the admin's Google Calendar email or 'primary'
+ */
+export async function createGoogleMeetLink(details: {
+  title: string;
+  dateIso: string;   // ISO date string e.g. "2025-06-15T00:00:00.000Z"
+  time: string;      // human-readable, e.g. "3:00 PM"
+  durationMinutes?: number;
+  guestEmail?: string;
+}): Promise<string> {
+  const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+  const calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary';
 
-interface CreatedMeet {
-  meetingLink: string;
-  eventId: string;
-}
-
-function parseTimeSlotTo24Hour(timeSlot: string): { hour: number; minute: number } {
-  const match = timeSlot.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if (!match) {
-    throw new Error('Invalid booking time format');
+  if (!serviceAccountEmail || !privateKey) {
+    throw new Error(
+      'Google service account credentials are not configured. ' +
+      'Add GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY to .env.local'
+    );
   }
 
-  let hour = Number(match[1]);
-  const minute = Number(match[2]);
-  const meridiem = match[3].toUpperCase();
-
-  if (hour === 12) hour = 0;
-  if (meridiem === 'PM') hour += 12;
-
-  return { hour, minute };
-}
-
-function buildDateTimeRange(date: Date, timeSlot: string, durationMinutes: number) {
-  const { hour, minute } = parseTimeSlotTo24Hour(timeSlot);
-
-  const start = new Date(date);
-  start.setHours(hour, minute, 0, 0);
-
-  const end = new Date(start.getTime() + durationMinutes * 60 * 1000);
-
-  return { start, end };
-}
-
-async function getGoogleAccessToken(): Promise<string> {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-
-  if (!clientId || !clientSecret || !refreshToken) {
-    throw new Error('Google OAuth credentials are missing');
-  }
-
-  const payload = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    refresh_token: refreshToken,
-    grant_type: 'refresh_token',
+  const auth = new google.auth.JWT({
+    email: serviceAccountEmail,
+    key: privateKey,
+    scopes: ['https://www.googleapis.com/auth/calendar'],
   });
 
-  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: payload,
-    cache: 'no-store',
-  });
+  const calendar = google.calendar({ version: 'v3', auth });
 
-  const tokenData = (await tokenRes.json()) as GoogleTokenResponse & { error?: string };
+  // Parse the date and time into a proper start/end datetime
+  const baseDate = new Date(details.dateIso);
 
-  if (!tokenRes.ok || !tokenData.access_token) {
-    throw new Error(tokenData.error || 'Unable to get Google access token');
-  }
+  // Parse time string like "3:00 PM" or "15:00"
+  const startDateTime = parseDateWithTime(baseDate, details.time);
+  const durationMs = (details.durationMinutes ?? 60) * 60 * 1000;
+  const endDateTime = new Date(startDateTime.getTime() + durationMs);
 
-  return tokenData.access_token;
-}
+  const requestId = randomUUID(); // unique per request, required by Google
 
-function hasGoogleMeetConfig(): boolean {
-  return Boolean(
-    process.env.GOOGLE_CLIENT_ID &&
-      process.env.GOOGLE_CLIENT_SECRET &&
-      process.env.GOOGLE_REFRESH_TOKEN &&
-      process.env.GOOGLE_CALENDAR_ID
-  );
-}
+  const attendees = details.guestEmail
+    ? [{ email: details.guestEmail }]
+    : [];
 
-export async function createGoogleMeetForBooking(input: CreateMeetInput): Promise<CreatedMeet | null> {
-  if (!hasGoogleMeetConfig()) {
-    return null;
-  }
-
-  const accessToken = await getGoogleAccessToken();
-  const calendarId = encodeURIComponent(process.env.GOOGLE_CALENDAR_ID as string);
-  const timezone = process.env.BOOKING_TIMEZONE || 'UTC';
-  const durationMinutes = Number(process.env.BOOKING_DURATION_MINUTES || '30');
-
-  const { start, end } = buildDateTimeRange(input.date, input.timeSlot, durationMinutes);
-
-  const body = {
-    summary: `Discovery Call - ${input.serviceTitle}`,
-    description: [
-      `Name: ${input.customerName}`,
-      `Email: ${input.customerEmail}`,
-      `Service: ${input.serviceTitle}`,
-      input.notes ? `Notes: ${input.notes}` : '',
-    ]
-      .filter(Boolean)
-      .join('\n'),
-    start: { dateTime: start.toISOString(), timeZone: timezone },
-    end: { dateTime: end.toISOString(), timeZone: timezone },
-    attendees: [{ email: input.customerEmail }],
-    conferenceData: {
-      createRequest: {
-        requestId: `booking-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        conferenceSolutionKey: { type: 'hangoutsMeet' },
+  const event = await calendar.events.insert({
+    calendarId,
+    conferenceDataVersion: 1,
+    requestBody: {
+      summary: details.title,
+      start: { dateTime: startDateTime.toISOString(), timeZone: 'UTC' },
+      end: { dateTime: endDateTime.toISOString(), timeZone: 'UTC' },
+      attendees,
+      conferenceData: {
+        createRequest: {
+          requestId,
+          conferenceSolutionKey: { type: 'hangoutsMeet' },
+        },
       },
     },
-  };
+  });
 
-  const res = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?conferenceDataVersion=1&sendUpdates=all`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      cache: 'no-store',
-    }
-  );
+  const meetLink = event.data.conferenceData?.entryPoints?.find(
+    (ep) => ep.entryPointType === 'video'
+  )?.uri;
 
-  const data = (await res.json()) as {
-    id?: string;
-    hangoutLink?: string;
-    conferenceData?: {
-      entryPoints?: { uri?: string; entryPointType?: string }[];
-    };
-    error?: { message?: string };
-  };
-
-  if (!res.ok) {
-    throw new Error(data?.error?.message || 'Failed to create Google Meet event');
+  if (!meetLink) {
+    throw new Error('Google Calendar returned no Meet link. Ensure Google Meet is enabled on the calendar.');
   }
 
-  const conferenceEntry = data.conferenceData?.entryPoints?.find(
-    (point) => point.entryPointType === 'video'
-  );
+  return meetLink;
+}
 
-  const meetingLink = data.hangoutLink || conferenceEntry?.uri;
+// ─── helpers ────────────────────────────────────────────────────────────────
 
-  if (!meetingLink || !data.id) {
-    throw new Error('Google event created without a meet link');
+function parseDateWithTime(base: Date, timeStr: string): Date {
+  const result = new Date(base);
+
+  // Handle "3:00 PM" / "3:00 AM"
+  const ampmMatch = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (ampmMatch) {
+    let hours = parseInt(ampmMatch[1], 10);
+    const minutes = parseInt(ampmMatch[2], 10);
+    const meridiem = ampmMatch[3].toUpperCase();
+    if (meridiem === 'PM' && hours !== 12) hours += 12;
+    if (meridiem === 'AM' && hours === 12) hours = 0;
+    result.setUTCHours(hours, minutes, 0, 0);
+    return result;
   }
 
-  return { meetingLink, eventId: data.id };
+  // Handle "15:00" 24-hour format
+  const h24Match = timeStr.match(/(\d{1,2}):(\d{2})/);
+  if (h24Match) {
+    result.setUTCHours(parseInt(h24Match[1], 10), parseInt(h24Match[2], 10), 0, 0);
+    return result;
+  }
+
+  // Fallback: 9 AM
+  result.setUTCHours(9, 0, 0, 0);
+  return result;
 }

@@ -30,14 +30,15 @@ export default function DetailsStep({ category, date, time, back }: DetailsStepP
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState("");
+  const [meetingLink, setMeetingLink] = useState("");
 
   // Pre-fill from localStorage if logged in
   useEffect(() => {
     const savedName = localStorage.getItem("userName");
     const savedUser = localStorage.getItem("user");
-    
+
     if (savedName) setName(savedName);
-    
+
     if (savedUser) {
       try {
         const userObj = JSON.parse(savedUser);
@@ -46,7 +47,9 @@ export default function DetailsStep({ category, date, time, back }: DetailsStepP
         console.error("Error parsing user from localStorage", e);
       }
     }
-  }, []);  // ERROR STATE
+  }, []);
+
+  // VALIDATION STATE
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
 
@@ -77,6 +80,7 @@ export default function DetailsStep({ category, date, time, back }: DetailsStepP
     setIsSubmitting(true);
     setSubmitError("");
     setSubmitSuccess("");
+    setMeetingLink("");
 
     try {
       const res = await fetch("/api/bookings/schedule", {
@@ -97,7 +101,8 @@ export default function DetailsStep({ category, date, time, back }: DetailsStepP
         throw new Error(data?.error || "Failed to schedule call");
       }
 
-      setSubmitSuccess("Call scheduled. Confirmation email has been sent.");
+      setMeetingLink(data.meetingLink || "");
+      setSubmitSuccess("Call scheduled! A confirmation email has been sent to you.");
       setName("");
       setEmail("");
       setNotes("");
@@ -156,8 +161,24 @@ export default function DetailsStep({ category, date, time, back }: DetailsStepP
           <p className="details-summary">
             You selected: {serviceData[category].title} • {formattedDate} • {time}
           </p>
+
           {submitError && <p className="details-error">{submitError}</p>}
-          {submitSuccess && <p className="details-success">{submitSuccess}</p>}
+
+          {submitSuccess && (
+            <div>
+              <p className="details-success">{submitSuccess}</p>
+              {meetingLink && (
+                <a
+                  href={meetingLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="details-meeting-link"
+                >
+                  🎥 Join Google Meet
+                </a>
+              )}
+            </div>
+          )}
 
           {/* ACTIONS */}
           <div className="details-actions">

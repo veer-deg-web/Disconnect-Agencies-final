@@ -6,6 +6,7 @@ type BookingStatus = 'pending' | 'completed';
 export interface IBooking extends Document {
   name: string;
   email: string;
+  phone: string;
   category: BookingCategory;
   serviceTitle: string;
   dateIso: string;
@@ -24,6 +25,7 @@ const BookingSchema = new Schema<IBooking>(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, lowercase: true },
+    phone: { type: String, default: '', trim: true },
     category: {
       type: String,
       enum: ['aimodels', 'appdev', 'webdev', 'uiux', 'seo', 'cloud'],
