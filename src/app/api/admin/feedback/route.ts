@@ -45,18 +45,20 @@ export async function PUT(req: Request) {
         const body = await req.json();
         const { id, isTestimonial, isFeatured, category } = body;
 
-        if (!id || typeof isTestimonial !== 'boolean') {
-            return NextResponse.json({ error: 'Missing or invalid fields' }, { status: 400 });
+        if (!id) {
+            return NextResponse.json({ error: 'Feedback ID is required' }, { status: 400 });
         }
 
         await dbConnect();
 
-        const updateData: any = { isTestimonial };
-        if (category !== undefined) {
-            updateData.category = category;
-        }
-        if (isFeatured !== undefined) {
-            updateData.isFeatured = isFeatured;
+        // Build only the fields that were explicitly sent
+        const updateData: any = {};
+        if (typeof isTestimonial === 'boolean') updateData.isTestimonial = isTestimonial;
+        if (typeof isFeatured === 'boolean') updateData.isFeatured = isFeatured;
+        if (category !== undefined) updateData.category = category;
+
+        if (Object.keys(updateData).length === 0) {
+            return NextResponse.json({ error: 'No fields to update' }, { status: 400 });
         }
 
         const feedback = await Feedback.findByIdAndUpdate(
@@ -78,6 +80,7 @@ export async function PUT(req: Request) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
+
 
 export async function DELETE(req: Request) {
     try {
