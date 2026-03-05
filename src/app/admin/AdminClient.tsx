@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Plus,
   Pencil,
@@ -19,6 +19,8 @@ import {
   Circle,
   CheckCircle2,
   User,
+  Settings,
+  Video,
 } from 'lucide-react';
 import StoreProvider from '@/store/StoreProvider';
 import {
@@ -42,7 +44,7 @@ import './Admin.css';
 
 /* ── Types ── */
 type Category = 'general' | 'cloud' | 'uiux' | 'webdev' | 'appdev' | 'aimodels' | 'seo';
-type AdminSection = 'faq' | 'bookings' | 'users';
+type AdminSection = 'faq' | 'bookings' | 'users' | 'settings';
 
 const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'general', label: 'General' },
@@ -979,16 +981,152 @@ function FeedbackAdminSection() {
   );
 }
 
+/* ─────────────────────────────────────────────
+   GOOGLE CALENDAR CONNECT SECTION
+───────────────────────────────────────────── */
+function GoogleCalendarSection() {
+  const [status, setStatus] = useState<'loading' | 'connected' | 'disconnected'>('loading');
+  const [email, setEmail] = useState('');
+  const [notice, setNotice] = useState('');
+
+  useEffect(() => {
+    fetch('/api/auth/google/status')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.connected) {
+          setStatus('connected');
+          setEmail(data.email || '');
+        } else {
+          setStatus('disconnected');
+        }
+      })
+      .catch(() => setStatus('disconnected'));
+  }, []);
+
+  const handleConnect = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must be logged in as admin.');
+      return;
+    }
+    // Pass JWT as a query param — window.location.href can't send headers,
+    // so the connect route reads the token from ?token= instead.
+    setNotice('Redirecting to Google…');
+    window.location.href = `/api/auth/google/connect?token=${encodeURIComponent(token)}`;
+  };
+
+
+  return (
+    <div>
+      <div className="adm-page-header">
+        <div>
+          <h1 className="adm-page-title">Google Calendar</h1>
+          <p className="adm-page-subtitle">Connect your Google account to generate real Meet links for every booking</p>
+        </div>
+      </div>
+
+      <div className="adm-booking-grid">
+        <section className="adm-settings-card">
+          <h2 className="adm-table-heading">Connection Status</h2>
+
+          <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+
+            {status === 'loading' && (
+              <div className="adm-loader">
+                <div className="adm-spinner" />
+                <div>Checking connection…</div>
+              </div>
+            )}
+
+            {status === 'connected' && (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '12px',
+                padding: '14px 18px',
+                background: 'rgba(34,197,94,0.1)',
+                border: '1px solid rgba(34,197,94,0.25)',
+                borderRadius: '10px',
+              }}>
+                <Video size={20} color="#86efac" />
+                <div>
+                  <div style={{ fontWeight: 600, color: '#86efac' }}>Connected ✓</div>
+                  <div style={{ fontSize: '13px', opacity: 0.7, marginTop: '2px' }}>{email}</div>
+                </div>
+              </div>
+            )}
+
+            {status === 'disconnected' && (
+              <div style={{
+                padding: '14px 18px',
+                background: 'rgba(239,68,68,0.08)',
+                border: '1px solid rgba(239,68,68,0.2)',
+                borderRadius: '10px',
+                color: 'rgba(252,165,165,0.9)',
+                fontSize: '14px',
+              }}>
+                ⚠ No Google account connected. Booking submissions will fail until you connect.
+              </div>
+            )}
+
+            {notice && (
+              <div style={{ fontSize: '13px', opacity: 0.6 }}>{notice}</div>
+            )}
+
+            <div>
+              <button
+                className="adm-btn adm-btn--primary"
+                onClick={handleConnect}
+                disabled={status === 'loading'}
+                style={{ gap: '8px' }}
+              >
+                <Video size={14} />
+                {status === 'connected' ? 'Reconnect Google Account' : 'Connect Google Account'}
+              </button>
+              <p style={{ marginTop: '10px', fontSize: '12px', opacity: 0.45, lineHeight: 1.6 }}>
+                You&apos;ll be redirected to Google to authorise calendar access.<br />
+                After approval you&apos;ll return here automatically.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="adm-settings-card">
+          <h2 className="adm-table-heading">How it works</h2>
+          <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '14px', lineHeight: 1.7, opacity: 0.75 }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <span style={{ flexShrink: 0, fontWeight: 700, color: 'rgba(147,197,253,0.9)' }}>1.</span>
+              <span>Click <strong>Connect Google Account</strong> and authorise calendar access.</span>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <span style={{ flexShrink: 0, fontWeight: 700, color: 'rgba(147,197,253,0.9)' }}>2.</span>
+              <span>Your refresh token is securely stored in the database.</span>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <span style={{ flexShrink: 0, fontWeight: 700, color: 'rgba(147,197,253,0.9)' }}>3.</span>
+              <span>Every booking automatically creates a Google Calendar event with a unique <code style={{ background: 'rgba(255,255,255,0.07)', padding: '1px 5px', borderRadius: '4px' }}>meet.google.com</code> link.</span>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <span style={{ flexShrink: 0, fontWeight: 700, color: 'rgba(147,197,253,0.9)' }}>4.</span>
+              <span>The Meet link is emailed to the client and stored in the booking record.</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════
    MAIN ADMIN CLIENT
 ═══════════════════════════════════════════════════════ */
 export default function AdminClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [userName, setUserName] = useState('');
   const [category, setCategory] = useState<'all' | Category>('all');
   const [section, setSection] = useState<AdminSection | 'feedback'>('faq');
   const [hydrated, setHydrated] = useState(false);
   const [authorized, setAuthorized] = useState(false);
+  const [googleBanner, setGoogleBanner] = useState('');
 
   useEffect(() => {
     const t = localStorage.getItem('token');
@@ -1006,6 +1144,27 @@ export default function AdminClient() {
     setAuthorized(true);
   }, [router]);
 
+  // Handle ?google= redirect from OAuth callback
+  useEffect(() => {
+    const g = searchParams.get('google');
+    if (g === 'connected') {
+      setSection('settings');
+      setGoogleBanner('✅ Google account connected successfully! Meet links will now be generated automatically.');
+    } else if (g === 'denied') {
+      setGoogleBanner('❌ Google authorisation was denied. Please try again.');
+    } else if (g === 'no_refresh_token') {
+      setGoogleBanner('⚠ Google did not return a refresh token. Please revoke access at myaccount.google.com/permissions and try again.');
+    } else if (g === 'error') {
+      setGoogleBanner('❌ An error occurred during Google authorisation. Check logs.');
+    }
+    if (g) {
+      // Clean the URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('google');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, [searchParams]);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -1016,8 +1175,23 @@ export default function AdminClient() {
     router.replace('/');
   };
 
-  if (!hydrated) return null;
-  if (!authorized) return null;
+  if (!hydrated || !authorized) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: '#0a0a12',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '16px',
+      }}>
+        <div className="adm-spinner" style={{ width: '36px', height: '36px', borderWidth: '3px' }} />
+        <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>Loading admin panel…</span>
+      </div>
+    );
+  }
+
 
   return (
     <StoreProvider>
@@ -1076,6 +1250,14 @@ export default function AdminClient() {
               {section === 'users' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
             </button>
 
+            <button
+              className={`adm-sidebar-item ${section === 'settings' ? 'active' : ''}`}
+              onClick={() => setSection('settings')}
+            >
+              <Settings size={15} /> Google Calendar
+              {section === 'settings' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+            </button>
+
             <div className="adm-sidebar-group-title">Categories</div>
             {CATEGORIES.map((c) => (
               <button
@@ -1094,10 +1276,25 @@ export default function AdminClient() {
         </aside>
 
         <main className="adm-main">
+          {googleBanner && (
+            <div
+              className={googleBanner.startsWith('✅') ? 'adm-ok-bar' : 'adm-error-bar'}
+              style={{ margin: '0 0 16px 0', borderRadius: '8px' }}
+            >
+              {googleBanner}
+              <button
+                onClick={() => setGoogleBanner('')}
+                style={{ marginLeft: '12px', background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6, color: 'inherit' }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
           {section === 'faq' && <FaqSection category={category} />}
           {section === 'bookings' && <BookingAdminSection />}
           {section === 'feedback' && <FeedbackAdminSection />}
           {section === 'users' && <UserAdminSection />}
+          {section === 'settings' && <GoogleCalendarSection />}
         </main>
       </div>
       </div>
