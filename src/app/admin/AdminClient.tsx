@@ -832,14 +832,23 @@ function FeedbackAdminSection() {
   const error = errorOut || errorLocal;
   const ok = okLocal;
 
-  const toggleTestimonial = async (id: string, currentStatus: boolean, newCategory?: string) => {
+  const toggleTestimonial = async (id: string, currentFeatured: boolean, isTestimonial: boolean | undefined, category?: string) => {
     setSavingId(id);
     setErrorLocal('');
     setOkLocal('');
 
     try {
-      const payload: any = { id, isFeatured: !currentStatus };
-      if (newCategory) payload.category = newCategory;
+      // Logic: If we are turning on "Featured", we MUST also turn on "isTestimonial" (approval).
+      // If we are turning off "Featured", we keep it as a "Testimonial" (approved) unless we want to unapprove it too.
+      // However, usually "Feature" in this UI means "Make it show up".
+      // Let's make it so toggling Featured to true also sets isTestimonial to true.
+      const newStatus = !currentFeatured;
+      const payload: any = { 
+        id, 
+        isFeatured: newStatus,
+        isTestimonial: newStatus ? true : isTestimonial // If featuring, definitely make it a testimonial.
+      };
+      if (category) payload.category = category;
 
       await updateFeedback(payload).unwrap();
       setOkLocal('Feedback updated successfully.');
@@ -867,9 +876,9 @@ function FeedbackAdminSection() {
     }
   };
 
-  const updateCategoryInstantly = async (id: string, isFeatured: boolean | undefined, newCategory: string) => {
+  const updateCategoryInstantly = async (id: string, isFeatured: boolean | undefined, isTestimonial: boolean | undefined, newCategory: string) => {
       // Fire-and-forget background update by RTK query (cache gets naturally invalidated and repopulated)
-      updateFeedback({ id, isFeatured: !!isFeatured, category: newCategory }).catch(console.error);
+      updateFeedback({ id, isFeatured: !!isFeatured, isTestimonial: !!isTestimonial, category: newCategory }).catch(console.error);
   };
 
   return (
@@ -931,7 +940,7 @@ function FeedbackAdminSection() {
                       value={f.category || 'General'}
                       onChange={(e) => {
                         const newCat = e.target.value;
-                        updateCategoryInstantly(f._id, f.isFeatured, newCat);
+                        updateCategoryInstantly(f._id, f.isFeatured, f.isTestimonial, newCat);
                       }}
                     >
                       <option value="General">General</option>
@@ -947,7 +956,7 @@ function FeedbackAdminSection() {
                 <div className="adm-faq-actions" style={{ flexDirection: 'column', gap: '8px' }}>
                   <button 
                     className="adm-btn adm-btn--outline" 
-                    onClick={() => toggleTestimonial(f._id, f.isFeatured || false, f.category)}
+                    onClick={() => toggleTestimonial(f._id, f.isFeatured || false, f.isTestimonial, f.category)}
                     disabled={savingId === f._id}
                     title={f.isFeatured ? "Remove from Testimonials" : "Feature as Testimonial"}
                     style={{ 
