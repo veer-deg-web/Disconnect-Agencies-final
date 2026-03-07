@@ -1,5 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "./macbook-scroll.css";
 import { MotionValue, motion, useScroll, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -25,6 +32,7 @@ import { IconCommand } from "@tabler/icons-react";
 import { IconCaretLeftFilled } from "@tabler/icons-react";
 import { IconCaretDownFilled } from "@tabler/icons-react";
 
+const KeySoundContext = createContext<() => void>(() => {});
 
 export const MacbookScroll = ({
   src,
@@ -67,58 +75,85 @@ export const MacbookScroll = ({
   const rotate = useTransform(scrollYProgress, [0.1, 0.12, 0.3], [-28, -28, 0]);
   const textTransform = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    const audio = new Audio("/sounds/sound.ogg");
+    audio.preload = "auto";
+    audio.volume = 0.1;
+    audioRef.current = audio;
+  }, []);
+
+  const playKeySound = useCallback(() => {
+    const base = audioRef.current;
+    if (!base) return;
+    try {
+      const click = base.cloneNode(true) as HTMLAudioElement;
+      click.volume = 0.1;
+      click.currentTime = 0;
+      click.play().catch(() => {});
+      window.setTimeout(() => {
+        click.pause();
+        click.src = "";
+      }, 120);
+    } catch {
+      // no-op
+    }
+  }, []);
 
   return (
-    <div
-      ref={ref}
-      className={cn("macbook-scroll-root", className)}
-    >
-      <motion.h2
-        style={{
-          translateY: textTransform,
-          opacity: textOpacity,
-        }}
-        className="macbook-scroll-title"
+    <KeySoundContext.Provider value={playKeySound}>
+      <div
+        ref={ref}
+        className={cn("macbook-scroll-root", className)}
       >
-        {title || (
-          <span>
-            This Macbook is built with Tailwindcss. <br /> No kidding.
-          </span>
-        )}
-      </motion.h2>
-      {/* Lid */}
-      <Lid
-        src={src}
-        scaleX={scaleX}
-        scaleY={scaleY}
-        rotate={rotate}
-        translate={translate}
-      />
-      {/* Base area */}
-      <div className="mbs-base">
-        {/* above keyboard bar */}
-        <div className="mbs-base-top">
-          <div className="mbs-base-notch" />
+        <motion.h2
+          style={{
+            translateY: textTransform,
+            opacity: textOpacity,
+          }}
+          className="macbook-scroll-title"
+        >
+          {title || (
+            <span>
+              This Macbook is built with Tailwindcss. <br /> No kidding.
+            </span>
+          )}
+        </motion.h2>
+        {/* Lid */}
+        <Lid
+          src={src}
+          scaleX={scaleX}
+          scaleY={scaleY}
+          rotate={rotate}
+          translate={translate}
+        />
+        {/* Base area */}
+        <div className="mbs-base">
+          {/* above keyboard bar */}
+          <div className="mbs-base-top">
+            <div className="mbs-base-notch" />
+          </div>
+          <div className="mbs-base-mid">
+            <div className="mbs-speaker-col">
+              <SpeakerGrid />
+            </div>
+            <div className="mbs-keypad-col">
+              <Keypad />
+            </div>
+            <div className="mbs-speaker-col">
+              <SpeakerGrid />
+            </div>
+          </div>
+          <Trackpad />
+          <div className="mbs-base-hinge" />
+          {showGradient && (
+            <div className="mbs-base-gradient"></div>
+          )}
+          {badge && <div className="mbs-badge">{badge}</div>}
         </div>
-        <div className="mbs-base-mid">
-          <div className="mbs-speaker-col">
-            <SpeakerGrid />
-          </div>
-          <div className="mbs-keypad-col">
-            <Keypad />
-          </div>
-          <div className="mbs-speaker-col">
-            <SpeakerGrid />
-          </div>
-        </div>
-        <Trackpad />
-        <div className="mbs-base-hinge" />
-        {showGradient && (
-          <div className="mbs-base-gradient"></div>
-        )}
-        {badge && <div className="mbs-badge">{badge}</div>}
       </div>
-    </div>
+    </KeySoundContext.Provider>
   );
 };
 
@@ -558,6 +593,15 @@ export const KBtn = ({
   childrenClassName?: string;
   backlit?: boolean;
 }) => {
+  const playKeySound = useContext(KeySoundContext);
+  const [isPressed, setIsPressed] = useState(false);
+
+  const handlePointerDown = () => {
+    setIsPressed(true);
+    playKeySound();
+  };
+  const handlePointerUp = () => setIsPressed(false);
+
   return (
     <div
       className={cn(
@@ -565,9 +609,15 @@ export const KBtn = ({
         backlit && "mbs-kbtn-backlit",
       )}
     >
-      <div
+      <button
+        type="button"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onPointerLeave={handlePointerUp}
         className={cn(
           "mbs-kbtn",
+          isPressed && "mbs-kbtn-pressed",
           className,
         )}
         style={{
@@ -584,7 +634,7 @@ export const KBtn = ({
         >
           {children}
         </div>
-      </div>
+      </button>
     </div>
   );
 };
