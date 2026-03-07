@@ -436,7 +436,7 @@ export default function AuthClient() {
           <div className="auth-form-panel auth-form-panel--signin">
             <div className="auth-form-inner">
               <div className="auth-form-header">
-                <h1>Welcome Back</h1>
+                <span className="auth-form-title">Welcome Back</span>
                 <p>Sign in to continue your journey</p>
               </div>
               <SignInPanel {...signInProps} />
@@ -447,7 +447,7 @@ export default function AuthClient() {
           <div className="auth-form-panel auth-form-panel--signup">
             <div className="auth-form-inner">
               <div className="auth-form-header">
-                <h1>Create Account</h1>
+                <span className="auth-form-title">Create Account</span>
                 <p>Fill in the details below to get started</p>
               </div>
               <SignUpPanel {...signUpProps} />

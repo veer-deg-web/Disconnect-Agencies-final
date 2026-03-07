@@ -87,7 +87,7 @@ export default function FeedbackPage() {
   return (
     <div className="fb-page-container">
       <div className="fb-card">
-        <h2 className="fb-title">Submit Detailed Feedback</h2>
+        <h1 className="fb-title">Submit Detailed Feedback</h1>
         <p className="fb-subtitle">Help us improve. Your feedback might be featured as a testimonial!</p>
 
         {status === "success" && <div className="fb-message success">{message}</div>}

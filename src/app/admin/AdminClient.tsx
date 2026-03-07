@@ -307,7 +307,7 @@ function FaqSection({ category }: { category: 'all' | Category }) {
     <div>
       <div className="adm-page-header">
         <div>
-          <h1 className="adm-page-title">FAQ Management</h1>
+          <span className="adm-page-title">FAQ Management</span>
           <p className="adm-page-subtitle">Add, edit or remove frequently asked questions</p>
         </div>
         <button className="adm-btn adm-btn--primary" onClick={() => setShowAdd(true)}>
@@ -531,7 +531,7 @@ function BookingAdminSection() {
     <div>
       <div className="adm-page-header">
         <div>
-          <h1 className="adm-page-title">Booking Management</h1>
+          <span className="adm-page-title">Booking Management</span>
           <p className="adm-page-subtitle">Manage meeting link, admin notifications, and scheduled calls</p>
         </div>
       </div>
@@ -729,7 +729,7 @@ function UserAdminSection() {
     <div>
       <div className="adm-page-header">
         <div>
-          <h1 className="adm-page-title">User Management</h1>
+          <span className="adm-page-title">User Management</span>
           <p className="adm-page-subtitle">Verify, suspend or delete application users</p>
         </div>
       </div>
@@ -876,7 +876,7 @@ function FeedbackAdminSection() {
     <div>
       <div className="adm-page-header">
         <div>
-          <h1 className="adm-page-title">Feedback & Testimonials</h1>
+          <span className="adm-page-title">Feedback & Testimonials</span>
           <p className="adm-page-subtitle">Manage user feedback and feature them as testimonials</p>
         </div>
       </div>
@@ -1020,7 +1020,7 @@ function GoogleCalendarSection() {
     <div>
       <div className="adm-page-header">
         <div>
-          <h1 className="adm-page-title">Google Calendar</h1>
+          <span className="adm-page-title">Google Calendar</span>
           <p className="adm-page-subtitle">Connect your Google account to generate real Meet links for every booking</p>
         </div>
       </div>
@@ -1127,6 +1127,16 @@ export default function AdminClient() {
   const [hydrated, setHydrated] = useState(false);
   const [authorized, setAuthorized] = useState(false);
   const [googleBanner, setGoogleBanner] = useState('');
+  const pageTitle =
+    section === 'faq'
+      ? 'FAQ Management'
+      : section === 'bookings'
+      ? 'Booking Management'
+      : section === 'feedback'
+      ? 'Feedback & Testimonials'
+      : section === 'users'
+      ? 'User Management'
+      : 'Google Calendar';
 
   useEffect(() => {
     const t = localStorage.getItem('token');
@@ -1276,6 +1286,7 @@ export default function AdminClient() {
         </aside>
 
         <main className="adm-main">
+          <h1 className="adm-sr-only">{pageTitle}</h1>
           {googleBanner && (
             <div
               className={googleBanner.startsWith('✅') ? 'adm-ok-bar' : 'adm-error-bar'}
