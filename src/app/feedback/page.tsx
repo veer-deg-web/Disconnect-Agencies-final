@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Keyboard } from "@/components/ui/keyboard";
 import "./Feedback.css";
 
 const CATEGORIES = ["Home", "AI", "Cloud", "SEO", "WebDev"];
@@ -86,83 +87,91 @@ export default function FeedbackPage() {
 
   return (
     <div className="fb-page-container">
-      <div className="fb-card">
-        <h1 className="fb-title">Submit Detailed Feedback</h1>
-        <p className="fb-subtitle">Help us improve. Your feedback might be featured as a testimonial!</p>
+      <div className="fb-content">
+        <div className="fb-card">
+          <h1 className="fb-title">Submit Detailed Feedback</h1>
+          <p className="fb-subtitle">Help us improve. Your feedback might be featured as a testimonial!</p>
 
-        {status === "success" && <div className="fb-message success">{message}</div>}
-        {status === "error" && <div className="fb-message error">{message}</div>}
+          {status === "success" && <div className="fb-message success">{message}</div>}
+          {status === "error" && <div className="fb-message error">{message}</div>}
 
-        <form className="fb-form" onSubmit={handleSubmit}>
-          {/* Category */}
-          <div className="fb-field">
-            <label>Category</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
+          <div className="fb-desktop-layout">
+            <form className="fb-form" onSubmit={handleSubmit}>
+              {/* Category */}
+              <div className="fb-field">
+                <label>Category</label>
+                <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
 
-          {/* Rating */}
-          <div className="fb-field">
-            <label>Rating - <strong>{rating} Stars</strong></label>
-            <div style={{ display: 'flex', gap: '8px', fontSize: '24px', cursor: 'pointer', margin: '8px 0' }}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  onClick={() => setRating(star)}
-                  onMouseEnter={() => setHoverRating(star)}
-                  onMouseLeave={() => setHoverRating(0)}
-                  style={{
-                    color: (hoverRating || rating) >= star ? "#fbbf24" : "rgba(255,255,255,0.2)",
-                    transition: "color 0.2s"
-                  }}
-                >
-                  ★
-                </span>
-              ))}
+              {/* Rating */}
+              <div className="fb-field">
+                <label>Rating - <strong>{rating} Stars</strong></label>
+                <div style={{ display: 'flex', gap: '8px', fontSize: '24px', cursor: 'pointer', margin: '8px 0' }}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      style={{
+                        color: (hoverRating || rating) >= star ? "#fbbf24" : "rgba(255,255,255,0.2)",
+                        transition: "color 0.2s"
+                      }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Position & Company Row */}
+              <div className="fb-row">
+                <div className="fb-field">
+                  <label>Your Position (e.g. CEO, Developer)</label>
+                  <input 
+                    type="text" 
+                    placeholder="CEO" 
+                    value={position} 
+                    onChange={(e) => setPosition(e.target.value)} 
+                    required 
+                  />
+                </div>
+                <div className="fb-field">
+                  <label>Company Name</label>
+                  <input 
+                    type="text" 
+                    placeholder="Tech Corp" 
+                    value={company} 
+                    onChange={(e) => setCompany(e.target.value)} 
+                    required 
+                  />
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="fb-field">
+                <label>Your Feedback</label>
+                <textarea 
+                  rows={5}
+                  placeholder="What are your thoughts?" 
+                  value={content} 
+                  onChange={(e) => setContent(e.target.value)} 
+                  required 
+                />
+              </div>
+
+              <button type="submit" className="fb-submit-btn" disabled={isSubmitting || !content.trim()}>
+                {isSubmitting ? "Submitting..." : "Submit Feedback"}
+              </button>
+            </form>
+
+            <div className="fb-keyboard-inline">
+              <Keyboard enableSound showPreview className="fb-keyboard" />
             </div>
           </div>
-
-          {/* Position & Company Row */}
-          <div className="fb-row">
-            <div className="fb-field">
-              <label>Your Position (e.g. CEO, Developer)</label>
-              <input 
-                type="text" 
-                placeholder="CEO" 
-                value={position} 
-                onChange={(e) => setPosition(e.target.value)} 
-                required 
-              />
-            </div>
-            <div className="fb-field">
-              <label>Company Name</label>
-              <input 
-                type="text" 
-                placeholder="Tech Corp" 
-                value={company} 
-                onChange={(e) => setCompany(e.target.value)} 
-                required 
-              />
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="fb-field">
-            <label>Your Feedback</label>
-            <textarea 
-              rows={4} 
-              placeholder="What are your thoughts?" 
-              value={content} 
-              onChange={(e) => setContent(e.target.value)} 
-              required 
-            />
-          </div>
-
-          <button type="submit" className="fb-submit-btn" disabled={isSubmitting || !content.trim()}>
-            {isSubmitting ? "Submitting..." : "Submit Feedback"}
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   );
