@@ -29,6 +29,10 @@ export const metadata: Metadata = {
   title: "UI/UX Design Services | Disconnect Agencies",
   description:
     "User-focused UI/UX design services with research, wireframes, visual design, and conversion-driven experiences.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: { canonical: "/Uiux" },
   openGraph: {
     title: "UI/UX Design Services | Disconnect Agencies",

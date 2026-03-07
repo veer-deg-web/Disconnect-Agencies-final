@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   title: "SEO Services | Disconnect Agencies",
   description:
     "Technical SEO, on-page optimization, content strategy, and growth-focused search performance services.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: { canonical: "/SEO" },
   openGraph: {
     title: "SEO Services | Disconnect Agencies",

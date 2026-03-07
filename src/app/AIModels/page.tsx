@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "AI Models & Automation Services | Disconnect Agencies",
   description:
     "Custom AI models, workflow automation, and intelligent systems built to improve business efficiency and scale.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: { canonical: "/AIModels" },
   openGraph: {
     title: "AI Models & Automation Services | Disconnect Agencies",

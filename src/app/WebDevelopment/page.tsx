@@ -30,6 +30,10 @@ export const metadata: Metadata = {
   title: "Web Development Services | Disconnect Agencies",
   description:
     "Reliable and conversion-focused web development services for modern businesses, from design to launch.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: { canonical: "/WebDevelopment" },
   openGraph: {
     title: "Web Development Services | Disconnect Agencies",

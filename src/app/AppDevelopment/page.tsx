@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "App Development Services | Disconnect Agencies",
   description:
     "Design, development, launch, and scaling support for high-performance mobile and web applications.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: { canonical: "/AppDevelopment" },
   openGraph: {
     title: "App Development Services | Disconnect Agencies",

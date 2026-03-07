@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "Cloud Services | Disconnect Agencies",
   description:
     "Cloud architecture, migration, optimization, and scalable infrastructure services for modern products.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: { canonical: "/Cloud" },
   openGraph: {
     title: "Cloud Services | Disconnect Agencies",
