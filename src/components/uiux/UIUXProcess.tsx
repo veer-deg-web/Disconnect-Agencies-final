@@ -13,7 +13,7 @@ export default function UIUXProcess() {
   return (
     <>
       {/* MOBILE-ONLY RULES (344px SAFE) */}
-      <style>
+      <style suppressHydrationWarning>
         {`
           @media (max-width: 768px) {
             .process-wrapper {
@@ -211,7 +211,7 @@ export default function UIUXProcess() {
       </section>
 
       {/* PULSE */}
-      <style jsx>{`
+      <style jsx suppressHydrationWarning>{`
         @keyframes pulse {
           0% {
             opacity: 0.4;

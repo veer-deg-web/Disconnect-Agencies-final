@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import "./HeroSection.css";
+import DynamicCity from "@/components/DynamicCity";
 
 export default function HeroSection() {
   return (
@@ -62,9 +63,9 @@ export default function HeroSection() {
         >
           © 2025
           <br />
-          Agenz is a simple team uses aesthetic
+          Scalable cloud systems for teams in <DynamicCity fallback="your city" />
           <br />
-          and minimal
+          built to ship faster
         </motion.div>
 
         

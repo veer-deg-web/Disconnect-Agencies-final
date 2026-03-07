@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import "./HeroSection.css";
+import DynamicCity from "@/components/DynamicCity";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -95,7 +96,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 2.1, ease: easeOut }}
         >
           <p className="hero-subtext">
-            Xtract brings AI automation to your fingertips &amp; streamlines tasks.
+            Xtract brings AI automation to teams in <DynamicCity fallback="your city" /> and streamlines daily tasks.
           </p>
 
           <div className="hero-actions">

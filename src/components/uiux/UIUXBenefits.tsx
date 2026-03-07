@@ -48,7 +48,7 @@ export default function UIUXProcess() {
   return (
     <>
       {/* MOBILE OVERRIDES — 344px SAFE */}
-      <style>
+      <style suppressHydrationWarning>
         {`
           @media (max-width: 768px) {
             .content-grid {
@@ -307,7 +307,7 @@ export default function UIUXProcess() {
         </div>
 
         {/* PULSE */}
-        <style jsx>{`
+        <style jsx suppressHydrationWarning>{`
           @keyframes pulse {
             0% {
               opacity: 0.4;

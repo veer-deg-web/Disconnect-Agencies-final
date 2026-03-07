@@ -4,6 +4,7 @@ import { motion, Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
 import './Hero.css';
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
+import DynamicCity from "@/components/DynamicCity";
 
 
 
@@ -104,7 +105,7 @@ export default function Hero() {
 
         {/* Subtitle */}
         <motion.p className="hero-webdev__subtitle" variants={item}>
-          Tool that turn bold ideas into interactive, visually striking
+          Tools that help teams in <DynamicCity fallback="your city" /> turn bold ideas into interactive, visually striking
           websites that capture attention and keep people coming back.
         </motion.p>
 

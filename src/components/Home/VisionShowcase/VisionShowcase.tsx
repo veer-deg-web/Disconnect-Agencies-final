@@ -4,6 +4,7 @@ import Cubes from "@/components/Shared/Cubes/Cubes";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import { showcaseLogos } from "@/Data/showcaseLogos";
+import DynamicCity from "@/components/DynamicCity";
 
 
 export default function VisionShowcase() {
@@ -41,8 +42,9 @@ export default function VisionShowcase() {
   disabled={false}
 /></h2>
           <p>
-            We're the full-service development agency that handles design,
-            engineering, and launch end to end.
+            We&apos;re the full-service development agency helping teams in{" "}
+            <DynamicCity fallback="your city" /> handle design, engineering,
+            and launch end to end.
           </p>
         </div>
 

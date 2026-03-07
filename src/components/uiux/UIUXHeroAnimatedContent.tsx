@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
+import DynamicCity from "@/components/DynamicCity";
 
 export default function UIUXHeroAnimatedContent() {
   return (
@@ -126,7 +127,7 @@ export default function UIUXHeroAnimatedContent() {
         >
           limitless,
         </span>{" "}
-        lightning fast design.
+        lightning fast design for teams in <DynamicCity fallback="your city" />.
       </motion.p>
 
       {/* ================= CTA ================= */}

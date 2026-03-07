@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import ReviewsMarquee from "./ReviewsMarquee";
 import "./Hero.css";
+import DynamicCity from "@/components/DynamicCity";
 
 export default function HeroSection() {
   return (
@@ -35,7 +36,7 @@ the Clutter`}
         </motion.h1>
 
         <p>
-          We help brands disconnect from digital chaos and reconnect with
+          We help brands in <DynamicCity fallback="your city" /> disconnect from digital chaos and reconnect with
           clarity, visibility, and real results.
         </p>
 

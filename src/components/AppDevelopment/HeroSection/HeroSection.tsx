@@ -9,6 +9,7 @@ import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import Hyperspeed from "@/components/Shared/Hyperspeed/Hyperspeed";
 import SplashCursor from "@/components/SplashCursor";
 import { showcaseLogos } from "@/Data/showcaseLogos";
+import DynamicCity from "@/components/DynamicCity";
 
 export default function HeroSection() {
   const [loaded, setLoaded] = useState(false);
@@ -97,7 +98,7 @@ export default function HeroSection() {
         </div>
 
         <p className="hero__subtitle">
-          We help you design, build, and scale modern mobile and web applications.
+          We help teams in <DynamicCity fallback="your city" /> design, build, and scale modern mobile and web applications.
         </p>
 
         <div className="hero__cta">
