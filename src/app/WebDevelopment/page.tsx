@@ -10,21 +10,9 @@ import IntegrationLogosSection from "@/components/WebDevelopment/IntegrationLogo
 import PricingSection from "@/components/WebDevelopment/PricingSection/PricingSection";
 import SupportedByAI from "@/components/WebDevelopment/SupportedByAi/SupportedByAi";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
-import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiTailwindcss,
-} from "react-icons/si"; 
+import { showcaseLogos } from "@/Data/showcaseLogos";
 import ClientFeedback from "@/components/WebDevelopment/Testimonial/ClientFeedback";
 import FeatureSection from "@/components/WebDevelopment/FeatureSection/FeatureSection";
-
-const heroLogos = [
-  { node: <SiReact />, title: "React" },
-  { node: <SiNextdotjs />, title: "Next.js" },
-  { node: <SiTypescript />, title: "TypeScript" },
-  { node: <SiTailwindcss />, title: "Tailwind CSS" },
-];
 
 export const metadata: Metadata = {
   title: "Web Development Services | Disconnect Agencies",
@@ -69,7 +57,7 @@ export default function WebDevelopmentPage() {
       />
       <Hero />
        <section className="uiux-marquee-section">
-    <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
+    <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200}/>
   </section>
       <SupportSection />
 

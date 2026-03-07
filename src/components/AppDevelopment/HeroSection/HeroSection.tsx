@@ -2,25 +2,13 @@
 
 import { useEffect, useState, useMemo } from "react";
 import "./HeroSection.css";
-import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiTailwindcss,
-} from "react-icons/si";
 
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import Hyperspeed from "@/components/Shared/Hyperspeed/Hyperspeed";
 import SplashCursor from "@/components/SplashCursor";
-
-const heroLogos = [
-  { node: <SiReact />, title: "React" },
-  { node: <SiNextdotjs />, title: "Next.js" },
-  { node: <SiTypescript />, title: "TypeScript" },
-  { node: <SiTailwindcss />, title: "Tailwind CSS" },
-];
+import { showcaseLogos } from "@/Data/showcaseLogos";
 
 export default function HeroSection() {
   const [loaded, setLoaded] = useState(false);
@@ -120,7 +108,7 @@ export default function HeroSection() {
       {/* ================= LOGOS ================= */}
 
     </section><div className="logos-below-phone">
-      <UIUXShowcaseLogos logos={heroLogos} iconGap={200} />
+      <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200} />
     </div></>
   );
 }

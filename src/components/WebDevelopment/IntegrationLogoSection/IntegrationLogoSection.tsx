@@ -2,32 +2,14 @@
 
 import { motion } from "framer-motion";
 import LogoLoop from "@/components/Shared/LogoLoop/LogoLoop";
-import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiTailwindcss,
-} from "react-icons/si";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
+import { showcaseLogos } from "@/Data/showcaseLogos";
 
 /* =======================
    DATA
 ======================= */
 
-const techLogos = [
-  { node: <SiReact />, title: "React", href: "https://react.dev" },
-  { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
-  {
-    node: <SiTypescript />,
-    title: "TypeScript",
-    href: "https://www.typescriptlang.org",
-  },
-  {
-    node: <SiTailwindcss />,
-    title: "Tailwind CSS",
-    href: "https://tailwindcss.com",
-  },
-];
+const techLogos = showcaseLogos;
 
 /* =======================
    COMPONENT

@@ -1,13 +1,8 @@
 "use client";
 
 import LogoLoop from "@/components/Shared/LogoLoop/LogoLoop";
+import type { LogoItem } from "@/components/Shared/LogoLoop/LogoLoop";
 import React, { useEffect, useMemo, useState } from "react";
-
-export type LogoItem = {
-  node: React.ReactNode;
-  title: string;
-  href?: string;
-};
 
 type UIUXShowcaseLogosProps = {
   title?: string;

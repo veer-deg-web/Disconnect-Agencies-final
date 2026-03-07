@@ -3,18 +3,7 @@
 import Cubes from "@/components/Shared/Cubes/Cubes";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
-import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiTailwindcss,
-} from "react-icons/si"; 
-const heroLogos = [
-  { node: <SiReact />, title: "React" },
-  { node: <SiNextdotjs />, title: "Next.js" },
-  { node: <SiTypescript />, title: "TypeScript" },
-  { node: <SiTailwindcss />, title: "Tailwind CSS" },
-];
+import { showcaseLogos } from "@/Data/showcaseLogos";
 
 
 export default function VisionShowcase() {
@@ -28,7 +17,7 @@ export default function VisionShowcase() {
        
 
        <UIUXShowcaseLogos
-  logos={heroLogos}
+  logos={showcaseLogos}
   title="Trusted By Top Innovative Teams"
   logoSize={60}
   iconGap={200}

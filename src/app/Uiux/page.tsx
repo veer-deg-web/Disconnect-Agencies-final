@@ -11,19 +11,8 @@ import UIUXTutorials from "@/components/uiux/UIUXTutorials";
 import Footer from "@/components/Shared/Footer/Footer";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import CTASection from "@/components/Shared/CTASection/CTASection";
-import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiTailwindcss,
-} from "react-icons/si"; 
-
-const heroLogos = [
-  { node: <SiReact />, title: "React" },
-  { node: <SiNextdotjs />, title: "Next.js" },
-  { node: <SiTypescript />, title: "TypeScript" },
-  { node: <SiTailwindcss />, title: "Tailwind CSS" },
-];
+import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
+import { showcaseLogos } from "@/Data/showcaseLogos";
 
 export const metadata: Metadata = {
   title: "UI/UX Design Services | Disconnect Agencies",
@@ -81,7 +70,7 @@ export default function UIUXPage() {
       <section id="pricing">
         <UIUXPricing />
       </section>
-       <UIUXShowcaseLogos logos={heroLogos} iconGap={200}/>
+       <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200}/>
       <UIUXTutorials />
       <section id="faq">
       <FAQSection
