@@ -49,83 +49,39 @@
 
 .visual-wrapper {
   position: relative;
-  max-width: 1100px;
+  max-width: 1380px;
   margin: 0 auto;
-  height: 640px;
+  min-height: 620px;
   isolation: isolate;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
-/* ================= PHONE ================= */
-
-.phone {
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  transform: translate(-50%, -50%);
-  width: 360px;
-  z-index: 1;
+.product-macbook-scroll {
+  width: 100%;
+  margin-top: -10px;
+  min-height: 132vh !important;
+  transform: scale(1.12) !important;
+  transform-origin: top center;
 }
 
-/* ================= FLOATING CARDS ================= */
-
-.card-left {
-  position: absolute;
-  top: -80px;
-  left: 0;
-  z-index: 10;
-}
-
-.card-right {
-  position: absolute;
-  top: 0;
-  right: 150px;
-  z-index: 10;
-}
-
-.card-bottom {
-  position: absolute;
-  right: 50px;
-  bottom: 0;
-  z-index: 10;
-}
-
-.card-left>div,
-.card-right>div,
-.card-bottom>div {
-  transform-origin: center;
+.macbook-badge {
+  height: 40px;
+  width: 40px;
+  transform: rotate(-12deg);
 }
 
 /* ================= LARGE TABLET ================= */
 
 @media (max-width: 1280px) {
   .visual-wrapper {
-    max-width: 980px;
-    height: 600px;
+    min-height: 560px;
   }
 
-  .phone {
-    width: 320px;
-    top: 48%;
-  }
-
-  .card-right {
-    right: 90px;
-  }
-
-  .card-bottom {
-    right: 16px;
-  }
-
-  .card-left>div {
-    transform: scale(0.9);
-  }
-
-  .card-right>div {
-    transform: scale(0.9);
-  }
-
-  .card-bottom>div {
-    transform: scale(0.92);
+  .product-macbook-scroll {
+    min-height: 118vh !important;
+    transform: scale(1.04) !important;
   }
 }
 
@@ -133,25 +89,16 @@
 
 @media (max-width: 1024px) {
   .visual-wrapper {
-    transform: scale(0.8);
-    transform-origin: top center;
-    height: 520px;
+    min-height: 480px;
   }
 
   .product-visuals__content {
     margin-bottom: 40px;
   }
 
-  .card-left>div {
-    transform: scale(0.8);
-  }
-
-  .card-right>div {
-    transform: scale(0.8);
-  }
-
-  .card-bottom>div {
-    transform: scale(0.84);
+  .product-macbook-scroll {
+    min-height: 98vh !important;
+    transform: scale(0.92) !important;
   }
 }
 
@@ -167,43 +114,12 @@
   }
 
   .visual-wrapper {
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 22px;
-    transform: none;
+    min-height: auto;
   }
 
-  .phone {
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
-    width: min(280px, 72vw);
-    margin: 0 auto;
-  }
-
-  .card-left,
-  .card-right,
-  .card-bottom {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .card-left>div,
-  .card-right>div,
-  .card-bottom>div {
-    width: min(92%, 360px);
-    max-width: 92%;
-    transform: scale(0.86);
-  }
-
-  .card-bottom>div {
-    width: min(92%, 390px);
+  .product-macbook-scroll {
+    min-height: 86vh !important;
+    transform: scale(0.82) !important;
   }
 }
 
@@ -219,43 +135,14 @@
     margin-bottom: 40px;
   }
 
-  .visual-wrapper {
-    gap: 24px;
-  }
-
-  .phone {
-    width: 240px;
-  }
-
-  .card-left>div,
-  .card-right>div,
-  .card-bottom>div {
-    width: min(90%, 330px);
-    max-width: 90%;
-    transform: scale(0.8);
-  }
-
-  .card-bottom>div {
-    width: min(90%, 350px);
+  .product-macbook-scroll {
+    margin-top: 0;
+    min-height: 78vh !important;
+    transform: scale(0.72) !important;
   }
 }
 
 /* ================= 344 SAFE ================= */
-
-@media (max-width: 360px) {
-
-  .phone {
-    width: 210px;
-  }
-
-  .card-left>div,
-  .card-right>div,
-  .card-bottom>div {
-    width: min(86%, 300px);
-    max-width: 86%;
-    transform: scale(0.72);
-  }
-}
 
 /* ================================================= */
 /* ================= WE HELP SECTION =============== */
