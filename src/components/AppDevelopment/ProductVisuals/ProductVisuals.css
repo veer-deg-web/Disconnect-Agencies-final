@@ -51,7 +51,7 @@
   position: relative;
   max-width: 1380px;
   margin: 0 auto;
-  min-height: 620px;
+  min-height: 560px;
   isolation: isolate;
   display: flex;
   align-items: flex-start;
@@ -61,8 +61,8 @@
 .product-macbook-scroll {
   width: 100%;
   margin-top: -10px;
-  min-height: 132vh !important;
-  transform: scale(1.12) !important;
+  min-height: 136vh !important;
+  transform: scale(1.18) !important;
   transform-origin: top center;
 }
 
@@ -76,12 +76,12 @@
 
 @media (max-width: 1280px) {
   .visual-wrapper {
-    min-height: 560px;
+    min-height: 520px;
   }
 
   .product-macbook-scroll {
-    min-height: 118vh !important;
-    transform: scale(1.04) !important;
+    min-height: 124vh !important;
+    transform: scale(1.08) !important;
   }
 }
 
@@ -89,7 +89,7 @@
 
 @media (max-width: 1024px) {
   .visual-wrapper {
-    min-height: 480px;
+    min-height: 460px;
   }
 
   .product-visuals__content {
@@ -97,8 +97,9 @@
   }
 
   .product-macbook-scroll {
-    min-height: 98vh !important;
-    transform: scale(0.92) !important;
+    min-height: 118vh !important;
+    transform: scale(1) !important;
+    margin-top: 0;
   }
 }
 
@@ -106,7 +107,7 @@
 
 @media (max-width: 860px) {
   .product-visuals {
-    padding: 70px 20px 80px;
+    padding: 110px 20px 80px;
   }
 
   .product-visuals__content {
@@ -118,8 +119,8 @@
   }
 
   .product-macbook-scroll {
-    min-height: 86vh !important;
-    transform: scale(0.82) !important;
+    min-height: 108vh !important;
+    transform: scale(1) !important;
   }
 }
 
@@ -128,17 +129,17 @@
 @media (max-width: 600px) {
 
   .product-visuals {
-    padding: 70px 20px 80px;
+    padding: 112px 16px 80px;
   }
 
   .product-visuals__content {
-    margin-bottom: 40px;
+    margin-bottom: 28px;
   }
 
   .product-macbook-scroll {
     margin-top: 0;
-    min-height: 78vh !important;
-    transform: scale(0.72) !important;
+    min-height: 102vh !important;
+    transform: scale(1) !important;
   }
 }
 

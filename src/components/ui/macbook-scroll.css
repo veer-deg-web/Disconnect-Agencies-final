@@ -1,22 +1,22 @@
 .macbook-scroll-root {
   position: relative;
   display: flex;
-  min-height: 150vh;
+  min-height: 138vh;
   flex-shrink: 0;
-  transform: scale(0.92);
+  transform: none;
   transform-origin: top center;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0.25rem 0 0;
+  padding: 0;
   perspective: 800px;
   overflow: visible;
 }
 
 .macbook-scroll-title {
-  margin-bottom: 1.2rem;
+  margin: 0 0 0.6rem;
   text-align: center;
-  font-size: clamp(1.4rem, 2vw, 2.05rem);
+  font-size: clamp(1.1rem, 2vw, 2rem);
   line-height: 1.2;
   font-weight: 700;
   color: #fff;
@@ -196,10 +196,19 @@
   display: flex;
   height: 1.5rem;
   width: 1.5rem;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
   align-items: center;
   justify-content: center;
   border-radius: 3.5px;
   background: #0a090d;
+  transition: transform 90ms ease, filter 90ms ease;
+}
+
+.mbs-kbtn-pressed {
+  transform: scale(0.96);
+  filter: brightness(1.12);
 }
 
 .mbs-kbtn-content {
@@ -361,23 +370,23 @@
 
 @media (min-width: 640px) {
   .macbook-scroll-root {
-    min-height: 145vh;
-    transform: scale(0.98);
+    min-height: 132vh;
+    transform: none;
   }
 }
 
 @media (min-width: 768px) {
   .macbook-scroll-root {
-    min-height: 138vh;
-    transform: scale(1.06);
+    min-height: 128vh;
+    transform: none;
     padding-top: 0;
   }
 }
 
 @media (max-width: 768px) {
   .macbook-scroll-root {
-    min-height: 112vh;
-    transform: scale(0.76);
+    min-height: 100vh;
+    transform: none;
     padding-top: 0;
   }
 
@@ -385,5 +394,19 @@
   .mbs-lid,
   .mbs-screen-shell {
     width: min(32rem, 94vw);
+  }
+}
+
+@media (max-width: 520px) {
+  .macbook-scroll-root {
+    min-height: 96vh;
+    transform: none;
+  }
+
+  .macbook-scroll-title {
+    margin-bottom: 0.5rem;
+    font-size: 0.98rem;
+    line-height: 1.25;
+    padding-inline: 8px;
   }
 }
