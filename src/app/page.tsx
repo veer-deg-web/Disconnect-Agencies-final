@@ -16,12 +16,12 @@ import CTASection from "@/components/Shared/CTASection/CTASection";
 import Footer from "@/components/Shared/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Disconnect Agencies | Full-Service Design & Development Agency",
+  title: "Disconnect | Full-Service Design & Development Agency",
   description:
-    "Disconnect Agencies helps founders and teams design, build, and scale products across web, app, UI/UX, SEO, cloud, and AI.",
+    "Disconnect helps founders and teams design, build, and scale products across web, app, UI/UX, SEO, cloud, and AI.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Disconnect Agencies | Full-Service Design & Development Agency",
+    title: "Disconnect | Full-Service Design & Development Agency",
     description:
       "End-to-end product design, engineering, and launch support for modern businesses.",
     type: "website",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Disconnect Agencies | Full-Service Design & Development Agency",
+    title: "Disconnect | Full-Service Design & Development Agency",
     description:
       "End-to-end product design, engineering, and launch support for modern businesses.",
   },
@@ -69,7 +69,7 @@ export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Disconnect Agencies",
+    name: "Disconnect",
     url: "/",
     description:
       "Full-service product agency for design, development, AI, SEO, and cloud solutions.",

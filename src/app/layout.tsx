@@ -8,10 +8,10 @@ import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
 
 export const metadata: Metadata = {
   title: {
-    default: "Disconnect Agencies",
-    template: "%s | Disconnect Agencies",
+    default: "Disconnect",
+    template: "%s | Disconnect",
   },
-  description: "Disconnect Agencies",
+  description: "Disconnect",
 };
 
 export default function RootLayout({

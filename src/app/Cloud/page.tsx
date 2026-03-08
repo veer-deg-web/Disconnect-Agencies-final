@@ -14,7 +14,7 @@ import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import Footer from "@/components/Shared/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Cloud Services | Disconnect Agencies",
+  title: "Cloud Services | Disconnect",
   description:
     "Cloud architecture, migration, optimization, and scalable infrastructure services for modern products.",
   robots: {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/Cloud" },
   openGraph: {
-    title: "Cloud Services | Disconnect Agencies",
+    title: "Cloud Services | Disconnect",
     description:
       "Secure and scalable cloud engineering for high-growth businesses.",
     type: "website",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cloud Services | Disconnect Agencies",
+    title: "Cloud Services | Disconnect",
     description:
       "Secure and scalable cloud engineering for high-growth businesses.",
   },
@@ -42,7 +42,7 @@ export default function CloudPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Cloud Services",
-    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    provider: { "@type": "Organization", name: "Disconnect" },
     description:
       "End-to-end cloud services including architecture, deployment, and optimization.",
     url: "/Cloud",

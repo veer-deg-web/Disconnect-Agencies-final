@@ -10,7 +10,7 @@ import ReviewsSection from "@/components/SEO/Review/ReviewsSection";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 
 export const metadata: Metadata = {
-  title: "SEO Services | Disconnect Agencies",
+  title: "SEO Services | Disconnect",
   description:
     "Technical SEO, on-page optimization, content strategy, and growth-focused search performance services.",
   robots: {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/SEO" },
   openGraph: {
-    title: "SEO Services | Disconnect Agencies",
+    title: "SEO Services | Disconnect",
     description:
       "Data-driven SEO services built to increase visibility, rankings, and conversions.",
     type: "website",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SEO Services | Disconnect Agencies",
+    title: "SEO Services | Disconnect",
     description:
       "Data-driven SEO services built to increase visibility, rankings, and conversions.",
   },
@@ -38,7 +38,7 @@ export default function SEOPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "SEO Services",
-    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    provider: { "@type": "Organization", name: "Disconnect" },
     description:
       "Technical SEO, on-page optimization, and content growth services.",
     url: "/SEO",

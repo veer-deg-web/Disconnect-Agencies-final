@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AppDevelopmentPage from "./client";
 
 export const metadata: Metadata = {
-  title: "App Development Services | Disconnect Agencies",
+  title: "App Development | Disconnect",
   description:
     "Design, development, launch, and scaling support for high-performance mobile and web applications.",
   robots: {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/AppDevelopment" },
   openGraph: {
-    title: "App Development Services | Disconnect Agencies",
+    title: "App Development | Disconnect",
     description:
       "End-to-end app development for modern businesses, built for speed and scalability.",
     type: "website",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "App Development Services | Disconnect Agencies",
+    title: "App Development | Disconnect",
     description:
       "End-to-end app development for modern businesses, built for speed and scalability.",
   },
@@ -30,7 +30,7 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "App Development Services",
-    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    provider: { "@type": "Organization", name: "Disconnect" },
     description:
       "Design, development, launch, and optimization services for mobile and web applications.",
     url: "/AppDevelopment",

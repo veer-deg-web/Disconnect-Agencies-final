@@ -13,7 +13,7 @@ import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import { partnerLogos } from "@/Data/PartnerLogo";
 
 export const metadata: Metadata = {
-  title: "AI Models & Automation Services | Disconnect Agencies",
+  title: "AI Models & Automation | Disconnect",
   description:
     "Custom AI models, workflow automation, and intelligent systems built to improve business efficiency and scale.",
   robots: {
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/AIModels" },
   openGraph: {
-    title: "AI Models & Automation Services | Disconnect Agencies",
+    title: "AI Models & Automation | Disconnect",
     description:
       "AI automation, integration, and optimization services for modern teams.",
     type: "website",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Models & Automation Services | Disconnect Agencies",
+    title: "AI Models & Automation | Disconnect",
     description:
       "AI automation, integration, and optimization services for modern teams.",
   },
@@ -41,7 +41,7 @@ export default function Ai() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "AI Models & Automation Services",
-    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    provider: { "@type": "Organization", name: "Disconnect" },
     description:
       "Custom AI development, integration, and optimization for business workflows.",
     url: "/AIModels",

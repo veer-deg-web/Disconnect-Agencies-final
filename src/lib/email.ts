@@ -10,13 +10,13 @@ const transporter = nodemailer.createTransport({
 
 export async function sendOtpEmail(to: string, otp: string, subject: string = 'Your OTP Code'): Promise<void> {
   const mailOptions = {
-    from: `"Disconnect Agencies" <${process.env.EMAIL_FROM}>`,
+    from: `"Disconnect" <${process.env.EMAIL_FROM}>`,
     to,
     subject,
     html: `
       <div style="font-family: 'Inter', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,0.08);">
         <div style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); padding: 36px 40px 28px;">
-          <h1 style="color: #fff; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">Disconnect Agencies</h1>
+          <h1 style="color: #fff; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">Disconnect</h1>
           <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0; font-size: 15px;">Verification Code</p>
         </div>
         <div style="padding: 36px 40px;">
@@ -28,7 +28,7 @@ export async function sendOtpEmail(to: string, otp: string, subject: string = 'Y
           <p style="color: #6b7280; font-size: 13px; margin: 0;">If you did not request this, please ignore this email or contact our support team.</p>
         </div>
         <div style="background: #f9fafb; padding: 20px 40px; border-top: 1px solid #e5e7eb;">
-          <p style="color: #9ca3af; font-size: 12px; margin: 0; text-align: center;">© 2024 Disconnect Agencies. All rights reserved.</p>
+          <p style="color: #9ca3af; font-size: 12px; margin: 0; text-align: center;">© 2024 Disconnect. All rights reserved.</p>
         </div>
       </div>
     `,
@@ -38,7 +38,7 @@ export async function sendOtpEmail(to: string, otp: string, subject: string = 'Y
 }
 
 export async function sendPasswordResetEmail(to: string, otp: string): Promise<void> {
-  await sendOtpEmail(to, otp, 'Reset Your Password – Disconnect Agencies');
+  await sendOtpEmail(to, otp, 'Reset Your Password – Disconnect');
 }
 
 function escapeHtml(value: string): string {
@@ -62,14 +62,14 @@ interface BookingMailDetails {
 
 export async function sendBookingScheduledEmailToUser(details: BookingMailDetails): Promise<void> {
   const mailOptions = {
-    from: `"Disconnect Agencies" <${process.env.EMAIL_FROM}>`,
+    from: `"Disconnect" <${process.env.EMAIL_FROM}>`,
     to: details.email,
-    subject: 'Your Call Is Scheduled – Disconnect Agencies',
+    subject: 'Your Call Is Scheduled – Disconnect',
     html: `
       <div style="font-family: 'Inter', Arial, sans-serif; max-width: 560px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,0.08);">
         <div style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); padding: 30px 34px;">
           <h1 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700;">Meeting Scheduled</h1>
-          <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0; font-size: 14px;">Disconnect Agencies</p>
+          <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0; font-size: 14px;">Disconnect</p>
         </div>
         <div style="padding: 30px 34px;">
           <p style="margin: 0 0 16px; color: #374151;">Hi ${escapeHtml(details.name)}, your call has been confirmed.</p>
@@ -98,7 +98,7 @@ export async function sendBookingScheduledEmailToAdmins(
   if (!recipients.length) return;
 
   const mailOptions = {
-    from: `"Disconnect Agencies" <${process.env.EMAIL_FROM}>`,
+    from: `"Disconnect" <${process.env.EMAIL_FROM}>`,
     to: recipients.join(','),
     subject: `New Booking Scheduled – ${details.serviceTitle}`,
     html: `

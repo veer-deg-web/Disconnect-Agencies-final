@@ -15,7 +15,7 @@ import ClientFeedback from "@/components/WebDevelopment/Testimonial/ClientFeedba
 import FeatureSection from "@/components/WebDevelopment/FeatureSection/FeatureSection";
 
 export const metadata: Metadata = {
-  title: "Web Development Services | Disconnect Agencies",
+  title: "Web Development | Disconnect",
   description:
     "Reliable and conversion-focused web development services for modern businesses, from design to launch.",
   robots: {
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/WebDevelopment" },
   openGraph: {
-    title: "Web Development Services | Disconnect Agencies",
+    title: "Web Development | Disconnect",
     description:
       "Custom websites and web products engineered for performance, scalability, and growth.",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Web Development Services | Disconnect Agencies",
+    title: "Web Development | Disconnect",
     description:
       "Custom websites and web products engineered for performance, scalability, and growth.",
   },
@@ -43,7 +43,7 @@ export default function WebDevelopmentPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Web Development Services",
-    provider: { "@type": "Organization", name: "Disconnect Agencies" },
+    provider: { "@type": "Organization", name: "Disconnect" },
     description:
       "Custom web development, frontend engineering, and scalable web architecture.",
     url: "/WebDevelopment",
