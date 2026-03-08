@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import AuthClient from './AuthClient';
 
 export const metadata: Metadata = {
-  title: "Login | Disconnect Agencies",
-  description: "Login to your Disconnect Agencies account.",
+  title: "Login",
+  description: "Login to your Disconnect account.",
   alternates: { canonical: "/auth" },
   robots: {
     index: false,

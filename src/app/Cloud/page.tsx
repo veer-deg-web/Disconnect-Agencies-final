@@ -14,7 +14,7 @@ import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import Footer from "@/components/Shared/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Cloud Services | Disconnect",
+  title: "Cloud Services",
   description:
     "Cloud architecture, migration, optimization, and scalable infrastructure services for modern products.",
   robots: {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/Cloud" },
   openGraph: {
-    title: "Cloud Services | Disconnect",
+    title: "Cloud Services",
     description:
       "Secure and scalable cloud engineering for high-growth businesses.",
     type: "website",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cloud Services | Disconnect",
+    title: "Cloud Services",
     description:
       "Secure and scalable cloud engineering for high-growth businesses.",
   },

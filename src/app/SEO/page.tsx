@@ -10,7 +10,7 @@ import ReviewsSection from "@/components/SEO/Review/ReviewsSection";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 
 export const metadata: Metadata = {
-  title: "SEO Services | Disconnect",
+  title: "SEO Services",
   description:
     "Technical SEO, on-page optimization, content strategy, and growth-focused search performance services.",
   robots: {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/SEO" },
   openGraph: {
-    title: "SEO Services | Disconnect",
+    title: "SEO Services",
     description:
       "Data-driven SEO services built to increase visibility, rankings, and conversions.",
     type: "website",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SEO Services | Disconnect",
+    title: "SEO Services",
     description:
       "Data-driven SEO services built to increase visibility, rankings, and conversions.",
   },

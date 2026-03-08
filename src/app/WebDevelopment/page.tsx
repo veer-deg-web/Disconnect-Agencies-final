@@ -15,7 +15,7 @@ import ClientFeedback from "@/components/WebDevelopment/Testimonial/ClientFeedba
 import FeatureSection from "@/components/WebDevelopment/FeatureSection/FeatureSection";
 
 export const metadata: Metadata = {
-  title: "Web Development | Disconnect",
+  title: "Web Development",
   description:
     "Reliable and conversion-focused web development services for modern businesses, from design to launch.",
   robots: {
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/WebDevelopment" },
   openGraph: {
-    title: "Web Development | Disconnect",
+    title: "Web Development",
     description:
       "Custom websites and web products engineered for performance, scalability, and growth.",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Web Development | Disconnect",
+    title: "Web Development",
     description:
       "Custom websites and web products engineered for performance, scalability, and growth.",
   },

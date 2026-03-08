@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
 import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
+import StoreProvider from "@/store/StoreProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -28,29 +29,29 @@ export default function RootLayout({
           margin: 0,
         }}
       >
-        <Toaster position="top-center" toastOptions={{ style: { zIndex: 9999, fontFamily: 'inherit' } }} />
-        {/* Background */}
-        <DotBackground />
+        <StoreProvider>
+          <Toaster position="top-center" toastOptions={{ style: { zIndex: 9999, fontFamily: 'inherit' } }} />
+          {/* Background */}
+          <DotBackground />
 
-        {/* Smooth Scroll */}
-        <SmoothScroll />
+          {/* Smooth Scroll */}
+          <SmoothScroll />
 
-        {/* Navbar */}
-        <HeroNavbar />
+          {/* Navbar */}
+          <HeroNavbar />
 
-        {/* Locomotive Container */}
-        <div
-          data-scroll-container
-          style={{
-            position: "relative",
-            zIndex: 1,
-            backgroundColor: "#000000",
-          }}
-        >
-          {children}
-        </div>
-
-
+          {/* Locomotive Container */}
+          <div
+            data-scroll-container
+            style={{
+              position: "relative",
+              zIndex: 1,
+              backgroundColor: "#000000",
+            }}
+          >
+            {children}
+          </div>
+        </StoreProvider>
       </body>
     </html>
   );

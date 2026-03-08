@@ -15,7 +15,7 @@ import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
 import { showcaseLogos } from "@/Data/showcaseLogos";
 
 export const metadata: Metadata = {
-  title: "UI/UX Design | Disconnect",
+  title: "UI/UX Design",
   description:
     "User-focused UI/UX design services with research, wireframes, visual design, and conversion-driven experiences.",
   robots: {
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/Uiux" },
   openGraph: {
-    title: "UI/UX Design | Disconnect",
+    title: "UI/UX Design",
     description:
       "Modern interface design and product UX systems crafted for engagement and growth.",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UI/UX Design | Disconnect",
+    title: "UI/UX Design",
     description:
       "Modern interface design and product UX systems crafted for engagement and growth.",
   },

@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import AdminClient from './AdminClient';
 
 export const metadata: Metadata = {
-  title: 'Admin — FAQ Management | Disconnect Agencies',
-  description: 'Manage frequently asked questions for the Disconnect Agencies website',
+  title: 'Admin — FAQ Management',
+  description: 'Manage frequently asked questions for the Disconnect website',
   robots: {
     index: false,
     follow: false,

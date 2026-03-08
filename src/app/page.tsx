@@ -16,7 +16,9 @@ import CTASection from "@/components/Shared/CTASection/CTASection";
 import Footer from "@/components/Shared/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Disconnect | Full-Service Design & Development Agency",
+  title: {
+    absolute: "Disconnect | Full-Service Design & Development Agency",
+  },
   description:
     "Disconnect helps founders and teams design, build, and scale products across web, app, UI/UX, SEO, cloud, and AI.",
   alternates: { canonical: "/" },

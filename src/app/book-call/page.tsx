@@ -3,9 +3,9 @@ import { Suspense } from "react";
 import BookCallClient from "./BookCallClient";
 
 export const metadata: Metadata = {
-  title: "Book A Call | Disconnect Agencies",
+  title: "Book A Call",
   description:
-    "Book a call with Disconnect Agencies to discuss your project requirements and next steps.",
+    "Book a call with Disconnect to discuss your project requirements and next steps.",
   alternates: { canonical: "/book-call" },
   openGraph: {
     title: "Book A Call | Disconnect Agencies",

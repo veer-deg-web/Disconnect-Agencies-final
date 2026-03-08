@@ -16,7 +16,7 @@ export const buildCitySeo = ({ serviceSlug, serviceName, citySlug }: CitySeoInpu
   const canonical = `${SITE_URL}/${serviceSlug}/${city.slug}`;
   const serviceLower = serviceName.toLowerCase();
   const cityLower = city.name.toLowerCase();
-  const title = `Best ${serviceName} Company in ${city.name} | Disconnect`;
+  const title = `Best ${serviceName} Company in ${city.name}`;
   const description = `Disconnect is a trusted ${serviceLower} company in ${city.name}, building high-performance websites, apps, SaaS products, and AI solutions.`;
 
   const metadata: Metadata = {

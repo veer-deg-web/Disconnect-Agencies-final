@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Book A Call Redirect | Disconnect Agencies",
+  title: "Book A Call Redirect",
   description: "Redirecting to the canonical booking page.",
   alternates: { canonical: "/book-call" },
   robots: {

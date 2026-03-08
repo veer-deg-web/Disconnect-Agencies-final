@@ -22,7 +22,7 @@ import {
   Settings,
   Video,
 } from 'lucide-react';
-import StoreProvider from '@/store/StoreProvider';
+
 import {
   useGetFaqsQuery,
   useAddFaqMutation,
@@ -1213,8 +1213,7 @@ export default function AdminClient() {
 
 
   return (
-    <StoreProvider>
-      <div className="adm-root">
+    <div className="admin-container">
         <header className="adm-header">
           <div className="adm-header-left">
             <div className="adm-header-logo">DA</div>
@@ -1318,6 +1317,6 @@ export default function AdminClient() {
         </main>
       </div>
       </div>
-    </StoreProvider>
+
   );
 }
