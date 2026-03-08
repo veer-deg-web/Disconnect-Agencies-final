@@ -420,7 +420,6 @@ export default function AuthClient() {
 
   return (
     <>
-      <Toaster position="top-center" toastOptions={{ style: { zIndex: 2147483647, fontFamily: 'inherit' } }} />
       <ParticleCanvas />
 
       {/* ────────── DESKTOP ────────── */}

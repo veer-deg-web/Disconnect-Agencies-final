@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useGetFeedbackQuery } from '@/store/publicApi';
 
 export interface DynamicTestimonial {
     _id: string;
@@ -16,32 +16,10 @@ export interface DynamicTestimonial {
 }
 
 export function useDynamicTestimonials(category?: string, isFeatured?: boolean) {
-    const [testimonials, setTestimonials] = useState<DynamicTestimonial[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data, isLoading } = useGetFeedbackQuery({ category, isFeatured });
 
-    useEffect(() => {
-        const fetchTestimonials = async () => {
-            try {
-                const params = new URLSearchParams();
-                if (category) params.append('category', category);
-                if (isFeatured !== undefined) params.append('isFeatured', isFeatured.toString());
-
-                const qs = params.toString() ? `?${params.toString()}` : '';
-                const res = await fetch(`/api/feedback${qs}`);
-
-                if (res.ok) {
-                    const data = await res.json();
-                    setTestimonials(data.testimonials || []);
-                }
-            } catch (err) {
-                console.error('Failed to fetch testimonials:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTestimonials();
-    }, [category, isFeatured]);
-
-    return { testimonials, loading };
+    return {
+        testimonials: data?.testimonials || [],
+        loading: isLoading
+    };
 }

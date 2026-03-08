@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useGetFaqsQuery } from '@/store/publicApi';
 
 export type FaqCategory =
   | 'general'
@@ -28,34 +28,12 @@ interface UseFaqResult {
 }
 
 export function useFaq(category: FaqCategory = 'all'): UseFaqResult {
-  const [faqs, setFaqs] = useState<FaqItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
+  const { data, isLoading, error, refetch } = useGetFaqsQuery({ category });
 
-  const refetch = () => setTick(t => t + 1);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-
-    fetch(`/api/faq?category=${category}`)
-      .then(res => res.json())
-      .then(data => {
-        if (cancelled) return;
-        if (data.error) throw new Error(data.error);
-        setFaqs(data.faqs ?? []);
-      })
-      .catch(err => {
-        if (!cancelled) setError(err.message);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => { cancelled = true; };
-  }, [category, tick]);
-
-  return { faqs, loading, error, refetch };
+  return {
+    faqs: data?.faqs || [],
+    loading: isLoading,
+    error: error ? (error as any).data?.error || 'Failed to fetch' : null,
+    refetch
+  };
 }

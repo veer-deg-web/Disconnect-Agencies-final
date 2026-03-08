@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import SmoothScroll from "./providers/SmoothScroll";
+import { Toaster } from "react-hot-toast";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
 import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
@@ -27,6 +28,7 @@ export default function RootLayout({
           margin: 0,
         }}
       >
+        <Toaster position="top-center" toastOptions={{ style: { zIndex: 9999, fontFamily: 'inherit' } }} />
         {/* Background */}
         <DotBackground />
 
