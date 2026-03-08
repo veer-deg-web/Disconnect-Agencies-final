@@ -2,13 +2,16 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, LogOut, Camera, Save, ArrowLeft, Trash2, Calendar, MessageSquare, Pencil, X } from 'lucide-react';
+import { User, LogOut, Camera, Save, ArrowLeft, Trash2, Calendar, MessageSquare, Pencil, X, CheckCircle2 } from 'lucide-react';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '@/lib/cropImage';
 import './Profile.css';
 
 interface UserProfile {
   name: string;
   email: string;
   avatar?: string;
+  isVerified?: boolean;
 }
 
 interface Booking {
@@ -54,6 +57,13 @@ export default function ProfilePage() {
   const [editFeedbackContent, setEditFeedbackContent] = useState('');
   const [editFeedbackRating, setEditFeedbackRating] = useState<number>(5);
   const [feedbackHoverRating, setFeedbackHoverRating] = useState<number>(0);
+  
+  // Crop States
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [isCropping, setIsCropping] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -133,9 +143,36 @@ export default function ProfilePage() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreviewAvatar(reader.result as string);
+      setImageToCrop(reader.result as string);
+      setIsCropping(true);
     };
     reader.readAsDataURL(file);
+  };
+
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const handleApplyCrop = async () => {
+    if (!imageToCrop || !croppedAreaPixels) return;
+
+    try {
+      const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
+      setPreviewAvatar(croppedImage);
+      setIsCropping(false);
+      setImageToCrop(null);
+    } catch (e) {
+      console.error(e);
+      setError('Failed to crop image');
+    }
+  };
+
+  const cancelCrop = () => {
+    setIsCropping(false);
+    setImageToCrop(null);
+    if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+    }
   };
 
   const removeAvatar = () => {
@@ -282,14 +319,16 @@ export default function ProfilePage() {
             {activeTab === 'profile' && (
               <>
             <div className="avatar-section">
-              <div className="avatar-preview">
-                {previewAvatar ? (
-                  <img src={previewAvatar} alt="Profile" className="avatar-img" />
-                ) : (
-                  <div className="avatar-placeholder">
-                    <User size={48} />
-                  </div>
-                )}
+              <div className="avatar-outer">
+                <div className="avatar-preview">
+                  {previewAvatar ? (
+                    <img src={previewAvatar} alt="Profile" className="avatar-img" />
+                  ) : (
+                    <div className="avatar-placeholder">
+                      <User size={48} />
+                    </div>
+                  )}
+                </div>
                 <button 
                   className="avatar-edit-btn" 
                   onClick={() => fileInputRef.current?.click()}
@@ -299,12 +338,12 @@ export default function ProfilePage() {
                 </button>
                 {previewAvatar && (
                     <button 
-                    className="avatar-remove-btn" 
-                    onClick={removeAvatar}
-                    title="Remove photo"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                      className="avatar-remove-btn" 
+                      onClick={removeAvatar}
+                      title="Remove photo"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                 )}
               </div>
               <input 
@@ -320,12 +359,18 @@ export default function ProfilePage() {
             <div className="info-section">
               <div className="form-group">
                 <label>Name</label>
-                <input 
-                  type="text" 
-                  value={editName} 
-                  onChange={(e) => setEditName(e.target.value)}
-                  placeholder="Your Name"
-                />
+                <div className="name-wrapper">
+                    <input 
+                    type="text" 
+                    value={editName} 
+                    onChange={(e) => setEditName(e.target.value)}
+                    placeholder="Your Name"
+                    style={{ flex: 1 }}
+                    />
+                    {profile.isVerified && (
+                        <CheckCircle2 className="verified-badge" size={20} />
+                    )}
+                </div>
               </div>
               <div className="form-group">
                 <label>Email</label>
@@ -441,6 +486,57 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Crop Modal */}
+      {isCropping && imageToCrop && (
+        <div className="crop-modal-backdrop">
+          <div className="crop-modal">
+            <div className="crop-modal-header">
+              <h2 className="crop-modal-title">Edit Profile Photo</h2>
+              <button className="back-btn" onClick={cancelCrop}><X size={18} /></button>
+            </div>
+            
+            <div className="crop-container">
+              <Cropper
+                image={imageToCrop}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+              />
+            </div>
+
+            <div className="crop-controls">
+              <div className="slider-group">
+                <label>Zoom</label>
+                <input
+                  type="range"
+                  value={zoom}
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  aria-labelledby="Zoom"
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="crop-slider"
+                />
+              </div>
+            </div>
+
+            <div className="crop-modal-footer">
+              <button className="logout-btn" style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '10px 20px', borderRadius: '8px' }} onClick={cancelCrop}>
+                Cancel
+              </button>
+              <button className="save-btn" style={{ margin: 0, padding: '10px 24px' }} onClick={handleApplyCrop}>
+                Apply Crop
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

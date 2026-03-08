@@ -54,7 +54,7 @@ export async function PUT(req: Request) {
         await user.save();
 
         return NextResponse.json(
-            { message: 'Profile updated successfully', user: { name: user.name, avatar: user.avatar, email: user.email } },
+            { message: 'Profile updated successfully', user: { name: user.name, avatar: user.avatar, email: user.email, isVerified: user.isVerified } },
             { status: 200 }
         );
     } catch (error: any) {
