@@ -119,7 +119,7 @@ export default function CareersPage() {
       {/* Dynamic Background */}
       <div className="careers-background">
         <ColorBends
-          colors={["#ff5c7a", "#8a5cff", "#00ffd1"]}
+          colors={["#ff5c7a", "#8a5cff", "#00ffd1", "#ffffff"]}
           rotation={0}
           speed={0.2}
           scale={1}

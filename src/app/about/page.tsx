@@ -76,7 +76,7 @@ export default function AboutUsPage() {
       {/* Dynamic Background */}
       <div className="about-background">
         <ColorBends
-          colors={["#ff5c7a", "#8a5cff", "#00ffd1"]}
+          colors={["#ff5c7a", "#8a5cff", "#00ffd1", "#ffffff"]}
           rotation={0}
           speed={0.2}
           scale={1}
