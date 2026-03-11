@@ -21,6 +21,7 @@ import {
   User,
   Settings,
   Video,
+  Briefcase,
 } from 'lucide-react';
 
 import {
@@ -38,13 +39,16 @@ import {
   useDeleteUserMutation,
   useGetFeedbacksQuery,
   useUpdateFeedbackMutation,
-  useDeleteFeedbackMutation
+  useDeleteFeedbackMutation,
+  useGetCareerApplicationsQuery,
+  useUpdateCareerApplicationMutation,
+  useDeleteCareerApplicationMutation
 } from '@/store/adminApi';
 import './Admin.css';
 
 /* ── Types ── */
 type Category = 'general' | 'cloud' | 'uiux' | 'webdev' | 'appdev' | 'aimodels' | 'seo';
-type AdminSection = 'faq' | 'bookings' | 'users' | 'settings';
+type AdminSection = 'faq' | 'bookings' | 'users' | 'settings' | 'careers';
 
 const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'general', label: 'General' },
@@ -111,6 +115,18 @@ interface BookingRecord {
   meetingLink: string;
   adminRemark?: string;
   status?: 'pending' | 'completed';
+  createdAt: string;
+}
+
+interface CareerApplicationRecord {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  message: string;
+  resumeUrl: string;
+  status: 'pending' | 'accepted' | 'rejected';
   createdAt: string;
 }
 
@@ -201,45 +217,6 @@ function FaqFormModal({
 /* ─────────────────────────────────────────────
    DELETE CONFIRM MODAL
 ───────────────────────────────────────────── */
-function DeleteModal({
-  faq,
-  onConfirm,
-  onClose,
-  loading,
-}: {
-  faq: Faq;
-  onConfirm: () => void;
-  onClose: () => void;
-  loading: boolean;
-}) {
-  return (
-    <div className="adm-modal-backdrop" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="adm-modal">
-        <div className="adm-modal-head">
-          <h2 className="adm-modal-title">Delete FAQ</h2>
-          <button className="adm-modal-close" onClick={onClose}><X size={16} /></button>
-        </div>
-        <div className="adm-modal-body">
-          <p className="adm-confirm-text">
-            Are you sure you want to delete this FAQ? This action cannot be undone.
-            <span className="adm-confirm-q">"{faq.question}"</span>
-          </p>
-        </div>
-        <div className="adm-modal-footer">
-          <button className="adm-btn adm-btn--outline" onClick={onClose}>Cancel</button>
-          <button
-            className="adm-btn adm-btn--primary"
-            style={{ background: 'linear-gradient(135deg, #dc2626, #991b1b)' }}
-            onClick={onConfirm}
-            disabled={loading}
-          >
-            {loading ? 'Deleting…' : 'Yes, Delete'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ─────────────────────────────────────────────
    FAQ SECTION
@@ -260,7 +237,6 @@ function FaqSection({ category }: { category: 'all' | Category }) {
   const [search, setSearch] = useState('');
   const [showAdd, setShowAdd] = useState(false);
   const [editFaq, setEditFaq] = useState<Faq | null>(null);
-  const [deleteFaq, setDeleteFaq] = useState<Faq | null>(null);
 
   const error = errorOut || errorLocal;
 
@@ -285,12 +261,10 @@ function FaqSection({ category }: { category: 'all' | Category }) {
     }
   };
 
-  const handleDelete = async () => {
-    if (!deleteFaq) return;
+  const handleDelete = async (id: string) => {
     try {
       setErrorLocal('');
-      await deleteFaqMutation(deleteFaq._id).unwrap();
-      setDeleteFaq(null);
+      await deleteFaqMutation(id).unwrap();
     } catch (err: any) {
       setErrorLocal(err?.data?.error || err.message || 'Failed to delete FAQ');
     }
@@ -374,7 +348,7 @@ function FaqSection({ category }: { category: 'all' | Category }) {
                   <button className="adm-btn adm-btn--ghost" title="Edit" onClick={() => setEditFaq(faq)}>
                     <Pencil size={14} />
                   </button>
-                  <button className="adm-btn adm-btn--danger" title="Delete" onClick={() => setDeleteFaq(faq)}>
+                  <button className="adm-btn adm-btn--danger" title="Delete" onClick={() => handleDelete(faq._id)}>
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -392,9 +366,6 @@ function FaqSection({ category }: { category: 'all' | Category }) {
           onClose={() => setEditFaq(null)}
           loading={saving}
         />
-      )}
-      {deleteFaq && (
-        <DeleteModal faq={deleteFaq} onConfirm={handleDelete} onClose={() => setDeleteFaq(null)} loading={saving} />
       )}
     </div>
   );
@@ -708,7 +679,6 @@ function UserAdminSection() {
   };
 
   const deleteUser = async (id: string) => {
-    if (!window.confirm('Delete this user permanently?')) return;
     setBusyId(id);
     setErrorLocal('');
     try {
@@ -860,8 +830,6 @@ function FeedbackAdminSection() {
   };
 
   const deleteFeedback = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this feedback?')) return;
-    
     setSavingId(id);
     setErrorLocal('');
     setOkLocal('');
@@ -982,6 +950,160 @@ function FeedbackAdminSection() {
                   </button>
                 </div>
               </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   CAREERS ADMIN SECTION
+───────────────────────────────────────────── */
+function CareersAdminSection() {
+  const { data: careerData, isLoading: loading, error: queryError } = useGetCareerApplicationsQuery();
+  const [updateStatus, { isLoading: isUpdating }] = useUpdateCareerApplicationMutation();
+  const [deleteApplication, { isLoading: isDeleting }] = useDeleteCareerApplicationMutation();
+
+  const applications: CareerApplicationRecord[] = careerData?.applications || [];
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [errorLocal, setErrorLocal] = useState('');
+  const [okLocal, setOkLocal] = useState('');
+  const [search, setSearch] = useState('');
+
+  const errorObj = queryError as any;
+  const errorOut = errorObj?.data?.error || errorObj?.error || '';
+  const error = errorOut || errorLocal;
+
+  const handleUpdateStatus = async (id: string, status: 'accepted' | 'rejected') => {
+    setBusyId(id);
+    setErrorLocal('');
+    setOkLocal('');
+    try {
+      await updateStatus({ id, status }).unwrap();
+      setOkLocal(`Application marked as ${status}`);
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to update status');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    setBusyId(id);
+    setErrorLocal('');
+    setOkLocal('');
+    try {
+      await deleteApplication(id).unwrap();
+      setOkLocal('Application deleted successfully');
+    } catch (err: any) {
+      setErrorLocal(err?.data?.error || err.message || 'Failed to delete application');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const filtered = applications.filter(app => 
+    app.name.toLowerCase().includes(search.toLowerCase()) || 
+    app.role.toLowerCase().includes(search.toLowerCase()) ||
+    app.email.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div>
+      <div className="adm-page-header">
+        <div>
+          <span className="adm-page-title">Career Applications</span>
+          <p className="adm-page-subtitle">Review job applications, download resumes, and manage hiring status</p>
+        </div>
+      </div>
+
+      <div className="adm-search-wrap" style={{ maxWidth: '400px', marginBottom: '20px' }}>
+        <Search size={13} />
+        <input 
+          className="adm-search-input" 
+          placeholder="Search by name, role, or email…" 
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
+
+      {error && <div className="adm-error-bar">{error}</div>}
+      {okLocal && <div className="adm-ok-bar">{okLocal}</div>}
+
+      <div className="adm-table-wrap">
+        {loading ? (
+          <div className="adm-loader">Loading...</div>
+        ) : filtered.length === 0 ? (
+          <div className="adm-empty">No applications found</div>
+        ) : (
+          <div className="adm-booking-list">
+            {filtered.map((app) => (
+              <article key={app._id} className="adm-booking-item" style={{ borderLeft: `4px solid ${app.status === 'accepted' ? '#22c55e' : app.status === 'rejected' ? '#ef4444' : '#f59e0b'}` }}>
+                <div className="adm-booking-head">
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <strong style={{ fontSize: '16px' }}>{app.name}</strong>
+                    <span style={{ fontSize: '13px', opacity: 0.6 }}>Applied: {new Date(app.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <div className={`adm-status-pill ${app.status === 'accepted' ? 'done' : app.status === 'rejected' ? 'danger' : 'pending'}`} 
+                       style={{ 
+                         background: app.status === 'accepted' ? 'rgba(34,197,94,0.1)' : app.status === 'rejected' ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)',
+                         color: app.status === 'accepted' ? '#22c55e' : app.status === 'rejected' ? '#ef4444' : '#f59e0b'
+                       }}>
+                    {app.status === 'accepted' ? <CheckCircle2 size={12} /> : app.status === 'rejected' ? <X size={12} /> : <Circle size={12} />}
+                    {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                  </div>
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '12px' }}>
+                  <p><b>Role:</b> {app.role}</p>
+                  <p><b>Email:</b> {app.email}</p>
+                  <p><b>Phone:</b> {app.phone}</p>
+                  <p>
+                    <b>Resume:</b> 
+                    <a href={app.resumeUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FF5C00', textDecoration: 'underline', marginLeft: '6px' }}>
+                      Download PDF
+                    </a>
+                  </p>
+                </div>
+                
+                <div className="adm-booking-remark" style={{ marginTop: '12px' }}>
+                  <label className="adm-label">Cover Message</label>
+                  <p style={{ fontSize: '14px', background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px', lineHeight: 1.5 }}>
+                    {app.message}
+                  </p>
+                </div>
+
+                <div className="adm-booking-actions" style={{ marginTop: '16px' }}>
+                  <button
+                    type="button"
+                    className="adm-btn adm-btn--outline"
+                    onClick={() => handleUpdateStatus(app._id, 'accepted')}
+                    disabled={busyId === app._id || app.status === 'accepted'}
+                    style={{ color: '#22c55e' }}
+                  >
+                    <CheckCircle2 size={13} /> Accept
+                  </button>
+                  <button
+                    type="button"
+                    className="adm-btn adm-btn--outline"
+                    onClick={() => handleUpdateStatus(app._id, 'rejected')}
+                    disabled={busyId === app._id || app.status === 'rejected'}
+                    style={{ color: '#ef4444' }}
+                  >
+                    <X size={13} /> Reject
+                  </button>
+                  <button
+                    type="button"
+                    className="adm-btn adm-btn--danger"
+                    onClick={() => handleDelete(app._id)}
+                    disabled={busyId === app._id}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </article>
             ))}
           </div>
         )}
@@ -1143,6 +1265,8 @@ export default function AdminClient() {
       ? 'Booking Management'
       : section === 'feedback'
       ? 'Feedback & Testimonials'
+      : section === 'careers'
+      ? 'Career Applications'
       : section === 'users'
       ? 'User Management'
       : 'Google Calendar';
@@ -1261,6 +1385,14 @@ export default function AdminClient() {
             </button>
 
             <button
+              className={`adm-sidebar-item ${section === 'careers' ? 'active' : ''}`}
+              onClick={() => setSection('careers')}
+            >
+              <Briefcase size={15} /> Careers
+              {section === 'careers' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+            </button>
+
+            <button
               className={`adm-sidebar-item ${section === 'users' ? 'active' : ''}`}
               onClick={() => setSection('users')}
             >
@@ -1312,6 +1444,7 @@ export default function AdminClient() {
           {section === 'faq' && <FaqSection category={category} />}
           {section === 'bookings' && <BookingAdminSection />}
           {section === 'feedback' && <FeedbackAdminSection />}
+          {section === 'careers' && <CareersAdminSection />}
           {section === 'users' && <UserAdminSection />}
           {section === 'settings' && <GoogleCalendarSection />}
         </main>

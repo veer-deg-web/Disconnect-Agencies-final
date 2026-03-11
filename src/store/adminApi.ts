@@ -20,7 +20,7 @@ export const adminApi = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Faq', 'Booking', 'BookingSettings', 'User', 'Feedback'],
+    tagTypes: ['Faq', 'Booking', 'BookingSettings', 'User', 'Feedback', 'CareerApplication'],
     endpoints: (builder) => ({
         /* =======================
            FAQS
@@ -137,6 +137,29 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Feedback'],
         }),
+
+        /* =======================
+           CAREER APPLICATIONS
+        ======================= */
+        getCareerApplications: builder.query<any, void>({
+            query: () => '/career-applications',
+            providesTags: ['CareerApplication'],
+        }),
+        updateCareerApplication: builder.mutation<any, any>({
+            query: (body) => ({
+                url: '/career-applications',
+                method: 'PUT',
+                body,
+            }),
+            invalidatesTags: ['CareerApplication'],
+        }),
+        deleteCareerApplication: builder.mutation<any, string>({
+            query: (id) => ({
+                url: `/career-applications?id=${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['CareerApplication'],
+        }),
     }),
 });
 
@@ -156,4 +179,7 @@ export const {
     useGetFeedbacksQuery,
     useUpdateFeedbackMutation,
     useDeleteFeedbackMutation,
+    useGetCareerApplicationsQuery,
+    useUpdateCareerApplicationMutation,
+    useDeleteCareerApplicationMutation,
 } = adminApi;

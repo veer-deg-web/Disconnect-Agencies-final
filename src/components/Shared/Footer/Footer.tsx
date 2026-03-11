@@ -66,6 +66,10 @@ export default function Footer() {
       router.push("/about");
       return;
     }
+    if (item === "Careers") {
+      router.push("/careers");
+      return;
+    }
   };
 
   return (
@@ -131,6 +135,7 @@ export default function Footer() {
               "Testimonials",
               "FAQ",
               "About Us",
+              "Careers",
             ].map((item) => (
               <button
                 key={item}
