@@ -16,7 +16,7 @@ import {
   User, 
   MessageSquare 
 } from 'lucide-react';
-import Balatro from '@/components/Balatro';
+import ColorBends from '@/components/ColorBends';
 import ShinyText from '@/components/Shared/ShinyText/ShinyText';
 import './Careers.css';
 
@@ -118,13 +118,18 @@ export default function CareersPage() {
 
       {/* Dynamic Background */}
       <div className="careers-background">
-        <Balatro
-          isRotate={false}
-          mouseInteraction={true}
-          pixelFilter={745}
-          color1="#FF5C00"
-          color2="#FF0031"
-          color3="#000000"
+        <ColorBends
+          colors={["#ff5c7a", "#8a5cff", "#00ffd1"]}
+          rotation={0}
+          speed={0.2}
+          scale={1}
+          frequency={1}
+          warpStrength={1}
+          mouseInfluence={1}
+          parallax={0.5}
+          noise={0.1}
+          transparent
+          autoRotate={0}
         />
       </div>
 
