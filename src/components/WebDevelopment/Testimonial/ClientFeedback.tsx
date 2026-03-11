@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { SiStripe, SiGooglecloud, SiApple } from "react-icons/si";
-import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import "./ClientFeedback.css";
 
 const easeSmooth: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -65,8 +65,8 @@ export default function ClientFeedback() {
   const { testimonials: dynTestimonials } = useDynamicTestimonials("WebDev", true);
 
   const finalTestimonials = useMemo(() => {
-    const formatted = dynTestimonials
-      .map((t, idx) => ({
+    const formatted: Testimonial[] = (dynTestimonials as DynamicTestimonial[])
+      .map((t: DynamicTestimonial, idx: number) => ({
         id: idx + 1,
         name: t.user.name,
         position: t.position || 'Verified Customer',
@@ -158,7 +158,7 @@ export default function ClientFeedback() {
 
         {/* DOTS */}
         <div className="dots">
-          {finalTestimonials.map((_, index) => (
+          {finalTestimonials.map((_, index: number) => (
             <button
               key={index}
               onClick={() => setActive(index)}

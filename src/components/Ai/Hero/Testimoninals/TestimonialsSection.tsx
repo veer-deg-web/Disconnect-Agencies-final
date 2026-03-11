@@ -3,11 +3,20 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
-import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
 import "./TestimonialsSection.css";
 
-const testimonials = [
+interface TestimonialData {
+  text: string;
+  name: string;
+  role: string;
+  avatar: string;
+  rating: number;
+  isVerified?: boolean;
+}
+
+const testimonials: TestimonialData[] = [
   {
     text:
       "AI automation transformed our operations by eliminating repetitive tasks and improving efficiency. Scaling our workflow has never been easier!",
@@ -46,8 +55,8 @@ export default function TestimonialsSection() {
   const { testimonials: dynTestimonials } = useDynamicTestimonials("AI", true);
 
   const finalTestimonials = useMemo(() => {
-    const formatted = dynTestimonials
-      .map(t => ({
+    const formatted: TestimonialData[] = (dynTestimonials as DynamicTestimonial[])
+      .map((t: DynamicTestimonial) => ({
         text: t.content,
         name: t.user.name,
         role: t.position && t.company ? `${t.position} @ ${t.company}` : 'Verified User',
@@ -96,7 +105,7 @@ export default function TestimonialsSection() {
 
       {/* GRID */}
       <div className="testimonials-grid">
-        {finalTestimonials.map((item, i) => (
+        {finalTestimonials.map((item: TestimonialData, i: number) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 30 }}
@@ -128,7 +137,7 @@ export default function TestimonialsSection() {
                   <div>
                     <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {item.name}
-                      {(item as any).isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
+                      {item.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
                     </strong>
                     <span>{item.role}</span>
                   </div>

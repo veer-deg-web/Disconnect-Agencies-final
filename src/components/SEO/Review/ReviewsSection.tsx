@@ -3,10 +3,19 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
 import ReviewCard from "./ReviewCard";
-import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import "./Reviews.css";
 
-const reviews = [
+interface ReviewData {
+  name: string;
+  role: string;
+  company: string;
+  avatar: string;
+  rating: string;
+  quote: string;
+}
+
+const reviews: ReviewData[] = [
   {
     name: "Jon Bell",
     role: "Data Scientist",
@@ -49,8 +58,8 @@ export default function ReviewsSection() {
   const { testimonials: dynTestimonials } = useDynamicTestimonials("SEO", true);
 
   const finalReviews = useMemo(() => {
-    const formatted = dynTestimonials
-      .map(t => ({
+    const formatted: ReviewData[] = (dynTestimonials as DynamicTestimonial[])
+      .map((t: DynamicTestimonial) => ({
         name: t.user.name,
         role: t.position || 'Verified Customer',
         company: t.company || 'User',
@@ -90,7 +99,7 @@ export default function ReviewsSection() {
           visible: { transition: { staggerChildren: 0.15 } },
         }}
       >
-        {finalReviews.map((review, i) => (
+        {finalReviews.map((review: ReviewData, i: number) => (
           <motion.div
             key={i}
             variants={{

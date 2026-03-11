@@ -9,9 +9,19 @@ import {
   useMotionValue,
 } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
-import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
 import "./TestimonialsSection.css";
+
+interface TestimonialData {
+  type: string;
+  tag: string;
+  text: string;
+  name: string;
+  role: string;
+  avatar?: string;
+  isVerified?: boolean;
+}
 
 // Feedback entirely fetched via API.
 
@@ -21,8 +31,8 @@ export default function TestimonialsSection() {
   const { testimonials: dynTestimonials } = useDynamicTestimonials("Cloud", true);
 
   const finalTestimonials = useMemo(() => {
-    const formatted = dynTestimonials
-      .map(t => ({
+    const formatted: TestimonialData[] = (dynTestimonials as DynamicTestimonial[])
+      .map((t: DynamicTestimonial) => ({
         type: "wide",
         tag: "Customer Feedback",
         text: t.content,
@@ -74,18 +84,18 @@ export default function TestimonialsSection() {
         onMouseLeave={() => setHovered(false)}
       >
         <motion.div className="testimonials-track" style={{ x }}>
-          {[...finalTestimonials, ...finalTestimonials].map((item, i) => (
+          {[...finalTestimonials, ...finalTestimonials].map((item: TestimonialData, i: number) => (
             <div key={i} className="testimonial-item">
               {item.type === "wide" ? (
                 <div className="testimonial-card wide">
                   <span className="tag">{item.tag}</span>
                   <p className="quote">“{item.text}”</p>
                   <div className="author">
-                    <img src={(item as any).avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
+                    <img src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
                     <div>
                       <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                         {item.name}
-                        {(item as any).isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
+                        {item.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
                       </strong>
                       <span>{item.role}</span>
                     </div>
@@ -93,10 +103,10 @@ export default function TestimonialsSection() {
                 </div>
               ) : (
                 <div className="testimonial-card square">
-                  <img src={(item as any).avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
+                  <img src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
                   <strong style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '8px' }}>
                     {item.name}
-                    {(item as any).isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
+                    {item.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
                   </strong>
                   <span>{item.role}</span>
                 </div>

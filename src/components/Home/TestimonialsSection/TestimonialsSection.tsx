@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
-import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
 
 /* =======================
@@ -60,8 +60,8 @@ export default function TestimonialsSection() {
   const { testimonials: dynTestimonials } = useDynamicTestimonials("Home", true);
 
   const { finalLeftColumn, finalRightColumn } = useMemo(() => {
-    const formatted: Testimonial[] = dynTestimonials
-      .map((t) => ({
+    const formatted: Testimonial[] = (dynTestimonials as DynamicTestimonial[])
+      .map((t: DynamicTestimonial) => ({
         name: t.user.name,
         role: t.position && t.company ? `${t.position} @ ${t.company}` : "Verified User",
         quote: t.content,

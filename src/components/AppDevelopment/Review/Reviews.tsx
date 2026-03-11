@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import "./Reviews.css";
-import { useDynamicTestimonials } from "@/lib/useDynamicTestimonials";
+import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 
 /* ---------------- TRUSTED BY ---------------- */
 
@@ -24,7 +24,7 @@ function TrustedBy({ images, author, date }: { images: string[], author: string,
   return (
     <div className="trusted-by">
       <div className="trusted-by__avatars">
-        {displayImages.slice(0, 5).map((src, i) => (
+        {displayImages.slice(0, 5).map((src: string, i: number) => (
           <div key={i} className="trusted-by__avatar">
             <img src={src} alt="User avatar" />
           </div>
@@ -40,6 +40,11 @@ function TrustedBy({ images, author, date }: { images: string[], author: string,
 }
 
 /* ---------------- MAIN COMPONENT ---------------- */
+
+interface ReviewItem {
+  name: string;
+  date: string;
+}
 
 export default function Reviews() {
   const { testimonials: dynTestimonials } = useDynamicTestimonials("AppDev", true);
@@ -63,12 +68,12 @@ export default function Reviews() {
       };
     }
 
-    const first = dynTestimonials[0];
-    const rest = dynTestimonials.slice(1, 5); // Limit to 4 cards max
+    const first = dynTestimonials[0] as DynamicTestimonial;
+    const rest = dynTestimonials.slice(1, 5) as DynamicTestimonial[];
     
     // Extract avatars for the "TrustedBy" row
-    const availableAvatars = dynTestimonials
-      .map(t => t.user.avatar)
+    const availableAvatars = (dynTestimonials as DynamicTestimonial[])
+      .map((t: DynamicTestimonial) => t.user.avatar)
       .filter((avatar): avatar is string => Boolean(avatar));
 
     return {
@@ -77,7 +82,7 @@ export default function Reviews() {
         author: first.user.name,
         date: new Date(first.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
       },
-      reviews: rest.map(t => ({
+      reviews: rest.map((t: DynamicTestimonial) => ({
         name: t.user.name,
         date: new Date(t.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
       })),
@@ -101,7 +106,7 @@ export default function Reviews() {
 
       {/* REVIEW STRIP */}
       <div className="reviews__strip">
-        {reviews.map((item, index) => (
+        {reviews.map((item: ReviewItem, index: number) => (
           <div key={index} className="review-card">
             <div className="review-card__name">{item.name}</div>
             <div className="review-card__date">{item.date}</div>
