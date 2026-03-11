@@ -62,6 +62,10 @@ export default function Footer() {
       scrollToAny(["faq"]);
       return;
     }
+    if (item === "About Us") {
+      router.push("/about");
+      return;
+    }
   };
 
   return (
@@ -126,6 +130,7 @@ export default function Footer() {
               "Pricing",
               "Testimonials",
               "FAQ",
+              "About Us",
             ].map((item) => (
               <button
                 key={item}
