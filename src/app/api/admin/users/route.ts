@@ -11,7 +11,7 @@ async function verifyAdmin(req: NextRequest) {
         throw new Error('Unauthorized');
     }
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
     if (decoded.role !== 'admin') {
         throw new Error('Forbidden');
     }
@@ -29,8 +29,9 @@ export async function GET(req: NextRequest) {
 
         console.log(`Admin Users API - Total: ${totalCount}, Admins: ${adminCount}, Users: ${userCount}`);
         return NextResponse.json({ users, debug: { totalCount, adminCount, userCount } });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: error.message === 'Unauthorized' ? 401 : 403 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ error: message }, { status: message === 'Unauthorized' ? 401 : 403 });
     }
 }
 
@@ -44,7 +45,7 @@ export async function PATCH(req: NextRequest) {
             return NextResponse.json({ error: 'You cannot suspend yourself' }, { status: 400 });
         }
 
-        const update: any = {};
+        const update: { isVerified?: boolean; isSuspended?: boolean } = {};
         if (typeof isVerified === 'boolean') update.isVerified = isVerified;
         if (typeof isSuspended === 'boolean') update.isSuspended = isSuspended;
 
@@ -53,9 +54,10 @@ export async function PATCH(req: NextRequest) {
         if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
         return NextResponse.json({ user });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Admin Users API PATCH Error:', error);
-        return NextResponse.json({ error: error.message }, { status: 403 });
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ error: message }, { status: 403 });
     }
 }
 
@@ -74,8 +76,9 @@ export async function DELETE(req: NextRequest) {
         if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
         return NextResponse.json({ message: 'User deleted' });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Admin Users API DELETE Error:', error);
-        return NextResponse.json({ error: error.message }, { status: 403 });
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ error: message }, { status: 403 });
     }
 }

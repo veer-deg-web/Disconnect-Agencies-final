@@ -25,11 +25,11 @@ export const adminApi = createApi({
         /* =======================
            FAQS
         ======================= */
-        getFaqs: builder.query<any, void>({
+        getFaqs: builder.query<{ faqs: any[] }, void>({
             query: () => '/faq',
             providesTags: ['Faq'],
         }),
-        addFaq: builder.mutation<any, any>({
+        addFaq: builder.mutation<any, { question: string; answer: string; category: string }>({
             query: (body) => ({
                 url: '/faq',
                 method: 'POST',
@@ -37,7 +37,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Faq'],
         }),
-        updateFaq: builder.mutation<any, any>({
+        updateFaq: builder.mutation<any, { id: string; question: string; answer: string; category: string }>({
             query: (body) => ({
                 url: '/faq',
                 method: 'PUT',
@@ -57,11 +57,11 @@ export const adminApi = createApi({
         /* =======================
            BOOKINGS & SETTINGS
         ======================= */
-        getBookingSettings: builder.query<any, void>({
+        getBookingSettings: builder.query<{ settings: { meetingLink: string; adminEmails: string[] } }, void>({
             query: () => '/booking-settings',
             providesTags: ['BookingSettings'],
         }),
-        updateBookingSettings: builder.mutation<any, any>({
+        updateBookingSettings: builder.mutation<any, { meetingLink: string; adminEmails: string[] }>({
             query: (body) => ({
                 url: '/booking-settings',
                 method: 'PUT',
@@ -69,11 +69,11 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['BookingSettings'],
         }),
-        getBookings: builder.query<any, void>({
+        getBookings: builder.query<{ bookings: any[] }, void>({
             query: () => '/bookings',
             providesTags: ['Booking'],
         }),
-        updateBooking: builder.mutation<any, any>({
+        updateBooking: builder.mutation<any, { id: string; adminRemark?: string; status?: string }>({
             query: (body) => ({
                 url: '/bookings',
                 method: 'PUT',

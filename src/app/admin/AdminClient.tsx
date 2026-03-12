@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Plus,
@@ -140,10 +141,7 @@ interface CareerApplicationRecord {
 }
 
 /* ── Helper: auth headers ── */
-function authHeader() {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  return { 'Content-Type': 'application/json', Authorization: token ? `Bearer ${token}` : '' };
-}
+
 
 /* ─────────────────────────────────────────────
    FAQ FORM MODAL
@@ -239,7 +237,7 @@ function FaqSection({ category }: { category: 'all' | Category }) {
   const faqs: Faq[] = data?.faqs || [];
   const loading = isLoading;
   const saving = isAdding || isUpdating || isDeleting;
-  const errorObj = queryError as any;
+  const errorObj = queryError as { data?: { error?: string }; error?: string };
   const errorOut = errorObj?.data?.error || errorObj?.error || '';
 
   const [errorLocal, setErrorLocal] = useState('');
@@ -254,8 +252,11 @@ function FaqSection({ category }: { category: 'all' | Category }) {
       setErrorLocal('');
       await addFaq(body).unwrap();
       setShowAdd(false);
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to add FAQ');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to add FAQ';
+      setErrorLocal(errorMsg);
     }
   };
 
@@ -265,8 +266,11 @@ function FaqSection({ category }: { category: 'all' | Category }) {
       setErrorLocal('');
       await updateFaq({ id: editFaq._id, ...body }).unwrap();
       setEditFaq(null);
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to edit FAQ');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to edit FAQ';
+      setErrorLocal(errorMsg);
     }
   };
 
@@ -274,8 +278,11 @@ function FaqSection({ category }: { category: 'all' | Category }) {
     try {
       setErrorLocal('');
       await deleteFaqMutation(id).unwrap();
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to delete FAQ');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to delete FAQ';
+      setErrorLocal(errorMsg);
     }
   };
 
@@ -449,8 +456,11 @@ function BookingAdminSection() {
     try {
       await updateSettings(newSettings).unwrap();
       setOk('Booking settings saved successfully.');
-    } catch (err: any) {
-      setError(err?.data?.error || err.message || 'Failed to save settings');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to save settings';
+      setError(errorMsg);
     }
   };
 
@@ -473,8 +483,11 @@ function BookingAdminSection() {
     try {
       await updateBookingMutation({ id, ...payload }).unwrap();
       setOk(successMessage);
-    } catch (err: any) {
-      setError(err?.data?.error || err.message || 'Failed to update booking');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to update booking';
+      setError(errorMsg);
     } finally {
       setBookingBusyId(null);
     }
@@ -500,8 +513,11 @@ function BookingAdminSection() {
     try {
       await deleteBookingMutation(id).unwrap();
       setOk('Booking deleted.');
-    } catch (err: any) {
-      setError(err?.data?.error || err.message || 'Failed to delete booking');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to delete booking';
+      setError(errorMsg);
     } finally {
       setBookingBusyId(null);
     }
@@ -651,15 +667,15 @@ function BookingAdminSection() {
 ───────────────────────────────────────────── */
 function UserAdminSection() {
   const { data: usersData, isLoading: loading, error: queryError } = useGetUsersQuery();
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
-  const [deleteUserMutation, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUserMutation] = useDeleteUserMutation();
 
   const users: UserRecord[] = usersData?.users || [];
   const [busyId, setBusyId] = useState<string | null>(null);
   const [errorLocal, setErrorLocal] = useState('');
   const [search, setSearch] = useState('');
 
-  const errorObj = queryError as any;
+  const errorObj = queryError as { data?: { error?: string }; error?: string };
   const errorOut = errorObj?.data?.error || errorObj?.error || '';
   const error = errorOut || errorLocal;
 
@@ -668,8 +684,11 @@ function UserAdminSection() {
     setErrorLocal('');
     try {
       await updateUser({ id, isVerified: !current }).unwrap();
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to toggle verification');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to toggle verification';
+      setErrorLocal(errorMsg);
     } finally {
       setBusyId(null);
     }
@@ -680,8 +699,11 @@ function UserAdminSection() {
     setErrorLocal('');
     try {
       await updateUser({ id, isSuspended: !current }).unwrap();
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to toggle suspension');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to toggle suspension';
+      setErrorLocal(errorMsg);
     } finally {
       setBusyId(null);
     }
@@ -692,8 +714,11 @@ function UserAdminSection() {
     setErrorLocal('');
     try {
       await deleteUserMutation(id).unwrap();
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to delete user');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to delete user';
+      setErrorLocal(errorMsg);
     } finally {
       setBusyId(null);
     }
@@ -745,7 +770,7 @@ function UserAdminSection() {
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {u.avatar ? (
-                      <img src={u.avatar} style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                      <Image src={u.avatar} alt={u.name} width={32} height={32} style={{ borderRadius: '50%' }} />
                     ) : (
                       <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {u.name[0]}
@@ -798,15 +823,15 @@ function UserAdminSection() {
 ───────────────────────────────────────────── */
 function FeedbackAdminSection() {
   const { data: feedbackData, isLoading: loading, error: queryError } = useGetFeedbacksQuery();
-  const [updateFeedback, { isLoading: isUpdating }] = useUpdateFeedbackMutation();
-  const [deleteFeedbackMutation, { isLoading: isDeleting }] = useDeleteFeedbackMutation();
+  const [updateFeedback] = useUpdateFeedbackMutation();
+  const [deleteFeedbackMutation] = useDeleteFeedbackMutation();
 
   const feedbacks: FeedbackRecord[] = feedbackData?.feedbacks || [];
   const [savingId, setSavingId] = useState<string | null>(null);
   const [errorLocal, setErrorLocal] = useState('');
   const [okLocal, setOkLocal] = useState('');
 
-  const errorObj = queryError as any;
+  const errorObj = queryError as { data?: { error?: string }; error?: string };
   const errorOut = errorObj?.data?.error || errorObj?.error || '';
   const error = errorOut || errorLocal;
   const ok = okLocal;
@@ -822,17 +847,20 @@ function FeedbackAdminSection() {
       // However, usually "Feature" in this UI means "Make it show up".
       // Let's make it so toggling Featured to true also sets isTestimonial to true.
       const newStatus = !currentFeatured;
-      const payload: any = { 
+      const payload: { id: string; isFeatured: boolean; isTestimonial: boolean; category?: string } = { 
         id, 
         isFeatured: newStatus,
-        isTestimonial: newStatus ? true : isTestimonial // If featuring, definitely make it a testimonial.
+        isTestimonial: newStatus ? true : (isTestimonial ?? false) // If featuring, definitely make it a testimonial.
       };
       if (category) payload.category = category;
 
       await updateFeedback(payload).unwrap();
       setOkLocal('Feedback updated successfully.');
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to update feedback');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to update feedback';
+      setErrorLocal(errorMsg);
     } finally {
       setSavingId(null);
     }
@@ -846,8 +874,11 @@ function FeedbackAdminSection() {
     try {
       await deleteFeedbackMutation(id).unwrap();
       setOkLocal('Feedback deleted successfully.');
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to delete feedback');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to delete feedback';
+      setErrorLocal(errorMsg);
     } finally {
       setSavingId(null);
     }
@@ -887,11 +918,11 @@ function FeedbackAdminSection() {
           </div>
         ) : (
           <div className="adm-faq-list">
-            {feedbacks.map((f, i) => (
+            {feedbacks.map((f) => (
               <div className="adm-faq-item" key={f._id} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                 <div style={{ flexShrink: 0, marginTop: '4px' }}>
                    {f.user?.avatar ? (
-                     <img src={f.user.avatar} alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                     <Image src={f.user.avatar} alt={f.user.name || 'Avatar'} width={40} height={40} style={{ borderRadius: '50%', objectFit: 'cover' }} />
                    ) : (
                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
                        {f.user?.name ? f.user.name.charAt(0).toUpperCase() : '?'}
@@ -972,8 +1003,8 @@ function FeedbackAdminSection() {
 ───────────────────────────────────────────── */
 function CareersAdminSection() {
   const { data: careerData, isLoading: loading, error: queryError } = useGetCareerApplicationsQuery();
-  const [updateStatus, { isLoading: isUpdating }] = useUpdateCareerApplicationMutation();
-  const [deleteApplication, { isLoading: isDeleting }] = useDeleteCareerApplicationMutation();
+  const [updateStatus] = useUpdateCareerApplicationMutation();
+  const [deleteApplication] = useDeleteCareerApplicationMutation();
 
   const applications: CareerApplicationRecord[] = careerData?.applications || [];
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -981,7 +1012,7 @@ function CareersAdminSection() {
   const [okLocal, setOkLocal] = useState('');
   const [search, setSearch] = useState('');
 
-  const errorObj = queryError as any;
+  const errorObj = queryError as { data?: { error?: string }; error?: string };
   const errorOut = errorObj?.data?.error || errorObj?.error || '';
   const error = errorOut || errorLocal;
 
@@ -992,8 +1023,11 @@ function CareersAdminSection() {
     try {
       await updateStatus({ id, status }).unwrap();
       setOkLocal(`Application marked as ${status}`);
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to update status');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to update status';
+      setErrorLocal(errorMsg);
     } finally {
       setBusyId(null);
     }
@@ -1006,8 +1040,11 @@ function CareersAdminSection() {
     try {
       await deleteApplication(id).unwrap();
       setOkLocal('Application deleted successfully');
-    } catch (err: any) {
-      setErrorLocal(err?.data?.error || err.message || 'Failed to delete application');
+    } catch (err: unknown) {
+      const errorMsg = err && typeof err === 'object' && 'data' in err 
+        ? (err as { data: { error: string } }).data.error 
+        : err instanceof Error ? err.message : 'Failed to delete application';
+      setErrorLocal(errorMsg);
     } finally {
       setBusyId(null);
     }

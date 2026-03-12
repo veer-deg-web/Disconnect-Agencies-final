@@ -72,7 +72,7 @@ export default function FeedbackPage() {
         setStatus("error");
         setMessage(data.error || "Failed to submit feedback.");
       }
-    } catch (err) {
+    } catch {
       setStatus("error");
       setMessage("An error occurred. Please try again.");
     } finally {

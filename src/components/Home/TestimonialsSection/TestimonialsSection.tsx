@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
-import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
+import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
 

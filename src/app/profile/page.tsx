@@ -89,7 +89,7 @@ export default function ProfilePage() {
           localStorage.removeItem('userName');
           router.push('/');
         }
-      } catch (err) {
+      } catch {
         setError('Failed to load profile');
       } finally {
         setLoading(false);
@@ -225,7 +225,7 @@ export default function ProfilePage() {
       } else {
         setError(data.error || 'Failed to update profile');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred while saving');
     } finally {
       setSaving(false);
@@ -423,7 +423,7 @@ export default function ProfilePage() {
               <div className="tab-pane">
                 <h2 style={{ marginBottom: '16px', color: '#fff' }}>My Feedbacks</h2>
                 {feedbacks.length === 0 ? (
-                    <p style={{ color: 'rgba(255,255,255,0.5)' }}>You haven't left any feedback yet.</p>
+                    <p style={{ color: 'rgba(255,255,255,0.5)' }}>You haven&apos;t left any feedback yet.</p>
                 ) : (
                     <div className="list-grid">
                         {feedbacks.map(f => (

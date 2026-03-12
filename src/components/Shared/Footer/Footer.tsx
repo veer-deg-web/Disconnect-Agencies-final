@@ -163,7 +163,7 @@ export default function Footer() {
               <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: "12px", padding: "20px", border: "1px solid rgba(255,255,255,0.08)" }}>
                 <h4 style={{ margin: "0 0 12px 0", fontSize: "16px", fontWeight: 500, color: "#fff" }}>Enjoying Disconnect?</h4>
                 <p style={{ margin: "0 0 16px 0", fontSize: "14px", color: "rgba(255,255,255,0.6)" }}>
-                  Have thoughts or suggestions? We'd love to hear from you. Your feedback might be featured directly on our page!
+                  Have thoughts or suggestions? We&apos;d love to hear from you. Your feedback might be featured directly on our page!
                 </p>
                 <button
                   onClick={() => router.push("/feedback")}

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, px, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton"; 
 /* ---------------- UTILS ---------------- */
@@ -68,9 +68,7 @@ export default function UIUXPricing() {
     console.log("Subscribe clicked");
   };
 
-  const handleBookCall = () => {
-    console.log("Book a call clicked");
-  };
+
 
   return (
     <section
@@ -430,16 +428,7 @@ const primaryBtnStyle = {
   fontWeight: 500,
 };
 
-const secondaryBtnStyle = {
-  flex: 1,
-  padding: "16px 20px",
-  borderRadius: 999,
-  fontSize: 14,
-  fontWeight: 500,
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.18)",
-  color: "#fff",
-};
+
 
 /* TOGGLE */
 const toggleContainer = {

@@ -30,8 +30,8 @@ export async function GET(req: Request) {
             .sort({ createdAt: -1 });
 
         return NextResponse.json({ feedbacks }, { status: 200 });
-    } catch (error: any) {
-        if (error.message === 'Unauthorized' || error.message === 'Forbidden') {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.message === 'Unauthorized' || error.message === 'Forbidden')) {
             return NextResponse.json({ error: error.message }, { status: error.message === 'Unauthorized' ? 401 : 403 });
         }
         console.error('Admin Fetch Feedback Error:', error);
@@ -72,8 +72,8 @@ export async function PUT(req: Request) {
         }
 
         return NextResponse.json({ feedback }, { status: 200 });
-    } catch (error: any) {
-        if (error.message === 'Unauthorized' || error.message === 'Forbidden') {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.message === 'Unauthorized' || error.message === 'Forbidden')) {
             return NextResponse.json({ error: error.message }, { status: error.message === 'Unauthorized' ? 401 : 403 });
         }
         console.error('Admin Update Feedback Error:', error);
@@ -100,8 +100,8 @@ export async function DELETE(req: Request) {
         }
 
         return NextResponse.json({ message: 'Feedback deleted successfully' }, { status: 200 });
-    } catch (error: any) {
-        if (error.message === 'Unauthorized' || error.message === 'Forbidden') {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.message === 'Unauthorized' || error.message === 'Forbidden')) {
             return NextResponse.json({ error: error.message }, { status: error.message === 'Unauthorized' ? 401 : 403 });
         }
         console.error('Admin Delete Feedback Error:', error);

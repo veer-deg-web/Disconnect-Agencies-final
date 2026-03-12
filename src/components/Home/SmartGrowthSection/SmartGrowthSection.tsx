@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
-import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+import { EASE_SMOOTH } from "@/lib/animations";
 
 /* ======================
    ANIMATION VARIANTS

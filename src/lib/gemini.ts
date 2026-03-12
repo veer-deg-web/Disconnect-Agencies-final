@@ -11,7 +11,7 @@ function getClient() {
 /* ── Robust JSON parser — handles messy AI output ── */
 function parseAIJson(text: string) {
   // Strip markdown fences
-  let cleaned = text
+  const cleaned = text
     .replace(/```json\s*/gi, "")
     .replace(/```\s*/g, "")
     .trim();

@@ -2,7 +2,7 @@
 
 import { motion, useAnimation, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+import { EASE_SMOOTH } from "@/lib/animations";
 
 /* =======================
    TYPEWRITER SCRIBBLE

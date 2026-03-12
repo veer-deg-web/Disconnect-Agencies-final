@@ -18,8 +18,9 @@ export async function GET(req: NextRequest) {
       .lean();
 
     return NextResponse.json({ bookings });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || 'Failed to load bookings' }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to load bookings';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -48,8 +49,9 @@ export async function PUT(req: NextRequest) {
     if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
 
     return NextResponse.json({ booking });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || 'Failed to update booking' }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to update booking';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -67,7 +69,8 @@ export async function DELETE(req: NextRequest) {
     if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
 
     return NextResponse.json({ message: 'Booking deleted' });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || 'Failed to delete booking' }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to delete booking';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

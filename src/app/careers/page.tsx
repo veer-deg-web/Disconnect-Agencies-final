@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   Upload, 
   X, 
@@ -96,8 +96,9 @@ export default function CareersPage() {
       if (!res.ok) throw new Error(result.error || 'Failed to submit application');
 
       setSubmitted(true);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to submit application';
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -266,7 +267,7 @@ export default function CareersPage() {
                 <textarea 
                   name="message"
                   className="form-textarea" 
-                  placeholder="Tell us why you're a great fit..." 
+                  placeholder="Tell us why you&apos;re a great fit..." 
                   rows={4} 
                   required 
                   value={formData.message}

@@ -71,7 +71,8 @@ const useResizeObserver = (
     return () => {
       observers.forEach(observer => observer?.disconnect());
     };
-  }, dependencies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [callback, elements, ...dependencies]);
 };
 
 const useImageLoader = (
@@ -111,7 +112,8 @@ const useImageLoader = (
         img.removeEventListener('error', handleImageLoad);
       });
     };
-  }, dependencies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onLoad, seqRef, ...dependencies]);
 };
 
 const useAnimationLoop = (
@@ -178,7 +180,7 @@ const useAnimationLoop = (
       }
       lastTimestampRef.current = null;
     };
-  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical]);
+  }, [trackRef, targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical]);
 };
 
 export const LogoLoop = React.memo<LogoLoopProps>(
@@ -302,30 +304,31 @@ export const LogoLoop = React.memo<LogoLoopProps>(
         }
         const isNodeItem = 'node' in item;
         const content = isNodeItem ? (
-          <span className="logoloop__node" aria-hidden={!!item.href && !item.ariaLabel}>
-            {(item as any).node}
+          <span className="logoloop__node" aria-hidden={!!(item as { href?: string }).href && !(item as { ariaLabel?: string }).ariaLabel}>
+            {(item as { node: React.ReactNode }).node}
           </span>
         ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
           <img
-            src={(item as any).src}
-            srcSet={(item as any).srcSet}
-            sizes={(item as any).sizes}
-            width={(item as any).width}
-            height={(item as any).height}
-            alt={(item as any).alt ?? ''}
-            title={(item as any).title}
+            src={(item as { src: string }).src}
+            srcSet={(item as { srcSet?: string }).srcSet}
+            sizes={(item as { sizes?: string }).sizes}
+            width={(item as { width?: number }).width}
+            height={(item as { height?: number }).height}
+            alt={(item as { alt?: string }).alt ?? ''}
+            title={(item as { title?: string }).title}
             loading="lazy"
             decoding="async"
             draggable={false}
           />
         );
         const itemAriaLabel = isNodeItem
-          ? ((item as any).ariaLabel ?? (item as any).title)
-          : ((item as any).alt ?? (item as any).title);
-        const itemContent = (item as any).href ? (
+          ? ((item as { ariaLabel?: string }).ariaLabel ?? (item as { title?: string }).title)
+          : ((item as { alt?: string }).alt ?? (item as { title?: string }).title);
+        const itemContent = (item as { href?: string }).href ? (
           <a
             className="logoloop__link"
-            href={(item as any).href}
+            href={(item as { href?: string }).href}
             aria-label={itemAriaLabel || 'logo link'}
             target="_blank"
             rel="noreferrer noopener"

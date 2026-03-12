@@ -449,7 +449,13 @@ export default function HeroNavbar() {
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       {userAvatar ? (
-                        <img src={userAvatar} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <Image 
+                          src={userAvatar} 
+                          alt="Profile" 
+                          width={32} 
+                          height={32} 
+                          style={{ borderRadius: '50%', objectFit: 'cover' }} 
+                        />
                       ) : (
                         <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', color: '#fff' }}>
                           {userName.charAt(0).toUpperCase()}

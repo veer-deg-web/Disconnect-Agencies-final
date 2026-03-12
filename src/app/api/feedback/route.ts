@@ -46,7 +46,7 @@ export async function POST(req: Request) {
             { message: 'Feedback submitted successfully', feedback: newFeedback },
             { status: 201 }
         );
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Submit Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
@@ -76,7 +76,7 @@ export async function GET(req: Request) {
             .sort({ createdAt: -1 });
 
         return NextResponse.json({ testimonials }, { status: 200 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Fetch Testimonials Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }

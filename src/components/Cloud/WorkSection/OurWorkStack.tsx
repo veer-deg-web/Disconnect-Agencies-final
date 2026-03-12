@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import "./OurWorkStack.css";
 
 const cards = [
@@ -9,7 +10,7 @@ const cards = [
   { src: "/assets/Cloud/WorkSection/photo/Stack3.webp", alt: "Work 3" },
 ];
 
-const N = cards.length; // 3
+
 
 export default function OurWorkStack() {
   const wrapperRef  = useRef<HTMLDivElement>(null);
@@ -72,7 +73,14 @@ export default function OurWorkStack() {
               className="work-stack-slider"
             >
               <div className="work-stack-card">
-                <img src={c.src} alt={c.alt} loading="lazy" />
+                <Image 
+                  src={c.src} 
+                  alt={c.alt} 
+                  width={800} 
+                  height={1000}
+                  className="work-stack-img"
+                  style={{ objectFit: 'cover' }}
+                />
               </div>
             </div>
           </div>

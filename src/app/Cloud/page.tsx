@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import CloudServicesSection from "@/components/Cloud/CloudServiceSection/CloudServicesSection";
-import OurWorkStack from "@/components/Cloud/WorkSection/OurWorkStack";
+
 import OurWorkFinal from "@/components/Cloud/WorkSection/OurWorkFinal";
 import ScrollZoomStats from "@/components/Cloud/SrollZoom/ScrollZoomStats";
 import MoreAboutSection from "@/components/Cloud/MoreAboutUs/MoreAboutSection";
@@ -9,7 +9,7 @@ import ProcessSection from "@/components/Cloud/Process/ProcessSection";
 import TestimonialsSection from "@/components/Cloud/Testimonials/TestimonialsSection";
 import HeroSection from "@/components/Cloud/Hero/HeroSection";
 import CTASection from "@/components/Shared/CTASection/CTASection";
-import { Cloudfaq } from "@/Data/Cloudfaq";
+
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import Footer from "@/components/Shared/Footer/Footer";
 

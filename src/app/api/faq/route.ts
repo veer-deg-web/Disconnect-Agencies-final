@@ -6,7 +6,7 @@ type Category = StaticFaqCategory | 'all';
 /** Return static data for a given category */
 function getStaticFaqs(category: Category) {
   if (category === 'all') {
-    return (Object.keys(STATIC_FAQS) as StaticFaqCategory[]).flatMap((cat, ci) =>
+    return (Object.keys(STATIC_FAQS) as StaticFaqCategory[]).flatMap((cat, _ci) =>
       STATIC_FAQS[cat].map((f, i) => ({
         _id: `${cat}-${i}`, question: f.question, answer: f.answer, category: cat, order: i,
       }))
