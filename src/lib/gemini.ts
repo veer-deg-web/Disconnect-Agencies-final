@@ -63,10 +63,10 @@ export async function rewriteArticle(original: {
     },
   });
 
-  const prompt = `You are a senior SEO content writer for "Disconnect", a premium full-service design and development agency.
+  const prompt = `You are a senior SEO content writer for "Disconnect".
 
 Rewrite the following article COMPLETELY — new structure, new sentences, new examples. 
-Keep the CORE TOPIC the same but shift the perspective to the Disconnect agency voice.
+Keep the CORE TOPIC the same but shift the perspective to the Disconnect voice.
 Make the content unique, engaging, and SEO-optimized.
 
 ORIGINAL TITLE: ${original.title}
@@ -77,11 +77,11 @@ ${original.content.substring(0, 8000)}
 Respond with JSON matching this schema:
 {
   "title": "New SEO-optimized title (max 60 chars)",
-  "metaTitle": "Meta title for SEO (max 60 chars)",
-  "metaDescription": "Compelling meta description (max 155 chars)",
+  "metaTitle": "Professional meta title for SEO (50-60 chars). Mention Disconnect once at most.",
+  "metaDescription": "Professional meta description (140-155 chars). Mention Disconnect once at most. Never use 'agency' or 'agencies'.",
   "excerpt": "A 2-3 sentence summary of the article (max 250 chars)",
   "category": "${original.category}",
-  "content": "Full HTML article content with proper h2, h3, p, ul, li tags. Minimum 1500 words. Do NOT use backticks or markdown — only HTML.",
+  "content": "Full HTML article content with proper h2, h3, p, ul, li tags. NEVER use h1 tags inside content. Minimum 1500 words. Do NOT use backticks or markdown — only HTML.",
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
   "faq": [
     {"question": "FAQ question 1?", "answer": "Detailed answer 1"},
@@ -106,12 +106,12 @@ export async function generateBlogFromTopic(topic: string) {
     },
   });
 
-  const prompt = `You are a senior SEO content writer for "Disconnect", a premium full-service design and development agency specializing in web development, app development, UI/UX, AI, cloud, and SEO.
+  const prompt = `You are a senior SEO content writer for "Disconnect", specializing in web development, app development, UI/UX, AI, cloud, and SEO.
 
 Write a COMPLETELY NEW, original, SEO-optimized blog post about: "${topic}"
 
 Requirements:
-- Write in first-person plural (we/our) from the Disconnect agency perspective
+- Write in first-person plural (we/our) from the Disconnect perspective
 - Include practical insights, statistics, and actionable advice
 - Minimum 1500 words of content
 - Use proper HTML tags (h2, h3, p, ul, li, strong, em)
@@ -122,11 +122,11 @@ Requirements:
 Respond with JSON matching this schema:
 {
   "title": "SEO-optimized title (max 60 chars)",
-  "metaTitle": "Meta title for SEO (max 60 chars)",
-  "metaDescription": "Compelling meta description (max 155 chars)",
+  "metaTitle": "Professional meta title for SEO (50-60 chars). Mention Disconnect once at most.",
+  "metaDescription": "Professional meta description (140-155 chars). Mention Disconnect once at most. Never use 'agency' or 'agencies'.",
   "excerpt": "2-3 sentence summary (max 250 chars)",
   "category": "One of: Web Development, AI & Data, Engineering, Cloud, UI/UX Design, Mobile Development, SEO, Business",
-  "content": "Full HTML article content with structured headings and paragraphs",
+  "content": "Full HTML article content with structured headings and paragraphs. NEVER use h1 tags inside content.",
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
   "faq": [
     {"question": "FAQ question 1?", "answer": "Detailed answer 1"},

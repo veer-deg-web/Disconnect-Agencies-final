@@ -1,7 +1,14 @@
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import { rewriteArticle, generateBlogFromTopic, getRandomTopic } from "@/lib/gemini";
-import { collectBlogUrls, scrapeMultipleArticles, ScrapedArticle } from "@/lib/scraper";
+import { collectBlogUrls, scrapeArticle } from "@/lib/scraper";
+import { ensureWebpImage } from "@/lib/blogImageWebp";
+import {
+  buildProfessionalMetaDescription,
+  buildProfessionalMetaTitle,
+  normalizeDisconnectBrand,
+  sanitizeBlogHtmlContent,
+} from "@/lib/blogSeo";
 
 /* ── Slug helper ── */
 function createSlug(title: string): string {
@@ -55,49 +62,137 @@ function truncate(str: string, max: number): string {
 /* ── Sanitize AI output fields before saving ── */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function sanitizeAIOutput(data: any): any {
+  const title = normalizeDisconnectBrand(String(data.title || ""));
+  const content = sanitizeBlogHtmlContent(String(data.content || ""));
+  const excerpt = truncate(
+    normalizeDisconnectBrand(String(data.excerpt || data.metaDescription || "")),
+    295
+  );
+
   return {
     ...data,
-    excerpt: truncate(String(data.excerpt || data.metaDescription || ""), 295),
-    metaTitle: truncate(String(data.metaTitle || data.title || ""), 68),
-    metaDescription: truncate(String(data.metaDescription || ""), 165),
+    title,
+    content,
+    excerpt,
+    metaTitle: buildProfessionalMetaTitle(title, String(data.metaTitle || "")),
+    metaDescription: buildProfessionalMetaDescription({
+      provided: String(data.metaDescription || ""),
+      excerpt,
+      content,
+      title,
+    }),
   };
 }
 
 /* ── Scrape + Rewrite pipeline ── */
+export interface ScrapeProgress {
+  phase: "collecting" | "processing" | "done";
+  total: number;
+  processed: number;
+  created: number;
+  skipped: number;
+  currentTitle?: string;
+  currentUrl?: string;
+  lastError?: string;
+}
+
 export async function scrapeAndRewrite(
-  maxPages: number = 2,
-  maxArticles: number = 5
-): Promise<{ created: number; errors: string[] }> {
+  maxPages: number = 100,
+  maxArticles: number = Number.MAX_SAFE_INTEGER,
+  onProgress?: (progress: ScrapeProgress) => void
+): Promise<{ created: number; skipped: number; processed: number; total: number; errors: string[] }> {
   await dbConnect();
   const errors: string[] = [];
   let created = 0;
+  let skipped = 0;
+  let processed = 0;
+
+  const emit = (payload: ScrapeProgress) => {
+    if (onProgress) onProgress(payload);
+  };
+
+  emit({
+    phase: "collecting",
+    total: 0,
+    processed: 0,
+    created: 0,
+    skipped: 0,
+  });
 
   // 1. Collect URLs
   const urls = await collectBlogUrls(maxPages);
   if (urls.length === 0) {
-    return { created: 0, errors: ["No blog URLs found from scraping"] };
+    emit({
+      phase: "done",
+      total: 0,
+      processed: 0,
+      created: 0,
+      skipped: 0,
+      lastError: "No blog URLs found from scraping",
+    });
+    return { created: 0, skipped: 0, processed: 0, total: 0, errors: ["No blog URLs found from scraping"] };
   }
 
   // 2. Filter out already-scraped URLs
   const existing = await Blog.find({ sourceUrl: { $in: urls } }).select("sourceUrl");
   const existingUrls = new Set(existing.map((b) => b.sourceUrl));
-  const newUrls = urls.filter((u) => !existingUrls.has(u));
+  const newUrls = urls.filter((u) => !existingUrls.has(u)).slice(0, maxArticles);
+  const total = newUrls.length;
 
   if (newUrls.length === 0) {
-    return { created: 0, errors: ["All scraped articles already exist in the database"] };
+    emit({
+      phase: "done",
+      total: 0,
+      processed: 0,
+      created: 0,
+      skipped: 0,
+      lastError: "All scraped articles already exist in the database",
+    });
+    return {
+      created: 0,
+      skipped: 0,
+      processed: 0,
+      total: 0,
+      errors: ["All scraped articles already exist in the database"],
+    };
   }
 
-  // 3. Scrape articles
-  const articles: ScrapedArticle[] = await scrapeMultipleArticles(newUrls, maxArticles);
+  emit({
+    phase: "processing",
+    total,
+    processed,
+    created,
+    skipped,
+  });
 
-  // 4. Rewrite each article with AI
-  for (const article of articles) {
+  // 3. Scrape + rewrite each article URL
+  for (const url of newUrls) {
     try {
+      const article = await scrapeArticle(url);
+      if (!article) {
+        skipped++;
+        processed++;
+        emit({
+          phase: "processing",
+          total,
+          processed,
+          created,
+          skipped,
+          currentUrl: url,
+          lastError: "Could not parse scraped article",
+        });
+        continue;
+      }
+
       const rewritten = sanitizeAIOutput(await rewriteArticle({
         title: article.title,
         content: article.content,
         category: article.category,
       }));
+      const featuredImage = await ensureWebpImage(
+        article.featuredImage || getRandomImage(),
+        rewritten.title || article.title
+      );
 
       const slug = await uniqueSlug(createSlug(String(rewritten.title) || article.title));
 
@@ -108,7 +203,7 @@ export async function scrapeAndRewrite(
         excerpt: rewritten.excerpt || "",
         metaTitle: rewritten.metaTitle || rewritten.title || article.title,
         metaDescription: rewritten.metaDescription || "",
-        featuredImage: article.featuredImage || getRandomImage(),
+        featuredImage,
         content: rewritten.content || "",
         tags: rewritten.tags || [],
         readingTime: calcReadingTime(rewritten.content || ""),
@@ -120,16 +215,45 @@ export async function scrapeAndRewrite(
       });
 
       created++;
+      processed++;
+      emit({
+        phase: "processing",
+        total,
+        processed,
+        created,
+        skipped,
+        currentTitle: rewritten.title || article.title,
+        currentUrl: article.sourceUrl,
+      });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      errors.push(`Failed to process "${article.title}": ${msg}`);
+      errors.push(`Failed to process "${url}": ${msg}`);
+      skipped++;
+      processed++;
+      emit({
+        phase: "processing",
+        total,
+        processed,
+        created,
+        skipped,
+        currentUrl: url,
+        lastError: msg,
+      });
     }
 
     // Rate limit delay between AI calls
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 
-  return { created, errors };
+  emit({
+    phase: "done",
+    total,
+    processed,
+    created,
+    skipped,
+  });
+
+  return { created, skipped, processed, total, errors };
 }
 
 /* ── Generate a new AI blog from a topic ── */
@@ -142,6 +266,7 @@ export async function generateNewBlog(
 
   try {
     const generated = sanitizeAIOutput(await generateBlogFromTopic(chosenTopic));
+    const featuredImage = await ensureWebpImage(getRandomImage(), generated.title || chosenTopic);
 
     const slug = await uniqueSlug(createSlug(String(generated.title) || chosenTopic));
 
@@ -152,7 +277,7 @@ export async function generateNewBlog(
       excerpt: generated.excerpt || "",
       metaTitle: generated.metaTitle || generated.title || chosenTopic,
       metaDescription: generated.metaDescription || "",
-      featuredImage: getRandomImage(),
+      featuredImage,
       content: generated.content || "",
       tags: generated.tags || [],
       readingTime: calcReadingTime(generated.content || ""),

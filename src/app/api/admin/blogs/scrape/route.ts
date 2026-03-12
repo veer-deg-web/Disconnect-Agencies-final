@@ -1,19 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
-import { scrapeAndRewrite } from "@/lib/blogGenerator";
+import { getBlogScrapeJobState, startBlogScrapeJob } from "@/lib/blogScrapeJob";
 
-/* POST /api/admin/blogs/scrape — Trigger scrape + AI rewrite */
+/* GET /api/admin/blogs/scrape — Live scrape job status */
+export async function GET() {
+  try {
+    const job = getBlogScrapeJobState();
+    return NextResponse.json({ job });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
+/* POST /api/admin/blogs/scrape — Start "scrape all" background job */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const maxPages = Math.min(10, parseInt(body.maxPages || "2"));
-    const maxArticles = Math.min(20, parseInt(body.maxArticles || "5"));
+    const maxPages = Math.min(200, Math.max(1, parseInt(body.maxPages || "100")));
+    const existing = getBlogScrapeJobState();
+    if (existing.status === "running") {
+      return NextResponse.json({
+        message: "Scrape job is already running",
+        started: false,
+        job: existing,
+      });
+    }
 
-    const result = await scrapeAndRewrite(maxPages, maxArticles);
-
+    const job = startBlogScrapeJob(maxPages);
     return NextResponse.json({
-      message: `Scraped and published ${result.created} blog(s)`,
-      created: result.created,
-      errors: result.errors,
+      message: "Started scraping all blog URLs. Track live progress in this panel.",
+      started: true,
+      job,
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal server error";

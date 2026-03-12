@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -52,6 +52,7 @@ import {
   useUpdateBlogMutation,
   useDeleteBlogMutation,
   useScrapeBlogMutation,
+  useGetScrapeBlogStatusQuery,
   useGenerateBlogMutation,
 } from '@/store/adminApi';
 import './Admin.css';
@@ -1309,15 +1310,35 @@ interface BlogRecord {
   createdAt: string;
 }
 
+interface ScrapeJobStatus {
+  status: 'idle' | 'running' | 'completed' | 'failed';
+  phase: 'collecting' | 'processing' | 'done';
+  total: number;
+  processed: number;
+  created: number;
+  skipped: number;
+  currentTitle?: string;
+  currentUrl?: string;
+  lastError?: string;
+  errors: string[];
+}
+
 function BlogAdminSection() {
-  const { data, isLoading } = useGetBlogsQuery();
+  const { data, isLoading, refetch: refetchBlogs } = useGetBlogsQuery();
   const [createBlog, { isLoading: isCreating }] = useCreateBlogMutation();
   const [updateBlog] = useUpdateBlogMutation();
   const [deleteBlogMut] = useDeleteBlogMutation();
   const [scrapeBlog, { isLoading: isScraping }] = useScrapeBlogMutation();
+  const { data: scrapeStatusData, refetch: refetchScrapeStatus } = useGetScrapeBlogStatusQuery();
   const [generateBlog, { isLoading: isGenerating }] = useGenerateBlogMutation();
+  const prevScrapeStatusRef = useRef<string>('');
 
   const blogs: BlogRecord[] = data?.blogs || [];
+  const scrapeJob: ScrapeJobStatus | undefined = scrapeStatusData?.job;
+  const scrapeRunning = scrapeJob?.status === 'running';
+  const scrapePercent = scrapeJob?.total
+    ? Math.round((scrapeJob.processed / Math.max(1, scrapeJob.total)) * 100)
+    : 0;
   const stats = data?.stats || { total: 0, published: 0, draft: 0, scraped: 0, aiGenerated: 0 };
 
   const [search, setSearch] = useState('');
@@ -1346,14 +1367,38 @@ function BlogAdminSection() {
   const handleScrape = async () => {
     setError(''); setOk('');
     try {
-      const res = await scrapeBlog({ maxPages: 2, maxArticles: 5 }).unwrap();
-      setOk(res.message || `Scraped ${res.created} blogs`);
-      if (res.errors?.length) setError(res.errors.join('; '));
+      const res = await scrapeBlog({ maxPages: 100 }).unwrap();
+      setOk(res.message || 'Scrape started');
+      refetchScrapeStatus();
     } catch (err: unknown) {
       const e = err as { data?: { error?: string } };
       setError(e?.data?.error || 'Scrape failed');
     }
   };
+
+  useEffect(() => {
+    if (!scrapeRunning) return;
+    const id = setInterval(() => {
+      refetchScrapeStatus();
+    }, 2000);
+    return () => clearInterval(id);
+  }, [scrapeRunning, refetchScrapeStatus]);
+
+  useEffect(() => {
+    const current = scrapeJob?.status || '';
+    const previous = prevScrapeStatusRef.current;
+    if (current === 'completed' && previous !== 'completed') {
+      setOk(`Scrape finished. Created ${scrapeJob?.created ?? 0} blog(s).`);
+      if (scrapeJob?.errors?.length) {
+        setError(scrapeJob.errors.slice(0, 3).join('; '));
+      }
+      refetchBlogs();
+    }
+    if (current === 'failed' && previous !== 'failed') {
+      setError(scrapeJob?.lastError || 'Scrape job failed');
+    }
+    prevScrapeStatusRef.current = current;
+  }, [scrapeJob, refetchBlogs]);
 
   const handleGenerate = async () => {
     setError(''); setOk('');
@@ -1447,11 +1492,21 @@ function BlogAdminSection() {
         <section className="adm-settings-card">
           <h2 className="adm-table-heading"><Download size={14} style={{ marginRight: '6px' }} />Scrape &amp; Import</h2>
           <p style={{ fontSize: '13px', opacity: 0.6, margin: '8px 0 14px' }}>
-            Scrape blogs from xbsoftware.com, rewrite with AI, and publish.
+            Scrape all blogs from xbsoftware.com, rewrite with AI, and publish with live progress.
           </p>
-          <button className="adm-btn adm-btn--primary" onClick={handleScrape} disabled={isScraping}>
-            {isScraping ? 'Scraping & Rewriting…' : 'Start Scrape'}
+          <button className="adm-btn adm-btn--primary" onClick={handleScrape} disabled={isScraping || scrapeRunning}>
+            {scrapeRunning ? 'Scraping in progress…' : isScraping ? 'Starting…' : 'Start Full Scrape'}
           </button>
+          {scrapeJob && scrapeJob.status !== 'idle' && (
+            <div style={{ marginTop: '14px', fontSize: '12px', lineHeight: 1.6, opacity: 0.8 }}>
+              <div><strong>Status:</strong> {scrapeJob.status}</div>
+              <div><strong>Progress:</strong> {scrapeJob.processed}/{scrapeJob.total} ({scrapePercent}%)</div>
+              <div><strong>Created:</strong> {scrapeJob.created} · <strong>Skipped:</strong> {scrapeJob.skipped}</div>
+              {scrapeJob.currentTitle && <div><strong>Current:</strong> {scrapeJob.currentTitle}</div>}
+              {!scrapeJob.currentTitle && scrapeJob.currentUrl && <div><strong>Current URL:</strong> {scrapeJob.currentUrl}</div>}
+              {scrapeJob.lastError && <div style={{ color: '#fca5a5' }}><strong>Last error:</strong> {scrapeJob.lastError}</div>}
+            </div>
+          )}
         </section>
 
         <section className="adm-settings-card">

@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
+import { ensureWebpImage } from "@/lib/blogImageWebp";
+import {
+  buildProfessionalMetaDescription,
+  buildProfessionalMetaTitle,
+  normalizeDisconnectBrand,
+  sanitizeBlogHtmlContent,
+} from "@/lib/blogSeo";
 
 /* GET /api/admin/blogs — Admin blog list (all statuses) */
 export async function GET(req: NextRequest) {
@@ -84,23 +91,40 @@ export async function POST(req: NextRequest) {
       slug = `${slug.replace(/-\d+$/, "")}-${counter}`;
     }
 
+    const normalizedTitle = normalizeDisconnectBrand(String(body.title || "").trim());
+    const normalizedExcerpt = normalizeDisconnectBrand(String(body.excerpt || "").trim());
+    const normalizedContent = sanitizeBlogHtmlContent(String(body.content || ""));
+
     // Calculate reading time
-    const text = (body.content || "").replace(/<[^>]+>/g, " ");
+    const text = normalizedContent.replace(/<[^>]+>/g, " ");
     const words = text.split(/\s+/).filter(Boolean).length;
     const readingTime = Math.max(1, Math.ceil(words / 200));
 
+    const featuredImage = await ensureWebpImage(
+      String(body.featuredImage || ""),
+      String(body.title || "blog-image")
+    );
+
     const blog = await Blog.create({
-      title: body.title,
+      title: normalizedTitle,
       slug,
       category: body.category || "Web Development",
-      excerpt: body.excerpt || "",
-      metaTitle: body.metaTitle || body.title.substring(0, 60),
-      metaDescription: body.metaDescription || body.excerpt || "",
-      featuredImage: body.featuredImage || "",
-      content: body.content,
+      excerpt: normalizedExcerpt,
+      metaTitle: buildProfessionalMetaTitle(
+        normalizedTitle,
+        String(body.metaTitle || "")
+      ),
+      metaDescription: buildProfessionalMetaDescription({
+        provided: String(body.metaDescription || ""),
+        excerpt: normalizedExcerpt,
+        content: normalizedContent,
+        title: normalizedTitle,
+      }),
+      featuredImage,
+      content: normalizedContent,
       tags: body.tags || [],
       readingTime,
-      author: body.author || "Disconnect Team",
+      author: normalizeDisconnectBrand(String(body.author || "Disconnect Team")),
       status: body.status || "published",
       source: "manual",
       faq: body.faq || [],
@@ -136,11 +160,55 @@ export async function PUT(req: NextRequest) {
       }
     }
 
+    if (body.title !== undefined) {
+      update.title = normalizeDisconnectBrand(String(body.title || ""));
+    }
+    if (body.author !== undefined) {
+      update.author = normalizeDisconnectBrand(String(body.author || ""));
+    }
+    if (body.excerpt !== undefined) {
+      update.excerpt = normalizeDisconnectBrand(String(body.excerpt || ""));
+    }
+    if (body.content !== undefined) {
+      update.content = sanitizeBlogHtmlContent(String(body.content || ""));
+    }
+
+    if (body.featuredImage !== undefined) {
+      update.featuredImage = await ensureWebpImage(
+        String(body.featuredImage || ""),
+        String(body.title || "blog-image")
+      );
+    }
+
     // Recalculate reading time if content changed
-    if (body.content) {
-      const text = body.content.replace(/<[^>]+>/g, " ");
+    if (update.content && typeof update.content === "string") {
+      const text = update.content.replace(/<[^>]+>/g, " ");
       const words = text.split(/\s+/).filter(Boolean).length;
       update.readingTime = Math.max(1, Math.ceil(words / 200));
+    }
+
+    const resolvedTitle = String(update.title || body.title || "");
+    const resolvedContent = String(update.content || body.content || "");
+    const resolvedExcerpt = String(update.excerpt || body.excerpt || "");
+
+    if (body.metaTitle !== undefined || body.title !== undefined) {
+      update.metaTitle = buildProfessionalMetaTitle(
+        resolvedTitle,
+        String(body.metaTitle || update.metaTitle || "")
+      );
+    }
+    if (
+      body.metaDescription !== undefined ||
+      body.excerpt !== undefined ||
+      body.content !== undefined ||
+      body.title !== undefined
+    ) {
+      update.metaDescription = buildProfessionalMetaDescription({
+        provided: String(body.metaDescription || update.metaDescription || ""),
+        excerpt: resolvedExcerpt,
+        content: resolvedContent,
+        title: resolvedTitle,
+      });
     }
 
     const blog = await Blog.findByIdAndUpdate(body.id, update, { new: true });

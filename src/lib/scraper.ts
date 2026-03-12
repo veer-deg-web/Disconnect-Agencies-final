@@ -31,6 +31,7 @@ export async function collectBlogUrls(
 
   for (let page = 1; page <= maxPages; page++) {
     try {
+      const before = urls.length;
       const pageUrl =
         page === 1
           ? "https://xbsoftware.com/blog/"
@@ -55,6 +56,11 @@ export async function collectBlogUrls(
 
       // Small delay between pages to be respectful
       await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Stop early when the listing no longer returns any blog links.
+      if (urls.length === before) {
+        break;
+      }
     } catch (err) {
       console.error(`Error fetching page ${page}:`, err);
       break;

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter, useParams } from "next/navigation";
 import Footer from "@/components/Shared/Footer/Footer";
+import { sanitizeBlogHtmlContent } from "@/lib/blogSeo";
 
 interface BlogFaq {
   question: string;
@@ -52,7 +53,13 @@ export default function BlogPostPage() {
 
         // Update page title
         if (data.blog?.metaTitle) {
-          document.title = `${data.blog.metaTitle} | Disconnect`;
+          document.title = data.blog.metaTitle;
+        }
+        if (data.blog?.metaDescription) {
+          const metaDesc = document.querySelector('meta[name="description"]');
+          if (metaDesc) {
+            metaDesc.setAttribute("content", data.blog.metaDescription);
+          }
         }
       } catch {
         setError("Failed to load blog post");
@@ -108,6 +115,7 @@ export default function BlogPostPage() {
   }
 
   // Schema.org BlogPosting markup
+  const articleHtml = sanitizeBlogHtmlContent(blog.content || "");
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -267,7 +275,7 @@ export default function BlogPostPage() {
       >
         <div
           className="blog-content"
-          dangerouslySetInnerHTML={{ __html: blog.content }}
+          dangerouslySetInnerHTML={{ __html: articleHtml }}
           style={{ color: "rgba(255,255,255,0.85)", lineHeight: 1.8, fontSize: "16.5px" }}
         />
 

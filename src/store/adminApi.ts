@@ -209,6 +209,9 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
+        getScrapeBlogStatus: builder.query<any, void>({
+            query: () => '/blogs/scrape',
+        }),
         generateBlog: builder.mutation<any, { topic?: string; keyword?: string }>({
             query: (body) => ({
                 url: '/blogs/generate',
@@ -244,6 +247,6 @@ export const {
     useUpdateBlogMutation,
     useDeleteBlogMutation,
     useScrapeBlogMutation,
+    useGetScrapeBlogStatusQuery,
     useGenerateBlogMutation,
 } = adminApi;
-
