@@ -8,6 +8,47 @@ function getClient() {
   return new GoogleGenerativeAI(key);
 }
 
+/* ── Robust JSON parser — handles messy AI output ── */
+function parseAIJson(text: string) {
+  // Strip markdown fences
+  let cleaned = text
+    .replace(/```json\s*/gi, "")
+    .replace(/```\s*/g, "")
+    .trim();
+
+  // Try direct parse
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    // noop
+  }
+
+  // Try extracting the outermost JSON object
+  const firstBrace = cleaned.indexOf("{");
+  const lastBrace = cleaned.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    const jsonStr = cleaned.substring(firstBrace, lastBrace + 1);
+    try {
+      return JSON.parse(jsonStr);
+    } catch {
+      // noop
+    }
+
+    // Fix common issues: unescaped newlines/quotes inside strings
+    const fixed = jsonStr
+      .replace(/\n/g, "\\n")
+      .replace(/\r/g, "\\r")
+      .replace(/\t/g, "\\t");
+    try {
+      return JSON.parse(fixed);
+    } catch {
+      // noop
+    }
+  }
+
+  throw new Error("Failed to parse AI response as JSON");
+}
+
 /* ── Rewrite an existing article ── */
 export async function rewriteArticle(original: {
   title: string;
@@ -15,7 +56,12 @@ export async function rewriteArticle(original: {
   category: string;
 }) {
   const genAI = getClient();
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    generationConfig: {
+      responseMimeType: "application/json",
+    },
+  });
 
   const prompt = `You are a senior SEO content writer for "Disconnect", a premium full-service design and development agency.
 
@@ -28,14 +74,14 @@ ORIGINAL CATEGORY: ${original.category}
 ORIGINAL CONTENT:
 ${original.content.substring(0, 8000)}
 
-Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
+Respond with JSON matching this schema:
 {
   "title": "New SEO-optimized title (max 60 chars)",
   "metaTitle": "Meta title for SEO (max 60 chars)",
   "metaDescription": "Compelling meta description (max 155 chars)",
   "excerpt": "A 2-3 sentence summary of the article (max 250 chars)",
   "category": "${original.category}",
-  "content": "Full HTML article content with proper h2, h3, p, ul, li tags. Minimum 1500 words.",
+  "content": "Full HTML article content with proper h2, h3, p, ul, li tags. Minimum 1500 words. Do NOT use backticks or markdown — only HTML.",
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
   "faq": [
     {"question": "FAQ question 1?", "answer": "Detailed answer 1"},
@@ -47,29 +93,18 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
 
   const result = await model.generateContent(prompt);
   const text = result.response.text();
-
-  // Strip potential markdown code fences
-  const cleaned = text
-    .replace(/```json\s*/gi, "")
-    .replace(/```\s*/g, "")
-    .trim();
-
-  try {
-    return JSON.parse(cleaned);
-  } catch {
-    // Attempt to extract JSON from the response
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
-    }
-    throw new Error("Failed to parse AI response as JSON");
-  }
+  return parseAIJson(text);
 }
 
 /* ── Generate a completely new blog from a topic ── */
 export async function generateBlogFromTopic(topic: string) {
   const genAI = getClient();
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    generationConfig: {
+      responseMimeType: "application/json",
+    },
+  });
 
   const prompt = `You are a senior SEO content writer for "Disconnect", a premium full-service design and development agency specializing in web development, app development, UI/UX, AI, cloud, and SEO.
 
@@ -80,10 +115,11 @@ Requirements:
 - Include practical insights, statistics, and actionable advice
 - Minimum 1500 words of content
 - Use proper HTML tags (h2, h3, p, ul, li, strong, em)
-- Include code examples where relevant (wrapped in <pre><code> tags)
+- Include code examples where relevant (wrapped in pre and code tags)
 - Make it engaging with a clear introduction, body sections, and conclusion
+- Do NOT use markdown or backticks — only HTML
 
-Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
+Respond with JSON matching this schema:
 {
   "title": "SEO-optimized title (max 60 chars)",
   "metaTitle": "Meta title for SEO (max 60 chars)",
@@ -102,21 +138,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
 
   const result = await model.generateContent(prompt);
   const text = result.response.text();
-
-  const cleaned = text
-    .replace(/```json\s*/gi, "")
-    .replace(/```\s*/g, "")
-    .trim();
-
-  try {
-    return JSON.parse(cleaned);
-  } catch {
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
-    }
-    throw new Error("Failed to parse AI response as JSON");
-  }
+  return parseAIJson(text);
 }
 
 /* ── Trending topics pool for auto-generation ── */

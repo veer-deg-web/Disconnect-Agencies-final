@@ -44,6 +44,25 @@ function getRandomImage(): string {
   return FALLBACK_IMAGES[Math.floor(Math.random() * FALLBACK_IMAGES.length)];
 }
 
+/* ── Truncate safely — cuts at word boundary ── */
+function truncate(str: string, max: number): string {
+  if (!str || str.length <= max) return str;
+  const trimmed = str.substring(0, max);
+  const lastSpace = trimmed.lastIndexOf(" ");
+  return (lastSpace > max * 0.7 ? trimmed.substring(0, lastSpace) : trimmed).replace(/[,.\s]+$/, "") + "…";
+}
+
+/* ── Sanitize AI output fields before saving ── */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function sanitizeAIOutput(data: any): any {
+  return {
+    ...data,
+    excerpt: truncate(String(data.excerpt || data.metaDescription || ""), 295),
+    metaTitle: truncate(String(data.metaTitle || data.title || ""), 68),
+    metaDescription: truncate(String(data.metaDescription || ""), 165),
+  };
+}
+
 /* ── Scrape + Rewrite pipeline ── */
 export async function scrapeAndRewrite(
   maxPages: number = 2,
@@ -74,19 +93,19 @@ export async function scrapeAndRewrite(
   // 4. Rewrite each article with AI
   for (const article of articles) {
     try {
-      const rewritten = await rewriteArticle({
+      const rewritten = sanitizeAIOutput(await rewriteArticle({
         title: article.title,
         content: article.content,
         category: article.category,
-      });
+      }));
 
-      const slug = await uniqueSlug(createSlug(rewritten.title || article.title));
+      const slug = await uniqueSlug(createSlug(String(rewritten.title) || article.title));
 
       await Blog.create({
         title: rewritten.title || article.title,
         slug,
         category: rewritten.category || article.category,
-        excerpt: rewritten.excerpt || rewritten.metaDescription || "",
+        excerpt: rewritten.excerpt || "",
         metaTitle: rewritten.metaTitle || rewritten.title || article.title,
         metaDescription: rewritten.metaDescription || "",
         featuredImage: article.featuredImage || getRandomImage(),
@@ -122,15 +141,15 @@ export async function generateNewBlog(
   const chosenTopic = topic || getRandomTopic();
 
   try {
-    const generated = await generateBlogFromTopic(chosenTopic);
+    const generated = sanitizeAIOutput(await generateBlogFromTopic(chosenTopic));
 
-    const slug = await uniqueSlug(createSlug(generated.title || chosenTopic));
+    const slug = await uniqueSlug(createSlug(String(generated.title) || chosenTopic));
 
     const blog = await Blog.create({
       title: generated.title || chosenTopic,
       slug,
       category: generated.category || "Web Development",
-      excerpt: generated.excerpt || generated.metaDescription || "",
+      excerpt: generated.excerpt || "",
       metaTitle: generated.metaTitle || generated.title || chosenTopic,
       metaDescription: generated.metaDescription || "",
       featuredImage: getRandomImage(),
