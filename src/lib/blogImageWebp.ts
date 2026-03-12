@@ -1,9 +1,10 @@
 import { createHash } from "crypto";
-import { mkdir, readFile, writeFile } from "fs/promises";
+import { access, mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 import sharp from "sharp";
 
 const BLOG_UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "blogs");
+const BLOG_PLACEHOLDER_FILE = "blog-featured-placeholder.webp";
 
 function cleanName(input: string): string {
   return input
@@ -16,6 +17,36 @@ function cleanName(input: string): string {
 export function isWebpImageUrl(url: string): boolean {
   const lower = url.toLowerCase();
   return lower.includes(".webp") || /[?&]fm=webp(?:&|$)/i.test(lower);
+}
+
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function ensurePlaceholderWebp(): Promise<string> {
+  await mkdir(BLOG_UPLOAD_DIR, { recursive: true });
+  const placeholderPath = path.join(BLOG_UPLOAD_DIR, BLOG_PLACEHOLDER_FILE);
+  const exists = await fileExists(placeholderPath);
+  if (!exists) {
+    const buffer = await sharp({
+      create: {
+        width: 1600,
+        height: 900,
+        channels: 3,
+        background: { r: 18, g: 18, b: 18 },
+      },
+    })
+      .webp({ quality: 82, effort: 4 })
+      .toBuffer();
+    await writeFile(placeholderPath, buffer);
+  }
+
+  return `/uploads/blogs/${BLOG_PLACEHOLDER_FILE}`;
 }
 
 async function readImageBuffer(imageUrl: string): Promise<Buffer> {
@@ -41,11 +72,18 @@ export async function ensureWebpImage(
   imageUrl: string,
   nameHint: string
 ): Promise<string> {
-  if (!imageUrl || !imageUrl.trim()) return "";
-  if (isWebpImageUrl(imageUrl)) return imageUrl;
+  if (!imageUrl || !imageUrl.trim()) return ensurePlaceholderWebp();
+
+  const source = imageUrl.trim();
+  if (source.startsWith("/") && isWebpImageUrl(source)) {
+    const localPath = path.join(process.cwd(), "public", source);
+    const exists = await fileExists(localPath);
+    if (exists) return source;
+    return ensurePlaceholderWebp();
+  }
+  if (isWebpImageUrl(source)) return source;
 
   try {
-    const source = imageUrl.trim();
     const sourceBuffer = await readImageBuffer(source);
     const digest = createHash("sha1").update(sourceBuffer).digest("hex").slice(0, 12);
     const filename = `${cleanName(nameHint)}-${digest}.webp`;
@@ -60,6 +98,6 @@ export async function ensureWebpImage(
 
     return `/uploads/blogs/${filename}`;
   } catch {
-    return imageUrl;
+    return ensurePlaceholderWebp();
   }
 }

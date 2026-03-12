@@ -52,8 +52,10 @@ import {
   useUpdateBlogMutation,
   useDeleteBlogMutation,
   useScrapeBlogMutation,
+  useStopScrapeBlogMutation,
   useGetScrapeBlogStatusQuery,
   useGenerateBlogMutation,
+  useGetGenerateBlogStatusQuery,
 } from '@/store/adminApi';
 import './Admin.css';
 
@@ -1311,7 +1313,7 @@ interface BlogRecord {
 }
 
 interface ScrapeJobStatus {
-  status: 'idle' | 'running' | 'completed' | 'failed';
+  status: 'idle' | 'running' | 'stopping' | 'stopped' | 'completed' | 'failed';
   phase: 'collecting' | 'processing' | 'done';
   total: number;
   processed: number;
@@ -1323,21 +1325,53 @@ interface ScrapeJobStatus {
   errors: string[];
 }
 
+interface GenerateJobStatus {
+  status: 'idle' | 'running' | 'completed' | 'failed';
+  total: number;
+  processed: number;
+  created: number;
+  failed: number;
+  currentTopic?: string;
+  lastError?: string;
+  errors: string[];
+}
+
+const BLOG_ACTION_CATEGORIES = [
+  'auto',
+  'General',
+  'Web Development',
+  'AI & Data',
+  'Engineering',
+  'Cloud',
+  'UI/UX Design',
+  'Mobile Development',
+  'SEO',
+  'Business',
+];
+
 function BlogAdminSection() {
-  const { data, isLoading, refetch: refetchBlogs } = useGetBlogsQuery();
+  const { data, isLoading, refetch: refetchBlogs } = useGetBlogsQuery({ limit: 200 });
   const [createBlog, { isLoading: isCreating }] = useCreateBlogMutation();
   const [updateBlog] = useUpdateBlogMutation();
   const [deleteBlogMut] = useDeleteBlogMutation();
   const [scrapeBlog, { isLoading: isScraping }] = useScrapeBlogMutation();
+  const [stopScrapeBlog, { isLoading: isStopping }] = useStopScrapeBlogMutation();
   const { data: scrapeStatusData, refetch: refetchScrapeStatus } = useGetScrapeBlogStatusQuery();
   const [generateBlog, { isLoading: isGenerating }] = useGenerateBlogMutation();
+  const { data: generateStatusData, refetch: refetchGenerateStatus } = useGetGenerateBlogStatusQuery();
   const prevScrapeStatusRef = useRef<string>('');
+  const prevGenerateStatusRef = useRef<string>('');
 
   const blogs: BlogRecord[] = data?.blogs || [];
   const scrapeJob: ScrapeJobStatus | undefined = scrapeStatusData?.job;
-  const scrapeRunning = scrapeJob?.status === 'running';
+  const generateJob: GenerateJobStatus | undefined = generateStatusData?.job;
+  const scrapeActive = scrapeJob?.status === 'running' || scrapeJob?.status === 'stopping';
+  const generateActive = generateJob?.status === 'running';
   const scrapePercent = scrapeJob?.total
     ? Math.round((scrapeJob.processed / Math.max(1, scrapeJob.total)) * 100)
+    : 0;
+  const generatePercent = generateJob?.total
+    ? Math.round((generateJob.processed / Math.max(1, generateJob.total)) * 100)
     : 0;
   const stats = data?.stats || { total: 0, published: 0, draft: 0, scraped: 0, aiGenerated: 0 };
 
@@ -1346,6 +1380,10 @@ function BlogAdminSection() {
   const [error, setError] = useState('');
   const [ok, setOk] = useState('');
   const [genTopic, setGenTopic] = useState('');
+  const [scrapeCount, setScrapeCount] = useState(10);
+  const [scrapeCategory, setScrapeCategory] = useState('auto');
+  const [aiCount, setAiCount] = useState(10);
+  const [aiCategory, setAiCategory] = useState('General');
   const [showCreate, setShowCreate] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_editBlog, setEditBlog] = useState<BlogRecord | null>(null);
@@ -1367,7 +1405,11 @@ function BlogAdminSection() {
   const handleScrape = async () => {
     setError(''); setOk('');
     try {
-      const res = await scrapeBlog({ maxPages: 100 }).unwrap();
+      const res = await scrapeBlog({
+        maxPages: 100,
+        maxArticles: Math.max(1, Math.min(200, scrapeCount)),
+        category: scrapeCategory === 'auto' ? '' : scrapeCategory,
+      }).unwrap();
       setOk(res.message || 'Scrape started');
       refetchScrapeStatus();
     } catch (err: unknown) {
@@ -1376,13 +1418,25 @@ function BlogAdminSection() {
     }
   };
 
+  const handleStopScrape = async () => {
+    setError(''); setOk('');
+    try {
+      const res = await stopScrapeBlog().unwrap();
+      setOk(res.message || 'Stop requested');
+      refetchScrapeStatus();
+    } catch (err: unknown) {
+      const e = err as { data?: { error?: string } };
+      setError(e?.data?.error || 'Failed to stop scrape');
+    }
+  };
+
   useEffect(() => {
-    if (!scrapeRunning) return;
+    if (!scrapeActive) return;
     const id = setInterval(() => {
       refetchScrapeStatus();
     }, 2000);
     return () => clearInterval(id);
-  }, [scrapeRunning, refetchScrapeStatus]);
+  }, [scrapeActive, refetchScrapeStatus]);
 
   useEffect(() => {
     const current = scrapeJob?.status || '';
@@ -1397,15 +1451,51 @@ function BlogAdminSection() {
     if (current === 'failed' && previous !== 'failed') {
       setError(scrapeJob?.lastError || 'Scrape job failed');
     }
+    if (current === 'stopped' && previous !== 'stopped') {
+      setOk(`Scrape stopped. Created ${scrapeJob?.created ?? 0} blog(s).`);
+      if (scrapeJob?.errors?.length) {
+        setError(scrapeJob.errors.slice(0, 3).join('; '));
+      }
+      refetchBlogs();
+    }
     prevScrapeStatusRef.current = current;
   }, [scrapeJob, refetchBlogs]);
+
+  useEffect(() => {
+    if (!generateActive) return;
+    const id = setInterval(() => {
+      refetchGenerateStatus();
+    }, 2000);
+    return () => clearInterval(id);
+  }, [generateActive, refetchGenerateStatus]);
+
+  useEffect(() => {
+    const current = generateJob?.status || '';
+    const previous = prevGenerateStatusRef.current;
+    if (current === 'completed' && previous !== 'completed') {
+      setOk(`AI generation finished. Created ${generateJob?.created ?? 0} blog(s).`);
+      if (generateJob?.errors?.length) {
+        setError(generateJob.errors.slice(0, 3).join('; '));
+      }
+      setGenTopic('');
+      refetchBlogs();
+    }
+    if (current === 'failed' && previous !== 'failed') {
+      setError(generateJob?.lastError || 'AI generation failed');
+    }
+    prevGenerateStatusRef.current = current;
+  }, [generateJob, refetchBlogs]);
 
   const handleGenerate = async () => {
     setError(''); setOk('');
     try {
-      const res = await generateBlog({ topic: genTopic || undefined }).unwrap();
-      setOk(res.message || 'Blog generated!');
-      setGenTopic('');
+      const res = await generateBlog({
+        topic: genTopic || undefined,
+        count: Math.max(1, Math.min(50, aiCount)),
+        category: aiCategory === 'auto' ? '' : aiCategory,
+      }).unwrap();
+      setOk(res.message || 'AI generation started');
+      refetchGenerateStatus();
     } catch (err: unknown) {
       const e = err as { data?: { error?: string } };
       setError(e?.data?.error || 'Generation failed');
@@ -1494,9 +1584,38 @@ function BlogAdminSection() {
           <p style={{ fontSize: '13px', opacity: 0.6, margin: '8px 0 14px' }}>
             Scrape all blogs from xbsoftware.com, rewrite with AI, and publish with live progress.
           </p>
-          <button className="adm-btn adm-btn--primary" onClick={handleScrape} disabled={isScraping || scrapeRunning}>
-            {scrapeRunning ? 'Scraping in progress…' : isScraping ? 'Starting…' : 'Start Full Scrape'}
-          </button>
+          <div className="adm-email-row" style={{ marginBottom: '10px' }}>
+            <input
+              className="adm-input"
+              type="number"
+              min={1}
+              max={200}
+              value={scrapeCount}
+              onChange={(e) => setScrapeCount(Math.max(1, Number(e.target.value || 1)))}
+              placeholder="How many blogs to scrape"
+            />
+            <select
+              className="adm-select"
+              value={scrapeCategory}
+              onChange={(e) => setScrapeCategory(e.target.value)}
+            >
+              {BLOG_ACTION_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat === 'auto' ? 'Auto Category (Source)' : cat}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <button className="adm-btn adm-btn--primary" onClick={handleScrape} disabled={isScraping || scrapeActive}>
+              {scrapeActive ? 'Scraping in progress…' : isScraping ? 'Starting…' : 'Start Full Scrape'}
+            </button>
+            {scrapeActive && (
+              <button className="adm-btn adm-btn--outline" onClick={handleStopScrape} disabled={isStopping || scrapeJob?.status === 'stopping'}>
+                {scrapeJob?.status === 'stopping' || isStopping ? 'Stopping…' : 'Stop Scrape'}
+              </button>
+            )}
+          </div>
           {scrapeJob && scrapeJob.status !== 'idle' && (
             <div style={{ marginTop: '14px', fontSize: '12px', lineHeight: 1.6, opacity: 0.8 }}>
               <div><strong>Status:</strong> {scrapeJob.status}</div>
@@ -1521,10 +1640,37 @@ function BlogAdminSection() {
               onChange={(e) => setGenTopic(e.target.value)}
               placeholder="e.g. Next.js 15 Server Actions"
             />
-            <button className="adm-btn adm-btn--primary" onClick={handleGenerate} disabled={isGenerating}>
-              {isGenerating ? 'Generating…' : 'Generate'}
+            <input
+              className="adm-input"
+              type="number"
+              min={1}
+              max={50}
+              value={aiCount}
+              onChange={(e) => setAiCount(Math.max(1, Number(e.target.value || 1)))}
+              placeholder="How many blogs"
+            />
+            <select
+              className="adm-select"
+              value={aiCategory}
+              onChange={(e) => setAiCategory(e.target.value)}
+            >
+              {BLOG_ACTION_CATEGORIES.filter((cat) => cat !== 'auto').map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            <button className="adm-btn adm-btn--primary" onClick={handleGenerate} disabled={isGenerating || generateActive}>
+              {generateActive ? 'Generating…' : isGenerating ? 'Starting…' : 'Generate'}
             </button>
           </div>
+          {generateJob && generateJob.status !== 'idle' && (
+            <div style={{ marginTop: '14px', fontSize: '12px', lineHeight: 1.6, opacity: 0.8 }}>
+              <div><strong>Status:</strong> {generateJob.status}</div>
+              <div><strong>Progress:</strong> {generateJob.processed}/{generateJob.total} ({generatePercent}%)</div>
+              <div><strong>Created:</strong> {generateJob.created} · <strong>Failed:</strong> {generateJob.failed}</div>
+              {generateJob.currentTopic && <div><strong>Current Topic:</strong> {generateJob.currentTopic}</div>}
+              {generateJob.lastError && <div style={{ color: '#fca5a5' }}><strong>Last error:</strong> {generateJob.lastError}</div>}
+            </div>
+          )}
         </section>
       </div>
 
@@ -1691,6 +1837,13 @@ export default function AdminClient() {
     setUserName(n);
     setAuthorized(true);
   }, [router]);
+
+  useEffect(() => {
+    const session = searchParams.get('session');
+    if (session === 'expired') {
+      setGoogleBanner('⚠ Session expired. Please sign in again.');
+    }
+  }, [searchParams]);
 
   // Handle ?google= redirect from OAuth callback
   useEffect(() => {

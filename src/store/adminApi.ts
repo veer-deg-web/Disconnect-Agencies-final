@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 // Extract the auth token for headers
 const getAuthToken = () => {
@@ -10,7 +11,8 @@ const getAuthToken = () => {
 
 export const adminApi = createApi({
     reducerPath: 'adminApi',
-    baseQuery: fetchBaseQuery({
+    baseQuery: ((): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> => {
+        const rawBaseQuery = fetchBaseQuery({
         baseUrl: '/api/admin',
         prepareHeaders: (headers) => {
             const token = getAuthToken();
@@ -19,7 +21,33 @@ export const adminApi = createApi({
             }
             return headers;
         },
-    }),
+        });
+
+        return async (args, api, extraOptions) => {
+            const result = await rawBaseQuery(args, api, extraOptions);
+
+            if (typeof window !== 'undefined' && result.error) {
+                const status = result.error.status;
+                const payload = result.error.data as { error?: string } | undefined;
+                const message = String(payload?.error || '').toLowerCase();
+                const looksExpired =
+                    status === 401 ||
+                    (status === 403 && (message.includes('jwt') || message.includes('token') || message.includes('unauthorized')));
+
+                if (looksExpired) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userRole');
+                    if (!window.location.pathname.startsWith('/auth')) {
+                        window.location.replace('/?session=expired');
+                    }
+                }
+            }
+
+            return result;
+        };
+    })(),
     tagTypes: ['Faq', 'Booking', 'BookingSettings', 'User', 'Feedback', 'CareerApplication', 'Blog'],
     endpoints: (builder) => ({
         /* =======================
@@ -164,11 +192,12 @@ export const adminApi = createApi({
         /* =======================
            BLOGS
         ======================= */
-        getBlogs: builder.query<any, { page?: number; status?: string; category?: string; search?: string } | void>({
+        getBlogs: builder.query<any, { page?: number; limit?: number; status?: string; category?: string; search?: string } | void>({
             query: (params) => {
                 const p = params || {};
                 const sp = new URLSearchParams();
                 if (p.page) sp.append('page', String(p.page));
+                if (p.limit) sp.append('limit', String(p.limit));
                 if (p.status) sp.append('status', p.status);
                 if (p.category) sp.append('category', p.category);
                 if (p.search) sp.append('search', p.search);
@@ -201,7 +230,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
-        scrapeBlog: builder.mutation<any, { maxPages?: number; maxArticles?: number }>({
+        scrapeBlog: builder.mutation<any, { maxPages?: number; maxArticles?: number; category?: string }>({
             query: (body) => ({
                 url: '/blogs/scrape',
                 method: 'POST',
@@ -209,16 +238,25 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
+        stopScrapeBlog: builder.mutation<any, void>({
+            query: () => ({
+                url: '/blogs/scrape',
+                method: 'DELETE',
+            }),
+        }),
         getScrapeBlogStatus: builder.query<any, void>({
             query: () => '/blogs/scrape',
         }),
-        generateBlog: builder.mutation<any, { topic?: string; keyword?: string }>({
+        generateBlog: builder.mutation<any, { topic?: string; keyword?: string; category?: string; count?: number }>({
             query: (body) => ({
                 url: '/blogs/generate',
                 method: 'POST',
                 body,
             }),
             invalidatesTags: ['Blog'],
+        }),
+        getGenerateBlogStatus: builder.query<any, void>({
+            query: () => '/blogs/generate',
         }),
     }),
 });
@@ -247,6 +285,8 @@ export const {
     useUpdateBlogMutation,
     useDeleteBlogMutation,
     useScrapeBlogMutation,
+    useStopScrapeBlogMutation,
     useGetScrapeBlogStatusQuery,
     useGenerateBlogMutation,
+    useGetGenerateBlogStatusQuery,
 } = adminApi;

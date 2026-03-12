@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     await dbConnect();
     const { searchParams } = new URL(req.url);
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
-    const limit = Math.min(100, parseInt(searchParams.get("limit") || "20"));
+    const limit = Math.min(200, parseInt(searchParams.get("limit") || "100"));
     const status = searchParams.get("status") || "";
     const category = searchParams.get("category") || "";
     const search = searchParams.get("search") || "";

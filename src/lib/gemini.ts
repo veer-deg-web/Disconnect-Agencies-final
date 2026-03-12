@@ -8,6 +8,46 @@ function getClient() {
   return new GoogleGenerativeAI(key);
 }
 
+function resolveGeminiModels(): string[] {
+  const raw =
+    process.env.GEMINI_MODELS ||
+    process.env.GEMINI_MODEL_LIST ||
+    process.env.BLOG_AI_MODELS ||
+    "gemini-2.5-flash";
+
+  const list = raw
+    .split(/[,\n]/)
+    .map((m) => m.trim())
+    .map((m) => m.replace(/^\[+/, "").replace(/\]+$/, ""))
+    .map((m) => m.replace(/^['"]+/, "").replace(/['"]+$/, ""))
+    .map((m) => m.trim())
+    .filter(Boolean);
+
+  const allowNonText = String(process.env.BLOG_AI_ALLOW_NON_TEXT_MODELS || "").toLowerCase() === "true";
+  const raceLimit = Math.max(1, Math.min(24, Number(process.env.BLOG_AI_MODEL_RACE_LIMIT || 8)));
+
+  const filtered = allowNonText
+    ? list
+    : list.filter((m) => {
+        const name = m.toLowerCase();
+        const blockedHints = [
+          "embedding",
+          "imagen",
+          "veo",
+          "tts",
+          "audio",
+          "image",
+          "computer-use",
+          "robotics",
+          "aqa",
+        ];
+        return !blockedHints.some((hint) => name.includes(hint));
+      });
+
+  const unique = Array.from(new Set(filtered.length ? filtered : list));
+  return unique.slice(0, raceLimit);
+}
+
 /* ── Robust JSON parser — handles messy AI output ── */
 function parseAIJson(text: string) {
   // Strip markdown fences
@@ -49,20 +89,42 @@ function parseAIJson(text: string) {
   throw new Error("Failed to parse AI response as JSON");
 }
 
+async function generateJsonWithFastestModel(prompt: string) {
+  const genAI = getClient();
+  const models = resolveGeminiModels();
+  const tasks = models.map(async (modelName) => {
+    const model = genAI.getGenerativeModel({
+      model: modelName,
+      generationConfig: {
+        responseMimeType: "application/json",
+      },
+    });
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
+    const json = parseAIJson(text);
+    return { json, modelName };
+  });
+
+  try {
+    const winner = await Promise.any(tasks);
+    return winner.json;
+  } catch (err) {
+    if (err instanceof AggregateError && Array.isArray(err.errors)) {
+      const details = err.errors
+        .map((e) => (e instanceof Error ? e.message : String(e)))
+        .join(" | ");
+      throw new Error(`All configured Gemini models failed: ${details}`);
+    }
+    throw err;
+  }
+}
+
 /* ── Rewrite an existing article ── */
 export async function rewriteArticle(original: {
   title: string;
   content: string;
   category: string;
 }) {
-  const genAI = getClient();
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
-    generationConfig: {
-      responseMimeType: "application/json",
-    },
-  });
-
   const prompt = `You are a senior SEO content writer for "Disconnect".
 
 Rewrite the following article COMPLETELY — new structure, new sentences, new examples. 
@@ -91,21 +153,11 @@ Respond with JSON matching this schema:
   "author": "Disconnect Team"
 }`;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
-  return parseAIJson(text);
+  return generateJsonWithFastestModel(prompt);
 }
 
 /* ── Generate a completely new blog from a topic ── */
 export async function generateBlogFromTopic(topic: string) {
-  const genAI = getClient();
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
-    generationConfig: {
-      responseMimeType: "application/json",
-    },
-  });
-
   const prompt = `You are a senior SEO content writer for "Disconnect", specializing in web development, app development, UI/UX, AI, cloud, and SEO.
 
 Write a COMPLETELY NEW, original, SEO-optimized blog post about: "${topic}"
@@ -136,9 +188,7 @@ Respond with JSON matching this schema:
   "author": "Disconnect Team"
 }`;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
-  return parseAIJson(text);
+  return generateJsonWithFastestModel(prompt);
 }
 
 /* ── Trending topics pool for auto-generation ── */

@@ -1,10 +1,11 @@
 import { scrapeAndRewrite, type ScrapeProgress } from "@/lib/blogGenerator";
 
-export type BlogScrapeJobStatus = "idle" | "running" | "completed" | "failed";
+export type BlogScrapeJobStatus = "idle" | "running" | "stopping" | "stopped" | "completed" | "failed";
 
 export interface BlogScrapeJobState extends ScrapeProgress {
   jobId: string;
   status: BlogScrapeJobStatus;
+  stopRequested: boolean;
   startedAt: string | null;
   endedAt: string | null;
   errors: string[];
@@ -18,6 +19,7 @@ const createInitialState = (): BlogScrapeJobState => ({
   processed: 0,
   created: 0,
   skipped: 0,
+  stopRequested: false,
   startedAt: null,
   endedAt: null,
   errors: [],
@@ -43,9 +45,13 @@ export function getBlogScrapeJobState(): BlogScrapeJobState {
   return getStateRef();
 }
 
-export function startBlogScrapeJob(maxPages: number = 100): BlogScrapeJobState {
+export function startBlogScrapeJob(
+  maxPages: number = 100,
+  maxArticles: number = Number.MAX_SAFE_INTEGER,
+  category?: string
+): BlogScrapeJobState {
   const current = getStateRef();
-  if (current.status === "running") {
+  if (current.status === "running" || current.status === "stopping") {
     return current;
   }
 
@@ -55,6 +61,7 @@ export function startBlogScrapeJob(maxPages: number = 100): BlogScrapeJobState {
     jobId,
     status: "running",
     phase: "collecting",
+    stopRequested: false,
     startedAt: new Date().toISOString(),
   };
   setState(initial);
@@ -63,7 +70,7 @@ export function startBlogScrapeJob(maxPages: number = 100): BlogScrapeJobState {
     try {
       const result = await scrapeAndRewrite(
         maxPages,
-        Number.MAX_SAFE_INTEGER,
+        maxArticles,
         (progress) => {
           const prev = getStateRef();
           setState({
@@ -77,14 +84,18 @@ export function startBlogScrapeJob(maxPages: number = 100): BlogScrapeJobState {
             currentUrl: progress.currentUrl,
             lastError: progress.lastError,
           });
-        }
+        },
+        () => getStateRef().stopRequested,
+        category
       );
 
       const prev = getStateRef();
       setState({
         ...prev,
-        status: "completed",
+        status: result.stopped ? "stopped" : "completed",
         phase: "done",
+        stopRequested: false,
+        lastError: result.stopped ? "Scrape stopped by admin" : prev.lastError,
         endedAt: new Date().toISOString(),
         errors: result.errors,
       });
@@ -93,8 +104,9 @@ export function startBlogScrapeJob(maxPages: number = 100): BlogScrapeJobState {
       const prev = getStateRef();
       setState({
         ...prev,
-        status: "failed",
+        status: prev.stopRequested ? "stopped" : "failed",
         phase: "done",
+        stopRequested: false,
         lastError: msg,
         endedAt: new Date().toISOString(),
         errors: [...prev.errors, msg],
@@ -103,4 +115,20 @@ export function startBlogScrapeJob(maxPages: number = 100): BlogScrapeJobState {
   })();
 
   return initial;
+}
+
+export function requestStopBlogScrapeJob(): BlogScrapeJobState {
+  const current = getStateRef();
+  if (current.status !== "running") {
+    return current;
+  }
+
+  const next: BlogScrapeJobState = {
+    ...current,
+    status: "stopping",
+    stopRequested: true,
+    lastError: "Stopping scrape...",
+  };
+  setState(next);
+  return next;
 }

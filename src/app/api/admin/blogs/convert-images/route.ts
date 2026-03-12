@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
-import { ensureWebpImage, isWebpImageUrl } from "@/lib/blogImageWebp";
+import { ensureWebpImage } from "@/lib/blogImageWebp";
 
 /* POST /api/admin/blogs/convert-images — Backfill existing featured images to webp */
 export async function POST(req: NextRequest) {
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     for (const blog of blogs) {
       try {
         const current = blog.featuredImage || "";
-        if (!current || isWebpImageUrl(current)) {
+        if (!current) {
           skipped++;
           continue;
         }

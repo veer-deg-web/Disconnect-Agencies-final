@@ -1,21 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateNewBlog } from "@/lib/blogGenerator";
+import { getBlogGenerateJobState, startBlogGenerateJob } from "@/lib/blogGenerateJob";
 
-/* POST /api/admin/blogs/generate — Generate blog from topic/keyword */
+/* GET /api/admin/blogs/generate — Live AI generate job status */
+export async function GET() {
+  try {
+    const job = getBlogGenerateJobState();
+    return NextResponse.json({ job });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
+/* POST /api/admin/blogs/generate — Start AI blog generation background job */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const topic = body.topic || body.keyword || "";
+    const topic = String(body.topic || body.keyword || "");
+    const category = typeof body.category === "string" ? body.category.trim() : "";
+    const count = Math.min(50, Math.max(1, parseInt(body.count || "1")));
 
-    const result = await generateNewBlog(topic || undefined);
-
-    if (result.error) {
-      return NextResponse.json({ error: result.error }, { status: 500 });
+    const existing = getBlogGenerateJobState();
+    if (existing.status === "running") {
+      return NextResponse.json({
+        message: "AI generation is already running",
+        started: false,
+        job: existing,
+      });
     }
 
+    const job = startBlogGenerateJob(count, topic, category || undefined);
     return NextResponse.json({
-      message: "Blog generated and published successfully",
-      blog: result.blog,
+      message: `Started generating ${count} AI blog(s). Track live progress in this panel.`,
+      started: true,
+      job,
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal server error";
