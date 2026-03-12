@@ -62,12 +62,12 @@ export default function Footer() {
       scrollToAny(["faq"]);
       return;
     }
-    if (item === "About Us") {
-      router.push("/about");
-      return;
-    }
     if (item === "Careers") {
       router.push("/careers");
+      return;
+    }
+    if (item === "Blog") {
+      router.push("/blog");
       return;
     }
   };
@@ -136,6 +136,7 @@ export default function Footer() {
               "FAQ",
               "About Us",
               "Careers",
+              "Blog",
             ].map((item) => (
               <button
                 key={item}

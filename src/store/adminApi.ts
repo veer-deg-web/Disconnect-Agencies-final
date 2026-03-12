@@ -20,7 +20,7 @@ export const adminApi = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Faq', 'Booking', 'BookingSettings', 'User', 'Feedback', 'CareerApplication'],
+    tagTypes: ['Faq', 'Booking', 'BookingSettings', 'User', 'Feedback', 'CareerApplication', 'Blog'],
     endpoints: (builder) => ({
         /* =======================
            FAQS
@@ -160,6 +160,63 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['CareerApplication'],
         }),
+
+        /* =======================
+           BLOGS
+        ======================= */
+        getBlogs: builder.query<any, { page?: number; status?: string; category?: string; search?: string } | void>({
+            query: (params) => {
+                const p = params || {};
+                const sp = new URLSearchParams();
+                if (p.page) sp.append('page', String(p.page));
+                if (p.status) sp.append('status', p.status);
+                if (p.category) sp.append('category', p.category);
+                if (p.search) sp.append('search', p.search);
+                const qs = sp.toString() ? `?${sp.toString()}` : '';
+                return `/blogs${qs}`;
+            },
+            providesTags: ['Blog'],
+        }),
+        createBlog: builder.mutation<any, any>({
+            query: (body) => ({
+                url: '/blogs',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['Blog'],
+        }),
+        updateBlog: builder.mutation<any, any>({
+            query: (body) => ({
+                url: '/blogs',
+                method: 'PUT',
+                body,
+            }),
+            invalidatesTags: ['Blog'],
+        }),
+        deleteBlog: builder.mutation<any, string>({
+            query: (id) => ({
+                url: '/blogs',
+                method: 'DELETE',
+                body: { id },
+            }),
+            invalidatesTags: ['Blog'],
+        }),
+        scrapeBlog: builder.mutation<any, { maxPages?: number; maxArticles?: number }>({
+            query: (body) => ({
+                url: '/blogs/scrape',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['Blog'],
+        }),
+        generateBlog: builder.mutation<any, { topic?: string; keyword?: string }>({
+            query: (body) => ({
+                url: '/blogs/generate',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['Blog'],
+        }),
     }),
 });
 
@@ -182,4 +239,11 @@ export const {
     useGetCareerApplicationsQuery,
     useUpdateCareerApplicationMutation,
     useDeleteCareerApplicationMutation,
+    useGetBlogsQuery,
+    useCreateBlogMutation,
+    useUpdateBlogMutation,
+    useDeleteBlogMutation,
+    useScrapeBlogMutation,
+    useGenerateBlogMutation,
 } = adminApi;
+

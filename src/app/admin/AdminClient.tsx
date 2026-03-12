@@ -22,6 +22,9 @@ import {
   Settings,
   Video,
   Briefcase,
+  FileText,
+  Sparkles,
+  Download,
 } from 'lucide-react';
 
 import {
@@ -42,13 +45,19 @@ import {
   useDeleteFeedbackMutation,
   useGetCareerApplicationsQuery,
   useUpdateCareerApplicationMutation,
-  useDeleteCareerApplicationMutation
+  useDeleteCareerApplicationMutation,
+  useGetBlogsQuery,
+  useCreateBlogMutation,
+  useUpdateBlogMutation,
+  useDeleteBlogMutation,
+  useScrapeBlogMutation,
+  useGenerateBlogMutation,
 } from '@/store/adminApi';
 import './Admin.css';
 
 /* ── Types ── */
 type Category = 'general' | 'cloud' | 'uiux' | 'webdev' | 'appdev' | 'aimodels' | 'seo';
-type AdminSection = 'faq' | 'bookings' | 'users' | 'settings' | 'careers';
+type AdminSection = 'faq' | 'bookings' | 'users' | 'settings' | 'careers' | 'blog';
 
 const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'general', label: 'General' },
@@ -1246,6 +1255,308 @@ function GoogleCalendarSection() {
   );
 }
 
+/* ─────────────────────────────────────────────
+   BLOG ADMIN SECTION
+───────────────────────────────────────────── */
+interface BlogRecord {
+  _id: string;
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  status: 'draft' | 'published';
+  source: 'scraped' | 'ai-generated' | 'manual';
+  readingTime: number;
+  author: string;
+  tags: string[];
+  createdAt: string;
+}
+
+function BlogAdminSection() {
+  const { data, isLoading } = useGetBlogsQuery();
+  const [createBlog, { isLoading: isCreating }] = useCreateBlogMutation();
+  const [updateBlog] = useUpdateBlogMutation();
+  const [deleteBlogMut] = useDeleteBlogMutation();
+  const [scrapeBlog, { isLoading: isScraping }] = useScrapeBlogMutation();
+  const [generateBlog, { isLoading: isGenerating }] = useGenerateBlogMutation();
+
+  const blogs: BlogRecord[] = data?.blogs || [];
+  const stats = data?.stats || { total: 0, published: 0, draft: 0, scraped: 0, aiGenerated: 0 };
+
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [error, setError] = useState('');
+  const [ok, setOk] = useState('');
+  const [genTopic, setGenTopic] = useState('');
+  const [showCreate, setShowCreate] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_editBlog, setEditBlog] = useState<BlogRecord | null>(null);
+
+  // Create form state
+  const [formTitle, setFormTitle] = useState('');
+  const [formContent, setFormContent] = useState('');
+  const [formCategory, setFormCategory] = useState('Web Development');
+  const [formExcerpt, setFormExcerpt] = useState('');
+  const [formStatus, setFormStatus] = useState<'draft' | 'published'>('published');
+
+  const filtered = blogs.filter((b) => {
+    const matchStatus = !statusFilter || b.status === statusFilter;
+    const q = search.toLowerCase();
+    const matchSearch = !q || b.title.toLowerCase().includes(q) || b.category.toLowerCase().includes(q);
+    return matchStatus && matchSearch;
+  });
+
+  const handleScrape = async () => {
+    setError(''); setOk('');
+    try {
+      const res = await scrapeBlog({ maxPages: 2, maxArticles: 5 }).unwrap();
+      setOk(res.message || `Scraped ${res.created} blogs`);
+      if (res.errors?.length) setError(res.errors.join('; '));
+    } catch (err: unknown) {
+      const e = err as { data?: { error?: string } };
+      setError(e?.data?.error || 'Scrape failed');
+    }
+  };
+
+  const handleGenerate = async () => {
+    setError(''); setOk('');
+    try {
+      const res = await generateBlog({ topic: genTopic || undefined }).unwrap();
+      setOk(res.message || 'Blog generated!');
+      setGenTopic('');
+    } catch (err: unknown) {
+      const e = err as { data?: { error?: string } };
+      setError(e?.data?.error || 'Generation failed');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    setError(''); setOk('');
+    try {
+      await deleteBlogMut(id).unwrap();
+      setOk('Blog deleted');
+    } catch (err: unknown) {
+      const e = err as { data?: { error?: string } };
+      setError(e?.data?.error || 'Delete failed');
+    }
+  };
+
+  const handleToggleStatus = async (blog: BlogRecord) => {
+    setError(''); setOk('');
+    try {
+      await updateBlog({ id: blog._id, status: blog.status === 'published' ? 'draft' : 'published' }).unwrap();
+      setOk(`Blog ${blog.status === 'published' ? 'unpublished' : 'published'}`);
+    } catch (err: unknown) {
+      const e = err as { data?: { error?: string } };
+      setError(e?.data?.error || 'Update failed');
+    }
+  };
+
+  const openCreate = () => {
+    setFormTitle(''); setFormContent(''); setFormCategory('Web Development');
+    setFormExcerpt(''); setFormStatus('published');
+    setShowCreate(true);
+  };
+
+  const handleSaveCreate = async () => {
+    if (!formTitle.trim() || !formContent.trim()) return;
+    setError(''); setOk('');
+    try {
+      await createBlog({
+        title: formTitle, content: formContent, category: formCategory,
+        excerpt: formExcerpt, status: formStatus,
+      }).unwrap();
+      setOk('Blog created!');
+      setShowCreate(false);
+    } catch (err: unknown) {
+      const e = err as { data?: { error?: string } };
+      setError(e?.data?.error || 'Create failed');
+    }
+  };
+
+  return (
+    <div>
+      <div className="adm-page-header">
+        <div>
+          <span className="adm-page-title">Blog Management</span>
+          <p className="adm-page-subtitle">Create, edit, scrape, and AI-generate blog posts</p>
+        </div>
+        <button className="adm-btn adm-btn--primary" onClick={openCreate}>
+          <Plus size={15} /> New Blog
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div className="adm-stats">
+        {[
+          { label: 'Total Posts', value: stats.total },
+          { label: 'Published', value: stats.published },
+          { label: 'Drafts', value: stats.draft },
+          { label: 'AI Generated', value: stats.aiGenerated },
+          { label: 'Scraped', value: stats.scraped },
+        ].map((s) => (
+          <div className="adm-stat-card" key={s.label}>
+            <span className="adm-stat-label">{s.label}</span>
+            <span className="adm-stat-value">{s.value}</span>
+          </div>
+        ))}
+      </div>
+
+      {error && <div className="adm-error-bar">{error}</div>}
+      {ok && <div className="adm-ok-bar">{ok}</div>}
+
+      {/* AI Tools */}
+      <div className="adm-booking-grid" style={{ marginBottom: '24px' }}>
+        <section className="adm-settings-card">
+          <h2 className="adm-table-heading"><Download size={14} style={{ marginRight: '6px' }} />Scrape &amp; Import</h2>
+          <p style={{ fontSize: '13px', opacity: 0.6, margin: '8px 0 14px' }}>
+            Scrape blogs from xbsoftware.com, rewrite with AI, and publish.
+          </p>
+          <button className="adm-btn adm-btn--primary" onClick={handleScrape} disabled={isScraping}>
+            {isScraping ? 'Scraping & Rewriting…' : 'Start Scrape'}
+          </button>
+        </section>
+
+        <section className="adm-settings-card">
+          <h2 className="adm-table-heading"><Sparkles size={14} style={{ marginRight: '6px' }} />AI Generate</h2>
+          <p style={{ fontSize: '13px', opacity: 0.6, margin: '8px 0 14px' }}>
+            Enter a topic or leave blank for a random tech topic.
+          </p>
+          <div className="adm-email-row">
+            <input
+              className="adm-input"
+              value={genTopic}
+              onChange={(e) => setGenTopic(e.target.value)}
+              placeholder="e.g. Next.js 15 Server Actions"
+            />
+            <button className="adm-btn adm-btn--primary" onClick={handleGenerate} disabled={isGenerating}>
+              {isGenerating ? 'Generating…' : 'Generate'}
+            </button>
+          </div>
+        </section>
+      </div>
+
+      {/* Blog List */}
+      <div className="adm-table-wrap">
+        <div className="adm-table-header">
+          <span className="adm-table-heading">Blog Posts ({filtered.length})</span>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <select
+              className="adm-select"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{ width: 'auto', minWidth: '100px' }}
+            >
+              <option value="">All Statuses</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+            <div className="adm-search-wrap">
+              <Search size={13} />
+              <input
+                className="adm-search-input"
+                placeholder="Search blogs…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="adm-loader"><div className="adm-spinner" /><div>Loading blogs…</div></div>
+        ) : filtered.length === 0 ? (
+          <div className="adm-empty">
+            <FileText size={42} />
+            <p className="adm-empty-text">No blogs found</p>
+            <p className="adm-empty-sub">Click &ldquo;New Blog&rdquo; or use AI Generate to create your first post</p>
+          </div>
+        ) : (
+          <div className="adm-faq-list">
+            {filtered.map((blog, i) => (
+              <div className="adm-faq-item" key={blog._id}>
+                <div className="adm-faq-num">{i + 1}</div>
+                <div className="adm-faq-body" style={{ flex: 1 }}>
+                  <p className="adm-faq-question" style={{ marginBottom: '4px' }}>{blog.title}</p>
+                  <div style={{ display: 'flex', gap: '8px', fontSize: '11px', opacity: 0.5, flexWrap: 'wrap' }}>
+                    <span>{blog.category}</span>
+                    <span>·</span>
+                    <span>{blog.readingTime} min</span>
+                    <span>·</span>
+                    <span>{blog.source}</span>
+                    <span>·</span>
+                    <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <div className={`adm-status-pill ${blog.status === 'published' ? 'done' : 'pending'}`} style={{ marginRight: '8px' }}>
+                  {blog.status === 'published' ? <CheckCircle2 size={12} /> : <Circle size={12} />}
+                  {blog.status}
+                </div>
+                <div className="adm-faq-actions">
+                  <button className="adm-btn adm-btn--ghost" title="Toggle Status" onClick={() => handleToggleStatus(blog)}>
+                    {blog.status === 'published' ? <Circle size={14} /> : <Check size={14} />}
+                  </button>
+                  <button className="adm-btn adm-btn--danger" title="Delete" onClick={() => handleDelete(blog._id)}>
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Create Blog Modal */}
+      {showCreate && (
+        <div className="adm-modal-backdrop" onClick={(e) => { if (e.target === e.currentTarget) setShowCreate(false); }}>
+          <div className="adm-modal" style={{ maxWidth: '640px' }}>
+            <div className="adm-modal-head">
+              <h2 className="adm-modal-title">Create Blog Post</h2>
+              <button type="button" className="adm-modal-close" onClick={() => setShowCreate(false)}><X size={16} /></button>
+            </div>
+            <div className="adm-modal-body">
+              <div className="adm-field">
+                <label className="adm-label">Title</label>
+                <input className="adm-input" value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="Blog title" />
+              </div>
+              <div className="adm-field">
+                <label className="adm-label">Category</label>
+                <input className="adm-input" value={formCategory} onChange={(e) => setFormCategory(e.target.value)} placeholder="Web Development" />
+              </div>
+              <div className="adm-field">
+                <label className="adm-label">Excerpt</label>
+                <input className="adm-input" value={formExcerpt} onChange={(e) => setFormExcerpt(e.target.value)} placeholder="Short summary" />
+              </div>
+              <div className="adm-field">
+                <label className="adm-label">Content (HTML)</label>
+                <textarea className="adm-textarea" rows={10} value={formContent} onChange={(e) => setFormContent(e.target.value)} placeholder="<h2>Introduction</h2><p>Your content here...</p>" />
+              </div>
+              <div className="adm-field">
+                <label className="adm-label">Status</label>
+                <select className="adm-select" value={formStatus} onChange={(e) => setFormStatus(e.target.value as 'draft' | 'published')}>
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                </select>
+              </div>
+            </div>
+            <div className="adm-modal-footer">
+              <button type="button" className="adm-btn adm-btn--outline" onClick={() => setShowCreate(false)}>Cancel</button>
+              <button
+                type="button"
+                className="adm-btn adm-btn--primary"
+                disabled={isCreating || !formTitle.trim() || !formContent.trim()}
+                onClick={handleSaveCreate}
+              >
+                {isCreating ? 'Creating…' : 'Create Blog'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════
    MAIN ADMIN CLIENT
 ═══════════════════════════════════════════════════════ */
@@ -1269,6 +1580,8 @@ export default function AdminClient() {
       ? 'Career Applications'
       : section === 'users'
       ? 'User Management'
+      : section === 'blog'
+      ? 'Blog Management'
       : 'Google Calendar';
 
   useEffect(() => {
@@ -1401,6 +1714,14 @@ export default function AdminClient() {
             </button>
 
             <button
+              className={`adm-sidebar-item ${section === 'blog' ? 'active' : ''}`}
+              onClick={() => setSection('blog')}
+            >
+              <FileText size={15} /> Blog
+              {section === 'blog' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+            </button>
+
+            <button
               className={`adm-sidebar-item ${section === 'settings' ? 'active' : ''}`}
               onClick={() => setSection('settings')}
             >
@@ -1447,6 +1768,7 @@ export default function AdminClient() {
           {section === 'careers' && <CareersAdminSection />}
           {section === 'users' && <UserAdminSection />}
           {section === 'settings' && <GoogleCalendarSection />}
+          {section === 'blog' && <BlogAdminSection />}
         </main>
       </div>
       </div>
