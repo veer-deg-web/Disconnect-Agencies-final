@@ -74,12 +74,9 @@ function getRandomImage(): string {
 }
 
 function getTopicImage(topic?: string, category?: string): string {
-  const queryParts = [topic, category, "technology", "software", "business"]
-    .map((v) => String(v || "").trim())
-    .filter(Boolean);
-  if (!queryParts.length) return getRandomImage();
-  const query = encodeURIComponent(queryParts.join(" "));
-  return `https://source.unsplash.com/1600x900/?${query}`;
+  void topic;
+  void category;
+  return getRandomImage();
 }
 
 /* ── Truncate safely — cuts at word boundary ── */

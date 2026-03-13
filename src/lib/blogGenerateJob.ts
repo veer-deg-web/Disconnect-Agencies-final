@@ -57,17 +57,17 @@ function getTopicForIndex(baseTopic: string, index: number, total: number): stri
   return `${trimmed} (Part ${index + 1})`;
 }
 
-export function startBlogGenerateJob(
+export async function runBlogGenerateJob(
   count: number,
   topic: string,
   category?: string
-): BlogGenerateJobState {
+): Promise<BlogGenerateJobState> {
   const current = getStateRef();
   if (current.status === "running") {
-    return current;
+    throw new Error("AI generation is already running");
   }
 
-  const total = Math.min(50, Math.max(1, count));
+  const total = Math.min(3, Math.max(1, count));
   const initial: BlogGenerateJobState = {
     ...createInitialState(),
     jobId: `generate-${Date.now()}`,
@@ -77,89 +77,79 @@ export function startBlogGenerateJob(
   };
   setState(initial);
 
-  void (async () => {
-    let processed = 0;
-    let created = 0;
-    let failed = 0;
-    const errors: string[] = [];
+  let processed = 0;
+  let created = 0;
+  let failed = 0;
+  const errors: string[] = [];
 
-    const concurrency = Math.min(
-      8,
-      Math.max(1, parseInt(process.env.BLOG_AI_GENERATE_CONCURRENCY || "4"))
-    );
-    const workerCount = Math.min(concurrency, total);
-    let cursor = 0;
+  const emit = (currentTopic?: string, lastError?: string) => {
+    const prev = getStateRef();
+    setState({
+      ...prev,
+      total,
+      processed,
+      created,
+      failed,
+      currentTopic: currentTopic || prev.currentTopic,
+      lastError: lastError || prev.lastError,
+      errors: [...errors],
+    });
+  };
 
-    const emit = (currentTopic?: string, lastError?: string) => {
-      const prev = getStateRef();
-      setState({
-        ...prev,
-        total,
-        processed,
-        created,
-        failed,
-        currentTopic: currentTopic || prev.currentTopic,
-        lastError: lastError || prev.lastError,
-        errors: [...errors],
-      });
-    };
+  try {
+    for (let index = 0; index < total; index += 1) {
+      const scopedTopic = getTopicForIndex(topic, index, total);
+      emit(scopedTopic);
 
-    try {
-      await Promise.all(
-        Array.from({ length: workerCount }, async () => {
-          // eslint-disable-next-line no-constant-condition
-          while (true) {
-            const index = cursor++;
-            if (index >= total) break;
-
-            const scopedTopic = getTopicForIndex(topic, index, total);
-            try {
-              const result = await generateNewBlog(scopedTopic, category);
-              if (result.blog) {
-                created++;
-              } else {
-                failed++;
-                if (result.error) errors.push(result.error);
-              }
-            } catch (err) {
-              failed++;
-              const msg = err instanceof Error ? err.message : "Unknown generation error";
-              errors.push(msg);
-              emit(scopedTopic, msg);
-            } finally {
-              processed++;
-              emit(scopedTopic);
-            }
+      try {
+        const result = await generateNewBlog(scopedTopic, category);
+        if (result.blog) {
+          created += 1;
+        } else {
+          failed += 1;
+          if (result.error) {
+            errors.push(result.error);
           }
-        })
-      );
-
-      const prev = getStateRef();
-      setState({
-        ...prev,
-        status: failed === total ? "failed" : "completed",
-        processed,
-        created,
-        failed,
-        errors,
-        endedAt: new Date().toISOString(),
-        lastError: failed === total ? (errors[errors.length - 1] || "All generations failed") : prev.lastError,
-      });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Unexpected generation failure";
-      const prev = getStateRef();
-      setState({
-        ...prev,
-        status: "failed",
-        processed,
-        created,
-        failed: failed + 1,
-        lastError: msg,
-        errors: [...errors, msg],
-        endedAt: new Date().toISOString(),
-      });
+        }
+      } catch (err) {
+        failed += 1;
+        const msg = err instanceof Error ? err.message : "Unknown generation error";
+        errors.push(msg);
+        emit(scopedTopic, msg);
+      } finally {
+        processed += 1;
+        emit(scopedTopic);
+      }
     }
-  })();
 
-  return initial;
+    const prev = getStateRef();
+    const finalState: BlogGenerateJobState = {
+      ...prev,
+      status: failed === total ? "failed" : "completed",
+      processed,
+      created,
+      failed,
+      errors,
+      endedAt: new Date().toISOString(),
+      lastError:
+        failed === total ? errors[errors.length - 1] || "All generations failed" : prev.lastError,
+    };
+    setState(finalState);
+    return finalState;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Unexpected generation failure";
+    const prev = getStateRef();
+    const failedState: BlogGenerateJobState = {
+      ...prev,
+      status: "failed",
+      processed,
+      created,
+      failed: failed + 1,
+      lastError: msg,
+      errors: [...errors, msg],
+      endedAt: new Date().toISOString(),
+    };
+    setState(failedState);
+    return failedState;
+  }
 }

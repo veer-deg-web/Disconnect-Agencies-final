@@ -1360,13 +1360,11 @@ function BlogAdminSection() {
   const [generateBlog, { isLoading: isGenerating }] = useGenerateBlogMutation();
   const { data: generateStatusData, refetch: refetchGenerateStatus } = useGetGenerateBlogStatusQuery();
   const prevScrapeStatusRef = useRef<string>('');
-  const prevGenerateStatusRef = useRef<string>('');
 
   const blogs: BlogRecord[] = data?.blogs || [];
   const scrapeJob: ScrapeJobStatus | undefined = scrapeStatusData?.job;
   const generateJob: GenerateJobStatus | undefined = generateStatusData?.job;
   const scrapeActive = scrapeJob?.status === 'running' || scrapeJob?.status === 'stopping';
-  const generateActive = generateJob?.status === 'running';
   const scrapePercent = scrapeJob?.total
     ? Math.round((scrapeJob.processed / Math.max(1, scrapeJob.total)) * 100)
     : 0;
@@ -1382,7 +1380,7 @@ function BlogAdminSection() {
   const [genTopic, setGenTopic] = useState('');
   const [scrapeCount, setScrapeCount] = useState(10);
   const [scrapeCategory, setScrapeCategory] = useState('auto');
-  const [aiCount, setAiCount] = useState(10);
+  const [aiCount, setAiCount] = useState(1);
   const [aiCategory, setAiCategory] = useState('General');
   const [showCreate, setShowCreate] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1461,40 +1459,24 @@ function BlogAdminSection() {
     prevScrapeStatusRef.current = current;
   }, [scrapeJob, refetchBlogs]);
 
-  useEffect(() => {
-    if (!generateActive) return;
-    const id = setInterval(() => {
-      refetchGenerateStatus();
-    }, 2000);
-    return () => clearInterval(id);
-  }, [generateActive, refetchGenerateStatus]);
-
-  useEffect(() => {
-    const current = generateJob?.status || '';
-    const previous = prevGenerateStatusRef.current;
-    if (current === 'completed' && previous !== 'completed') {
-      setOk(`AI generation finished. Created ${generateJob?.created ?? 0} blog(s).`);
-      if (generateJob?.errors?.length) {
-        setError(generateJob.errors.slice(0, 3).join('; '));
-      }
-      setGenTopic('');
-      refetchBlogs();
-    }
-    if (current === 'failed' && previous !== 'failed') {
-      setError(generateJob?.lastError || 'AI generation failed');
-    }
-    prevGenerateStatusRef.current = current;
-  }, [generateJob, refetchBlogs]);
-
   const handleGenerate = async () => {
     setError(''); setOk('');
     try {
       const res = await generateBlog({
         topic: genTopic || undefined,
-        count: Math.max(1, Math.min(50, aiCount)),
+        count: Math.max(1, Math.min(3, aiCount)),
         category: aiCategory === 'auto' ? '' : aiCategory,
       }).unwrap();
-      setOk(res.message || 'AI generation started');
+      if (res?.job?.status === 'failed') {
+        setError(res?.job?.lastError || 'AI generation failed');
+      } else {
+        setOk(res.message || 'AI generation completed');
+      }
+      if (res?.job?.errors?.length) {
+        setError(res.job.errors.slice(0, 3).join('; '));
+      }
+      setGenTopic('');
+      refetchBlogs();
       refetchGenerateStatus();
     } catch (err: unknown) {
       const e = err as { data?: { error?: string } };
@@ -1631,7 +1613,7 @@ function BlogAdminSection() {
         <section className="adm-settings-card">
           <h2 className="adm-table-heading"><Sparkles size={14} style={{ marginRight: '6px' }} />AI Generate</h2>
           <p style={{ fontSize: '13px', opacity: 0.6, margin: '8px 0 14px' }}>
-            Enter a topic or leave blank for a random tech topic.
+            Generate 1-3 blog posts per request. This runs inside the request for better production reliability and lower API waste.
           </p>
           <div className="adm-email-row">
             <input
@@ -1644,7 +1626,7 @@ function BlogAdminSection() {
               className="adm-input"
               type="number"
               min={1}
-              max={50}
+              max={3}
               value={aiCount}
               onChange={(e) => setAiCount(Math.max(1, Number(e.target.value || 1)))}
               placeholder="How many blogs"
@@ -1658,8 +1640,8 @@ function BlogAdminSection() {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <button className="adm-btn adm-btn--primary" onClick={handleGenerate} disabled={isGenerating || generateActive}>
-              {generateActive ? 'Generating…' : isGenerating ? 'Starting…' : 'Generate'}
+            <button className="adm-btn adm-btn--primary" onClick={handleGenerate} disabled={isGenerating}>
+              {isGenerating ? 'Generating…' : 'Generate'}
             </button>
           </div>
           {generateJob && generateJob.status !== 'idle' && (

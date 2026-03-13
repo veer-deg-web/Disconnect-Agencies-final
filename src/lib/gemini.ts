@@ -1,12 +1,14 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const DEFAULT_TEXT_MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.5-pro",
   "gemini-2.0-flash",
   "gemini-1.5-flash",
-  "gemini-1.5-pro",
 ];
+
+const MODEL_TIMEOUT_MS = Math.max(
+  10000,
+  Math.min(60000, Number(process.env.BLOG_AI_MODEL_TIMEOUT_MS || 25000))
+);
 
 function getClient() {
   const key = process.env.GEMINI_API_KEY;
@@ -33,7 +35,7 @@ function resolveGeminiModels(): string[] {
     .filter(Boolean);
 
   const allowNonText = String(process.env.BLOG_AI_ALLOW_NON_TEXT_MODELS || "").toLowerCase() === "true";
-  const fallbackLimit = Math.max(1, Math.min(8, Number(process.env.BLOG_AI_MODEL_FALLBACK_LIMIT || 4)));
+  const fallbackLimit = Math.max(1, Math.min(3, Number(process.env.BLOG_AI_MODEL_FALLBACK_LIMIT || 2)));
 
   const blockedHints = [
     "embedding",
@@ -49,7 +51,7 @@ function resolveGeminiModels(): string[] {
     "vision",
   ];
 
-  const allowedPrefixes = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+  const allowedPrefixes = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"];
 
   const filtered = allowNonText
     ? list
@@ -129,6 +131,15 @@ function getErrorMessage(err: unknown): string {
   return String(err);
 }
 
+async function withTimeout<T>(task: Promise<T>, timeoutMs: number, label: string): Promise<T> {
+  return await Promise.race([
+    task,
+    new Promise<T>((_, reject) => {
+      setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
+    }),
+  ]);
+}
+
 async function generateJsonWithFallbackModels(prompt: string) {
   const genAI = getClient();
   const models = resolveGeminiModels();
@@ -141,9 +152,15 @@ async function generateJsonWithFallbackModels(prompt: string) {
         model: modelName,
         generationConfig: {
           responseMimeType: "application/json",
+          temperature: 0.6,
+          maxOutputTokens: 4096,
         },
       });
-      const result = await model.generateContent(prompt);
+      const result = await withTimeout(
+        model.generateContent(prompt),
+        MODEL_TIMEOUT_MS,
+        `Gemini model ${modelName}`
+      );
       const text = result.response.text();
       const json = parseAIJson(text);
       return json;
@@ -176,19 +193,15 @@ ${original.content.substring(0, 8000)}
 
 Respond with JSON matching this schema:
 {
-  "title": "New SEO-optimized title (max 60 chars)",
-  "metaTitle": "Professional meta title for SEO (50-60 chars). Mention Disconnect once at most.",
-  "metaDescription": "Professional meta description (140-155 chars). Mention Disconnect once at most. Never use 'agency' or 'agencies'.",
-  "excerpt": "A 2-3 sentence summary of the article (max 250 chars)",
+  "title": "New SEO-optimized title",
   "category": "${original.category}",
-  "content": "Full HTML article content with proper h2, h3, p, ul, li tags. NEVER use h1 tags inside content. Minimum 1500 words. Do NOT use backticks or markdown — only HTML.",
-  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+  "content": "Full HTML article content with proper h2, h3, p, ul, li tags. NEVER use h1 tags. Keep it between 900 and 1200 words. Do NOT use markdown or backticks.",
+  "tags": ["tag1", "tag2", "tag3", "tag4"],
   "faq": [
     {"question": "FAQ question 1?", "answer": "Detailed answer 1"},
     {"question": "FAQ question 2?", "answer": "Detailed answer 2"},
     {"question": "FAQ question 3?", "answer": "Detailed answer 3"}
-  ],
-  "author": "Disconnect Team"
+  ]
 }`;
 
   return generateJsonWithFallbackModels(prompt);
@@ -203,27 +216,22 @@ Write a COMPLETELY NEW, original, SEO-optimized blog post about: "${topic}"
 Requirements:
 - Write in first-person plural (we/our) from the Disconnect perspective
 - Include practical insights, statistics, and actionable advice
-- Minimum 1500 words of content
+- Keep the article between 900 and 1200 words
 - Use proper HTML tags (h2, h3, p, ul, li, strong, em)
-- Include code examples where relevant (wrapped in pre and code tags)
 - Make it engaging with a clear introduction, body sections, and conclusion
 - Do NOT use markdown or backticks — only HTML
 
 Respond with JSON matching this schema:
 {
-  "title": "SEO-optimized title (max 60 chars)",
-  "metaTitle": "Professional meta title for SEO (50-60 chars). Mention Disconnect once at most.",
-  "metaDescription": "Professional meta description (140-155 chars). Mention Disconnect once at most. Never use 'agency' or 'agencies'.",
-  "excerpt": "2-3 sentence summary (max 250 chars)",
+  "title": "SEO-optimized title",
   "category": "One of: Web Development, AI & Data, Engineering, Cloud, UI/UX Design, Mobile Development, SEO, Business",
   "content": "Full HTML article content with structured headings and paragraphs. NEVER use h1 tags inside content.",
-  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+  "tags": ["tag1", "tag2", "tag3", "tag4"],
   "faq": [
     {"question": "FAQ question 1?", "answer": "Detailed answer 1"},
     {"question": "FAQ question 2?", "answer": "Detailed answer 2"},
     {"question": "FAQ question 3?", "answer": "Detailed answer 3"}
-  ],
-  "author": "Disconnect Team"
+  ]
 }`;
 
   return generateJsonWithFallbackModels(prompt);
