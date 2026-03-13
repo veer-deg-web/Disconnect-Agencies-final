@@ -288,6 +288,9 @@ export async function scrapeAndRewrite(
         processed++;
         console.log(`Worker ${workerIdx} Success: Published blog "${rewritten.title}" (${slug})`);
         
+        // Mandatory cooldown to respect Free Tier RPM limits
+        await sleep(5000);
+
         emit({
           phase: "processing",
           total,
@@ -386,6 +389,10 @@ export async function generateNewBlog(
     });
 
     console.log(`Pipeline Success: Published topic-based blog "${blog.title}" (${slug})`);
+    
+    // Mandatory cooldown to respect Free Tier RPM limits
+    await sleep(5000);
+
     return { blog };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);

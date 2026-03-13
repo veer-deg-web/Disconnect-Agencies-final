@@ -140,38 +140,62 @@ async function withTimeout<T>(task: Promise<T>, timeoutMs: number, label: string
   ]);
 }
 
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function generateJsonWithFallbackModels(prompt: string) {
   const genAI = getClient();
   const models = resolveGeminiModels();
 
   const errors: string[] = [];
+  const maxRetriesPerModel = 3;
 
   for (const modelName of models) {
-    try {
-      const model = genAI.getGenerativeModel({
-        model: modelName,
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.6,
-          maxOutputTokens: 4096,
-        },
-      });
-      const result = await withTimeout(
-        model.generateContent(prompt),
-        MODEL_TIMEOUT_MS,
-        `Gemini model ${modelName}`
-      );
-      const text = result.response.text();
-      const json = parseAIJson(text);
-      return json;
-    } catch (err) {
-      const details = getErrorMessage(err);
-      console.error(`[Gemini:${modelName}] generation failed: ${details}`);
-      errors.push(`${modelName}: ${details}`);
+    for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.6,
+            maxOutputTokens: 4096,
+          },
+        });
+
+        const result = await withTimeout(
+          model.generateContent(prompt),
+          MODEL_TIMEOUT_MS,
+          `Gemini model ${modelName}`
+        );
+
+        const text = result.response.text();
+        const json = parseAIJson(text);
+        return json;
+      } catch (err) {
+        const details = getErrorMessage(err);
+        const isRateLimit = details.includes("429") || details.toLowerCase().includes("quota");
+
+        if (isRateLimit && attempt < maxRetriesPerModel) {
+          const waitTime = Math.pow(2, attempt) * 4000; // 8s, 16s...
+          console.warn(`[Gemini:${modelName}] Rate limited (429). Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetriesPerModel})`);
+          await sleep(waitTime);
+          continue;
+        }
+
+        console.error(`[Gemini:${modelName}] attempt ${attempt} failed: ${details}`);
+        
+        if (attempt === maxRetriesPerModel) {
+          errors.push(`${modelName}: ${details}`);
+        } else {
+          // For non-rate-limit errors, wait a bit
+          await sleep(2000 * attempt);
+        }
+      }
     }
   }
 
-  throw new Error(`All configured Gemini models failed: ${errors.join(" | ")}`);
+  throw new Error(`All configured Gemini models failed after retries: ${errors.join(" | ")}`);
 }
 
 /* ── Rewrite an existing article ── */
