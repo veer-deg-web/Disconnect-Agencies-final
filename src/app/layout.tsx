@@ -6,13 +6,17 @@ import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
 import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
 import StoreProvider from "@/store/StoreProvider";
+import { getSiteUrl } from "@/lib/site";
+
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Disconnect",
     template: "%s | Disconnect",
   },
-  description: "Disconnect",
+  description: "Disconnect builds production-grade digital products, platforms, and AI systems.",
 };
 
 export default function RootLayout({
