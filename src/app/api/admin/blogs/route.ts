@@ -5,6 +5,8 @@ import { ensureWebpImage } from "@/lib/blogImageWebp";
 import {
   buildProfessionalMetaDescription,
   buildProfessionalMetaTitle,
+  generateBlogExcerpt,
+  normalizeBlogSlug,
   normalizeDisconnectBrand,
   sanitizeBlogHtmlContent,
 } from "@/lib/blogSeo";
@@ -76,13 +78,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate slug
-    let slug =
-      body.slug ||
-      body.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "")
-        .substring(0, 80);
+    let slug = normalizeBlogSlug(String(body.slug || body.title || ""));
 
     // Ensure unique
     let counter = 0;
@@ -92,8 +88,14 @@ export async function POST(req: NextRequest) {
     }
 
     const normalizedTitle = normalizeDisconnectBrand(String(body.title || "").trim());
-    const normalizedExcerpt = normalizeDisconnectBrand(String(body.excerpt || "").trim());
-    const normalizedContent = sanitizeBlogHtmlContent(String(body.content || ""));
+    const normalizedContent = sanitizeBlogHtmlContent(String(body.content || ""), {
+      fallbackAlt: normalizedTitle || "Blog article illustration",
+    });
+    const normalizedExcerpt = generateBlogExcerpt({
+      excerpt: normalizeDisconnectBrand(String(body.excerpt || "").trim()),
+      content: normalizedContent,
+      title: normalizedTitle,
+    });
 
     // Calculate reading time
     const text = normalizedContent.replace(/<[^>]+>/g, " ");
@@ -170,7 +172,12 @@ export async function PUT(req: NextRequest) {
       update.excerpt = normalizeDisconnectBrand(String(body.excerpt || ""));
     }
     if (body.content !== undefined) {
-      update.content = sanitizeBlogHtmlContent(String(body.content || ""));
+      update.content = sanitizeBlogHtmlContent(String(body.content || ""), {
+        fallbackAlt: String(body.title || update.title || "Blog article illustration"),
+      });
+    }
+    if (body.slug !== undefined || body.title !== undefined) {
+      update.slug = normalizeBlogSlug(String(body.slug || body.title || update.slug || ""));
     }
 
     if (body.featuredImage !== undefined) {
@@ -189,7 +196,15 @@ export async function PUT(req: NextRequest) {
 
     const resolvedTitle = String(update.title || body.title || "");
     const resolvedContent = String(update.content || body.content || "");
-    const resolvedExcerpt = String(update.excerpt || body.excerpt || "");
+    const resolvedExcerpt = generateBlogExcerpt({
+      excerpt: String(update.excerpt || body.excerpt || ""),
+      content: resolvedContent,
+      title: resolvedTitle,
+    });
+
+    if (body.excerpt !== undefined || body.content !== undefined || body.title !== undefined) {
+      update.excerpt = resolvedExcerpt;
+    }
 
     if (body.metaTitle !== undefined || body.title !== undefined) {
       update.metaTitle = buildProfessionalMetaTitle(
