@@ -490,54 +490,58 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </section>
 
-      <style jsx global>{`
-        .blog-content h2 {
-          color: #fff;
-          font-size: 2rem;
-          line-height: 1.2;
-          margin: 40px 0 16px;
-        }
-        .blog-content h3 {
-          color: #fff;
-          font-size: 1.4rem;
-          line-height: 1.3;
-          margin: 28px 0 12px;
-        }
-        .blog-content p,
-        .blog-content ul,
-        .blog-content ol,
-        .blog-content blockquote,
-        .blog-content pre,
-        .blog-content figure {
-          margin: 0 0 20px;
-        }
-        .blog-content ul,
-        .blog-content ol {
-          padding-left: 24px;
-        }
-        .blog-content a {
-          color: #de5e03;
-          text-decoration: underline;
-        }
-        .blog-content img {
-          max-width: 100%;
-          height: auto;
-          border-radius: 18px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .blog-content blockquote {
-          border-left: 4px solid #de5e03;
-          padding: 16px 18px;
-          color: rgba(255, 255, 255, 0.76);
-          background: rgba(255, 255, 255, 0.03);
-        }
-        .blog-content pre {
-          overflow-x: auto;
-          padding: 16px;
-          border-radius: 16px;
-          background: rgba(255, 255, 255, 0.05);
-        }
-      `}</style>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .blog-content h2 {
+              color: #fff;
+              font-size: 2rem;
+              line-height: 1.2;
+              margin: 40px 0 16px;
+            }
+            .blog-content h3 {
+              color: #fff;
+              font-size: 1.4rem;
+              line-height: 1.3;
+              margin: 28px 0 12px;
+            }
+            .blog-content p,
+            .blog-content ul,
+            .blog-content ol,
+            .blog-content blockquote,
+            .blog-content pre,
+            .blog-content figure {
+              margin: 0 0 20px;
+            }
+            .blog-content ul,
+            .blog-content ol {
+              padding-left: 24px;
+            }
+            .blog-content a {
+              color: #de5e03;
+              text-decoration: underline;
+            }
+            .blog-content img {
+              max-width: 100%;
+              height: auto;
+              border-radius: 18px;
+              border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .blog-content blockquote {
+              border-left: 4px solid #de5e03;
+              padding: 16px 18px;
+              color: rgba(255, 255, 255, 0.76);
+              background: rgba(255, 255, 255, 0.03);
+            }
+            .blog-content pre {
+              overflow-x: auto;
+              padding: 16px;
+              border-radius: 16px;
+              background: rgba(255, 255, 255, 0.05);
+            }
+          `,
+        }}
+      />
 
       <Footer />
     </main>
