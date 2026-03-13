@@ -10,17 +10,44 @@ export interface ScrapedArticle {
   sourceUrl: string;
 }
 
+const USER_AGENTS = [
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 17_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Mobile/15E148 Safari/604.1",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+];
+
+function getRandomUserAgent() {
+  return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
+}
+
 /* ── Fetch a page and return parsed cheerio instance ── */
-async function fetchPage(url: string): Promise<cheerio.CheerioAPI> {
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    },
-  });
-  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
-  const html = await res.text();
-  return cheerio.load(html);
+async function fetchPage(url: string, timeoutMs: number = 30000): Promise<cheerio.CheerioAPI> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent": getRandomUserAgent(),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
+    }
+
+    const html = await res.text();
+    return cheerio.load(html);
+  } finally {
+    clearTimeout(id);
+  }
 }
 
 /* ── Collect all blog post URLs from the listing pages ── */
@@ -32,10 +59,11 @@ export async function collectBlogUrls(
   for (let page = 1; page <= maxPages; page++) {
     try {
       const before = urls.length;
+      const baseUrl = process.env.SCRAPER_SOURCE_URL || "https://xbsoftware.com/blog/";
       const pageUrl =
         page === 1
-          ? "https://xbsoftware.com/blog/"
-          : `https://xbsoftware.com/blog/page/${page}/`;
+          ? baseUrl
+          : `${baseUrl.replace(/\/$/, "")}/page/${page}/`;
 
       const $ = await fetchPage(pageUrl);
 

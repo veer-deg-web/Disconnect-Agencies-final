@@ -199,20 +199,111 @@ export async function scrapeAndRewrite(
     skipped,
   });
 
-  // 3. Scrape + rewrite using bounded concurrency for faster processing.
+  // 3. Scrape + rewrite using bounded concurrency
+  console.log(`Pipeline Info: Starting processing ${newUrls.length} new articles with concurrency ${SCRAPE_CONCURRENCY}`);
+  
   let cursor = 0;
   const workerCount = Math.min(SCRAPE_CONCURRENCY, newUrls.length);
-  const workers = Array.from({ length: workerCount }, async () => {
-    // eslint-disable-next-line no-constant-condition
+  const workers = Array.from({ length: workerCount }, async (_, workerIdx) => {
+    console.log(`Worker ${workerIdx} started`);
     while (true) {
-      if (shouldStop?.()) break;
+      if (shouldStop?.()) {
+        console.log(`Worker ${workerIdx} stopping: Stop requested`);
+        break;
+      }
       const nextIndex = cursor++;
       if (nextIndex >= newUrls.length) break;
       const url = newUrls[nextIndex];
 
-    try {
-      const article = await scrapeArticle(url);
-      if (!article) {
+      console.log(`Worker ${workerIdx} processing [${nextIndex + 1}/${total}]: ${url}`);
+
+      try {
+        const article = await scrapeArticle(url);
+        if (!article) {
+          console.warn(`Worker ${workerIdx} Warning: Failed to scrape or parse content from ${url}`);
+          skipped++;
+          processed++;
+          emit({
+            phase: "processing",
+            total,
+            processed,
+            created,
+            skipped,
+            currentUrl: url,
+            lastError: "Could not parse scraped article",
+          });
+          continue;
+        }
+
+        console.log(`Worker ${workerIdx} Info: Scrape success. Sending to AI for rewrite: "${article.title}"`);
+
+        const rewrittenRaw = await withRetry(
+          () => rewriteArticle({
+            title: article.title,
+            content: article.content,
+            category: article.category,
+          }),
+          AI_RETRY_COUNT
+        );
+
+        if (!rewrittenRaw || !rewrittenRaw.content || rewrittenRaw.content.length < 500) {
+          throw new Error("AI output validation failed: Content too short or empty");
+        }
+
+        const rewritten = sanitizeAIOutput(rewrittenRaw);
+        
+        console.log(`Worker ${workerIdx} Info: AI rewrite success. Processing images and slug...`);
+
+        const featuredImage = await ensureWebpImage(
+          article.featuredImage || getRandomImage(),
+          rewritten.title || article.title
+        ).catch(err => {
+          console.error(`Worker ${workerIdx} Image Error:`, err.message);
+          return getRandomImage();
+        });
+
+        const finalCategory =
+          typeof categoryOverride === "string" && categoryOverride.trim()
+            ? categoryOverride.trim()
+            : rewritten.category || article.category;
+
+        const slug = await uniqueSlug(createSlug(String(rewritten.title) || article.title));
+
+        await Blog.create({
+          title: rewritten.title || article.title,
+          slug,
+          category: finalCategory,
+          excerpt: rewritten.excerpt || "",
+          metaTitle: rewritten.metaTitle || rewritten.title || article.title,
+          metaDescription: rewritten.metaDescription || "",
+          featuredImage,
+          content: rewritten.content || "",
+          tags: rewritten.tags || [],
+          readingTime: calcReadingTime(rewritten.content || ""),
+          author: rewritten.author || "Disconnect Team",
+          status: "published",
+          source: "scraped",
+          sourceUrl: article.sourceUrl,
+          faq: rewritten.faq || [],
+        });
+
+        created++;
+        processed++;
+        console.log(`Worker ${workerIdx} Success: Published blog "${rewritten.title}" (${slug})`);
+        
+        emit({
+          phase: "processing",
+          total,
+          processed,
+          created,
+          skipped,
+          currentTitle: rewritten.title || article.title,
+          currentUrl: article.sourceUrl,
+        });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`Worker ${workerIdx} Error processing "${url}":`, msg);
+        errors.push(`Failed to process "${url}": ${msg}`);
         skipped++;
         processed++;
         emit({
@@ -222,82 +313,16 @@ export async function scrapeAndRewrite(
           created,
           skipped,
           currentUrl: url,
-          lastError: "Could not parse scraped article",
+          lastError: msg,
         });
-        continue;
       }
-
-      const rewritten = sanitizeAIOutput(
-        await withRetry(
-          () =>
-            rewriteArticle({
-              title: article.title,
-              content: article.content,
-              category: article.category,
-            }),
-          AI_RETRY_COUNT
-        )
-      );
-      const featuredImage = await ensureWebpImage(
-        article.featuredImage || getRandomImage(),
-        rewritten.title || article.title
-      );
-      const finalCategory =
-        typeof categoryOverride === "string" && categoryOverride.trim()
-          ? categoryOverride.trim()
-          : rewritten.category || article.category;
-
-      const slug = await uniqueSlug(createSlug(String(rewritten.title) || article.title));
-
-      await Blog.create({
-        title: rewritten.title || article.title,
-        slug,
-        category: finalCategory,
-        excerpt: rewritten.excerpt || "",
-        metaTitle: rewritten.metaTitle || rewritten.title || article.title,
-        metaDescription: rewritten.metaDescription || "",
-        featuredImage,
-        content: rewritten.content || "",
-        tags: rewritten.tags || [],
-        readingTime: calcReadingTime(rewritten.content || ""),
-        author: rewritten.author || "Disconnect Team",
-        status: "published",
-        source: "scraped",
-        sourceUrl: article.sourceUrl,
-        faq: rewritten.faq || [],
-      });
-
-      created++;
-      processed++;
-      emit({
-        phase: "processing",
-        total,
-        processed,
-        created,
-        skipped,
-        currentTitle: rewritten.title || article.title,
-        currentUrl: article.sourceUrl,
-      });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      errors.push(`Failed to process "${url}": ${msg}`);
-      skipped++;
-      processed++;
-      emit({
-        phase: "processing",
-        total,
-        processed,
-        created,
-        skipped,
-        currentUrl: url,
-        lastError: msg,
-      });
-    }
     }
   });
+
   await Promise.all(workers);
 
   const stopped = Boolean(shouldStop?.());
+  console.log(`Pipeline Done: Generated ${created} blogs, skipped ${skipped}, total ${processed}/${total} processed.`);
 
   emit({
     phase: "done",
@@ -318,19 +343,30 @@ export async function generateNewBlog(
   await dbConnect();
 
   const chosenTopic = topic || getRandomTopic();
+  console.log(`Pipeline Info: Generating new blog for topic: "${chosenTopic}"`);
 
   try {
-    const generated = sanitizeAIOutput(
-      await withRetry(() => generateBlogFromTopic(chosenTopic), AI_RETRY_COUNT)
-    );
+    const generatedRaw = await withRetry(() => generateBlogFromTopic(chosenTopic), AI_RETRY_COUNT);
+    
+    if (!generatedRaw || !generatedRaw.content || generatedRaw.content.length < 500) {
+      throw new Error("AI output validation failed: Content too short or empty");
+    }
+
+    const generated = sanitizeAIOutput(generatedRaw);
+    
     const finalCategory =
       typeof category === "string" && category.trim()
         ? category.trim()
         : generated.category || "Web Development";
-    const featuredImage = await ensureWebpImage(
-      getTopicImage(chosenTopic, finalCategory),
-      generated.title || chosenTopic
-    );
+
+    console.log(`Pipeline Info: AI generation success. Processing image for "${generated.title}"`);
+
+    const imageSource = getTopicImage(chosenTopic, finalCategory);
+    const featuredImage = await ensureWebpImage(imageSource, generated.title || chosenTopic)
+      .catch(err => {
+        console.error("Pipeline Image Error:", err.message);
+        return imageSource;
+      });
 
     const slug = await uniqueSlug(createSlug(String(generated.title) || chosenTopic));
 
@@ -352,9 +388,11 @@ export async function generateNewBlog(
       faq: generated.faq || [],
     });
 
+    console.log(`Pipeline Success: Published topic-based blog "${blog.title}" (${slug})`);
     return { blog };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
+    console.error(`Pipeline Error [Topic: ${chosenTopic}]:`, msg);
     return { blog: null, error: msg };
   }
 }
