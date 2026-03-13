@@ -1,5 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+const DEFAULT_TEXT_MODELS = [
+  "gemini-2.5-flash",
+  "gemini-2.5-pro",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-1.5-pro",
+];
+
 function getClient() {
   const key = process.env.GEMINI_API_KEY;
   if (!key || key === "your_gemini_api_key_here") {
@@ -13,39 +21,49 @@ function resolveGeminiModels(): string[] {
     process.env.GEMINI_MODELS ||
     process.env.GEMINI_MODEL_LIST ||
     process.env.BLOG_AI_MODELS ||
-    "gemini-2.5-flash";
+    DEFAULT_TEXT_MODELS.join(",");
 
   const list = raw
     .split(/[,\n]/)
     .map((m) => m.trim())
     .map((m) => m.replace(/^\[+/, "").replace(/\]+$/, ""))
     .map((m) => m.replace(/^['"]+/, "").replace(/['"]+$/, ""))
+    .map((m) => m.replace(/^models\//i, ""))
     .map((m) => m.trim())
     .filter(Boolean);
 
   const allowNonText = String(process.env.BLOG_AI_ALLOW_NON_TEXT_MODELS || "").toLowerCase() === "true";
-  const raceLimit = Math.max(1, Math.min(24, Number(process.env.BLOG_AI_MODEL_RACE_LIMIT || 8)));
+  const fallbackLimit = Math.max(1, Math.min(8, Number(process.env.BLOG_AI_MODEL_FALLBACK_LIMIT || 4)));
+
+  const blockedHints = [
+    "embedding",
+    "imagen",
+    "veo",
+    "tts",
+    "audio",
+    "image",
+    "computer-use",
+    "robotics",
+    "aqa",
+    "live",
+    "vision",
+  ];
+
+  const allowedPrefixes = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
 
   const filtered = allowNonText
     ? list
     : list.filter((m) => {
         const name = m.toLowerCase();
-        const blockedHints = [
-          "embedding",
-          "imagen",
-          "veo",
-          "tts",
-          "audio",
-          "image",
-          "computer-use",
-          "robotics",
-          "aqa",
-        ];
-        return !blockedHints.some((hint) => name.includes(hint));
+        const hasBlockedHint = blockedHints.some((hint) => name.includes(hint));
+        const isTextModel = allowedPrefixes.some((prefix) => name.startsWith(prefix));
+        return !hasBlockedHint && isTextModel;
       });
 
-  const unique = Array.from(new Set(filtered.length ? filtered : list));
-  return unique.slice(0, raceLimit);
+  const unique = Array.from(
+    new Set((filtered.length ? filtered : DEFAULT_TEXT_MODELS).map((model) => model.trim()))
+  );
+  return unique.slice(0, fallbackLimit);
 }
 
 /* ── Robust JSON parser — handles messy AI output ── */
@@ -89,34 +107,54 @@ function parseAIJson(text: string) {
   throw new Error("Failed to parse AI response as JSON");
 }
 
-async function generateJsonWithFastestModel(prompt: string) {
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) {
+    const maybeStatus = (err as Error & { status?: number }).status;
+    const maybeCause = (err as Error & { cause?: unknown }).cause;
+    const parts = [err.message];
+
+    if (typeof maybeStatus === "number") {
+      parts.push(`status=${maybeStatus}`);
+    }
+
+    if (maybeCause instanceof Error) {
+      parts.push(`cause=${maybeCause.message}`);
+    } else if (typeof maybeCause === "string") {
+      parts.push(`cause=${maybeCause}`);
+    }
+
+    return parts.join(" | ");
+  }
+
+  return String(err);
+}
+
+async function generateJsonWithFallbackModels(prompt: string) {
   const genAI = getClient();
   const models = resolveGeminiModels();
-  const tasks = models.map(async (modelName) => {
-    const model = genAI.getGenerativeModel({
-      model: modelName,
-      generationConfig: {
-        responseMimeType: "application/json",
-      },
-    });
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    const json = parseAIJson(text);
-    return { json, modelName };
-  });
 
-  try {
-    const winner = await Promise.any(tasks);
-    return winner.json;
-  } catch (err) {
-    if (err instanceof AggregateError && Array.isArray(err.errors)) {
-      const details = err.errors
-        .map((e) => (e instanceof Error ? e.message : String(e)))
-        .join(" | ");
-      throw new Error(`All configured Gemini models failed: ${details}`);
+  const errors: string[] = [];
+
+  for (const modelName of models) {
+    try {
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        generationConfig: {
+          responseMimeType: "application/json",
+        },
+      });
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+      const json = parseAIJson(text);
+      return json;
+    } catch (err) {
+      const details = getErrorMessage(err);
+      console.error(`[Gemini:${modelName}] generation failed: ${details}`);
+      errors.push(`${modelName}: ${details}`);
     }
-    throw err;
   }
+
+  throw new Error(`All configured Gemini models failed: ${errors.join(" | ")}`);
 }
 
 /* ── Rewrite an existing article ── */
@@ -153,7 +191,7 @@ Respond with JSON matching this schema:
   "author": "Disconnect Team"
 }`;
 
-  return generateJsonWithFastestModel(prompt);
+  return generateJsonWithFallbackModels(prompt);
 }
 
 /* ── Generate a completely new blog from a topic ── */
@@ -188,7 +226,7 @@ Respond with JSON matching this schema:
   "author": "Disconnect Team"
 }`;
 
-  return generateJsonWithFastestModel(prompt);
+  return generateJsonWithFallbackModels(prompt);
 }
 
 /* ── Trending topics pool for auto-generation ── */
