@@ -1,134 +1,56 @@
-import { scrapeAndRewrite, type ScrapeProgress } from "@/lib/blogGenerator";
+import { createJob, finishJob } from "@/lib/acidJob";
+import GenerationJob from "@/models/GenerationJob";
+import dbConnect from "@/lib/mongodb";
+import { scrapeAndRewrite } from "@/lib/blogGenerator";
 
-export type BlogScrapeJobStatus = "idle" | "running" | "stopping" | "stopped" | "completed" | "failed";
-
-export interface BlogScrapeJobState extends ScrapeProgress {
-  jobId: string;
-  status: BlogScrapeJobStatus;
-  stopRequested: boolean;
-  startedAt: string | null;
-  endedAt: string | null;
-  errors: string[];
+export async function getBlogScrapeJobStatus() {
+  await dbConnect();
+  // Durability (D): Retrieve the latest job from the database
+  return await GenerationJob.findOne({ type: "scrape" }).sort({ createdAt: -1 }).lean();
 }
 
-const createInitialState = (): BlogScrapeJobState => ({
-  jobId: "",
-  status: "idle",
-  phase: "done",
-  total: 0,
-  processed: 0,
-  created: 0,
-  skipped: 0,
-  stopRequested: false,
-  startedAt: null,
-  endedAt: null,
-  errors: [],
-});
-
-const globalStore = globalThis as typeof globalThis & {
-  __blogScrapeJobState?: BlogScrapeJobState;
-};
-
-if (!globalStore.__blogScrapeJobState) {
-  globalStore.__blogScrapeJobState = createInitialState();
-}
-
-function getStateRef(): BlogScrapeJobState {
-  return globalStore.__blogScrapeJobState as BlogScrapeJobState;
-}
-
-function setState(next: BlogScrapeJobState) {
-  globalStore.__blogScrapeJobState = next;
-}
-
-export function getBlogScrapeJobState(): BlogScrapeJobState {
-  return getStateRef();
-}
-
-export function startBlogScrapeJob(
+export async function startBlogScrapeJob(
   maxPages: number = 100,
   maxArticles: number = Number.MAX_SAFE_INTEGER,
   category?: string
-): BlogScrapeJobState {
-  const current = getStateRef();
-  if (current.status === "running" || current.status === "stopping") {
-    return current;
-  }
+) {
+  // Isolation (I): handled by createJob internally
+  const { job, lockId } = await createJob("scrape");
 
-  const jobId = `scrape-${Date.now()}`;
-  const initial: BlogScrapeJobState = {
-    ...createInitialState(),
-    jobId,
-    status: "running",
-    phase: "collecting",
-    stopRequested: false,
-    startedAt: new Date().toISOString(),
-  };
-  setState(initial);
-
+  // Fire and forget the worker
   void (async () => {
     try {
       const result = await scrapeAndRewrite(
         maxPages,
         maxArticles,
-        (progress) => {
-          const prev = getStateRef();
-          setState({
-            ...prev,
-            phase: progress.phase,
-            total: progress.total,
-            processed: progress.processed,
-            created: progress.created,
-            skipped: progress.skipped,
-            currentTitle: progress.currentTitle,
-            currentUrl: progress.currentUrl,
-            lastError: progress.lastError,
-          });
-        },
-        () => getStateRef().stopRequested,
-        category
+        undefined, // Progress now handled internally via jobId/lockId
+        undefined, // TODO: Implement persistent stop request check
+        category,
+        job._id.toString(),
+        lockId
       );
 
-      const prev = getStateRef();
-      setState({
-        ...prev,
-        status: result.stopped ? "stopped" : "completed",
-        phase: "done",
-        stopRequested: false,
-        lastError: result.stopped ? "Scrape stopped by admin" : prev.lastError,
-        endedAt: new Date().toISOString(),
-        errors: result.errors,
-      });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Unknown scrape job error";
-      const prev = getStateRef();
-      setState({
-        ...prev,
-        status: prev.stopRequested ? "stopped" : "failed",
-        phase: "done",
-        stopRequested: false,
-        lastError: msg,
-        endedAt: new Date().toISOString(),
-        errors: [...prev.errors, msg],
-      });
+      // Finalize (A, C, D)
+      await finishJob(
+        job._id, 
+        lockId, 
+        result.stopped ? "failed" : "completed"
+      );
+    } catch {
+      await finishJob(job._id, lockId, "failed");
+      // Optionally log the error to job metadata or errors array
     }
   })();
 
-  return initial;
+  return job;
 }
 
-export function requestStopBlogScrapeJob(): BlogScrapeJobState {
-  const current = getStateRef();
-  if (current.status !== "running") {
-    return current;
-  }
-
-  const next: BlogScrapeJobState = {
-    ...current,
-    status: "stopping",
-    stopRequested: true,
-    lastError: "Stopping scrape...",
-  };
-  setState(next);
-  return next;
+export async function requestStopBlogScrapeJob() {
+  await dbConnect();
+  // Isolation (I): Request stop on the active job
+  return await GenerationJob.findOneAndUpdate(
+    { type: "scrape", status: { $in: ["generating", "seeding"] } },
+    { $set: { status: "failed", currentTask: "Stop requested" }, $push: { logs: `[${new Date().toISOString()}] Job stop requested by admin` } },
+    { new: true }
+  );
 }

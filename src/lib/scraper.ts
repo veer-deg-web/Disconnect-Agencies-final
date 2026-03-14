@@ -50,52 +50,73 @@ async function fetchPage(url: string, timeoutMs: number = 30000): Promise<cheeri
   }
 }
 
-/* ── Collect all blog post URLs from the listing pages ── */
-export async function collectBlogUrls(
-  maxPages: number = 3
+/* ── Discover blog post URLs from ANY listing page ── */
+export async function discoverBlogUrls(
+  listingUrl: string,
+  maxPages: number = 1
 ): Promise<string[]> {
   const urls: string[] = [];
+  const targetDomain = new URL(listingUrl).hostname;
 
   for (let page = 1; page <= maxPages; page++) {
     try {
       const before = urls.length;
-      const baseUrl = process.env.SCRAPER_SOURCE_URL || "https://xbsoftware.com/blog/";
-      const pageUrl =
-        page === 1
-          ? baseUrl
-          : `${baseUrl.replace(/\/$/, "")}/page/${page}/`;
+      let pageUrl = listingUrl;
+      
+      if (page > 1) {
+        // Common pagination patterns: /page/2, ?page=2, /p/2
+        if (listingUrl.includes("?")) {
+          pageUrl = `${listingUrl}&page=${page}`;
+        } else {
+          pageUrl = `${listingUrl.replace(/\/$/, "")}/page/${page}/`;
+        }
+      }
 
       const $ = await fetchPage(pageUrl);
 
-      // Find article links — the blog listing uses h2 > a or article a patterns
-      $("article a, .post-title a, h2 a, h3 a").each((_, el) => {
+      // Heuristic for finding article links
+      $("article a, main a, .post-title a, h1 a, h2 a, h3 a, .entry-title a").each((_, el) => {
         const href = $(el).attr("href");
-        if (
-          href &&
-          href.startsWith("https://xbsoftware.com/blog/") &&
-          !href.includes("/page/") &&
-          !href.includes("/author/") &&
-          href !== "https://xbsoftware.com/blog/" &&
-          !urls.includes(href)
-        ) {
-          urls.push(href);
+        if (!href) return;
+
+        try {
+          const absoluteUrl = new URL(href, listingUrl).href;
+          const urlObj = new URL(absoluteUrl);
+          
+          // Filter: Must be same domain, not a pagination link, and looks like a post
+          if (
+            urlObj.hostname === targetDomain &&
+            !absoluteUrl.includes("/page/") &&
+            !absoluteUrl.includes("/category/") &&
+            !absoluteUrl.includes("/tag/") &&
+            !absoluteUrl.includes("/author/") &&
+            absoluteUrl !== listingUrl &&
+            absoluteUrl.length > listingUrl.length + 5 && // Post URL usually longer than listing
+            !urls.includes(absoluteUrl)
+          ) {
+            urls.push(absoluteUrl);
+          }
+        } catch {
+          // Skip invalid URLs
         }
       });
 
-      // Small delay between pages to be respectful
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Stop early when the listing no longer returns any blog links.
-      if (urls.length === before) {
-        break;
-      }
+      if (urls.length === before) break;
+      await new Promise((resolve) => setTimeout(resolve, 800));
     } catch (err) {
-      console.error(`Error fetching page ${page}:`, err);
+      console.error(`Error discovering URLs at ${listingUrl}:`, err);
       break;
     }
   }
 
-  return [...new Set(urls)]; // deduplicate
+  return [...new Set(urls)];
+}
+
+/* ── Existing hardcoded collection for xbsoftware (legacy support) ── */
+export async function collectBlogUrls(
+  maxPages: number = 3
+): Promise<string[]> {
+  return discoverBlogUrls(process.env.SCRAPER_SOURCE_URL || "https://xbsoftware.com/blog/", maxPages);
 }
 
 /* ── Scrape a single blog post ── */
@@ -141,23 +162,29 @@ export async function scrapeArticle(
 
     // Extract main content
     const contentSelectors = [
+      "article",
       ".entry-content",
       ".post-content",
       ".article-content",
-      "article .content",
-      "article",
+      "main",
+      "#content",
+      ".content",
     ];
 
     let content = "";
     for (const selector of contentSelectors) {
       const el = $(selector).first();
       if (el.length) {
-        // Remove scripts, styles, nav, sidebar elements
-        el.find(
-          "script, style, nav, .sidebar, .social-share, .related-posts, .comments, .author-bio"
+        // Clone to avoid mutation if needed, though cheerio handles it
+        const contentClone = el.clone();
+        
+        // Remove known noise
+        contentClone.find(
+          "script, style, nav, footer, header, .sidebar, .ads, .advertisement, .social-share, .related, .comments, .newsletter, .subscribe, noscript, svg, button"
         ).remove();
-        content = el.html()?.trim() || "";
-        if (content.length > 200) break;
+        
+        content = contentClone.html()?.trim() || "";
+        if (content.length > 500) break;
       }
     }
 

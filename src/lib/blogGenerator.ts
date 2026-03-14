@@ -1,7 +1,10 @@
+import fs from "fs";
+import path from "path";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
-import { rewriteArticle, generateBlogFromTopic, getRandomTopic } from "@/lib/gemini";
-import { collectBlogUrls, scrapeArticle } from "@/lib/scraper";
+import { seedBlogs } from "../../scripts/seedBlogs";
+import { rewriteArticle, generateBlogFromTopic, getRandomTopic, rewriteForImport } from "@/lib/gemini";
+import { collectBlogUrls, scrapeArticle, discoverBlogUrls } from "@/lib/scraper";
 import { ensureWebpImage } from "@/lib/blogImageWebp";
 import {
   buildProfessionalMetaDescription,
@@ -9,89 +12,29 @@ import {
   normalizeDisconnectBrand,
   sanitizeBlogHtmlContent,
 } from "@/lib/blogSeo";
+import { updateJobProgress, logJob } from "@/lib/acidJob";
+import {
+  createSlug,
+  getTopicImage,
+  sleep,
+  withRetry,
+} from "@/lib/utils";
 
-const SCRAPE_CONCURRENCY = Math.max(1, Math.min(4, Number(process.env.BLOG_SCRAPE_CONCURRENCY || 3)));
 const AI_RETRY_COUNT = Math.max(1, Math.min(4, Number(process.env.BLOG_AI_RETRY_COUNT || 3)));
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function withRetry<T>(task: () => Promise<T>, retries: number): Promise<T> {
-  let lastError: unknown;
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      return await task();
-    } catch (err) {
-      lastError = err;
-      if (attempt < retries) {
-        await sleep(300 * attempt);
-      }
-    }
-  }
-  throw lastError;
-}
-
-/* ── Slug helper ── */
-function createSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .substring(0, 80);
-}
-
-/* ── Ensure unique slug ── */
-async function uniqueSlug(base: string): Promise<string> {
-  let slug = base;
-  let counter = 0;
-  while (await Blog.findOne({ slug })) {
-    counter++;
-    slug = `${base}-${counter}`;
-  }
-  return slug;
-}
-
-/* ── Calculate reading time ── */
-function calcReadingTime(html: string): number {
-  const text = html.replace(/<[^>]+>/g, " ");
-  const words = text.split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.ceil(words / 200));
-}
-
-/* ── Featured image fallback ── */
-const FALLBACK_IMAGES = [
-  "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
-  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-  "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&q=80",
-  "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
-  "https://images.unsplash.com/photo-1586528116311-ad86d790d798?w=800&q=80",
-  "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=800&q=80",
-];
-
-function getRandomImage(): string {
-  return FALLBACK_IMAGES[Math.floor(Math.random() * FALLBACK_IMAGES.length)];
-}
-
-function getTopicImage(topic?: string, category?: string): string {
-  void topic;
-  void category;
-  return getRandomImage();
-}
-
-/* ── Truncate safely — cuts at word boundary ── */
-function truncate(str: string, max: number): string {
-  if (!str || str.length <= max) return str;
-  const trimmed = str.substring(0, max);
-  const lastSpace = trimmed.lastIndexOf(" ");
-  return (lastSpace > max * 0.7 ? trimmed.substring(0, lastSpace) : trimmed).replace(/[,.\s]+$/, "") + "…";
-}
 
 /* ── Sanitize AI output fields before saving ── */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function sanitizeAIOutput(data: any): any {
   const title = normalizeDisconnectBrand(String(data.title || ""));
   const content = sanitizeBlogHtmlContent(String(data.content || ""));
+  
+  function truncate(str: string, max: number): string {
+    if (!str || str.length <= max) return str;
+    const trimmed = str.substring(0, max);
+    const lastSpace = trimmed.lastIndexOf(" ");
+    return (lastSpace > max * 0.7 ? trimmed.substring(0, lastSpace) : trimmed).replace(/[,.\s]+$/, "") + "…";
+  }
+
   const excerpt = truncate(
     normalizeDisconnectBrand(String(data.excerpt || data.metaDescription || "")),
     295
@@ -112,6 +55,16 @@ function sanitizeAIOutput(data: any): any {
   };
 }
 
+export async function uniqueSlug(base: string): Promise<string> {
+  let slug = base;
+  let counter = 0;
+  while (await Blog.findOne({ slug })) {
+    counter++;
+    slug = `${base}-${counter}`;
+  }
+  return slug;
+}
+
 /* ── Scrape + Rewrite pipeline ── */
 export interface ScrapeProgress {
   phase: "collecting" | "processing" | "done";
@@ -129,7 +82,9 @@ export async function scrapeAndRewrite(
   maxArticles: number = Number.MAX_SAFE_INTEGER,
   onProgress?: (progress: ScrapeProgress) => void,
   shouldStop?: () => boolean,
-  categoryOverride?: string
+  categoryOverride?: string,
+  acidJobId?: string,
+  lockId?: string
 ): Promise<{ created: number; skipped: number; processed: number; total: number; errors: string[]; stopped: boolean }> {
   await dbConnect();
   const errors: string[] = [];
@@ -139,28 +94,30 @@ export async function scrapeAndRewrite(
 
   const emit = (payload: ScrapeProgress) => {
     if (onProgress) onProgress(payload);
+    if (acidJobId && lockId) {
+      updateJobProgress(acidJobId, lockId, {
+        status: payload.phase === "done" ? "seeding" : "generating",
+        totalBlogs: payload.total,
+        processedBlogs: payload.processed,
+        successCount: payload.created,
+        failureCount: payload.skipped,
+        currentTask: payload.currentTitle || payload.currentUrl || payload.phase,
+        log: payload.lastError ? `Error: ${payload.lastError}` : undefined
+      });
+    }
   };
 
-  emit({
-    phase: "collecting",
-    total: 0,
-    processed: 0,
-    created: 0,
-    skipped: 0,
-  });
+  const generatedBlogs: any[] = [];
+
+  emit({ phase: "collecting", total: 0, processed: 0, created: 0, skipped: 0 });
+  if (acidJobId && lockId) await logJob(acidJobId, lockId, "Starting scraping phase...");
 
   // 1. Collect URLs
   const urls = await collectBlogUrls(maxPages);
   if (urls.length === 0) {
-    emit({
-      phase: "done",
-      total: 0,
-      processed: 0,
-      created: 0,
-      skipped: 0,
-      lastError: "No blog URLs found from scraping",
-    });
-    return { created: 0, skipped: 0, processed: 0, total: 0, errors: ["No blog URLs found from scraping"], stopped: false };
+    const err = "No blog URLs found from scraping";
+    emit({ phase: "done", total: 0, processed: 0, created: 0, skipped: 0, lastError: err });
+    return { created: 0, skipped: 0, processed: 0, total: 0, errors: [err], stopped: false };
   }
 
   // 2. Filter out already-scraped URLs
@@ -169,208 +126,142 @@ export async function scrapeAndRewrite(
   const newUrls = urls.filter((u) => !existingUrls.has(u)).slice(0, maxArticles);
   const total = newUrls.length;
 
-  if (newUrls.length === 0) {
-    emit({
-      phase: "done",
-      total: 0,
-      processed: 0,
-      created: 0,
-      skipped: 0,
-      lastError: "All scraped articles already exist in the database",
-    });
-    return {
-      created: 0,
-      skipped: 0,
-      processed: 0,
-      total: 0,
-      errors: ["All scraped articles already exist in the database"],
-      stopped: false,
-    };
+  if (total === 0) {
+    const err = "All scraped articles already exist in the database";
+    emit({ phase: "done", total: 0, processed: 0, created: 0, skipped: 0, lastError: err });
+    return { created: 0, skipped: 0, processed: 0, total: 0, errors: [err], stopped: false };
   }
 
-  emit({
-    phase: "processing",
-    total,
-    processed,
-    created,
-    skipped,
-  });
+  emit({ phase: "processing", total, processed: 0, created: 0, skipped: 0 });
+  if (acidJobId && lockId) await logJob(acidJobId, lockId, `Found ${total} new URLs to process.`);
 
-  // 3. Scrape + rewrite using bounded concurrency
-  console.log(`Pipeline Info: Starting processing ${newUrls.length} new articles with concurrency ${SCRAPE_CONCURRENCY}`);
-  
-  let cursor = 0;
-  const workerCount = Math.min(SCRAPE_CONCURRENCY, newUrls.length);
-  const workers = Array.from({ length: workerCount }, async (_, workerIdx) => {
-    console.log(`Worker ${workerIdx} started`);
-    while (true) {
-      if (shouldStop?.()) {
-        console.log(`Worker ${workerIdx} stopping: Stop requested`);
-        break;
-      }
-      const nextIndex = cursor++;
-      if (nextIndex >= newUrls.length) break;
-      const url = newUrls[nextIndex];
-
-      console.log(`Worker ${workerIdx} processing [${nextIndex + 1}/${total}]: ${url}`);
-
-      try {
-        const article = await scrapeArticle(url);
-        if (!article) {
-          console.warn(`Worker ${workerIdx} Warning: Failed to scrape or parse content from ${url}`);
-          skipped++;
-          processed++;
-          emit({
-            phase: "processing",
-            total,
-            processed,
-            created,
-            skipped,
-            currentUrl: url,
-            lastError: "Could not parse scraped article",
-          });
-          continue;
-        }
-
-        console.log(`Worker ${workerIdx} Info: Scrape success. Sending to AI for rewrite: "${article.title}"`);
-
-        const rewrittenRaw = await withRetry(
-          () => rewriteArticle({
-            title: article.title,
-            content: article.content,
-            category: article.category,
-          }),
-          AI_RETRY_COUNT
-        );
-
-        if (!rewrittenRaw || !rewrittenRaw.content || rewrittenRaw.content.length < 500) {
-          throw new Error("AI output validation failed: Content too short or empty");
-        }
-
-        const rewritten = sanitizeAIOutput(rewrittenRaw);
-        
-        console.log(`Worker ${workerIdx} Info: AI rewrite success. Processing images and slug...`);
-
-        const featuredImage = await ensureWebpImage(
-          article.featuredImage || getRandomImage(),
-          rewritten.title || article.title
-        ).catch(err => {
-          console.error(`Worker ${workerIdx} Image Error:`, err.message);
-          return getRandomImage();
-        });
-
-        const finalCategory =
-          typeof categoryOverride === "string" && categoryOverride.trim()
-            ? categoryOverride.trim()
-            : rewritten.category || article.category;
-
-        const slug = await uniqueSlug(createSlug(String(rewritten.title) || article.title));
-
-        await Blog.create({
-          title: rewritten.title || article.title,
-          slug,
-          category: finalCategory,
-          excerpt: rewritten.excerpt || "",
-          metaTitle: rewritten.metaTitle || rewritten.title || article.title,
-          metaDescription: rewritten.metaDescription || "",
-          featuredImage,
-          content: rewritten.content || "",
-          tags: rewritten.tags || [],
-          readingTime: calcReadingTime(rewritten.content || ""),
-          author: rewritten.author || "Disconnect Team",
-          status: "published",
-          source: "scraped",
-          sourceUrl: article.sourceUrl,
-          faq: rewritten.faq || [],
-        });
-
-        created++;
-        processed++;
-        console.log(`Worker ${workerIdx} Success: Published blog "${rewritten.title}" (${slug})`);
-        
-        // Mandatory cooldown to respect Free Tier RPM limits
-        await sleep(5000);
-
-        emit({
-          phase: "processing",
-          total,
-          processed,
-          created,
-          skipped,
-          currentTitle: rewritten.title || article.title,
-          currentUrl: article.sourceUrl,
-        });
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        console.error(`Worker ${workerIdx} Error processing "${url}":`, msg);
-        errors.push(`Failed to process "${url}": ${msg}`);
-        skipped++;
-        processed++;
-        emit({
-          phase: "processing",
-          total,
-          processed,
-          created,
-          skipped,
-          currentUrl: url,
-          lastError: msg,
-        });
-      }
+  // 3. Sequential Processing for ACID stability and rate-limiting
+  for (const url of newUrls) {
+    if (shouldStop && shouldStop()) {
+      if (acidJobId && lockId) await logJob(acidJobId, lockId, "Stop requested by admin. Stopping...");
+      break;
     }
-  });
 
-  await Promise.all(workers);
+    processed += 1;
+    try {
+      const scraped = await scrapeArticle(url);
+      if (!scraped || !scraped.content) {
+        skipped += 1;
+        errors.push(`Failed to scrape: ${url}`);
+        if (acidJobId && lockId) await logJob(acidJobId, lockId, `Failed to scrape content from: ${url}`);
+        continue;
+      }
 
-  const stopped = Boolean(shouldStop?.());
-  console.log(`Pipeline Done: Generated ${created} blogs, skipped ${skipped}, total ${processed}/${total} processed.`);
+      emit({ phase: "processing", total, processed, created, skipped, currentUrl: url, currentTitle: scraped.title });
 
-  emit({
-    phase: "done",
-    total,
-    processed,
-    created,
-    skipped,
-  });
+      if (acidJobId && lockId) await logJob(acidJobId, lockId, `Rewriting article: "${scraped.title || url}"`);
 
-  return { created, skipped, processed, total, errors, stopped };
+      // AI Rewrite with retries
+      const generatedRaw = await withRetry(() => rewriteArticle(scraped), AI_RETRY_COUNT);
+      if (!generatedRaw || !generatedRaw.content) {
+        skipped += 1;
+        errors.push(`AI skipped or failed for: ${scraped.title}`);
+        continue;
+      }
+
+      const generated = sanitizeAIOutput(generatedRaw);
+      const category = categoryOverride || generated.category || "Web Development";
+      const imageSource = scraped.featuredImage || getTopicImage(generated.title, category);
+      
+      const featuredImage = await ensureWebpImage(imageSource, generated.title)
+        .catch(() => scraped.featuredImage || imageSource);
+
+      // Task 2, 3: Push to array instead of DB directly
+      const baseSlug = createSlug(generated.title);
+      const slug = await uniqueSlug(baseSlug);
+
+      generatedBlogs.push({
+        title: generated.title,
+        slug,
+        category,
+        excerpt: generated.excerpt,
+        metaTitle: generated.metaTitle,
+        metaDescription: generated.metaDescription,
+        featuredImage,
+        content: generated.content,
+        tags: generated.tags || [],
+      });
+
+      created += 1;
+      if (acidJobId && lockId) await logJob(acidJobId, lockId, `Generated JSON for: "${generated.title}"`);
+
+      emit({ phase: "processing", total, processed, created, skipped });
+      await sleep(3000); // Rate limit protection
+
+    } catch (err) {
+      skipped += 1;
+      const msg = err instanceof Error ? err.message : String(err);
+      errors.push(`Error at ${url}: ${msg}`);
+      if (acidJobId && lockId) await logJob(acidJobId, lockId, `Error processing ${url}: ${msg}`);
+      emit({ phase: "processing", total, processed, created, skipped, lastError: msg });
+    }
+  }
+
+  // Write JSON file first
+  const jsonPath = path.join(process.cwd(), "data", "blogs.json");
+  fs.writeFileSync(jsonPath, JSON.stringify({ blogs: generatedBlogs }, null, 2));
+  if (acidJobId && lockId) await logJob(acidJobId, lockId, `Saved ${generatedBlogs.length} blogs to data/blogs.json`);
+
+  // Call the seed script
+  let finalCreated = 0;
+  let finalSkipped = skipped;
+  try {
+    const seedResult = await seedBlogs(jsonPath, acidJobId, lockId);
+    finalCreated = seedResult.successCount;
+    finalSkipped += seedResult.failureCount;
+  } catch (err) {
+    errors.push(`Seeding failed: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
+  const stopped = !!(shouldStop && shouldStop());
+  emit({ phase: "done", total, processed, created: finalCreated, skipped: finalSkipped });
+
+  return { created: finalCreated, skipped: finalSkipped, processed, total, errors, stopped };
 }
 
 /* ── Generate a new AI blog from a topic ── */
 export async function generateNewBlog(
   topic?: string,
-  category?: string
+  category?: string,
+  acidJobId?: string,
+  lockId?: string
 ): Promise<{ blog: typeof Blog.prototype | null; error?: string }> {
   await dbConnect();
-
   const chosenTopic = topic || getRandomTopic();
-  console.log(`Pipeline Info: Generating new blog for topic: "${chosenTopic}"`);
 
+  if (acidJobId && lockId) {
+    await updateJobProgress(acidJobId, lockId, {
+      currentTask: `Generating: ${chosenTopic}`,
+      status: "generating",
+      log: `Starting AI generation for topic: "${chosenTopic}"`
+    });
+  }
+
+  // Instead of starting a transaction and saving directly:
   try {
     const generatedRaw = await withRetry(() => generateBlogFromTopic(chosenTopic), AI_RETRY_COUNT);
-    
     if (!generatedRaw || !generatedRaw.content || generatedRaw.content.length < 500) {
       throw new Error("AI output validation failed: Content too short or empty");
     }
 
+    if (acidJobId && lockId) await logJob(acidJobId, lockId, `AI output generated for "${generatedRaw.title || chosenTopic}"`);
+
     const generated = sanitizeAIOutput(generatedRaw);
-    
-    const finalCategory =
-      typeof category === "string" && category.trim()
-        ? category.trim()
-        : generated.category || "Web Development";
-
-    console.log(`Pipeline Info: AI generation success. Processing image for "${generated.title}"`);
-
+    const finalCategory = (category && category.trim()) || generated.category || "Web Development";
     const imageSource = getTopicImage(chosenTopic, finalCategory);
+    
     const featuredImage = await ensureWebpImage(imageSource, generated.title || chosenTopic)
-      .catch(err => {
-        console.error("Pipeline Image Error:", err.message);
-        return imageSource;
-      });
+      .catch(() => imageSource);
 
-    const slug = await uniqueSlug(createSlug(String(generated.title) || chosenTopic));
+    const baseSlug = createSlug(generated.title || chosenTopic);
+    const slug = await uniqueSlug(baseSlug);
 
-    const blog = await Blog.create({
+    const blogJSON = {
       title: generated.title || chosenTopic,
       slug,
       category: finalCategory,
@@ -380,23 +271,148 @@ export async function generateNewBlog(
       featuredImage,
       content: generated.content || "",
       tags: generated.tags || [],
-      readingTime: calcReadingTime(generated.content || ""),
-      author: generated.author || "Disconnect Team",
-      status: "published",
-      source: "ai-generated",
-      sourceUrl: "",
-      faq: generated.faq || [],
-    });
+    };
 
-    console.log(`Pipeline Success: Published topic-based blog "${blog.title}" (${slug})`);
+    const jsonPath = path.join(process.cwd(), "data", "blogs.json");
+    fs.writeFileSync(jsonPath, JSON.stringify({ blogs: [blogJSON] }, null, 2));
+
+    if (acidJobId && lockId) await logJob(acidJobId, lockId, `Blog saved to data/blogs.json: "${generated.title}"`);
     
-    // Mandatory cooldown to respect Free Tier RPM limits
-    await sleep(5000);
+    // Call seed
+    const seedResult = await seedBlogs(jsonPath, acidJobId, lockId);
+    if (seedResult.successCount === 0) {
+      return { blog: null, error: `Failed to insert blog during seeding phase` };
+    }
 
-    return { blog };
+    // Ideally we would return the inserted blog, but returning a stub for now
+    const existingBlog = await Blog.findOne({ slug });
+    await sleep(5000); // Cooldown
+    return { blog: existingBlog };
+
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error(`Pipeline Error [Topic: ${chosenTopic}]:`, msg);
+    if (acidJobId && lockId) await logJob(acidJobId, lockId, `Generation error [Topic: ${chosenTopic}]: ${msg}`);
     return { blog: null, error: msg };
+  }
+}
+
+/* ── Admin Blog Importer Pipeline ── */
+export async function importFromExternalUrl(
+  listingUrl: string,
+  categoryOverride?: string,
+  maxPages: number = 1,
+  limit: number = 20,
+  acidJobId?: string,
+  lockId?: string
+) {
+  await dbConnect();
+  const errors: string[] = [];
+  let processed = 0;
+  let created = 0;
+  let skipped = 0;
+
+  const emit = (phase: "generating" | "seeding", currentTask: string, log?: string) => {
+    if (acidJobId && lockId) {
+      updateJobProgress(acidJobId, lockId, {
+        status: phase,
+        processedBlogs: processed,
+        successCount: created,
+        failureCount: skipped,
+        currentTask,
+        log
+      });
+    }
+  };
+
+  try {
+    emit("generating", "Discovering blog URLs...");
+    if (acidJobId && lockId) await logJob(acidJobId, lockId, `Target listing: ${listingUrl}`);
+
+    // 1. Discovery
+    const urls = await discoverBlogUrls(listingUrl, maxPages);
+    if (urls.length === 0) {
+      throw new Error("No article URLs discovered at the provided listing.");
+    }
+    
+    // 2. Filter existing
+    const existing = await Blog.find({ sourceUrl: { $in: urls } }).select("sourceUrl");
+    const existingUrls = new Set(existing.map(b => b.sourceUrl));
+    const newUrls = urls.filter(u => !existingUrls.has(u)).slice(0, limit);
+    
+    skipped += (urls.length - newUrls.length);
+    if (newUrls.length === 0) {
+      throw new Error("All discovered URLs are already imported.");
+    }
+
+    if (acidJobId && lockId) {
+      await updateJobProgress(acidJobId, lockId, { totalBlogs: newUrls.length });
+      await logJob(acidJobId, lockId, `Found ${newUrls.length} new articles to import.`);
+    }
+
+    const importerBlogs: any[] = [];
+
+    // 3. Sequential Process (Scrape -> AI -> metadata)
+    for (const url of newUrls) {
+      processed++;
+      emit("generating", `Scraping: ${url}`);
+      
+      try {
+        const scraped = await scrapeArticle(url);
+        if (!scraped || !scraped.content) {
+          skipped++;
+          errors.push(`Scrape failed for: ${url}`);
+          continue;
+        }
+
+        emit("generating", `Rewriting with AI: ${scraped.title}`);
+        const aiOutput = await rewriteForImport({
+          title: scraped.title,
+          content: scraped.content,
+          category: categoryOverride || scraped.category
+        });
+
+        importerBlogs.push({
+          ...aiOutput,
+          category: categoryOverride || scraped.category,
+          sourceUrl: url,
+          status: "draft",
+          featuredImage: scraped.featuredImage || ""
+        });
+
+        created++;
+        if (acidJobId && lockId) await logJob(acidJobId, lockId, `Successfully processed [AI]: ${scraped.title}`);
+        
+      } catch (err) {
+        skipped++;
+        const msg = err instanceof Error ? err.message : String(err);
+        errors.push(`Error processing ${url}: ${msg}`);
+        if (acidJobId && lockId) await logJob(acidJobId, lockId, `Failed: ${url} - ${msg}`);
+      }
+    }
+
+    // 4. Write to JSON
+    const dataDir = path.join(process.cwd(), "data");
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    
+    const jsonPath = path.join(dataDir, "blogs.json");
+    fs.writeFileSync(jsonPath, JSON.stringify({ blogs: importerBlogs }, null, 2));
+    
+    if (acidJobId && lockId) await logJob(acidJobId, lockId, `Wrote ${importerBlogs.length} blogs to intermediate JSON. Starting seed...`);
+
+    // 5. Seed
+    const seedResult = await seedBlogs(jsonPath, acidJobId, lockId);
+    
+    return {
+      total: urls.length,
+      processed,
+      created: seedResult.successCount,
+      skipped,
+      errors
+    };
+
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (acidJobId && lockId) await logJob(acidJobId, lockId, `Import fatal error: ${msg}`);
+    throw err;
   }
 }

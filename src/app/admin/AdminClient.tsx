@@ -1944,8 +1944,16 @@ export default function AdminClient() {
               className={`adm-sidebar-item ${section === 'blog' ? 'active' : ''}`}
               onClick={() => setSection('blog')}
             >
-              <FileText size={15} /> Blog
+              <FileText size={15} /> Blog Management
               {section === 'blog' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+            </button>
+
+            <button
+              className="adm-sidebar-item"
+              onClick={() => router.push('/admin/blog-importer')}
+            >
+              <Sparkles size={15} /> Blog Importer
+              <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />
             </button>
 
             <button

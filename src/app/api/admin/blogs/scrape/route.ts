@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBlogScrapeJobState, requestStopBlogScrapeJob, startBlogScrapeJob } from "@/lib/blogScrapeJob";
+import { getBlogScrapeJobStatus, requestStopBlogScrapeJob, startBlogScrapeJob } from "@/lib/blogScrapeJob";
 
 /* GET /api/admin/blogs/scrape — Live scrape job status */
 export async function GET() {
   try {
-    const job = getBlogScrapeJobState();
+    const job = await getBlogScrapeJobStatus();
     return NextResponse.json({ job });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal server error";
@@ -19,18 +19,10 @@ export async function POST(req: NextRequest) {
     const maxPages = Math.min(200, Math.max(1, parseInt(body.maxPages || "100")));
     const maxArticles = Math.min(200, Math.max(1, parseInt(body.maxArticles || "50")));
     const category = typeof body.category === "string" ? body.category.trim() : "";
-    const existing = getBlogScrapeJobState();
-    if (existing.status === "running" || existing.status === "stopping") {
-      return NextResponse.json({
-        message: "Scrape job is already running",
-        started: false,
-        job: existing,
-      });
-    }
 
-    const job = startBlogScrapeJob(maxPages, maxArticles, category || undefined);
+    const job = await startBlogScrapeJob(maxPages, maxArticles, category || undefined);
     return NextResponse.json({
-      message: "Started scraping all blog URLs. Track live progress in this panel.",
+      message: "Job started.",
       started: true,
       job,
     });
@@ -43,26 +35,10 @@ export async function POST(req: NextRequest) {
 /* DELETE /api/admin/blogs/scrape — Request background scrape stop */
 export async function DELETE() {
   try {
-    const existing = getBlogScrapeJobState();
-    if (existing.status === "stopping") {
-      return NextResponse.json({
-        message: "Stop already requested. Waiting for current tasks to finish.",
-        stopped: true,
-        job: existing,
-      });
-    }
-    if (existing.status !== "running") {
-      return NextResponse.json({
-        message: "No running scrape job found",
-        stopped: false,
-        job: existing,
-      });
-    }
-
-    const job = requestStopBlogScrapeJob();
+    const job = await requestStopBlogScrapeJob();
     return NextResponse.json({
-      message: "Stop requested. Waiting for current tasks to finish.",
-      stopped: true,
+      message: job ? "Stop requested." : "No running job found.",
+      stopped: !!job,
       job,
     });
   } catch (err) {

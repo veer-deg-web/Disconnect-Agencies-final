@@ -1,9 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const DEFAULT_TEXT_MODELS = [
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
-];
+const MODEL_NAME = "gemini-2.0-flash";
 
 const MODEL_TIMEOUT_MS = Math.max(
   10000,
@@ -18,55 +15,12 @@ function getClient() {
   return new GoogleGenerativeAI(key);
 }
 
-function resolveGeminiModels(): string[] {
-  const raw =
-    process.env.GEMINI_MODELS ||
-    process.env.GEMINI_MODEL_LIST ||
-    process.env.BLOG_AI_MODELS ||
-    DEFAULT_TEXT_MODELS.join(",");
-
-  const list = raw
-    .split(/[,\n]/)
-    .map((m) => m.trim())
-    .map((m) => m.replace(/^\[+/, "").replace(/\]+$/, ""))
-    .map((m) => m.replace(/^['"]+/, "").replace(/['"]+$/, ""))
-    .map((m) => m.replace(/^models\//i, ""))
-    .map((m) => m.trim())
-    .filter(Boolean);
-
-  const allowNonText = String(process.env.BLOG_AI_ALLOW_NON_TEXT_MODELS || "").toLowerCase() === "true";
-  const fallbackLimit = Math.max(1, Math.min(3, Number(process.env.BLOG_AI_MODEL_FALLBACK_LIMIT || 2)));
-
-  const blockedHints = [
-    "embedding",
-    "imagen",
-    "veo",
-    "tts",
-    "audio",
-    "image",
-    "computer-use",
-    "robotics",
-    "aqa",
-    "live",
-    "vision",
-  ];
-
-  const allowedPrefixes = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"];
-
-  const filtered = allowNonText
-    ? list
-    : list.filter((m) => {
-        const name = m.toLowerCase();
-        const hasBlockedHint = blockedHints.some((hint) => name.includes(hint));
-        const isTextModel = allowedPrefixes.some((prefix) => name.startsWith(prefix));
-        return !hasBlockedHint && isTextModel;
-      });
-
-  const unique = Array.from(
-    new Set((filtered.length ? filtered : DEFAULT_TEXT_MODELS).map((model) => model.trim()))
-  );
-  return unique.slice(0, fallbackLimit);
+// Ensure 3s delay to prevent quota errors
+export async function enforceGeminiDelay() {
+  await sleep(3000);
 }
+
+// removed model resolution logic
 
 /* ── Robust JSON parser — handles messy AI output ── */
 function parseAIJson(text: string) {
@@ -146,56 +100,51 @@ async function sleep(ms: number) {
 
 async function generateJsonWithFallbackModels(prompt: string) {
   const genAI = getClient();
-  const models = resolveGeminiModels();
-
-  const errors: string[] = [];
   const maxRetriesPerModel = 3;
 
-  for (const modelName of models) {
-    for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
-      try {
-        const model = genAI.getGenerativeModel({
-          model: modelName,
-          generationConfig: {
-            responseMimeType: "application/json",
-            temperature: 0.6,
-            maxOutputTokens: 4096,
-          },
-        });
+  for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
+    try {
+      await enforceGeminiDelay(); // Apply strict 3s delay
+      const model = genAI.getGenerativeModel({
+        model: MODEL_NAME,
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.6,
+          maxOutputTokens: 4096,
+        },
+      });
 
-        const result = await withTimeout(
-          model.generateContent(prompt),
-          MODEL_TIMEOUT_MS,
-          `Gemini model ${modelName}`
-        );
+      const result = await withTimeout(
+        model.generateContent(prompt),
+        MODEL_TIMEOUT_MS,
+        `Gemini model ${MODEL_NAME}`
+      );
 
-        const text = result.response.text();
-        const json = parseAIJson(text);
-        return json;
-      } catch (err) {
-        const details = getErrorMessage(err);
-        const isRateLimit = details.includes("429") || details.toLowerCase().includes("quota");
+      const text = result.response.text();
+      const json = parseAIJson(text);
+      return json;
+    } catch (err) {
+      const details = getErrorMessage(err);
+      const isRateLimit = details.includes("429") || details.toLowerCase().includes("quota");
 
-        if (isRateLimit && attempt < maxRetriesPerModel) {
-          const waitTime = Math.pow(2, attempt) * 4000; // 8s, 16s...
-          console.warn(`[Gemini:${modelName}] Rate limited (429). Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetriesPerModel})`);
-          await sleep(waitTime);
-          continue;
-        }
+      if (isRateLimit && attempt < maxRetriesPerModel) {
+        const waitTime = Math.pow(2, attempt) * 4000;
+        console.warn(`[Gemini:${MODEL_NAME}] Rate limited (429). Retrying in ${waitTime}ms...`);
+        await sleep(waitTime);
+        continue;
+      }
 
-        console.error(`[Gemini:${modelName}] attempt ${attempt} failed: ${details}`);
-        
-        if (attempt === maxRetriesPerModel) {
-          errors.push(`${modelName}: ${details}`);
-        } else {
-          // For non-rate-limit errors, wait a bit
-          await sleep(2000 * attempt);
-        }
+      console.error(`[Gemini:${MODEL_NAME}] attempt ${attempt} failed: ${details}`);
+      
+      if (attempt === maxRetriesPerModel) {
+        throw new Error(`${MODEL_NAME}: ${details}`);
+      } else {
+        await sleep(2000 * attempt);
       }
     }
   }
 
-  throw new Error(`All configured Gemini models failed after retries: ${errors.join(" | ")}`);
+  throw new Error(`Configured Gemini model failed after retries.`);
 }
 
 /* ── Rewrite an existing article ── */
@@ -226,6 +175,40 @@ Respond with JSON matching this schema:
     {"question": "FAQ question 2?", "answer": "Detailed answer 2"},
     {"question": "FAQ question 3?", "answer": "Detailed answer 3"}
   ]
+}`;
+
+  return generateJsonWithFallbackModels(prompt);
+}
+
+/* ── Specialized rewrite for Import Pipeline ── */
+export async function rewriteForImport(original: {
+  title: string;
+  content: string;
+  category: string;
+}) {
+  const prompt = `You are an expert SEO blog writer and structured data generator.
+Your task is to REWRITE the following article completely. 
+
+RULES:
+1. Output MUST be valid JSON.
+2. The tone should be human-readable, professional, and informative.
+3. Use H2 and H3 headings for structure.
+4. The article must be a minimum of 1000 words.
+5. Completely rewrite the content to avoid plagiarism while maintaining the original meaning.
+6. Use markdown for the content.
+
+ORIGINAL TITLE: ${original.title}
+ORIGINAL CATEGORY: ${original.category}
+ORIGINAL CONTENT:
+${original.content.substring(0, 10000)}
+
+Respond ONLY with JSON matching this schema:
+{
+  "title": "A catchy, SEO-friendly human title",
+  "slug": "seo-friendly-url-slug",
+  "meta_description": "140-160 character meta description",
+  "content_markdown": "The full article in markdown format (min 1000 words). Use ## and ### for headings.",
+  "tags": ["tag1", "tag2", "tag3"]
 }`;
 
   return generateJsonWithFallbackModels(prompt);

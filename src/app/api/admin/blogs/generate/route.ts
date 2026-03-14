@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBlogGenerateJobState, runBlogGenerateJob } from "@/lib/blogGenerateJob";
+import { getBlogGenerateJobStatus, runBlogGenerateJob } from "@/lib/blogGenerateJob";
 
 /* GET /api/admin/blogs/generate — Live AI generate job status */
 export const maxDuration = 300;
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const job = getBlogGenerateJobState();
+    const job = await getBlogGenerateJobStatus();
     return NextResponse.json({ job });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal server error";
@@ -23,19 +23,9 @@ export async function POST(req: NextRequest) {
     const category = typeof body.category === "string" ? body.category.trim() : "";
     const count = Math.min(3, Math.max(1, parseInt(body.count || "1")));
 
-    const existing = getBlogGenerateJobState();
-    if (existing.status === "running") {
-      return NextResponse.json({
-        message: "AI generation is already running",
-        started: false,
-        job: existing,
-      });
-    }
-
     const job = await runBlogGenerateJob(count, topic, category || undefined);
     return NextResponse.json({
-      message: `Generated ${job.created} AI blog(s) with ${job.failed} failure(s).`,
-      started: false,
+      message: `Job started/finished.`,
       job,
     });
   } catch (err) {
