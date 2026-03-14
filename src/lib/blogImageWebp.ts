@@ -2,9 +2,16 @@ import { createHash } from "crypto";
 import { access, mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 import sharp from "sharp";
+import { uploadToCloudinary } from "./cloudinary";
 
 const BLOG_UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "blogs");
 const BLOG_PLACEHOLDER_FILE = "blog-featured-placeholder.webp";
+
+// Check if Cloudinary is configured
+const IS_CLOUDINARY_CONFIGURED = 
+  process.env.CLOUDINARY_CLOUD_NAME && 
+  process.env.CLOUDINARY_API_KEY && 
+  process.env.CLOUDINARY_API_SECRET;
 
 function cleanName(input: string): string {
   return input
@@ -17,6 +24,10 @@ function cleanName(input: string): string {
 export function isWebpImageUrl(url: string): boolean {
   const lower = url.toLowerCase();
   return lower.includes(".webp") || /[?&]fm=webp(?:&|$)/i.test(lower);
+}
+
+export function isCloudinaryUrl(url: string): boolean {
+  return url.includes("res.cloudinary.com");
 }
 
 async function fileExists(filePath: string): Promise<boolean> {
@@ -75,29 +86,53 @@ export async function ensureWebpImage(
   if (!imageUrl || !imageUrl.trim()) return ensurePlaceholderWebp();
 
   const source = imageUrl.trim();
-  if (source.startsWith("/") && isWebpImageUrl(source)) {
-    const localPath = path.join(process.cwd(), "public", source);
-    const exists = await fileExists(localPath);
-    if (exists) return source;
-    return ensurePlaceholderWebp();
+
+  // If it's already a Cloudinary URL, return as is
+  if (isCloudinaryUrl(source)) return source;
+
+  // If Cloudinary is not configured, fallback to existing local logic
+  if (!IS_CLOUDINARY_CONFIGURED) {
+    if (source.startsWith("/") && isWebpImageUrl(source)) {
+      const localPath = path.join(process.cwd(), "public", source);
+      const exists = await fileExists(localPath);
+      if (exists) return source;
+      return ensurePlaceholderWebp();
+    }
+    if (isWebpImageUrl(source)) return source;
+
+    try {
+      const sourceBuffer = await readImageBuffer(source);
+      const digest = createHash("sha1").update(sourceBuffer).digest("hex").slice(0, 12);
+      const filename = `${cleanName(nameHint)}-${digest}.webp`;
+      const outPath = path.join(BLOG_UPLOAD_DIR, filename);
+
+      await mkdir(BLOG_UPLOAD_DIR, { recursive: true });
+      const webpBuffer = await sharp(sourceBuffer)
+        .rotate()
+        .webp({ quality: 82, effort: 4 })
+        .toBuffer();
+      await writeFile(outPath, webpBuffer);
+
+      return `/uploads/blogs/${filename}`;
+    } catch {
+      return ensurePlaceholderWebp();
+    }
   }
-  if (isWebpImageUrl(source)) return source;
 
+  // Cloudinary logic
   try {
-    const sourceBuffer = await readImageBuffer(source);
-    const digest = createHash("sha1").update(sourceBuffer).digest("hex").slice(0, 12);
-    const filename = `${cleanName(nameHint)}-${digest}.webp`;
-    const outPath = path.join(BLOG_UPLOAD_DIR, filename);
+    let uploadSource: string | Buffer = source;
+    
+    // For local files, we need the absolute path
+    if (source.startsWith("/")) {
+      uploadSource = path.join(process.cwd(), "public", source);
+    }
 
-    await mkdir(BLOG_UPLOAD_DIR, { recursive: true });
-    const webpBuffer = await sharp(sourceBuffer)
-      .rotate()
-      .webp({ quality: 82, effort: 4 })
-      .toBuffer();
-    await writeFile(outPath, webpBuffer);
-
-    return `/uploads/blogs/${filename}`;
-  } catch {
-    return ensurePlaceholderWebp();
+    const result = await uploadToCloudinary(uploadSource, "blogs");
+    return result.secure_url;
+  } catch (error) {
+    console.error("Cloudinary upload failed, falling back to local/placeholder:", error);
+    // Fallback to placeholder or original if upload fails
+    return source.startsWith("http") ? source : ensurePlaceholderWebp();
   }
 }
