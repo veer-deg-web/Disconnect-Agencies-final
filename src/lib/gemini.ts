@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { aiClient } from "./ai/ai-client";
 
 const DEFAULT_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash"];
 const RESOLVED_MODELS = (process.env.GEMINI_MODELS || "")
@@ -6,44 +6,24 @@ const RESOLVED_MODELS = (process.env.GEMINI_MODELS || "")
   .map((model) => model.trim())
   .filter(Boolean);
 const MODEL_NAMES = RESOLVED_MODELS.length > 0 ? RESOLVED_MODELS : DEFAULT_MODELS;
-const MODEL_TIMEOUT_MS = Math.max(
-  10000,
-  Math.min(60000, Number(process.env.BLOG_AI_MODEL_TIMEOUT_MS || 25000))
-);
 const BLOG_AI_MODEL_FALLBACK_LIMIT = Math.max(
   1,
   Math.min(MODEL_NAMES.length, Number(process.env.BLOG_AI_MODEL_FALLBACK_LIMIT || MODEL_NAMES.length))
 );
 
-function getClient() {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key || key === "your_gemini_api_key_here") {
-    throw new Error("GEMINI_API_KEY is not configured in .env.local");
-  }
-  return new GoogleGenerativeAI(key);
-}
-
-// Ensure 3s delay to prevent quota errors
-export async function enforceGeminiDelay() {
-  await sleep(3000);
-}
-
 /* ── Robust JSON parser — handles messy AI output ── */
 function parseAIJson(text: string) {
-  // Strip markdown fences
   const cleaned = text
     .replace(/```json\s*/gi, "")
     .replace(/```\s*/g, "")
     .trim();
 
-  // Try direct parse
   try {
     return JSON.parse(cleaned);
   } catch {
     // noop
   }
 
-  // Try extracting the outermost JSON object
   const firstBrace = cleaned.indexOf("{");
   const lastBrace = cleaned.lastIndexOf("}");
   if (firstBrace !== -1 && lastBrace > firstBrace) {
@@ -54,7 +34,6 @@ function parseAIJson(text: string) {
       // noop
     }
 
-    // Fix common issues: unescaped newlines/quotes inside strings
     const fixed = jsonStr
       .replace(/\n/g, "\\n")
       .replace(/\r/g, "\\r")
@@ -69,92 +48,29 @@ function parseAIJson(text: string) {
   throw new Error("Failed to parse AI response as JSON");
 }
 
-function getErrorMessage(err: unknown): string {
-  if (err instanceof Error) {
-    const maybeStatus = (err as Error & { status?: number }).status;
-    const maybeCause = (err as Error & { cause?: unknown }).cause;
-    const parts = [err.message];
-
-    if (typeof maybeStatus === "number") {
-      parts.push(`status=${maybeStatus}`);
-    }
-
-    if (maybeCause instanceof Error) {
-      parts.push(`cause=${maybeCause.message}`);
-    } else if (typeof maybeCause === "string") {
-      parts.push(`cause=${maybeCause}`);
-    }
-
-    return parts.join(" | ");
-  }
-
-  return String(err);
-}
-
-async function withTimeout<T>(task: Promise<T>, timeoutMs: number, label: string): Promise<T> {
-  return await Promise.race([
-    task,
-    new Promise<T>((_, reject) => {
-      setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
-    }),
-  ]);
-}
-
-async function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 async function generateJsonWithFallbackModels(prompt: string) {
-  const genAI = getClient();
-  const maxRetriesPerModel = 3;
   const modelsToTry = MODEL_NAMES.slice(0, BLOG_AI_MODEL_FALLBACK_LIMIT);
   const failures: string[] = [];
 
   for (const modelName of modelsToTry) {
-    for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
-      try {
-        await enforceGeminiDelay();
-        const model = genAI.getGenerativeModel({
-          model: modelName,
-          generationConfig: {
-            responseMimeType: "application/json",
-            temperature: 0.6,
-            maxOutputTokens: 4096,
-          },
-        });
+    try {
+      const response = await aiClient.request({
+        model: modelName,
+        prompt,
+        responseMimeType: "application/json",
+        temperature: 0.6,
+        cache: true
+      });
 
-        const result = await withTimeout(
-          model.generateContent(prompt),
-          MODEL_TIMEOUT_MS,
-          `Gemini model ${modelName}`
-        );
-
-        const text = result.response.text();
-        return parseAIJson(text);
-      } catch (err) {
-        const details = getErrorMessage(err);
-        const isRateLimit = details.includes("429") || details.toLowerCase().includes("quota");
-        const isLastAttemptForModel = attempt === maxRetriesPerModel;
-
-        if (isRateLimit && !isLastAttemptForModel) {
-          const waitTime = Math.pow(2, attempt) * 4000;
-          console.warn(`[Gemini:${modelName}] Rate limited (429). Retrying in ${waitTime}ms...`);
-          await sleep(waitTime);
-          continue;
-        }
-
-        console.error(`[Gemini:${modelName}] attempt ${attempt} failed: ${details}`);
-
-        if (isLastAttemptForModel) {
-          failures.push(`${modelName}: ${details}`);
-        } else {
-          await sleep(2000 * attempt);
-        }
-      }
+      return parseAIJson(response.text);
+    } catch (err) {
+      const details = err instanceof Error ? err.message : String(err);
+      failures.push(`${modelName}: ${details}`);
+      console.error(`[Gemini:${modelName}] request failed: ${details}`);
     }
   }
 
-  throw new Error(`Configured Gemini models failed after retries. ${failures.join(" || ")}`);
+  throw new Error(`Configured Gemini models failed. ${failures.join(" || ")}`);
 }
 
 /* ── Rewrite an existing article ── */

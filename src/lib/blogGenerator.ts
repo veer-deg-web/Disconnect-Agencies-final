@@ -156,8 +156,8 @@ export async function scrapeAndRewrite(
 
       if (acidJobId && lockId) await logJob(acidJobId, lockId, `Rewriting article: "${scraped.title || url}"`);
 
-      // AI Rewrite with retries
-      const generatedRaw = await withRetry(() => rewriteArticle(scraped), AI_RETRY_COUNT);
+      // AI Rewrite (Throttling and retries handled by aiClient)
+      const generatedRaw = await rewriteArticle(scraped);
       if (!generatedRaw || !generatedRaw.content) {
         skipped += 1;
         errors.push(`AI skipped or failed for: ${scraped.title}`);
@@ -191,7 +191,6 @@ export async function scrapeAndRewrite(
       if (acidJobId && lockId) await logJob(acidJobId, lockId, `Generated JSON for: "${generated.title}"`);
 
       emit({ phase: "processing", total, processed, created, skipped });
-      await sleep(3000); // Rate limit protection
 
     } catch (err) {
       skipped += 1;
@@ -242,9 +241,8 @@ export async function generateNewBlog(
     });
   }
 
-  // Instead of starting a transaction and saving directly:
   try {
-    const generatedRaw = await withRetry(() => generateBlogFromTopic(chosenTopic), AI_RETRY_COUNT);
+    const generatedRaw = await generateBlogFromTopic(chosenTopic);
     if (!generatedRaw || !generatedRaw.content || generatedRaw.content.length < 500) {
       throw new Error("AI output validation failed: Content too short or empty");
     }
@@ -286,7 +284,6 @@ export async function generateNewBlog(
 
     // Ideally we would return the inserted blog, but returning a stub for now
     const existingBlog = await Blog.findOne({ slug });
-    await sleep(5000); // Cooldown
     return { blog: existingBlog };
 
   } catch (err) {
