@@ -15,11 +15,14 @@ export async function GET() {
     }
 
     return NextResponse.json({
+      _id: String(job._id),
+      type: job.type,
       status: job.status,
       totalBlogs: job.totalBlogs,
       processedBlogs: job.processedBlogs,
       successCount: job.successCount,
       failureCount: job.failureCount,
+      currentTask: job.currentTask,
       logs: job.logs
     });
   } catch (err) {

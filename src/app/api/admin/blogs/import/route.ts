@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const { listingUrl, category, limit } = body;
 
     if (!listingUrl) {
-      return NextResponse.json({ error: "listingUrl is required" }, { status: 100 });
+      return NextResponse.json({ error: "listingUrl is required" }, { status: 400 });
     }
 
     const { job, lockId } = await createJob("importer");

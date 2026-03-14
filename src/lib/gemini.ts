@@ -1,10 +1,18 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const MODEL_NAME = "gemini-2.0-flash";
-
+const DEFAULT_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash"];
+const RESOLVED_MODELS = (process.env.GEMINI_MODELS || "")
+  .split(",")
+  .map((model) => model.trim())
+  .filter(Boolean);
+const MODEL_NAMES = RESOLVED_MODELS.length > 0 ? RESOLVED_MODELS : DEFAULT_MODELS;
 const MODEL_TIMEOUT_MS = Math.max(
   10000,
   Math.min(60000, Number(process.env.BLOG_AI_MODEL_TIMEOUT_MS || 25000))
+);
+const BLOG_AI_MODEL_FALLBACK_LIMIT = Math.max(
+  1,
+  Math.min(MODEL_NAMES.length, Number(process.env.BLOG_AI_MODEL_FALLBACK_LIMIT || MODEL_NAMES.length))
 );
 
 function getClient() {
@@ -19,8 +27,6 @@ function getClient() {
 export async function enforceGeminiDelay() {
   await sleep(3000);
 }
-
-// removed model resolution logic
 
 /* ── Robust JSON parser — handles messy AI output ── */
 function parseAIJson(text: string) {
@@ -101,50 +107,54 @@ async function sleep(ms: number) {
 async function generateJsonWithFallbackModels(prompt: string) {
   const genAI = getClient();
   const maxRetriesPerModel = 3;
+  const modelsToTry = MODEL_NAMES.slice(0, BLOG_AI_MODEL_FALLBACK_LIMIT);
+  const failures: string[] = [];
 
-  for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
-    try {
-      await enforceGeminiDelay(); // Apply strict 3s delay
-      const model = genAI.getGenerativeModel({
-        model: MODEL_NAME,
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.6,
-          maxOutputTokens: 4096,
-        },
-      });
+  for (const modelName of modelsToTry) {
+    for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
+      try {
+        await enforceGeminiDelay();
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.6,
+            maxOutputTokens: 4096,
+          },
+        });
 
-      const result = await withTimeout(
-        model.generateContent(prompt),
-        MODEL_TIMEOUT_MS,
-        `Gemini model ${MODEL_NAME}`
-      );
+        const result = await withTimeout(
+          model.generateContent(prompt),
+          MODEL_TIMEOUT_MS,
+          `Gemini model ${modelName}`
+        );
 
-      const text = result.response.text();
-      const json = parseAIJson(text);
-      return json;
-    } catch (err) {
-      const details = getErrorMessage(err);
-      const isRateLimit = details.includes("429") || details.toLowerCase().includes("quota");
+        const text = result.response.text();
+        return parseAIJson(text);
+      } catch (err) {
+        const details = getErrorMessage(err);
+        const isRateLimit = details.includes("429") || details.toLowerCase().includes("quota");
+        const isLastAttemptForModel = attempt === maxRetriesPerModel;
 
-      if (isRateLimit && attempt < maxRetriesPerModel) {
-        const waitTime = Math.pow(2, attempt) * 4000;
-        console.warn(`[Gemini:${MODEL_NAME}] Rate limited (429). Retrying in ${waitTime}ms...`);
-        await sleep(waitTime);
-        continue;
-      }
+        if (isRateLimit && !isLastAttemptForModel) {
+          const waitTime = Math.pow(2, attempt) * 4000;
+          console.warn(`[Gemini:${modelName}] Rate limited (429). Retrying in ${waitTime}ms...`);
+          await sleep(waitTime);
+          continue;
+        }
 
-      console.error(`[Gemini:${MODEL_NAME}] attempt ${attempt} failed: ${details}`);
-      
-      if (attempt === maxRetriesPerModel) {
-        throw new Error(`${MODEL_NAME}: ${details}`);
-      } else {
-        await sleep(2000 * attempt);
+        console.error(`[Gemini:${modelName}] attempt ${attempt} failed: ${details}`);
+
+        if (isLastAttemptForModel) {
+          failures.push(`${modelName}: ${details}`);
+        } else {
+          await sleep(2000 * attempt);
+        }
       }
     }
   }
 
-  throw new Error(`Configured Gemini model failed after retries.`);
+  throw new Error(`Configured Gemini models failed after retries. ${failures.join(" || ")}`);
 }
 
 /* ── Rewrite an existing article ── */
