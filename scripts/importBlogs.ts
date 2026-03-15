@@ -22,6 +22,7 @@ function parseArgs(argv: string[]) {
     file: "blogs.json",
     dryRun: false,
     mongoUri: process.env.MONGODB_URI || "",
+    category: "",
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -39,6 +40,11 @@ function parseArgs(argv: string[]) {
 
     if (value === "--mongo-uri" && argv[index + 1]) {
       options.mongoUri = argv[index + 1];
+      index += 1;
+    }
+
+    if (value === "--category" && argv[index + 1]) {
+      options.category = argv[index + 1];
       index += 1;
     }
   }
@@ -88,7 +94,9 @@ async function main() {
   const documentsToInsert: PreparedBlogImport[] = [];
 
   for (const [index, rawBlog] of blogs.entries()) {
-    const prepared = prepareBlogImport(rawBlog);
+    const prepared = prepareBlogImport(rawBlog, {
+      categoryOverride: options.category || undefined,
+    });
     const title = prepared.blog.title || rawBlog.title || `Blog ${index + 1}`;
     let slug = prepared.blog.slug;
 
@@ -130,7 +138,12 @@ async function main() {
     }
   }
 
-  console.log(`Prepared ${documentsToInsert.length} blog(s) from ${blogs.length} input record(s).`);
+  console.log(
+    `Prepared ${documentsToInsert.length} blog(s) from ${blogs.length} input record(s).`
+  );
+  if (options.category) {
+    console.log(`Category override applied: ${options.category}`);
+  }
 
   let insertedCount = 0;
 

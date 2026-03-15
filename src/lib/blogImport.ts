@@ -28,6 +28,10 @@ export interface RawBlogImport {
   faq?: Array<{ question?: string; answer?: string }>;
 }
 
+export interface PrepareBlogImportOptions {
+  categoryOverride?: string;
+}
+
 export interface PreparedBlogImport {
   title: string;
   slug: string;
@@ -52,7 +56,10 @@ export interface PreparedBlogResult {
   issues: BlogSeoValidationIssue[];
 }
 
-export function prepareBlogImport(input: RawBlogImport): PreparedBlogResult {
+export function prepareBlogImport(
+  input: RawBlogImport,
+  options: PrepareBlogImportOptions = {}
+): PreparedBlogResult {
   const title = normalizeDisconnectBrand(String(input.title || "").trim());
   const sanitizedContent = sanitizeBlogHtmlContent(String(input.content || ""), {
     fallbackAlt: title || "Blog article illustration",
@@ -71,6 +78,10 @@ export function prepareBlogImport(input: RawBlogImport): PreparedBlogResult {
     title,
   });
 
+  const resolvedCategory = normalizeDisconnectBrand(
+    String(options.categoryOverride || input.category || "General").trim()
+  );
+
   const blog: PreparedBlogImport = {
     title,
     slug,
@@ -79,7 +90,7 @@ export function prepareBlogImport(input: RawBlogImport): PreparedBlogResult {
     featuredImage:
       String(input.featuredImage || "").trim() ||
       "/uploads/blogs/blog-featured-placeholder.webp",
-    category: normalizeDisconnectBrand(String(input.category || "General").trim()) || "General",
+    category: resolvedCategory || "General",
     tags: Array.isArray(input.tags)
       ? input.tags
           .map((tag) => normalizeDisconnectBrand(String(tag || "").trim()))
