@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useState, useRef } from "react";
+import Image from "next/image";
 import "./ProcessSection.css";
 
 const steps = [
@@ -75,9 +76,10 @@ export default function ProcessSection() {
                   exit={{ opacity: 0, scale: 1.04, y: -20 }}
                   transition={{ duration: 0.5, ease: EASE }}
                 >
-                  <img
-                    src={steps.find((s) => s.id === openId)?.image}
-                    alt={steps.find((s) => s.id === openId)?.title}
+                  <Image
+                    src={steps.find((s) => s.id === openId)?.image || ""}
+                    alt={steps.find((s) => s.id === openId)?.title || ""}
+                    fill
                   />
                   <span className="ps-image-tag">
                     {steps.find((s) => s.id === openId)?.tag}

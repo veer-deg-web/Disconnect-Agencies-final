@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import Footer from "@/components/Shared/Footer/Footer";
 
@@ -113,7 +114,7 @@ export default function CategoryPage() {
             <div style={{
               display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "28px",
             }}>
-              {blogs.map((post, i) => (
+              {blogs.map((post: BlogPost, i: number) => (
                 <motion.article
                   key={post._id}
                   initial={{ opacity: 0, y: 20 }}
@@ -129,7 +130,13 @@ export default function CategoryPage() {
                 >
                   <div style={{ position: "relative", height: "200px" }}>
                     {post.featuredImage ? (
-                      <img src={post.featuredImage} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
+                      <Image 
+                        src={post.featuredImage} 
+                        alt={post.title} 
+                        width={400} 
+                        height={200} 
+                        style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} 
+                      />
                     ) : (
                       <div style={{
                         width: "100%", height: "100%",

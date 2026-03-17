@@ -1,6 +1,7 @@
 "use client";
 
 import { JSX, useRef } from "react";
+import Image from "next/image";
 import {
   SiCodesandbox,
   SiAdobe,
@@ -68,7 +69,7 @@ export default function ReviewCard({
     >
       {/* TOP */}
       <div className="seo-review__top">
-        <img src={avatar} alt={name} className="seo-review__avatar" />
+        <Image src={avatar} alt={name} width={48} height={48} className="seo-review__avatar" />
         <div className="seo-review__person">
           <span className="seo-review__name">{name}</span>
           <span className="seo-review__role">{role}</span>

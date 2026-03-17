@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -119,7 +120,7 @@ export default function SEOServicesSection() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
         >
-          <img src="/assets/SEO/Services/photo/Section.webp" alt="SEO service visual" />
+          <Image src="/assets/SEO/Services/photo/Section.webp" alt="SEO service visual" width={600} height={400} />
         </motion.div>
       </div>
     </section>

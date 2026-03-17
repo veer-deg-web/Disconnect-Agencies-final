@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 
 /* =======================
@@ -97,7 +98,13 @@ function renderCard(person: Person, i: number) {
         (e.currentTarget.style.transform = "translateY(0px)")
       }
     >
-      <img src={person.img} alt={person.name} style={avatar} />
+      <Image
+        src={person.img}
+        alt={person.name}
+        width={50}
+        height={50}
+        style={avatar}
+      />
       <div style={name}>{person.name}</div>
       <div style={role}>{person.role}</div>
     </div>

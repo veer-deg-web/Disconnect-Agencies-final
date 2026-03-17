@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 
 /* =======================
@@ -210,14 +211,11 @@ export default function UIUXProcess() {
                 position: "relative",
               }}
             >
-              <img
+              <Image
                 src="/assets/Uiux/UIUXBenefits/photo/uiux-preview.webp"
                 alt="UI UX Preview"
+                fill
                 style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
                   objectFit: "cover",
                 }}
               />

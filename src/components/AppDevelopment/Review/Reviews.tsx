@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import "./Reviews.css";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 
@@ -26,7 +27,7 @@ function TrustedBy({ images, author, date }: { images: string[], author: string,
       <div className="trusted-by__avatars">
         {displayImages.slice(0, 5).map((src: string, i: number) => (
           <div key={i} className="trusted-by__avatar">
-            <img src={src} alt="User avatar" />
+            <Image src={src} alt="User avatar" width={40} height={40} />
           </div>
         ))}
       </div>

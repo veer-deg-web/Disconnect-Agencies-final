@@ -59,7 +59,7 @@ export default function ReviewsSection() {
 
   const finalReviews = useMemo(() => {
     const formatted: ReviewData[] = (dynTestimonials as DynamicTestimonial[])
-      .map((t: DynamicTestimonial) => ({
+      .map((t: DynamicTestimonial): ReviewData => ({
         name: t.user.name,
         role: t.position || 'Verified Customer',
         company: t.company || 'User',

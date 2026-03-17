@@ -56,9 +56,9 @@ export async function POST(req: NextRequest) {
     await sendOtpEmail(email.trim(), emailOtp, 'Verify Your Email – Disconnect Agencies');
 
     return NextResponse.json({ message: 'OTP sent to your email. Please verify.' }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Signup initiate error:', error);
-    const msg: string = error?.message || 'Internal server error';
+    const msg: string = (error as Error)?.message || 'Internal server error';
     const isDbError = msg.toLowerCase().includes('whitelist') ||
       msg.toLowerCase().includes('ip') ||
       msg.toLowerCase().includes('atlas') ||

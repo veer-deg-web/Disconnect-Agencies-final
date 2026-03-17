@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { useRouter } from "next/navigation";
@@ -301,11 +302,14 @@ export default function BlogPage() {
                   {/* Image */}
                   <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
                     {post.featuredImage ? (
-                      <img
-                        src={post.featuredImage}
-                        alt={post.title}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }}
-                      />
+                      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                        <Image
+                          src={post.featuredImage}
+                          alt={post.title}
+                          fill
+                          style={{ objectFit: "cover", opacity: 0.8 }}
+                        />
+                      </div>
                     ) : (
                       <div style={{
                         width: "100%", height: "100%",

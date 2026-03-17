@@ -276,7 +276,7 @@ export default function AuthClient() {
       localStorage.setItem('userName', data.user.name);
       localStorage.setItem('userRole', data.user.role ?? 'user');
       setTimeout(redirect, 800);
-    } catch (err: any) { toast.error(err.message || 'Login failed'); }
+    } catch (err: unknown) { toast.error((err as Error).message || 'Action failed'); }
     finally { setLoading(false); }
   };
 
@@ -301,7 +301,7 @@ export default function AuthClient() {
       setEmailOtp(''); setOtpError(''); setOtpTimer(600);
       toast.success('OTP sent! Check your email.');
       setOtpModal(true);
-    } catch (err: any) { toast.error(err.message || 'Signup failed'); }
+    } catch (err: unknown) { toast.error((err as Error).message || 'Action failed'); }
     finally { setLoading(false); }
   };
 
@@ -325,7 +325,7 @@ export default function AuthClient() {
         toast.success('Verified! Please sign in.');
         setOtpModal(false); setMode('signin');
       }
-    } catch (err: any) { setOtpError(err.message || 'OTP verification failed'); }
+    } catch (err: unknown) { setOtpError((err as Error).message || 'OTP verification failed'); }
     finally { setLoading(false); }
   };
 
@@ -337,7 +337,7 @@ export default function AuthClient() {
       if (!res.ok) throw new Error(data.error || 'Resend failed');
       toast.success('New OTP sent!');
       setOtpTimer(600); setEmailOtp(''); setOtpError('');
-    } catch (err: any) { toast.error(err.message || 'Resend failed'); }
+    } catch (err: unknown) { toast.error((err as Error).message || 'Resend failed'); }
     finally { setLoading(false); }
   };
 
@@ -355,7 +355,7 @@ export default function AuthClient() {
       if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
       toast.success('OTP sent!');
       setFpStep('otp'); setFpTimer(900); setFpOtp('');
-    } catch (err: any) { toast.error(err.message || 'Failed to send OTP'); }
+    } catch (err: unknown) { toast.error((err as Error).message || 'Failed to send OTP'); }
     finally { setLoading(false); }
   };
   const fpVerifyOtp = async () => {
@@ -369,7 +369,7 @@ export default function AuthClient() {
       if (!res.ok) throw new Error(data.error || 'Invalid OTP');
       toast.success('OTP verified!');
       setFpStep('reset');
-    } catch (err: any) { toast.error(err.message || 'Invalid OTP'); }
+    } catch (err: unknown) { toast.error((err as Error).message || 'Invalid OTP'); }
     finally { setLoading(false); }
   };
   const fpReset = async () => {
@@ -386,7 +386,7 @@ export default function AuthClient() {
       if (!res.ok) throw new Error(data.error || 'Reset failed');
       toast.success('Password reset! Please sign in.');
       closeFp(); setMode('signin');
-    } catch (err: any) { toast.error(err.message || 'Reset failed'); }
+    } catch (err: unknown) { toast.error((err as Error).message || 'Reset failed'); }
     finally { setLoading(false); }
   };
   const fpResend = async () => {
@@ -397,7 +397,7 @@ export default function AuthClient() {
       if (!res.ok) throw new Error(data.error || 'Resend failed');
       toast.success('OTP resent!');
       setFpTimer(900); setFpOtp('');
-    } catch (err: any) { toast.error(err.message || 'Resend failed'); }
+    } catch (err: unknown) { toast.error((err as Error).message || 'Resend failed'); }
     finally { setLoading(false); }
   };
 

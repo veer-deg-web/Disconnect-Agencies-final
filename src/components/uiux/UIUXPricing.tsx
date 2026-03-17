@@ -22,7 +22,7 @@ export default function UIUXPricing() {
   /* 🔁 restart animation on every scroll */
   useEffect(() => {
     if (inView) {
-      setCycleKey((k) => k + 1);
+      setCycleKey((k: number) => k + 1);
       setFramerOn(false);
       setPrice(10000);
       setIsAnimating(false);
@@ -61,7 +61,7 @@ export default function UIUXPricing() {
   }, [framerOn]);
 
   const handleToggle = () => {
-    setFramerOn((prev) => !prev);
+    setFramerOn((prev: boolean) => !prev);
   };
 
   const handleSubscribe = () => {
@@ -105,7 +105,7 @@ export default function UIUXPricing() {
           transition={{ delay: 0.15, duration: 0.55 }}
           style={headingStyle}
         >
-          Pricing that's so{" "}
+          Pricing that&apos;s so{" "}
           <span style={{ opacity: 0.55, fontStyle: "italic",fontFamily: "instrument-serif" }}>
             simple.
           </span>

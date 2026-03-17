@@ -81,7 +81,7 @@ interface FeedbackRecord {
     email: string;
     avatar?: string;
     isVerified?: boolean;
-  };
+  } | string;
   content: string;
   isTestimonial: boolean;
   isFeatured?: boolean;
@@ -106,7 +106,7 @@ interface Faq {
   _id: string;
   question: string;
   answer: string;
-  category: Category;
+  category: Category | string;
   order: number;
 }
 
@@ -156,13 +156,13 @@ function FaqFormModal({
   loading,
 }: {
   initial?: Partial<Faq>;
-  onSave: (data: { question: string; answer: string; category: Category }) => void;
+  onSave: (data: { question: string; answer: string; category: Category | string }) => void;
   onClose: () => void;
   loading: boolean;
 }) {
   const [question, setQuestion] = useState(initial?.question || '');
   const [answer, setAnswer] = useState(initial?.answer || '');
-  const [category, setCategory] = useState<Category>(initial?.category || 'general');
+  const [category, setCategory] = useState<Category | string>(initial?.category || 'general');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -237,7 +237,7 @@ function FaqSection({ category }: { category: 'all' | Category }) {
   const [updateFaq, { isLoading: isUpdating }] = useUpdateFaqMutation();
   const [deleteFaqMutation, { isLoading: isDeleting }] = useDeleteFaqMutation();
 
-  const faqs: Faq[] = data?.faqs || [];
+  const faqs: Faq[] = (data?.faqs as unknown as Faq[]) || [];
   const loading = isLoading;
   const saving = isAdding || isUpdating || isDeleting;
   const errorObj = queryError as { data?: { error?: string }; error?: string };
@@ -250,7 +250,7 @@ function FaqSection({ category }: { category: 'all' | Category }) {
 
   const error = errorOut || errorLocal;
 
-  const handleAdd = async (body: { question: string; answer: string; category: Category }) => {
+  const handleAdd = async (body: { question: string; answer: string; category: Category | string }) => {
     try {
       setErrorLocal('');
       await addFaq(body).unwrap();
@@ -263,7 +263,7 @@ function FaqSection({ category }: { category: 'all' | Category }) {
     }
   };
 
-  const handleEdit = async (body: { question: string; answer: string; category: Category }) => {
+  const handleEdit = async (body: { question: string; answer: string; category: Category | string }) => {
     if (!editFaq) return;
     try {
       setErrorLocal('');
@@ -829,7 +829,7 @@ function FeedbackAdminSection() {
   const [updateFeedback] = useUpdateFeedbackMutation();
   const [deleteFeedbackMutation] = useDeleteFeedbackMutation();
 
-  const feedbacks: FeedbackRecord[] = feedbackData?.feedbacks || [];
+  const feedbacks: FeedbackRecord[] = (feedbackData?.feedbacks as unknown as FeedbackRecord[]) || [];
   const [savingId, setSavingId] = useState<string | null>(null);
   const [errorLocal, setErrorLocal] = useState('');
   const [okLocal, setOkLocal] = useState('');
@@ -921,79 +921,82 @@ function FeedbackAdminSection() {
           </div>
         ) : (
           <div className="adm-faq-list">
-            {feedbacks.map((f) => (
-              <div className="adm-faq-item" key={f._id} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                <div style={{ flexShrink: 0, marginTop: '4px' }}>
-                   {f.user?.avatar ? (
-                     <Image src={f.user.avatar} alt={f.user.name || 'Avatar'} width={40} height={40} style={{ borderRadius: '50%', objectFit: 'cover' }} />
-                   ) : (
-                     <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                       {f.user?.name ? f.user.name.charAt(0).toUpperCase() : '?'}
-                     </div>
-                   )}
-                </div>
-                <div className="adm-faq-body" style={{ flex: 1 }}>
-                  <p className="adm-faq-question" style={{ marginBottom: '4px' }}>
-                    {f.user?.name || 'Unknown User'} 
-                    {f.user?.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '4px' }} />}
-                    <span style={{ fontSize: '12px', fontWeight: 'normal', color: 'rgba(255,255,255,0.4)', marginLeft: '8px' }}>
-                      ({f.user?.email || 'No email'}) • {new Date(f.createdAt).toLocaleDateString()}
-                    </span>
-                  </p>
-                  <p className="adm-faq-answer" style={{ color: "rgba(255,255,255,0.85)" }}>{f.content}</p>
-                  
-                  {/* Category Selection Dropdown */}
-                  <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>Category:</span>
-                    <select 
-                      className="adm-select" 
-                      style={{ padding: '4px 8px', fontSize: '13px', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
-                      value={f.category || 'General'}
-                      onChange={(e) => {
-                        const newCat = e.target.value;
-                        updateCategoryInstantly(f._id, f.isFeatured, f.isTestimonial, newCat);
+            {feedbacks.map((f) => {
+              const userObj = typeof f.user === 'object' ? f.user : null;
+              return (
+                <div className="adm-faq-item" key={f._id} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                  <div style={{ flexShrink: 0, marginTop: '4px' }}>
+                    {userObj?.avatar ? (
+                      <Image src={userObj.avatar} alt={userObj.name || 'Avatar'} width={40} height={40} style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                    ) : (
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                        {userObj?.name ? userObj.name.charAt(0).toUpperCase() : '?'}
+                      </div>
+                    )}
+                  </div>
+                  <div className="adm-faq-body" style={{ flex: 1 }}>
+                    <p className="adm-faq-question" style={{ marginBottom: '4px' }}>
+                      {userObj?.name || 'Unknown User'} 
+                      {userObj?.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '4px' }} />}
+                      <span style={{ fontSize: '12px', fontWeight: 'normal', color: 'rgba(255,255,255,0.4)', marginLeft: '8px' }}>
+                        ({userObj?.email || 'No email'}) • {new Date(f.createdAt).toLocaleDateString()}
+                      </span>
+                    </p>
+                    <p className="adm-faq-answer" style={{ color: "rgba(255,255,255,0.85)" }}>{f.content}</p>
+                    
+                    {/* Category Selection Dropdown */}
+                    <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>Category:</span>
+                      <select 
+                        className="adm-select" 
+                        style={{ padding: '4px 8px', fontSize: '13px', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                        value={f.category || 'General'}
+                        onChange={(e) => {
+                          const newCat = e.target.value;
+                          updateCategoryInstantly(f._id, f.isFeatured, f.isTestimonial, newCat);
+                        }}
+                      >
+                        <option value="General">General</option>
+                        <option value="Home">Home</option>
+                        <option value="Cloud">Cloud</option>
+                        <option value="WebDev">WebDev</option>
+                        <option value="AppDev">AppDev</option>
+                        <option value="SEO">SEO</option>
+                        <option value="AI">AI</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="adm-faq-actions" style={{ flexDirection: 'column', gap: '8px' }}>
+                    <button 
+                      className="adm-btn adm-btn--outline" 
+                      onClick={() => toggleTestimonial(f._id, f.isFeatured || false, f.isTestimonial, f.category)}
+                      disabled={savingId === f._id}
+                      title={f.isFeatured ? "Remove from Testimonials" : "Feature as Testimonial"}
+                      style={{ 
+                        borderColor: f.isFeatured ? "rgba(34,197,94,0.5)" : "rgba(255,255,255,0.2)",
+                        color: f.isFeatured ? "#86efac" : "inherit"
                       }}
                     >
-                      <option value="General">General</option>
-                      <option value="Home">Home</option>
-                      <option value="Cloud">Cloud</option>
-                      <option value="WebDev">WebDev</option>
-                      <option value="AppDev">AppDev</option>
-                      <option value="SEO">SEO</option>
-                      <option value="AI">AI</option>
-                    </select>
+                      {savingId === f._id ? (
+                        <div className="adm-spinner" style={{ width: '14px', height: '14px', borderWidth: '2px' }} />
+                      ) : f.isFeatured ? (
+                        <><CheckCircle2 size={13} /> Featured</>
+                      ) : (
+                        <><Circle size={13} /> Feature</>
+                      )}
+                    </button>
+                    <button 
+                      className="adm-btn adm-btn--danger" 
+                      onClick={() => deleteFeedback(f._id)}
+                      disabled={savingId === f._id}
+                      title="Delete Feedback"
+                    >
+                      <Trash2 size={13} /> Delete
+                    </button>
                   </div>
                 </div>
-                <div className="adm-faq-actions" style={{ flexDirection: 'column', gap: '8px' }}>
-                  <button 
-                    className="adm-btn adm-btn--outline" 
-                    onClick={() => toggleTestimonial(f._id, f.isFeatured || false, f.isTestimonial, f.category)}
-                    disabled={savingId === f._id}
-                    title={f.isFeatured ? "Remove from Testimonials" : "Feature as Testimonial"}
-                    style={{ 
-                      borderColor: f.isFeatured ? "rgba(34,197,94,0.5)" : "rgba(255,255,255,0.2)",
-                      color: f.isFeatured ? "#86efac" : "inherit"
-                    }}
-                  >
-                    {savingId === f._id ? (
-                      <div className="adm-spinner" style={{ width: '14px', height: '14px', borderWidth: '2px' }} />
-                    ) : f.isFeatured ? (
-                      <><CheckCircle2 size={13} /> Featured</>
-                    ) : (
-                      <><Circle size={13} /> Feature</>
-                    )}
-                  </button>
-                  <button 
-                    className="adm-btn adm-btn--danger" 
-                    onClick={() => deleteFeedback(f._id)}
-                    disabled={savingId === f._id}
-                    title="Delete Feedback"
-                  >
-                    <Trash2 size={13} /> Delete
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -1305,8 +1308,8 @@ interface BlogRecord {
   category: string;
   excerpt: string;
   status: 'draft' | 'published';
-  source: 'scraped' | 'ai-generated' | 'manual';
-  readingTime: number;
+  source?: string;
+  readingTime?: string | number;
   author: string;
   tags: string[];
   createdAt: string;
@@ -1314,11 +1317,11 @@ interface BlogRecord {
 
 interface ScrapeJobStatus {
   status: 'idle' | 'running' | 'stopping' | 'stopped' | 'completed' | 'failed';
-  phase: 'collecting' | 'processing' | 'done';
+  phase?: 'collecting' | 'processing' | 'done';
   total: number;
   processed: number;
   created: number;
-  skipped: number;
+  skipped?: number;
   currentTitle?: string;
   currentUrl?: string;
   lastError?: string;
@@ -1330,7 +1333,7 @@ interface GenerateJobStatus {
   total: number;
   processed: number;
   created: number;
-  failed: number;
+  failed?: number;
   currentTopic?: string;
   lastError?: string;
   errors: string[];
@@ -1371,7 +1374,7 @@ function BlogAdminSection() {
   const generatePercent = generateJob?.total
     ? Math.round((generateJob.processed / Math.max(1, generateJob.total)) * 100)
     : 0;
-  const stats = data?.stats || { total: 0, published: 0, draft: 0, scraped: 0, aiGenerated: 0 };
+  const stats = (data as unknown as { stats: { total: number; published: number; draft: number; scraped: number; aiGenerated: number } })?.stats || { total: 0, published: 0, draft: 0, scraped: 0, aiGenerated: 0 };
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -1408,7 +1411,7 @@ function BlogAdminSection() {
         maxArticles: Math.max(1, Math.min(200, scrapeCount)),
         category: scrapeCategory === 'auto' ? '' : scrapeCategory,
       }).unwrap();
-      setOk(res.message || 'Scrape started');
+      setOk((res as { message?: string }).message || 'Scrape started');
       refetchScrapeStatus();
     } catch (err: unknown) {
       const e = err as { data?: { error?: string } };
@@ -1420,7 +1423,7 @@ function BlogAdminSection() {
     setError(''); setOk('');
     try {
       const res = await stopScrapeBlog().unwrap();
-      setOk(res.message || 'Stop requested');
+      setOk((res as { message?: string }).message || 'Stop requested');
       refetchScrapeStatus();
     } catch (err: unknown) {
       const e = err as { data?: { error?: string } };
@@ -1470,7 +1473,7 @@ function BlogAdminSection() {
       if (res?.job?.status === 'failed') {
         setError(res?.job?.lastError || 'AI generation failed');
       } else {
-        setOk(res.message || 'AI generation completed');
+        setOk((res as { message?: string }).message || 'AI generation completed');
       }
       if (res?.job?.errors?.length) {
         setError(res.job.errors.slice(0, 3).join('; '));

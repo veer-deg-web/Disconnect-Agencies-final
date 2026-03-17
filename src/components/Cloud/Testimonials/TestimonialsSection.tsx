@@ -9,6 +9,7 @@ import {
   useMotionValue,
 } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
+import Image from "next/image";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
 import "./TestimonialsSection.css";
@@ -91,7 +92,7 @@ export default function TestimonialsSection() {
                   <span className="tag">{item.tag}</span>
                   <p className="quote">“{item.text}”</p>
                   <div className="author">
-                    <img src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
+                    <Image src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" width={40} height={40} />
                     <div>
                       <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                         {item.name}
@@ -103,7 +104,7 @@ export default function TestimonialsSection() {
                 </div>
               ) : (
                 <div className="testimonial-card square">
-                  <img src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" />
+                  <Image src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" width={40} height={40} />
                   <strong style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '8px' }}>
                     {item.name}
                     {item.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}

@@ -12,7 +12,7 @@ export async function GET() {
     const result = Array.from(new Set([...defaults, ...categories])).sort();
     
     return NextResponse.json({ categories: result });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });
   }
 }

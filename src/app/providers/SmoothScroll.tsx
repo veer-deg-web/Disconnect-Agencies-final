@@ -3,12 +3,12 @@
 import { useEffect, useRef } from "react";
 
 export default function SmoothScroll() {
-  const locoRef = useRef<any>(null);
+  const locoRef = useRef<unknown>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    let loco: any;
+    let loco: unknown;
 
     const initScroll = async () => {
       const LocomotiveScroll = (await import("locomotive-scroll")).default;
@@ -21,7 +21,8 @@ export default function SmoothScroll() {
 
       const isMobile = window.innerWidth < 768;
 
-      loco = new (LocomotiveScroll as any)({
+      const LocomotiveScrollClass = LocomotiveScroll as unknown as { new (opt: unknown): unknown };
+      loco = new LocomotiveScrollClass({
         el: scrollContainer,
         smooth: !isMobile, // ❗ disable smooth on mobile
         lerp: 0.08,
@@ -41,7 +42,7 @@ export default function SmoothScroll() {
 
     return () => {
       if (locoRef.current) {
-        locoRef.current.destroy();
+        (locoRef.current as { destroy: () => void }).destroy();
         locoRef.current = null;
       }
     };

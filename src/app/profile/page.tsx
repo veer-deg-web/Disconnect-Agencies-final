@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { User, LogOut, Camera, Save, ArrowLeft, Trash2, Calendar, MessageSquare, Pencil, X, CheckCircle2 } from 'lucide-react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '@/lib/cropImage';
@@ -33,6 +34,13 @@ interface Feedback {
   createdAt: string;
 }
 
+interface Area {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export default function ProfilePage() {
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -62,7 +70,7 @@ export default function ProfilePage() {
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [isCropping, setIsCropping] = useState(false);
 
   useEffect(() => {
@@ -149,14 +157,13 @@ export default function ProfilePage() {
     reader.readAsDataURL(file);
   };
 
-  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+  const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
 
   const handleApplyCrop = async () => {
-    if (!imageToCrop || !croppedAreaPixels) return;
-
     try {
+      if (!imageToCrop || !croppedAreaPixels) return;
       const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
       setPreviewAvatar(croppedImage);
       setIsCropping(false);
@@ -245,7 +252,7 @@ export default function ProfilePage() {
 
       if (res.ok) {
         const data = await res.json();
-        setFeedbacks(prev => prev.map(f => f._id === id ? data.feedback : f));
+        setFeedbacks((prev: Feedback[]) => prev.map((f: Feedback) => f._id === id ? data.feedback : f));
         setEditingFeedbackId(null);
       }
     } catch (err) {
@@ -267,7 +274,7 @@ export default function ProfilePage() {
       });
 
       if (res.ok) {
-        setFeedbacks(prev => prev.filter(f => f._id !== id));
+        setFeedbacks((prev: Feedback[]) => prev.filter((f: Feedback) => f._id !== id));
       }
     } catch (err) {
       console.error('Delete Feedback Error:', err);
@@ -322,7 +329,7 @@ export default function ProfilePage() {
               <div className="avatar-outer">
                 <div className="avatar-preview">
                   {previewAvatar ? (
-                    <img src={previewAvatar} alt="Profile" className="avatar-img" />
+                    <Image src={previewAvatar} alt="Profile" width={100} height={100} className="avatar-img" />
                   ) : (
                     <div className="avatar-placeholder">
                       <User size={48} />
@@ -405,7 +412,7 @@ export default function ProfilePage() {
                     <p style={{ color: 'rgba(255,255,255,0.5)' }}>You have no scheduled bookings yet.</p>
                 ) : (
                     <div className="list-grid">
-                        {bookings.map(b => (
+                        {bookings.map((b: Booking) => (
                             <div key={b._id} className="list-card">
                                 <h4>{b.serviceTitle} <span className="category-badge">{b.category}</span></h4>
                                 <p><strong>Date:</strong> {b.dateLabel} at {b.time}</p>
@@ -426,7 +433,7 @@ export default function ProfilePage() {
                     <p style={{ color: 'rgba(255,255,255,0.5)' }}>You haven&apos;t left any feedback yet.</p>
                 ) : (
                     <div className="list-grid">
-                        {feedbacks.map(f => (
+                        {feedbacks.map((f: Feedback) => (
                             <div key={f._id} className="list-card">
                                 {editingFeedbackId === f._id ? (
                                     <div className="edit-form">
@@ -460,7 +467,7 @@ export default function ProfilePage() {
                                     </div>
                                 ) : (
                                     <>
-                                        <p className="card-content">"{f.content}"</p>
+                                        <p className="card-content">&quot;{f.content}&quot;</p>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
                                             <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>
                                                 {f.category || 'General'} • {f.rating || 5}/5 ★

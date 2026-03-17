@@ -57,8 +57,8 @@ export async function POST(req: NextRequest) {
       application 
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Career application error:', error);
-    return NextResponse.json({ error: error?.message || 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: (error as Error)?.message || 'Internal server error' }, { status: 500 });
   }
 }

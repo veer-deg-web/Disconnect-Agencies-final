@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import Image from "next/image";
 import "./macbook-scroll.css";
 import { MotionValue, motion, useScroll, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -203,10 +204,12 @@ export const Lid = ({
         className="mbs-screen-shell"
       >
         <div className="mbs-screen-bg" />
-        <img
+        <Image
           src={src as string}
           alt="aceternity logo"
+          fill
           className="mbs-screen-image"
+          priority
         />
       </motion.div>
     </div>

@@ -23,9 +23,10 @@ export async function GET(req: Request) {
         const feedbacks = await Feedback.find({ user: decoded.userId }).sort({ createdAt: -1 });
 
         return NextResponse.json({ feedbacks }, { status: 200 });
-    } catch (error: any) {
-        if (error.message === 'Unauthorized') {
-            return NextResponse.json({ error: error.message }, { status: 401 });
+    } catch (error: unknown) {
+        const err = error as Error;
+        if (err.message === 'Unauthorized') {
+            return NextResponse.json({ error: err.message }, { status: 401 });
         }
         console.error('Fetch User Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -59,9 +60,10 @@ export async function PUT(req: Request) {
         await feedback.save();
 
         return NextResponse.json({ feedback, message: 'Feedback updated successfully' }, { status: 200 });
-    } catch (error: any) {
-        if (error.message === 'Unauthorized') {
-            return NextResponse.json({ error: error.message }, { status: 401 });
+    } catch (error: unknown) {
+        const err = error as Error;
+        if (err.message === 'Unauthorized') {
+            return NextResponse.json({ error: err.message }, { status: 401 });
         }
         console.error('Update User Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -88,9 +90,10 @@ export async function DELETE(req: Request) {
         }
 
         return NextResponse.json({ message: 'Feedback deleted successfully' }, { status: 200 });
-    } catch (error: any) {
-        if (error.message === 'Unauthorized') {
-            return NextResponse.json({ error: error.message }, { status: 401 });
+    } catch (error: unknown) {
+        const err = error as Error;
+        if (err.message === 'Unauthorized') {
+            return NextResponse.json({ error: err.message }, { status: 401 });
         }
         console.error('Delete User Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

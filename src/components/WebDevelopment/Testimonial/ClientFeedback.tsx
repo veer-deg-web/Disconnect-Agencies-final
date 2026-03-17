@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import Image from "next/image";
 import { SiStripe, SiGooglecloud, SiApple } from "react-icons/si";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import "./ClientFeedback.css";
@@ -111,10 +112,13 @@ export default function ClientFeedback() {
               initial="hidden"
               animate="show"
             >
-              <img
+              <Image
                 src={finalTestimonials[active].image}
                 alt={finalTestimonials[active].name}
+                width={500}
+                height={600}
                 className="feedback-image"
+                priority={active === 0}
               />
             </motion.div>
 
@@ -131,7 +135,7 @@ export default function ClientFeedback() {
               </div>
 
               <p className="feedback-text">
-                "{finalTestimonials[active].text}"
+                &quot;{finalTestimonials[active].text}&quot;
               </p>
 
               {/* Bottom Right Block */}

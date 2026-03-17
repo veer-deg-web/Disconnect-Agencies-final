@@ -5,7 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
+import { CategoryType } from "@/components/data/serviceData";
 import "./CalendarStep.css";
+
+interface CalendarStepProps {
+  category: CategoryType;
+  date: Date | null;
+  setDate: (date: Date) => void;
+  next: () => void;
+  back: () => void;
+}
 
 export default function CalendarStep({
   category,
@@ -13,7 +22,7 @@ export default function CalendarStep({
   setDate,
   next,
   back,
-}: any) {
+}: CalendarStepProps) {
   const today = new Date();
 
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());

@@ -48,7 +48,7 @@ const TargetCursor = ({
     const checkMobile = () => {
       const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       const isSmallScreen = window.innerWidth <= 768;
-      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+      const userAgent = navigator.userAgent || navigator.vendor || (window as unknown as { opera: string }).opera;
       const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
       const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
       setIsMobile((hasTouchScreen && isSmallScreen) || isMobileUserAgent);
@@ -317,15 +317,16 @@ const TargetCursor = ({
       target.addEventListener('mouseleave', leaveHandler);
     };
 
-    window.addEventListener('mouseover', enterHandler as any, { passive: true });
+    window.addEventListener('mouseover', enterHandler as EventListener, { passive: true });
 
+    const activeStrength = activeStrengthRef.current;
     return () => {
       if (tickerFnRef.current) {
         gsap.ticker.remove(tickerFnRef.current);
       }
 
       window.removeEventListener('mousemove', moveHandler);
-      window.removeEventListener('mouseover', enterHandler as any);
+      window.removeEventListener('mouseover', enterHandler as EventListener);
       window.removeEventListener('scroll', scrollHandler);
       window.removeEventListener('mousedown', mouseDownHandler);
       window.removeEventListener('mouseup', mouseUpHandler);
@@ -339,7 +340,7 @@ const TargetCursor = ({
 
       isActiveRef.current = false;
       targetCornerPositionsRef.current = null;
-      activeStrengthRef.current.current = 0;
+      activeStrength.current = 0;
     };
   }, [targetSelector, scopeSelector, spinDuration, moveCursor, constants, hideDefaultCursor, isMobile, hoverDuration, parallaxOn, mounted]);
 

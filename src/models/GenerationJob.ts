@@ -19,7 +19,7 @@ export interface IGenerationJob extends Document {
   // Details
   currentTask: string;
   logs: string[];
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   
   startedAt: Date;
   finishedAt: Date | null;

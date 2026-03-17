@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import { EASE_SMOOTH } from "@/lib/animations";
 
@@ -128,8 +129,9 @@ export default function SmartGrowthSection() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
+                style={{ position: 'relative', width: '100%', height: '100%' }}
               >
-                <img src={item.image} alt="" />
+                <Image src={item.image} alt="" fill style={{ objectFit: 'contain' }} />
               </motion.div>
             </div>
 

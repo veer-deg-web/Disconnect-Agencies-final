@@ -10,7 +10,7 @@ export default function UIUXFAQ() {
 
   return (
     <section style={{ padding: "140px 24px", maxWidth: "900px", margin: "0 auto" }}>
-      {faqs.map((q) => (
+      {faqs.map((q: string) => (
         <div
           key={q}
           style={{

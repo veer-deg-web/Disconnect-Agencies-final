@@ -5,7 +5,7 @@ import { BloomEffect, EffectComposer, EffectPass, RenderPass, SMAAEffect, SMAAPr
 import './Hyperspeed.css';
 
 interface Distortion {
-  uniforms: Record<string, { value: any }>;
+  uniforms: Record<string, { value: unknown }>;
   getDistortion: string;
   getJS?: (progress: number, time: number) => THREE.Vector3;
 }
@@ -458,6 +458,7 @@ class CarLights {
     const curve = new THREE.LineCurve3(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1));
     const geometry = new THREE.TubeGeometry(curve, 40, 1, 8, false);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const instanced = new THREE.InstancedBufferGeometry().copy(geometry as any) as THREE.InstancedBufferGeometry;
     instanced.instanceCount = options.lightPairsPerRoadWay * 2;
 
@@ -616,6 +617,7 @@ class LightsSticks {
   init() {
     const options = this.options;
     const geometry = new THREE.PlaneGeometry(1, 1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const instanced = new THREE.InstancedBufferGeometry().copy(geometry as any) as THREE.InstancedBufferGeometry;
     const totalSticks = options.totalSideLightSticks;
     instanced.instanceCount = totalSticks;
@@ -760,7 +762,7 @@ class Road {
       segments
     );
 
-    let uniforms: Record<string, { value: any }> = {
+    let uniforms: Record<string, { value: unknown }> = {
       uTravelLength: { value: options.length },
       uColor: {
         value: new THREE.Color(isRoad ? options.colors.roadColor : options.colors.islandColor)
@@ -925,12 +927,14 @@ class App {
   renderPass!: RenderPass;
   bloomPass!: EffectPass;
   clock: THREE.Clock;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assets: Record<string, any>;
   disposed: boolean;
   road: Road;
   leftCarLights: CarLights;
   rightCarLights: CarLights;
   leftSticks: LightsSticks;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fogUniforms: Record<string, { value: any }>;
   fovTarget: number;
   speedUpTarget: number;

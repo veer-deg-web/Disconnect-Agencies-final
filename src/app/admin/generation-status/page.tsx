@@ -28,7 +28,7 @@ export default function GenerationStatusPage() {
         const data = await res.json();
         setJob(data);
         setError(null);
-      } catch (err) {
+      } catch {
         setError("Unable to connect to generation service.");
       }
     };

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion, useAnimationControls } from "framer-motion";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
@@ -212,9 +213,9 @@ export function MorphingLoginButton() {
       const nextUserRole = localStorage.getItem("userRole") ?? "user";
       const nextUserAvatar = localStorage.getItem("userAvatar") || null;
 
-      setUserName((prev) => (prev === nextUserName ? prev : nextUserName));
-      setUserRole((prev) => (prev === nextUserRole ? prev : nextUserRole));
-      setUserAvatar((prev) => (prev === nextUserAvatar ? prev : nextUserAvatar));
+      setUserName((prev: string | null) => (prev === nextUserName ? prev : nextUserName));
+      setUserRole((prev: string) => (prev === nextUserRole ? prev : nextUserRole));
+      setUserAvatar((prev: string | null) => (prev === nextUserAvatar ? prev : nextUserAvatar));
     };
 
     const onVisibility = () => {
@@ -276,7 +277,7 @@ export function MorphingLoginButton() {
   /* ── LOGGED IN: avatar with hover dropdown ── */
   const initials = userName
     .split(" ")
-    .map((n) => n[0]?.toUpperCase() ?? "")
+    .map((n: string) => n[0]?.toUpperCase() ?? "")
     .slice(0, 2)
     .join("");
 
@@ -303,7 +304,7 @@ export function MorphingLoginButton() {
         }}
       >
         {userAvatar ? (
-          <img src={userAvatar} alt="Profile" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
+          <Image src={userAvatar} alt="Profile" width={28} height={28} style={{ borderRadius: '50%', objectFit: 'cover' }} />
         ) : (
           <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF7A18, #AF002D)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600, color: '#fff' }}>
             {initials}
@@ -338,7 +339,7 @@ export function MorphingLoginButton() {
         {/* User info */}
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
           {userAvatar ? (
-            <img src={userAvatar} alt="Profile" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: 'cover', flexShrink: 0 }} />
+            <Image src={userAvatar} alt="Profile" width={36} height={36} style={{ borderRadius: "50%", objectFit: 'cover', flexShrink: 0 }} />
           ) : (
             <div
               style={{
@@ -494,12 +495,13 @@ function TrustedBy() {
               overflow: "hidden",
             }}
           >
-            <img
+            <Image
               src={src}
               alt={`Trusted profile ${i + 1}`}
+              width={28}
+              height={28}
               loading="eager"
-              decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              style={{ objectFit: "cover" }}
             />
           </div>
         ))}

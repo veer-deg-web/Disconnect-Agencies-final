@@ -117,10 +117,11 @@ export async function createGoogleMeetLink(details: {
 
     return meetLink;
 
-  } catch (error: any) {
-    console.error("Google Calendar API error:", error?.errors ?? error);
+  } catch (error: unknown) {
+    const err = error as { errors?: unknown[]; code?: string | number; message?: string };
+    console.error("Google Calendar API error:", err?.errors ?? err);
     throw new Error(
-      `Google Calendar API failed (${error.code ?? "?"}): ${error.message}`
+      `Google Calendar API failed (${err.code ?? "?"}): ${err.message}`
     );
   }
 }

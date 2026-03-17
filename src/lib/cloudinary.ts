@@ -41,7 +41,7 @@ export async function uploadToCloudinary(
 
     if (typeof file === "string") {
       // It's a URL or a file path
-      cloudinary.uploader.upload(file, uploadOptions, (error: any, result: any) => {
+      cloudinary.uploader.upload(file, uploadOptions, (error: Error | undefined, result: CloudinaryUploadResult | undefined) => {
         if (error) reject(error);
         else resolve(result as CloudinaryUploadResult);
       });
@@ -49,7 +49,7 @@ export async function uploadToCloudinary(
       // It's a Buffer
       const uploadStream = cloudinary.uploader.upload_stream(
         uploadOptions,
-        (error: any, result: any) => {
+        (error: Error | undefined, result: CloudinaryUploadResult | undefined) => {
           if (error) reject(error);
           else resolve(result as CloudinaryUploadResult);
         }

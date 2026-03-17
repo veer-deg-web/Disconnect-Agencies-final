@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Shared/Footer/Footer";
@@ -325,9 +327,11 @@ export default async function BlogPostPage({ params }: Props) {
 
         {blog.featuredImage && (
           <figure style={{ margin: "0 0 40px" }}>
-            <img
+            <Image
               src={blog.featuredImage}
               alt={blog.title}
+              width={1200}
+              height={520}
               style={{
                 width: "100%",
                 maxHeight: "520px",
@@ -521,7 +525,7 @@ export default async function BlogPostPage({ params }: Props) {
               color: #de5e03;
               text-decoration: underline;
             }
-            .blog-content img {
+            .blog-content [src] {
               max-width: 100%;
               height: auto;
               border-radius: 18px;

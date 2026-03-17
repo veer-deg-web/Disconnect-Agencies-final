@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import "./SupportService.css";
@@ -116,7 +117,7 @@ export default function SupportSection() {
             </motion.div>
 
             <div className="brand">
-              <img src="/assets/WebDevelopment/SupportService/photo/logo.webp" alt="disconnect" />
+              <Image src="/assets/WebDevelopment/SupportService/photo/logo.webp" alt="disconnect" width={120} height={40} />
             </div>
           </SpotlightCard>
         </motion.div>

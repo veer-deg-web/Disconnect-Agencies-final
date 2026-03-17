@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         }
 
         return NextResponse.json({ user }, { status: 200 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Get Profile Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
@@ -57,7 +57,7 @@ export async function PUT(req: Request) {
             { message: 'Profile updated successfully', user: { name: user.name, avatar: user.avatar, email: user.email, isVerified: user.isVerified } },
             { status: 200 }
         );
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Update Profile Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }

@@ -60,7 +60,7 @@ export async function GET(req: Request) {
         const category = searchParams.get('category');
         const isFeatured = searchParams.get('isFeatured');
 
-        const query: any = { isTestimonial: true };
+        const query: Record<string, unknown> = { isTestimonial: true };
 
         if (category && category !== 'All') {
             query.category = category;

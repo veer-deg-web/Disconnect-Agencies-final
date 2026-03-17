@@ -9,18 +9,125 @@ const getAuthToken = () => {
     return null;
 };
 
+/* =======================
+   INTERFACES
+======================= */
+
+export interface AdminFaq {
+    _id: string;
+    question: string;
+    answer: string;
+    category: string;
+    order: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface AdminBooking {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    category: string;
+    serviceTitle: string;
+    dateIso: string;
+    dateLabel: string;
+    time: string;
+    notes: string;
+    meetingLink: string;
+    adminRemark: string;
+    status: 'pending' | 'completed';
+    createdAt: string;
+}
+
+export interface AdminUser {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: 'user' | 'admin';
+    isVerified: boolean;
+    isSuspended: boolean;
+    createdAt: string;
+}
+
+export interface AdminFeedback {
+    _id: string;
+    user: {
+        _id: string;
+        name: string;
+        email: string;
+    } | string;
+    content: string;
+    isTestimonial: boolean;
+    isFeatured: boolean;
+    category: string;
+    rating: number;
+    position: string;
+    company: string;
+    createdAt: string;
+}
+
+export interface AdminCareerApplication {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: string;
+    message: string;
+    resumeUrl: string;
+    status: 'pending' | 'accepted' | 'rejected';
+    createdAt: string;
+}
+
+export interface AdminBlog {
+    _id: string;
+    title: string;
+    slug: string;
+    category: string;
+    excerpt: string;
+    content: string;
+    featuredImage: string;
+    author: string;
+    status: 'published' | 'draft';
+    tags: string[];
+    source?: string;
+    readingTime?: string;
+    createdAt: string;
+}
+
+export interface ScrapeJobStatus {
+    jobId: string;
+    status: 'idle' | 'running' | 'completed' | 'failed' | 'stopping' | 'stopped';
+    total: number;
+    processed: number;
+    created: number;
+    errors: string[];
+    lastError?: string;
+}
+
+export interface GenerateJobStatus {
+    jobId: string;
+    status: 'idle' | 'running' | 'completed' | 'failed';
+    total: number;
+    processed: number;
+    created: number;
+    errors: string[];
+    lastError?: string;
+}
+
 export const adminApi = createApi({
     reducerPath: 'adminApi',
     baseQuery: ((): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> => {
         const rawBaseQuery = fetchBaseQuery({
-        baseUrl: '/api/admin',
-        prepareHeaders: (headers) => {
-            const token = getAuthToken();
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`);
-            }
-            return headers;
-        },
+            baseUrl: '/api/admin',
+            prepareHeaders: (headers) => {
+                const token = getAuthToken();
+                if (token) {
+                    headers.set('authorization', `Bearer ${token}`);
+                }
+                return headers;
+            },
         });
 
         return async (args, api, extraOptions) => {
@@ -53,11 +160,11 @@ export const adminApi = createApi({
         /* =======================
            FAQS
         ======================= */
-        getFaqs: builder.query<{ faqs: any[] }, void>({
+        getFaqs: builder.query<{ faqs: AdminFaq[] }, void>({
             query: () => '/faq',
             providesTags: ['Faq'],
         }),
-        addFaq: builder.mutation<any, { question: string; answer: string; category: string }>({
+        addFaq: builder.mutation<AdminFaq, { question: string; answer: string; category: string }>({
             query: (body) => ({
                 url: '/faq',
                 method: 'POST',
@@ -65,7 +172,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Faq'],
         }),
-        updateFaq: builder.mutation<any, { id: string; question: string; answer: string; category: string }>({
+        updateFaq: builder.mutation<AdminFaq, { id: string; question: string; answer: string; category: string }>({
             query: (body) => ({
                 url: '/faq',
                 method: 'PUT',
@@ -73,7 +180,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Faq'],
         }),
-        deleteFaq: builder.mutation<any, string>({
+        deleteFaq: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
                 url: '/faq',
                 method: 'DELETE',
@@ -89,7 +196,7 @@ export const adminApi = createApi({
             query: () => '/booking-settings',
             providesTags: ['BookingSettings'],
         }),
-        updateBookingSettings: builder.mutation<any, { meetingLink: string; adminEmails: string[] }>({
+        updateBookingSettings: builder.mutation<{ success: boolean }, { meetingLink: string; adminEmails: string[] }>({
             query: (body) => ({
                 url: '/booking-settings',
                 method: 'PUT',
@@ -97,11 +204,11 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['BookingSettings'],
         }),
-        getBookings: builder.query<{ bookings: any[] }, void>({
+        getBookings: builder.query<{ bookings: AdminBooking[] }, void>({
             query: () => '/bookings',
             providesTags: ['Booking'],
         }),
-        updateBooking: builder.mutation<any, { id: string; adminRemark?: string; status?: string }>({
+        updateBooking: builder.mutation<AdminBooking, { id: string; adminRemark?: string; status?: string }>({
             query: (body) => ({
                 url: '/bookings',
                 method: 'PUT',
@@ -109,7 +216,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Booking'],
         }),
-        deleteBooking: builder.mutation<any, string>({
+        deleteBooking: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
                 url: '/bookings',
                 method: 'DELETE',
@@ -121,11 +228,11 @@ export const adminApi = createApi({
         /* =======================
            USERS
         ======================= */
-        getUsers: builder.query<any, void>({
+        getUsers: builder.query<{ users: AdminUser[] }, void>({
             query: () => '/users',
             providesTags: ['User'],
         }),
-        updateUser: builder.mutation<any, any>({
+        updateUser: builder.mutation<AdminUser, Partial<AdminUser> & { id: string }>({
             query: (body) => ({
                 url: '/users',
                 method: 'PATCH',
@@ -133,7 +240,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['User'],
         }),
-        deleteUser: builder.mutation<any, string>({
+        deleteUser: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
                 url: '/users',
                 method: 'DELETE',
@@ -145,11 +252,11 @@ export const adminApi = createApi({
         /* =======================
            FEEDBACKS
         ======================= */
-        getFeedbacks: builder.query<any, void>({
+        getFeedbacks: builder.query<{ feedbacks: AdminFeedback[] }, void>({
             query: () => '/feedback',
             providesTags: ['Feedback'],
         }),
-        updateFeedback: builder.mutation<any, any>({
+        updateFeedback: builder.mutation<AdminFeedback, Partial<AdminFeedback> & { id: string }>({
             query: (body) => ({
                 url: '/feedback',
                 method: 'PUT',
@@ -157,7 +264,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Feedback'],
         }),
-        deleteFeedback: builder.mutation<any, string>({
+        deleteFeedback: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
                 url: '/feedback',
                 method: 'DELETE',
@@ -169,11 +276,11 @@ export const adminApi = createApi({
         /* =======================
            CAREER APPLICATIONS
         ======================= */
-        getCareerApplications: builder.query<any, void>({
+        getCareerApplications: builder.query<{ applications: AdminCareerApplication[] }, void>({
             query: () => '/career-applications',
             providesTags: ['CareerApplication'],
         }),
-        updateCareerApplication: builder.mutation<any, any>({
+        updateCareerApplication: builder.mutation<AdminCareerApplication, Partial<AdminCareerApplication> & { id: string }>({
             query: (body) => ({
                 url: '/career-applications',
                 method: 'PUT',
@@ -181,7 +288,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['CareerApplication'],
         }),
-        deleteCareerApplication: builder.mutation<any, string>({
+        deleteCareerApplication: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
                 url: `/career-applications?id=${id}`,
                 method: 'DELETE',
@@ -192,7 +299,7 @@ export const adminApi = createApi({
         /* =======================
            BLOGS
         ======================= */
-        getBlogs: builder.query<any, { page?: number; limit?: number; status?: string; category?: string; search?: string } | void>({
+        getBlogs: builder.query<{ blogs: AdminBlog[]; pagination: { total: number; pages: number } }, { page?: number; limit?: number; status?: string; category?: string; search?: string } | void>({
             query: (params) => {
                 const p = params || {};
                 const sp = new URLSearchParams();
@@ -206,7 +313,7 @@ export const adminApi = createApi({
             },
             providesTags: ['Blog'],
         }),
-        createBlog: builder.mutation<any, any>({
+        createBlog: builder.mutation<AdminBlog, Partial<AdminBlog>>({
             query: (body) => ({
                 url: '/blogs',
                 method: 'POST',
@@ -214,7 +321,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
-        updateBlog: builder.mutation<any, any>({
+        updateBlog: builder.mutation<AdminBlog, Partial<AdminBlog> & { id: string }>({
             query: (body) => ({
                 url: '/blogs',
                 method: 'PUT',
@@ -222,7 +329,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
-        deleteBlog: builder.mutation<any, string>({
+        deleteBlog: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
                 url: '/blogs',
                 method: 'DELETE',
@@ -230,7 +337,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
-        scrapeBlog: builder.mutation<any, { maxPages?: number; maxArticles?: number; category?: string }>({
+        scrapeBlog: builder.mutation<{ success: boolean; jobId: string }, { maxPages?: number; maxArticles?: number; category?: string }>({
             query: (body) => ({
                 url: '/blogs/scrape',
                 method: 'POST',
@@ -238,16 +345,16 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
-        stopScrapeBlog: builder.mutation<any, void>({
+        stopScrapeBlog: builder.mutation<{ success: boolean }, void>({
             query: () => ({
                 url: '/blogs/scrape',
                 method: 'DELETE',
             }),
         }),
-        getScrapeBlogStatus: builder.query<any, void>({
+        getScrapeBlogStatus: builder.query<{ success: boolean; job: ScrapeJobStatus; message?: string }, void>({
             query: () => '/blogs/scrape',
         }),
-        generateBlog: builder.mutation<any, { topic?: string; keyword?: string; category?: string; count?: number }>({
+        generateBlog: builder.mutation<{ success: boolean; jobId: string; job?: GenerateJobStatus; message?: string }, { topic?: string; keyword?: string; category?: string; count?: number }>({
             query: (body) => ({
                 url: '/blogs/generate',
                 method: 'POST',
@@ -255,7 +362,7 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
-        getGenerateBlogStatus: builder.query<any, void>({
+        getGenerateBlogStatus: builder.query<{ success: boolean; job: GenerateJobStatus; message?: string }, void>({
             query: () => '/blogs/generate',
         }),
     }),

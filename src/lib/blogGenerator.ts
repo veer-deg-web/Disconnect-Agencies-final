@@ -16,15 +16,10 @@ import { updateJobProgress, logJob } from "@/lib/acidJob";
 import {
   createSlug,
   getTopicImage,
-  sleep,
-  withRetry,
 } from "@/lib/utils";
 
-const AI_RETRY_COUNT = Math.max(1, Math.min(4, Number(process.env.BLOG_AI_RETRY_COUNT || 3)));
-
 /* ── Sanitize AI output fields before saving ── */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanitizeAIOutput(data: any): any {
+function sanitizeAIOutput(data: Record<string, unknown>): Record<string, unknown> {
   const title = normalizeDisconnectBrand(String(data.title || ""));
   const content = sanitizeBlogHtmlContent(String(data.content || ""));
   
@@ -107,7 +102,7 @@ export async function scrapeAndRewrite(
     }
   };
 
-  const generatedBlogs: any[] = [];
+  const generatedBlogs: Record<string, unknown>[] = [];
 
   emit({ phase: "collecting", total: 0, processed: 0, created: 0, skipped: 0 });
   if (acidJobId && lockId) await logJob(acidJobId, lockId, "Starting scraping phase...");
@@ -165,14 +160,15 @@ export async function scrapeAndRewrite(
       }
 
       const generated = sanitizeAIOutput(generatedRaw);
-      const category = categoryOverride || generated.category || "Web Development";
-      const imageSource = scraped.featuredImage || getTopicImage(generated.title, category);
+      const category = categoryOverride || (generated.category as string) || "Web Development";
+      const titleStr = (generated.title as string) || "";
+      const imageSource = scraped.featuredImage || getTopicImage(titleStr, category);
       
-      const featuredImage = await ensureWebpImage(imageSource, generated.title)
+      const featuredImage = await ensureWebpImage(imageSource as string, titleStr)
         .catch(() => scraped.featuredImage || imageSource);
 
       // Task 2, 3: Push to array instead of DB directly
-      const baseSlug = createSlug(generated.title);
+      const baseSlug = createSlug(titleStr);
       const slug = await uniqueSlug(baseSlug);
 
       generatedBlogs.push({
@@ -250,13 +246,14 @@ export async function generateNewBlog(
     if (acidJobId && lockId) await logJob(acidJobId, lockId, `AI output generated for "${generatedRaw.title || chosenTopic}"`);
 
     const generated = sanitizeAIOutput(generatedRaw);
-    const finalCategory = (category && category.trim()) || generated.category || "Web Development";
+    const finalCategory = (category && category.trim()) || (generated.category as string) || "Web Development";
+    const titleStr = (generated.title as string) || chosenTopic;
     const imageSource = getTopicImage(chosenTopic, finalCategory);
     
-    const featuredImage = await ensureWebpImage(imageSource, generated.title || chosenTopic)
+    const featuredImage = await ensureWebpImage(imageSource, titleStr)
       .catch(() => imageSource);
 
-    const baseSlug = createSlug(generated.title || chosenTopic);
+    const baseSlug = createSlug(titleStr);
     const slug = await uniqueSlug(baseSlug);
 
     const blogJSON = {
@@ -346,7 +343,7 @@ export async function importFromExternalUrl(
       await logJob(acidJobId, lockId, `Found ${newUrls.length} new articles to import.`);
     }
 
-    const importerBlogs: any[] = [];
+    const importerBlogs: Record<string, unknown>[] = [];
 
     // 3. Sequential Process (Scrape -> AI -> metadata)
     for (const url of newUrls) {

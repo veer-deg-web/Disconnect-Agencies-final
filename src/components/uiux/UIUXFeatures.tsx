@@ -11,7 +11,7 @@ export default function UIUXFeatures() {
 
   useEffect(() => {
     if (!isInView) return;
-    setCycleKey((k) => k + 1);
+    setCycleKey((k: number) => k + 1);
   }, [isInView]);
 
   return (
@@ -151,7 +151,7 @@ export default function UIUXFeatures() {
               gap: 56,
             }}
           >
-            {FEATURES.map((item, i) => (
+            {FEATURES.map((item, i: number) => (
               <motion.div
                 key={i}
                 className="feature-card"

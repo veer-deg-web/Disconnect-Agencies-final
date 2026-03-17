@@ -50,9 +50,9 @@ export async function POST(req: NextRequest) {
         phone: user.phone,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Email verify error:', error);
-    const msg: string = error?.message || 'Internal server error';
+    const msg: string = (error as Error)?.message || 'Internal server error';
     const isDb = msg.toLowerCase().includes('whitelist') || msg.toLowerCase().includes('connect') || msg.toLowerCase().includes('atlas');
     return NextResponse.json({ error: isDb ? 'Database connection failed. Please try again shortly.' : msg }, { status: 500 });
   }

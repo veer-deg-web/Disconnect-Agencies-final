@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Invalid OTP type' }, { status: 400 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Resend OTP error:', error);
-    const msg: string = error?.message || 'Internal server error';
+    const msg: string = (error as Error)?.message || 'Internal server error';
     const isDb = msg.toLowerCase().includes('whitelist') || msg.toLowerCase().includes('connect') || msg.toLowerCase().includes('atlas');
     return NextResponse.json({ error: isDb ? 'Database connection failed. Please try again shortly.' : msg }, { status: 500 });
   }

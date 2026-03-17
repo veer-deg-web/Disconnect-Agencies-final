@@ -2,6 +2,16 @@
 
 import ReviewCard from "../Review/ReviewCard";
 
+interface ReviewData {
+  name: string;
+  role: string;
+  company: string;
+  avatar: string;
+  rating: string;
+  quote: string;
+  highlight?: boolean;
+}
+
 const reviews = [
   {
     name: "Eniola Bakare",
@@ -34,7 +44,7 @@ export default function ReviewsMarquee() {
   return (
     <div className="seo-marquee">
       <div className="seo-marquee__track">
-        {[...reviews, ...reviews].map((r, i) => (
+        {[...reviews, ...reviews].map((r: ReviewData, i: number) => (
           <ReviewCard key={i} {...r} />
         ))}
       </div>

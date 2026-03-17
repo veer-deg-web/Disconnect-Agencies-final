@@ -1,6 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Shared/Footer/Footer";
@@ -145,10 +147,11 @@ export default function BlogClient({ blog }: { blog: BlogPost }) {
             border: "1px solid rgba(255,255,255,0.08)",
             position: "relative", height: "400px",
           }}>
-            <img
+            <Image
               src={blog.featuredImage}
               alt={blog.title}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              fill
+              style={{ objectFit: "cover" }}
             />
           </div>
         </motion.div>
@@ -232,7 +235,7 @@ export default function BlogClient({ blog }: { blog: BlogPost }) {
             background: none;
             padding: 0;
           }
-          .blog-content img {
+          .blog-content [src] {
             max-width: 100%;
             border-radius: 12px;
             margin: 24px 0;

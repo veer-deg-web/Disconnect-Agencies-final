@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useMemo, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import {
   SiReact,
   SiNextdotjs,
@@ -157,7 +157,7 @@ export default function OrbitalWindow({
     radius: number,
     speed: number,
     reverse = false,
-    icons: any[]
+    icons: React.FC<{ size?: number }>[]
   ) => {
     return (
       <motion.g

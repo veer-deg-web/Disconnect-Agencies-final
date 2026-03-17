@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 import "./MoreAboutSection.css";
 
 /* =========================
@@ -77,9 +78,10 @@ export default function MoreAboutSection() {
               className="ma-card"
               variants={itemVariants}
             >
-              <img
+              <Image
                 src={src}
                 alt=""
+                fill
                 className="ma-image"
               />
               <div className="ma-overlay" />

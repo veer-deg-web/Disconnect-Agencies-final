@@ -6,7 +6,17 @@ import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import StepWrapper from "./StepWrapper";
 import ServiceInfoCard from "./ServiceInfoCard";
 import MiniCalendar from "./MiniCalendar";
+import { CategoryType } from "@/components/data/serviceData";
 import "./TimeStep.css";
+
+interface TimeStepProps {
+  category: CategoryType;
+  date: string | Date;
+  time: string | null;
+  setTime: (time: string) => void;
+  next: () => void;
+  back: () => void;
+}
 
 const timeSlots = [
   "9:00 AM","10:00 AM","11:00 AM","12:00 PM",
@@ -29,7 +39,7 @@ const slotVariants: Variants = {
     transition: { duration: 0.3, ease: EASE } },
 };
 
-export default function TimeStep({ category, date, time, setTime, next, back }: any) {
+export default function TimeStep({ category, date, time, setTime, next, back }: TimeStepProps) {
   const selectedDate = new Date(date);
   const formattedDate = selectedDate.toLocaleDateString("en-US", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",

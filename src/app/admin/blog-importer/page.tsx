@@ -3,14 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { 
   Globe, 
-  Layers, 
   Play, 
   Loader2, 
   CheckCircle2, 
   XCircle, 
   ScrollText, 
-  ArrowRight,
-  Plus,
   AlertCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -112,7 +109,7 @@ export default function BlogImporterPage() {
     }
   };
 
-  const statusColors: Record<string, string> = {
+  const _statusColors: Record<string, string> = {
     pending: "text-yellow-400",
     generating: "text-purple-400",
     seeding: "text-pink-400",
@@ -243,7 +240,7 @@ export default function BlogImporterPage() {
               <div className="adm-empty" style={{ flex: 1 }}>
                 <ScrollText size={48} />
                 <p className="adm-empty-text">No Active Import</p>
-                <p className="adm-empty-sub">Enter a URL and click "Start Import" to see logs here.</p>
+                <p className="adm-empty-sub">Enter a URL and click &quot;Start Import&quot; to see logs here.</p>
               </div>
             ) : (
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

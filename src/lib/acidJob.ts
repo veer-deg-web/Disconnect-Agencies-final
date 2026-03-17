@@ -41,7 +41,7 @@ export async function updateJobProgress(
     totalBlogs?: number
   }
 ) {
-  const set: any = {};
+  const set: Record<string, string | number | JobStatus | undefined> = {};
   if (updates.processedBlogs !== undefined) set.processedBlogs = updates.processedBlogs;
   if (updates.successCount !== undefined) set.successCount = updates.successCount;
   if (updates.failureCount !== undefined) set.failureCount = updates.failureCount;
@@ -49,7 +49,7 @@ export async function updateJobProgress(
   if (updates.status !== undefined) set.status = updates.status;
   if (updates.totalBlogs !== undefined) set.totalBlogs = updates.totalBlogs;
 
-  const push: any = {};
+  const push: Record<string, string> = {};
   if (updates.log) {
     push.logs = `[${new Date().toISOString()}] ${updates.log}`;
   }

@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { serviceData, CategoryType } from "@/components/data/serviceData";
 import "./ServiceInfoCard.css";
 
@@ -80,10 +81,12 @@ export default function ServiceInfoCard({ category }: ServiceInfoCardProps) {
         }}
       />
 
-      <img
+      <Image
         src={data.image}
         className="service-card__image"
         alt={data.title}
+        width={400}
+        height={200}
       />
 
       <h2 className="service-card__title">{data.title}</h2>

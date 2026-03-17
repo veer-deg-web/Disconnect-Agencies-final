@@ -21,7 +21,7 @@ export interface AIResponse {
 }
 
 // Queue / Throttling state
-const requestQueue: (() => Promise<any>)[] = [];
+const requestQueue: (() => Promise<void>)[] = [];
 let isProcessingQueue = false;
 const MIN_INTERVAL_MS = 3000;
 let lastRequestTime = 0;

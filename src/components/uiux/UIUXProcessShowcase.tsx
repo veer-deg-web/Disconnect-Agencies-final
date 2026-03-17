@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 export default function UIUXProcessShowcase() {
   const rows = [
@@ -45,27 +46,27 @@ export default function UIUXProcessShowcase() {
               // No initial opacity or transform - instantly visible
             }}
           >
-            <img
-              src={row.src}
-              alt=""
-              style={{
-                width: "50%",
-                height: "100%",
-                objectFit: "cover",
-                transform: "skewX(-16deg)", // straighten image
-              }}
-            />
+            <div style={{ width: "50%", height: "100%", position: "relative", transform: "skewX(-16deg)" }}>
+              <Image
+                src={row.src}
+                alt=""
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            </div>
 
-            <img
-              src={row.src}
-              alt=""
-              style={{
-                width: "50%",
-                height: "100%",
-                objectFit: "cover",
-                transform: "skewX(-16deg)", // straighten image
-              }}
-            />
+            <div style={{ width: "50%", height: "100%", position: "relative", transform: "skewX(-16deg)" }}>
+              <Image
+                src={row.src}
+                alt=""
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            </div>
           </div>
         </div>
       ))}

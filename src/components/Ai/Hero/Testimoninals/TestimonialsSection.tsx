@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useMemo } from "react";
+import Image from "next/image";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
@@ -130,9 +131,12 @@ export default function TestimonialsSection() {
 
                 {/* AUTHOR */}
                 <div className="testimonial-author">
-                  <img
+                  <Image
                     src={item.avatar}
                     alt={item.name}
+                    width={40}
+                    height={40}
+                    className="testimonial-avatar"
                   />
                   <div>
                     <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>

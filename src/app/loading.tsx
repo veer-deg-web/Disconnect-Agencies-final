@@ -1,11 +1,16 @@
+import Image from "next/image";
+
 export default function Loading() {
   return (
     <div className="global-loader-container">
       <div className="global-loader-pulse">
-        <img 
+        <Image 
           src="/assets/Home/loading/photo/logo.webp" 
           alt="Loading..." 
+          width={96}
+          height={96}
           className="global-loader-logo"
+          priority
         />
       </div>
       <style key="loader-styles">{`

@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useMemo } from "react";
+import Image from "next/image";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
@@ -99,7 +100,7 @@ export default function TestimonialsSection() {
           </h2>
 
           <p className="testimonial-subtitle" style={subtitle}>
-            Real stories from users who've transformed their investment
+            Real stories from users who&apos;ve transformed their investment
             experience with AI-driven insights.
           </p>
         </motion.div>
@@ -196,15 +197,19 @@ function TestimonialCard({ name, role, quote, avatar, isVerified }: Testimonial 
     <div style={card}>
       <div style={cardHeader}>
         {avatar ? (
-          <img
+          <Image
             src={avatar}
             alt={name}
+            width={42}
+            height={42}
             style={avatarImage}
           />
         ) : (
-          <img
+          <Image
             src="/assets/Home/TestimonialsSection/photo/Section.webp"
             alt={name}
+            width={42}
+            height={42}
             style={avatarImage}
           />
         )}
