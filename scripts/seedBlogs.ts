@@ -109,7 +109,7 @@ export async function seedBlogs(
           content: finalContent,
           tags: blog.tags || [],
           readingTime: Math.max(1, Math.ceil(finalContent.split(/\s+/).length / 200)),
-          author: "Disconnect AI",
+          author: "Disconnect Team",
           status: blog.status || "published",
           sourceUrl: blog.sourceUrl || "",
           source: blog.sourceUrl ? "importer" : "json-seed",

@@ -117,7 +117,7 @@ export const STATIC_FAQS: Record<StaticFaqCategory, StaticFaq[]> = {
         },
         {
             question: "Is eCommerce development included in your services?",
-            answer: "Yes! We build highly scalable headless eCommerce solutions using Shopify Plus, Medusa, or completely custom Node.js/PostgreSQL backends tailored to high-volume sales.",
+            answer: "Yes! We build highly scalable headless eCommerce solutions using Shopify Plus, Medusa, or completely custom Node.js/MongoDB backends tailored to high-volume sales.",
         },
         {
             question: "Can I update the website content myself?",
@@ -140,7 +140,7 @@ export const STATIC_FAQS: Record<StaticFaqCategory, StaticFaq[]> = {
         },
         {
             question: "What backend do you use for mobile apps?",
-            answer: "We typically pair our mobile apps with scalable backends using Node.js, PostgreSQL, and GraphQL, or robust Backend-as-a-Service (BaaS) platforms like Supabase or Firebase depending on your product's scale.",
+            answer: "We typically pair our mobile apps with scalable backends using Node.js, MongoDB, and GraphQL, or robust cloud platforms depending on your product's scale.",
         },
         {
             question: "How do you handle app updates and bug fixes?",
