@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import CareerApplication from '@/models/CareerApplication';
-import { writeFile } from 'node:fs/promises';
-import path from 'node:path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,12 +33,9 @@ export async function POST(req: NextRequest) {
     const bytes = await resume.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const filename = `${Date.now()}-${resume.name.replace(/\s+/g, '_')}`;
-    const uploadDir = path.join(process.cwd(), 'public/uploads/resumes');
-    const filePath = path.join(uploadDir, filename);
-
-    await writeFile(filePath, buffer);
-    const resumeUrl = `/uploads/resumes/${filename}`;
+    // Upload to Cloudinary
+    const cloudinaryResult = await uploadToCloudinary(buffer, 'resumes', 'auto');
+    const resumeUrl = cloudinaryResult.secure_url;
 
     const application = await CareerApplication.create({
       name,

@@ -30,14 +30,18 @@ export type CloudinaryUploadResult = {
  */
 export async function uploadToCloudinary(
   file: string | Buffer,
-  folder: string = "blogs"
+  folder: string = "blogs",
+  resourceType: "image" | "video" | "raw" | "auto" = "image"
 ): Promise<CloudinaryUploadResult> {
   return new Promise((resolve, reject) => {
-    const uploadOptions = {
+    const uploadOptions: any = {
       folder,
-      resource_type: "image" as const,
-      transformation: [{ quality: "auto", fetch_format: "auto" }],
+      resource_type: resourceType,
     };
+
+    if (resourceType === "image") {
+      uploadOptions.transformation = [{ quality: "auto", fetch_format: "auto" }];
+    }
 
     if (typeof file === "string") {
       // It's a URL or a file path

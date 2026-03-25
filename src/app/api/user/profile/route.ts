@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import dbConnect from '../../../../lib/mongodb';
 import User from '../../../../models/User';
 
+import { uploadToCloudinary } from '../../../../lib/cloudinary';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
 
 export async function GET(req: Request) {
@@ -49,7 +51,16 @@ export async function PUT(req: Request) {
         }
 
         if (name) user.name = name;
-        if (avatar !== undefined) user.avatar = avatar; // Allow empty string to remove avatar
+        
+        if (avatar !== undefined) {
+          if (avatar && avatar.startsWith('data:image/')) {
+            // It's a base64 image, upload to Cloudinary
+            const uploadResult = await uploadToCloudinary(avatar, 'avatars');
+            user.avatar = uploadResult.secure_url;
+          } else {
+            user.avatar = avatar; // Could be a URL or an empty string
+          }
+        }
 
         await user.save();
 
