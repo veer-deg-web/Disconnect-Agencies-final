@@ -107,7 +107,7 @@ const cardVariant = {
 
 /* =======================
    COMPONENT
-======================= */
+======================= */import styles from "./PricingSection.module.css";
 
 export default function PricingSection({
   headingTitle = "Pricing Options",
@@ -129,10 +129,10 @@ export default function PricingSection({
   }, [inView, controls]);
 
   return (
-    <section ref={ref} style={sectionStyle}>
+    <section ref={ref} className={styles.section}>
       <motion.div variants={timeline} initial="hidden" animate={controls}>
         {/* HEADING */}
-        <motion.h2 variants={fadeUp} style={headingStyle}>
+        <motion.h2 variants={fadeUp} className={styles.heading}>
           <GradientText
             colors={headingGradient}
             animationSpeed={8}
@@ -143,23 +143,23 @@ export default function PricingSection({
         </motion.h2>
 
         {/* SUBTITLE */}
-        <motion.p variants={fadeUp} style={subtitleStyle}>
+        <motion.p variants={fadeUp} className={styles.subtitle}>
           Choose the subscription plan that suits your needs
         </motion.p>
 
         {/* TOGGLE */}
-        <motion.div variants={fadeUp} style={toggleWrap}>
-          <div style={toggle}>
+        <motion.div variants={fadeUp} className={styles.toggleWrap}>
+          <div className={styles.toggle}>
             <motion.div
               animate={{ left: billing === "monthly" ? "0%" : "50%" }}
               transition={{ type: "spring", stiffness: 500, damping: 35 }}
-              style={toggleThumb}
+              className={styles.toggleThumb}
             />
 
             <button
               onClick={() => setBilling("monthly")}
+              className={styles.toggleBtn}
               style={{
-                ...toggleBtn,
                 color: billing === "monthly" ? "#000" : "#aaa",
               }}
             >
@@ -168,8 +168,8 @@ export default function PricingSection({
 
             <button
               onClick={() => setBilling("yearly")}
+              className={styles.toggleBtn}
               style={{
-                ...toggleBtn,
                 color: billing === "yearly" ? "#000" : "#aaa",
               }}
             >
@@ -179,29 +179,29 @@ export default function PricingSection({
         </motion.div>
 
         {/* CARDS */}
-        <div className="pricing-grid" style={grid}>
+        <div className={`pricing-grid ${styles.grid}`}>
           {plans.map((plan) => (
             <motion.div
               key={plan.title}
               variants={cardVariant}
+              className={`${styles.card} ${plan.highlight ? styles.cardHighlighted : ""}`}
               style={{
-                ...card,
                 ...WILL_CHANGE_TRANSFORM,
                 ...(plan.highlight
-                  ? {
-                      background: `linear-gradient(180deg, ${accentColor}55, #1a1a1a)`,
-                      border: `2px solid ${accentColor}`,
-                    }
+                  ? ({
+                      "--accent-color": accentColor,
+                      "--accent-glow": `${accentColor}55`,
+                    } as React.CSSProperties)
                   : {}),
               }}
             >
               <div>
-                <div style={cardHeader}>
+                <div className={styles.cardHeader}>
                   <h3>{plan.title}</h3>
                   {plan.highlight && (
                     <span
+                      className={styles.badge}
                       style={{
-                        ...badge,
                         color: accentColor,
                       }}
                     >
@@ -210,9 +210,9 @@ export default function PricingSection({
                   )}
                 </div>
 
-                <div style={priceWrap}>
+                <div className={styles.priceWrap}>
                   {billing === "yearly" && (
-                    <span style={strike}>
+                    <span className={styles.strike}>
                       ${plan.monthly.toLocaleString()}
                     </span>
                   )}
@@ -222,7 +222,7 @@ export default function PricingSection({
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, ease: easeSmooth }}
-                    style={price}
+                    className={styles.price}
                   >
                     $
                     {(billing === "monthly"
@@ -232,13 +232,13 @@ export default function PricingSection({
                   </motion.span>
                 </div>
 
-                <p style={billingText}>
+                <p className={styles.billingText}>
                   {billing === "monthly"
                     ? "Billed monthly"
                     : "Save 20% with annual billing"}
                 </p>
 
-                <ul style={list}>
+                <ul className={styles.list}>
                   {plan.features.map((f) => (
                     <li key={f}>✓ {f}</li>
                   ))}
@@ -252,130 +252,6 @@ export default function PricingSection({
           ))}
         </div>
       </motion.div>
-
-      {/* MOBILE OVERRIDES */}
-      <style>{`
-        @media (max-width: 768px) {
-          .pricing-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
-
-/* =======================
-   STYLES (UNCHANGED)
-======================= */
-
-const sectionStyle: React.CSSProperties = {
-  padding: "160px 24px",
-  background: "radial-gradient(circle at top, #151515, #000)",
-  color: "#fff",
-  textAlign: "center",
-};
-
-const headingStyle: React.CSSProperties = {
-  fontSize: "clamp(42px, 5vw, 56px)",
-  fontWeight: 700,
-};
-
-const subtitleStyle: React.CSSProperties = {
-  opacity: 0.7,
-  marginTop: 12,
-};
-
-const toggleWrap: React.CSSProperties = {
-  marginTop: 40,
-};
-
-const toggle: React.CSSProperties = {
-  position: "relative",
-  width: 200,
-  height: 44,
-  background: "#1f1f1f",
-  borderRadius: 999,
-  display: "flex",
-  overflow: "hidden",
-  margin: "0 auto",
-};
-
-const toggleThumb: React.CSSProperties = {
-  position: "absolute",
-  top: 0,
-  bottom: 0,
-  width: "50%",
-  background: "#fff",
-  borderRadius: 999,
-};
-
-const toggleBtn: React.CSSProperties = {
-  flex: 1,
-  border: "none",
-  background: "transparent",
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: "pointer",
-  zIndex: 1,
-};
-
-const grid: React.CSSProperties = {
-  maxWidth: 1200,
-  margin: "80px auto 0",
-  display: "grid",
-  gridTemplateColumns: "repeat(3,1fr)",
-  gap: 24,
-};
-
-const card: React.CSSProperties = {
-  background: "#1a1a1a",
-  borderRadius: 18,
-  padding: 28,
-  textAlign: "left",
-  border: "1px solid rgba(255,255,255,0.1)",
-  display: "flex",
-  flexDirection: "column",
-};
-
-const cardHeader: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const badge: React.CSSProperties = {
-  background: "#fff",
-  padding: "4px 10px",
-  borderRadius: 999,
-  fontSize: 12,
-  fontWeight: 600,
-};
-
-const priceWrap: React.CSSProperties = {
-  display: "flex",
-  alignItems: "baseline",
-  gap: 10,
-  marginTop: 16,
-};
-
-const price: React.CSSProperties = {
-  fontSize: 44,
-  fontWeight: 700,
-};
-
-const strike: React.CSSProperties = {
-  textDecoration: "line-through",
-  opacity: 0.5,
-};
-
-const billingText: React.CSSProperties = {
-  opacity: 0.6,
-  marginBottom: 20,
-};
-
-const list: React.CSSProperties = {
-  listStyle: "none",
-  padding: 0,
-  lineHeight: 2,
-};

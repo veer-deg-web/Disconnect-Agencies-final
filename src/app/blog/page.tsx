@@ -32,6 +32,8 @@ interface CategoryItem {
   count: number;
 }
 
+import styles from "./BlogPage.module.css";
+
 export default function BlogPage() {
   const router = useRouter();
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -92,32 +94,18 @@ export default function BlogPage() {
   };
 
   return (
-    <main style={{ backgroundColor: "#000", minHeight: "100vh" }}>
+    <main className={styles.main}>
       {/* Hero Header */}
-      <div style={{ position: "relative", overflow: "hidden", paddingTop: "120px", paddingBottom: "60px" }}>
+      <div className={styles.heroHeader}>
         {/* Gradient background */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(222,94,3,0.15) 0%, transparent 70%)",
-        }} />
+        <div className={styles.gradientBg} />
 
-        <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: "800px", margin: "0 auto", padding: "0 24px" }}>
+        <div className={styles.heroContent}>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            style={{
-              display: "inline-block",
-              background: "rgba(222, 94, 3, 0.1)",
-              color: "#DE5E03",
-              padding: "6px 16px",
-              borderRadius: "100px",
-              fontSize: "13px",
-              fontWeight: 500,
-              marginBottom: "24px",
-              border: "1px solid rgba(222, 94, 3, 0.2)",
-              letterSpacing: "0.5px",
-            }}
+            className={styles.badge}
           >
             INSIGHTS & PERSPECTIVES
           </motion.div>
@@ -126,14 +114,7 @@ export default function BlogPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            style={{
-              fontSize: "clamp(36px, 7vw, 64px)",
-              fontWeight: 700,
-              color: "#fff",
-              margin: "0 0 20px 0",
-              lineHeight: 1.1,
-              letterSpacing: "-1px",
-            }}
+            className={styles.title}
           >
             The Disconnect Journal
           </motion.h1>
@@ -142,7 +123,7 @@ export default function BlogPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ fontSize: "17px", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, maxWidth: "600px", margin: "0 auto 32px" }}
+            className={styles.subtitle}
           >
             Technical deep dives, industry insights, and engineering perspectives from the frontier of design and development.
           </motion.p>
@@ -152,12 +133,7 @@ export default function BlogPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            style={{
-              display: "flex",
-              gap: "8px",
-              maxWidth: "480px",
-              margin: "0 auto",
-            }}
+            className={styles.searchBar}
           >
             <input
               type="text"
@@ -165,32 +141,11 @@ export default function BlogPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              style={{
-                flex: 1,
-                padding: "12px 18px",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "12px",
-                color: "#fff",
-                fontSize: "14px",
-                outline: "none",
-                fontFamily: "inherit",
-              }}
+              className={styles.searchInput}
             />
             <button
               onClick={handleSearch}
-              style={{
-                padding: "12px 24px",
-                background: "#DE5E03",
-                color: "#fff",
-                border: "none",
-                borderRadius: "12px",
-                fontSize: "14px",
-                fontWeight: 600,
-                cursor: "pointer",
-                fontFamily: "inherit",
-                whiteSpace: "nowrap",
-              }}
+              className={styles.searchButton}
             >
               Search
             </button>
@@ -200,30 +155,10 @@ export default function BlogPage() {
 
       {/* Category Filter */}
       {categories.length > 0 && (
-        <div style={{
-          maxWidth: "1200px",
-          margin: "0 auto 40px",
-          padding: "0 24px",
-          display: "flex",
-          gap: "8px",
-          overflowX: "auto",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}>
+        <div className={styles.categoryFilter}>
           <button
             onClick={() => handleCategoryFilter("")}
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "13px",
-              fontWeight: 500,
-              cursor: "pointer",
-              fontFamily: "inherit",
-              border: activeCategory === "" ? "1px solid #DE5E03" : "1px solid rgba(255,255,255,0.12)",
-              background: activeCategory === "" ? "rgba(222,94,3,0.15)" : "rgba(255,255,255,0.04)",
-              color: activeCategory === "" ? "#DE5E03" : "rgba(255,255,255,0.7)",
-              transition: "all 0.2s",
-            }}
+            className={`${styles.categoryBtn} ${activeCategory === "" ? styles.categoryBtnActive : ""}`}
           >
             All
           </button>
@@ -231,19 +166,7 @@ export default function BlogPage() {
             <button
               key={cat.name}
               onClick={() => handleCategoryFilter(cat.name)}
-              style={{
-                padding: "8px 18px",
-                borderRadius: "100px",
-                fontSize: "13px",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontFamily: "inherit",
-                border: activeCategory === cat.name ? "1px solid #DE5E03" : "1px solid rgba(255,255,255,0.12)",
-                background: activeCategory === cat.name ? "rgba(222,94,3,0.15)" : "rgba(255,255,255,0.04)",
-                color: activeCategory === cat.name ? "#DE5E03" : "rgba(255,255,255,0.7)",
-                transition: "all 0.2s",
-                whiteSpace: "nowrap",
-              }}
+              className={`${styles.categoryBtn} ${activeCategory === cat.name ? styles.categoryBtnActive : ""}`}
             >
               {cat.name} ({cat.count})
             </button>
@@ -252,34 +175,25 @@ export default function BlogPage() {
       )}
 
       {/* Blog Grid */}
-      <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px 80px" }}>
+      <section className={styles.section}>
         {loading ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(255,255,255,0.5)" }}>
-            <div style={{
-              width: "32px", height: "32px", border: "3px solid rgba(255,255,255,0.1)",
-              borderTopColor: "#DE5E03", borderRadius: "50%",
-              animation: "spin 0.8s linear infinite", margin: "0 auto 16px",
-            }} />
+          <div className={styles.loading}>
+            <div className={styles.spinner} />
             Loading articles...
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         ) : blogs.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "80px 0", color: "rgba(255,255,255,0.4)" }}>
-            <div style={{ fontSize: "48px", marginBottom: "16px" }}>📝</div>
-            <p style={{ fontSize: "18px", fontWeight: 500, marginBottom: "8px", color: "rgba(255,255,255,0.6)" }}>
+          <div className={styles.empty}>
+            <div className={styles.emptyIcon}>📝</div>
+            <p className={styles.emptyTitle}>
               No articles found
             </p>
-            <p style={{ fontSize: "14px" }}>
+            <p className={styles.emptyText}>
               {search ? "Try a different search term" : "Blog posts will appear here once published"}
             </p>
           </div>
         ) : (
           <>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
-              gap: "28px",
-            }}>
+            <div className={styles.grid}>
               {blogs.map((post, index) => (
                 <motion.article
                   key={post._id}
@@ -287,87 +201,49 @@ export default function BlogPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   onClick={() => router.push(`/blog/${post.slug}`)}
-                  style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                    borderRadius: "16px",
-                    overflow: "hidden",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
+                  className={styles.article}
                   whileHover={{ y: -4, borderColor: "rgba(222,94,3,0.3)" }}
                 >
                   {/* Image */}
-                  <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
+                  <div className={styles.imageWrapper}>
                     {post.featuredImage ? (
-                      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                      <div className={styles.imageContainer}>
                         <Image
                           src={post.featuredImage}
                           alt={post.title}
                           fill
-                          style={{ objectFit: "cover", opacity: 0.8 }}
+                          className={styles.articleImage}
                         />
                       </div>
                     ) : (
-                      <div style={{
-                        width: "100%", height: "100%",
-                        background: "linear-gradient(135deg, rgba(222,94,3,0.2), rgba(138,92,255,0.2))",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: "48px", opacity: 0.5,
-                      }}>📄</div>
+                      <div className={styles.placeholderImage}>📄</div>
                     )}
-                    <div style={{
-                      position: "absolute", top: "12px", left: "12px",
-                      background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
-                      padding: "4px 12px", borderRadius: "100px",
-                      fontSize: "11px", color: "#fff", fontWeight: 500,
-                      letterSpacing: "0.3px",
-                    }}>
+                    <div className={styles.categoryBadge}>
                       {post.category}
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column" }}>
-                    <div style={{
-                      display: "flex", gap: "12px", fontSize: "12px",
-                      color: "rgba(255,255,255,0.4)", marginBottom: "10px",
-                    }}>
+                  <div className={styles.cardContent}>
+                    <div className={styles.metaInfo}>
                       <span>{new Date(post.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                       <span>·</span>
                       <span>{post.readingTime} min read</span>
                     </div>
 
-                    <h3 style={{
-                      fontSize: "18px", fontWeight: 600, color: "#fff",
-                      marginBottom: "10px", lineHeight: 1.4,
-                      display: "-webkit-box", WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical", overflow: "hidden",
-                    }}>
+                    <h3 className={styles.articleTitle}>
                       {post.title}
                     </h3>
 
-                    <p style={{
-                      fontSize: "14px", color: "rgba(255,255,255,0.5)",
-                      lineHeight: 1.6, flex: 1, marginBottom: "16px",
-                      display: "-webkit-box", WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical", overflow: "hidden",
-                    }}>
+                    <p className={styles.articleExcerpt}>
                       {post.excerpt}
                     </p>
 
-                    <div style={{
-                      display: "flex", alignItems: "center", justifyContent: "space-between",
-                    }}>
-                      <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.35)" }}>
+                    <div className={styles.articleFooter}>
+                      <span className={styles.author}>
                         {post.author}
                       </span>
-                      <span style={{
-                        fontSize: "13px", color: "#DE5E03", fontWeight: 500,
-                        display: "flex", alignItems: "center", gap: "4px",
-                      }}>
+                      <span className={styles.readMoreLink}>
                         Read →
                       </span>
                     </div>
@@ -378,39 +254,21 @@ export default function BlogPage() {
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-              <div style={{
-                display: "flex", justifyContent: "center", gap: "8px",
-                marginTop: "48px",
-              }}>
+              <div className={styles.pagination}>
                 <button
                   disabled={pagination.page <= 1}
                   onClick={() => handlePageChange(pagination.page - 1)}
-                  style={{
-                    padding: "10px 18px", borderRadius: "10px", fontSize: "13px",
-                    border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)",
-                    color: pagination.page <= 1 ? "rgba(255,255,255,0.2)" : "#fff",
-                    cursor: pagination.page <= 1 ? "not-allowed" : "pointer",
-                    fontFamily: "inherit",
-                  }}
+                  className={`${styles.pageBtn} ${pagination.page <= 1 ? styles.pageBtnDisabled : ""}`}
                 >
                   ← Prev
                 </button>
-                <span style={{
-                  padding: "10px 18px", fontSize: "13px", color: "rgba(255,255,255,0.5)",
-                  display: "flex", alignItems: "center",
-                }}>
+                <span className={styles.pageInfo}>
                   Page {pagination.page} of {pagination.totalPages}
                 </span>
                 <button
                   disabled={pagination.page >= pagination.totalPages}
                   onClick={() => handlePageChange(pagination.page + 1)}
-                  style={{
-                    padding: "10px 18px", borderRadius: "10px", fontSize: "13px",
-                    border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)",
-                    color: pagination.page >= pagination.totalPages ? "rgba(255,255,255,0.2)" : "#fff",
-                    cursor: pagination.page >= pagination.totalPages ? "not-allowed" : "pointer",
-                    fontFamily: "inherit",
-                  }}
+                  className={`${styles.pageBtn} ${pagination.page >= pagination.totalPages ? styles.pageBtnDisabled : ""}`}
                 >
                   Next →
                 </button>

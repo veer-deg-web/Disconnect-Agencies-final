@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF } from "react-icons/fa";
 
 export default function Footer() {
   const router = useRouter();
@@ -156,6 +157,60 @@ export default function Footer() {
               </button>
             ))}
           </nav>
+          
+          <div
+            className="footer-social"
+            style={{
+              display: "flex",
+              gap: "16px",
+              marginTop: "8px",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            {[
+              { Icon: FaInstagram, href: "https://www.instagram.com/disconnect.agencies/", label: "Instagram" },
+              { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/disconnect-agencies/", label: "LinkedIn" },
+              { Icon: FaGithub, href: "https://github.com/veer-deg", label: "GitHub" },
+              { Icon: FaFacebookF, href: "https://www.facebook.com/disconnect.agencies", label: "Facebook" },
+            ].map(({ Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                style={{
+                  color: "rgba(255,255,255,0.6)",
+                  fontSize: "18px",
+                  transition: "all 0.3s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "38px",
+                  height: "38px",
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  textDecoration: "none"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#fff";
+                  e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                  e.currentTarget.style.transform = "translateY(-3px)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "rgba(255,255,255,0.6)";
+                  e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                }}
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+          </div>
 
           {/* FEEDBACK SECTION FOR LOGGED IN USERS */}
           {userName && (

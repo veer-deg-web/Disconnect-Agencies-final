@@ -14,6 +14,8 @@ interface BlogCardProps {
   slug: string;
 }
 
+import styles from "./BlogCard.module.css";
+
 const BlogCard: React.FC<BlogCardProps> = ({ title, summary, date, category, image, slug }) => {
   return (
     <motion.div
@@ -22,65 +24,35 @@ const BlogCard: React.FC<BlogCardProps> = ({ title, summary, date, category, ima
       viewport={{ once: true }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.5 }}
-      style={{
-        background: "rgba(255, 255, 255, 0.03)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        borderRadius: "20px",
-        overflow: "hidden",
-        position: "relative",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className={styles.card}
     >
-      <div style={{ position: "relative", height: "200px", width: "100%" }}>
+      <div className={styles.imageContainer}>
         <Image
           src={image}
           alt={title}
           fill
-          style={{ objectFit: "cover", opacity: 0.7 }}
+          className={styles.image}
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "16px",
-            left: "16px",
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(8px)",
-            padding: "4px 12px",
-            borderRadius: "100px",
-            fontSize: "12px",
-            color: "#fff",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
+        <div className={styles.categoryPill}>
           {category}
         </div>
       </div>
       
-      <div style={{ padding: "24px", flex: 1, display: "flex", flexDirection: "column" }}>
-        <div style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.5)", marginBottom: "8px" }}>
+      <div className={styles.content}>
+        <div className={styles.date}>
           {date}
         </div>
-        <h3 style={{ fontSize: "20px", fontWeight: 600, color: "#fff", marginBottom: "12px", lineHeight: 1.4 }}>
+        <h3 className={styles.title}>
           {title}
         </h3>
-        <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.6)", marginBottom: "20px", lineHeight: 1.6, flex: 1 }}>
+        <p className={styles.summary}>
           {summary}
         </p>
         
         <Link 
           href={`/blog/${slug}`}
           onClick={(e) => e.preventDefault()} // For now just a placeholder
-          style={{ 
-            color: "#fff", 
-            textDecoration: "none", 
-            fontSize: "14px", 
-            fontWeight: 500,
-            display: "flex",
-            alignItems: "center",
-            gap: "8px"
-          }}
+          className={styles.link}
         >
           Read More
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

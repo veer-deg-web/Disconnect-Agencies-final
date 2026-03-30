@@ -4,40 +4,19 @@ import { motion } from "framer-motion";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import DynamicCity from "@/components/DynamicCity";
 
+import styles from "./UIUXHeroAnimatedContent.module.css";
+
 export default function UIUXHeroAnimatedContent() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-        color: "#ffffff",
-        padding: "0 16px",
-      }}
-    >
+    <div className={styles.container}>
       {/* ================= BADGE ================= */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        style={{ marginBottom: "clamp(20px, 5vw, 32px)" }}
+        className={styles.badgeWrapper}
       >
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "6px 14px",
-            borderRadius: "999px",
-            background: "rgba(255,255,255,0.08)",
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            border: "1px solid rgba(255,255,255,0.15)",
-            fontSize: "clamp(12px, 3.5vw, 14px)",
-            color: "#e5e5e5",
-          }}
-        >
+        <span className={styles.badge}>
           <motion.span
             animate={{
               opacity: [0.4, 1, 0.4],
@@ -52,13 +31,7 @@ export default function UIUXHeroAnimatedContent() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              background: "#22c55e",
-              display: "inline-block",
-            }}
+            className={styles.pulseDot}
           />
           We Deliver Quality
         </span>
@@ -73,30 +46,13 @@ export default function UIUXHeroAnimatedContent() {
           delay: 0.1,
           ease: [0.22, 1, 0.36, 1],
         }}
-        style={{
-          fontSize: "clamp(2.2rem, 9vw, 5.5rem)",
-          lineHeight: 1.08,
-          marginBottom: "clamp(16px, 4vw, 24px)",
-          fontWeight: 500,
-        }}
+        className={styles.heading}
       >
         The truly{" "}
-        <span
-          style={{
-            opacity: 0.45,
-            fontFamily: "instrument-serif",
-            fontStyle: "italic",
-          }}
-        >
+        <span className={styles.limitText}>
           Limit
         </span>
-        <span
-          style={{
-            opacity: 1,
-            fontFamily: "instrument-serif",
-            fontStyle: "italic",
-          }}
-        >
+        <span className={styles.lessText}>
           less
         </span>
         <br />
@@ -112,19 +68,10 @@ export default function UIUXHeroAnimatedContent() {
           delay: 0.25,
           ease: [0.22, 1, 0.36, 1],
         }}
-        style={{
-          maxWidth: "520px",
-          color: "#b3b3b3",
-          marginBottom: "clamp(28px, 6vw, 40px)",
-          fontSize: "clamp(14px, 4vw, 16px)",
-        }}
+        className={styles.subtext}
       >
         Say goodbye to expensive freelancers, and hello to{" "}
-        <span
-          style={{
-            fontFamily: '"Instrument Serif", serif',
-          }}
-        >
+        <span className={styles.limitlessText}>
           limitless,
         </span>{" "}
         lightning fast design for teams in <DynamicCity fallback="your city" />.
