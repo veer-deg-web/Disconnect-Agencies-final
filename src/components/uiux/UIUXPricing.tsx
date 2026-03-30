@@ -64,9 +64,6 @@ export default function UIUXPricing() {
     setFramerOn((prev: boolean) => !prev);
   };
 
-  const handleSubscribe = () => {
-    console.log("Subscribe clicked");
-  };
 
 
 
@@ -171,13 +168,7 @@ export default function UIUXPricing() {
 
               {/* BUTTONS */}
               <div style={buttonRow}>
-                <button 
-                  
-                  onClick={handleSubscribe}
-                  style={primaryBtnStyle}
-                >
-                  Subscribe
-                </button>
+                
                  <BookCallButton/> 
               </div>
 

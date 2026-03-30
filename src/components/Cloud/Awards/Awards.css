@@ -38,6 +38,15 @@
   padding-bottom: 1.5rem;
   font-size: 0.7rem;
   color: #6f6f6f;
+  align-items: center;
+}
+
+.aw-header span:nth-child(2) {
+  text-align: center;
+}
+
+.aw-header span:nth-child(3) {
+  text-align: right;
 }
 
 /* =========================

@@ -85,7 +85,7 @@ export default function Hero() {
         <motion.div className="hero-badge" variants={item}>
           <span className="blink-dot" />
           <span><ShinyText
-            text="We Deliver Stunning Websites Like Never BeforeDisconnect Agencies"
+            text="We Deliver Stunning Websites Like Never Before"
             speed={2}
             delay={0}
             color="#b5b5b5"

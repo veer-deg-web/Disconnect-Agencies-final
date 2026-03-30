@@ -6,7 +6,7 @@
 .antigravity {
   position: relative;
   width: 100%;
-  min-height: 620px;
+  min-height: 460px;
   background: #000000;
   overflow: hidden;
   display: flex;
@@ -91,7 +91,7 @@
 /* ── TABLET ──────────────────────────────────────────────── */
 @media (min-width: 600px) {
   .antigravity {
-    min-height: 660px;
+    min-height: 520px;
   }
 }
 
