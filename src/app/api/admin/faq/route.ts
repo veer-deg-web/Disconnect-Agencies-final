@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,11 +63,12 @@ export async function POST(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
     const Faq = await getDb();
-    const { question, answer, category } = await req.json();
-    if (!question?.trim() || !answer?.trim() || !category)
+    const rawBody = await req.json();
+    const { question, answer, category } = sanitizeInput(rawBody);
+    if (!question || !answer || !category)
       return NextResponse.json({ error: 'question, answer and category are required' }, { status: 400 });
     const count = await Faq.countDocuments({ category });
-    const faq = await Faq.create({ question: question.trim(), answer: answer.trim(), category, order: count });
+    const faq = await Faq.create({ question, answer, category, order: count });
     return NextResponse.json({ faq }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -80,11 +82,12 @@ export async function PUT(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
     const Faq = await getDb();
-    const { id, question, answer, category } = await req.json();
+    const rawBody = await req.json();
+    const { id, question, answer, category } = sanitizeInput(rawBody);
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
     const faq = await Faq.findByIdAndUpdate(
       id,
-      { question: question?.trim(), answer: answer?.trim(), category },
+      { question, answer, category },
       { new: true, runValidators: true }
     );
     if (!faq) return NextResponse.json({ error: 'FAQ not found' }, { status: 404 });

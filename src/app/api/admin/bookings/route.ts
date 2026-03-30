@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Booking from '@/models/Booking';
 import { verifyAdminToken } from '@/lib/adminAuth';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,7 +31,8 @@ export async function PUT(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {
-    const { id, adminRemark, status } = (await req.json()) as {
+    const rawBody = await req.json();
+    const { id, adminRemark, status } = sanitizeInput(rawBody) as {
       id: string;
       adminRemark?: string;
       status?: 'pending' | 'completed';
@@ -41,7 +43,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const update: { adminRemark?: string; status?: 'pending' | 'completed' } = {};
-    if (typeof adminRemark === 'string') update.adminRemark = adminRemark.trim();
+    if (typeof adminRemark === 'string') update.adminRemark = adminRemark;
     if (status && ['pending', 'completed'].includes(status)) update.status = status;
 
     await dbConnect();
@@ -61,7 +63,8 @@ export async function DELETE(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {
-    const { id } = (await req.json()) as { id: string };
+    const rawBody = await req.json();
+    const { id } = sanitizeInput(rawBody) as { id: string };
     if (!id) return NextResponse.json({ error: 'Booking id is required' }, { status: 400 });
 
     await dbConnect();

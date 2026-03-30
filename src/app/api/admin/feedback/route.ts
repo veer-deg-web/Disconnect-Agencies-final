@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Feedback from '@/models/Feedback';
 import { verifyAdminToken } from '@/lib/adminAuth';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminToken(req);
@@ -26,8 +27,8 @@ export async function PUT(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {
-    const body = await req.json();
-    const { id, isTestimonial, isFeatured, category } = body;
+    const rawBody = await req.json();
+    const { id, isTestimonial, isFeatured, category } = sanitizeInput(rawBody);
 
     if (!id) {
       return NextResponse.json({ error: 'Feedback ID is required' }, { status: 400 });

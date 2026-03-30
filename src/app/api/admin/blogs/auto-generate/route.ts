@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/sanitizer";
 import { generateNewBlog } from "@/lib/blogGenerator";
 
 /* POST /api/admin/blogs/auto-generate — Cron-triggered auto-generation */
@@ -11,7 +12,8 @@ export async function POST(req: NextRequest) {
       req.headers.get("x-cron-secret") ||
       "";
 
-    const body = await req.json().catch(() => ({}));
+    const rawBody = await req.json().catch(() => ({}));
+    const body = sanitizeInput(rawBody, ["secret"]);
     const bodySecret = body.secret || "";
 
     const expectedSecret = process.env.CRON_SECRET || "";

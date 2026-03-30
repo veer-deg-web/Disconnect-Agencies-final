@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import CareerApplication from '@/models/CareerApplication';
 import { uploadToCloudinary } from '@/lib/cloudinary';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     
     const formData = await req.formData();
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const phone = formData.get('phone') as string;
-    const role = formData.get('role') as string;
-    const message = formData.get('message') as string;
+    const name = sanitizeInput(formData.get('name') as string);
+    const email = sanitizeInput(formData.get('email') as string);
+    const phone = sanitizeInput(formData.get('phone') as string);
+    const role = sanitizeInput(formData.get('role') as string);
+    const message = sanitizeInput(formData.get('message') as string);
     const resume = formData.get('resume') as File;
 
     if (!name || !email || !phone || !role || !message || !resume) {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import dbConnect from '../../../../lib/mongodb';
 import Feedback from '../../../../models/Feedback';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
 
@@ -36,7 +37,8 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
     try {
         const decoded = verifyUser(req);
-        const body = await req.json();
+        const rawBody = await req.json();
+        const body = sanitizeInput(rawBody);
         const { id, content, rating } = body;
 
         if (!id || !content) {
@@ -73,8 +75,8 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const decoded = verifyUser(req);
-        const body = await req.json();
-        const { id } = body;
+        const rawBody = await req.json();
+        const { id } = sanitizeInput(rawBody);
 
         if (!id) {
             return NextResponse.json({ error: 'Feedback ID is required' }, { status: 400 });

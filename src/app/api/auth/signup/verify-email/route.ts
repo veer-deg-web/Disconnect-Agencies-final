@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sanitizeInput } from '@/lib/sanitizer';
 import jwt from 'jsonwebtoken';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
@@ -6,13 +7,14 @@ import User from '@/models/User';
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { email, emailOtp } = await req.json();
+    const rawBody = await req.json();
+    const { email, emailOtp } = sanitizeInput(rawBody);
 
     if (!email || !emailOtp) {
       return NextResponse.json({ error: 'Email and OTP are required' }, { status: 400 });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
@@ -21,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email already verified' }, { status: 400 });
     }
 
-    if (!user.emailOtp || user.emailOtp !== emailOtp.trim()) {
+    if (!user.emailOtp || user.emailOtp !== emailOtp) {
       return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
     }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import CareerApplication from '@/models/CareerApplication';
 import { verifyAdminToken } from '@/lib/adminAuth';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +29,8 @@ export async function PUT(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {
-    const { id, status } = (await req.json()) as {
+    const rawBody = await req.json();
+    const { id, status } = sanitizeInput(rawBody) as {
       id: string;
       status: 'pending' | 'accepted' | 'rejected';
     };
@@ -63,7 +65,7 @@ export async function DELETE(req: NextRequest) {
 
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
+    const id = sanitizeInput(searchParams.get('id'));
     console.log('Attempting to delete application with ID (query param):', id);
 
     if (!id) {

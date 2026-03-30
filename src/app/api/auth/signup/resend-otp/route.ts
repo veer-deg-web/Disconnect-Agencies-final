@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sanitizeInput } from '@/lib/sanitizer';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendOtpEmail } from '@/lib/email';
@@ -15,13 +16,14 @@ function generateOtp(length = 4): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { email, type } = await req.json();
+    const rawBody = await req.json();
+    const { email, type } = sanitizeInput(rawBody);
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
       user.emailOtp = emailOtp;
       user.emailOtpExpiry = new Date(Date.now() + 10 * 60 * 1000);
       await user.save();
-      await sendOtpEmail(email.trim(), emailOtp, 'New OTP – Disconnect Agencies');
+      await sendOtpEmail(email, emailOtp, 'New OTP – Disconnect Agencies');
       return NextResponse.json({ message: 'OTP resent to email' });
     }
 

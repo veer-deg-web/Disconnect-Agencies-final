@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/sanitizer";
 import { getBlogGenerateJobStatus, runBlogGenerateJob } from "@/lib/blogGenerateJob";
 
 /* GET /api/admin/blogs/generate — Live AI generate job status */
@@ -18,9 +19,10 @@ export async function GET() {
 /* POST /api/admin/blogs/generate — Start AI blog generation background job */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json().catch(() => ({}));
+    const rawBody = await req.json().catch(() => ({}));
+    const body = sanitizeInput(rawBody);
     const topic = String(body.topic || body.keyword || "");
-    const category = typeof body.category === "string" ? body.category.trim() : "";
+    const category = typeof body.category === "string" ? body.category : "";
     const count = Math.min(3, Math.max(1, parseInt(body.count || "1")));
 
     const job = await runBlogGenerateJob(count, topic, category || undefined);

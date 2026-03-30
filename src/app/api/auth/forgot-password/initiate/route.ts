@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sanitizeInput } from '@/lib/sanitizer';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendPasswordResetEmail } from '@/lib/email';
@@ -15,7 +16,8 @@ function generateOtp(length = 6): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { identifier } = await req.json();
+    const rawBody = await req.json();
+    const { identifier } = sanitizeInput(rawBody);
 
     if (!identifier) {
       return NextResponse.json({ error: 'Email or phone number is required' }, { status: 400 });
@@ -23,8 +25,8 @@ export async function POST(req: NextRequest) {
 
     const isEmail = identifier.includes('@');
     const user = isEmail
-      ? await User.findOne({ email: identifier.toLowerCase().trim() })
-      : await User.findOne({ phone: identifier.trim() });
+      ? await User.findOne({ email: identifier.toLowerCase() })
+      : await User.findOne({ phone: identifier });
 
     if (!user) {
       return NextResponse.json({ error: 'No account found with this identifier' }, { status: 404 });
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     user.forgotPasswordOtp = otp;
     user.forgotPasswordOtpExpiry = expiry;
-    user.forgotPasswordIdentifier = identifier.trim();
+    user.forgotPasswordIdentifier = identifier;
     await user.save();
 
     if (isEmail) {

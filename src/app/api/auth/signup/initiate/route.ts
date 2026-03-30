@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
+import { sanitizeInput } from '@/lib/sanitizer';
 import { sendOtpEmail } from '@/lib/email';
 
 function generateOtp(length = 4): string {
@@ -16,13 +17,14 @@ function generateOtp(length = 4): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { name, email, phone, password } = await req.json();
+    const rawBody = await req.json();
+    const { name, email, phone, password } = sanitizeInput(rawBody, ['password']);
 
     if (!name || !email || !phone || !password) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
-    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser && existingUser.emailVerified) {
       return NextResponse.json({ error: 'Email is already registered' }, { status: 409 });
     }
@@ -43,7 +45,7 @@ export async function POST(req: NextRequest) {
     } else {
       await User.create({
         name,
-        email: email.toLowerCase().trim(),
+        email: email.toLowerCase(),
         phone,
         password: hashedPassword,
         emailVerified: false,
@@ -53,7 +55,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    await sendOtpEmail(email.trim(), emailOtp, 'Verify Your Email – Disconnect Agencies');
+    await sendOtpEmail(email, emailOtp, 'Verify Your Email – Disconnect Agencies');
 
     return NextResponse.json({ message: 'OTP sent to your email. Please verify.' }, { status: 200 });
   } catch (error: unknown) {

@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { identifier, otp, newPassword } = await req.json();
+    const rawBody = await req.json();
+    const { identifier, otp, newPassword } = sanitizeInput(rawBody, ['newPassword']);
 
     if (!identifier || !otp || !newPassword) {
       return NextResponse.json({ error: 'Identifier, OTP and new password are required' }, { status: 400 });
@@ -14,14 +16,14 @@ export async function POST(req: NextRequest) {
 
     const isEmail = identifier.includes('@');
     const user = isEmail
-      ? await User.findOne({ email: identifier.toLowerCase().trim() })
-      : await User.findOne({ phone: identifier.trim() });
+      ? await User.findOne({ email: identifier.toLowerCase() })
+      : await User.findOne({ phone: identifier });
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    if (!user.forgotPasswordOtp || user.forgotPasswordOtp !== otp.trim()) {
+    if (!user.forgotPasswordOtp || user.forgotPasswordOtp !== otp) {
       return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
     }
 

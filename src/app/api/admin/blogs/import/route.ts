@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/sanitizer";
 import { createJob, finishJob } from "@/lib/acidJob";
 import { importFromExternalUrl } from "@/lib/blogGenerator";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const rawBody = await req.json();
+    const body = sanitizeInput(rawBody);
     const { listingUrl, category, limit } = body;
 
     if (!listingUrl) {

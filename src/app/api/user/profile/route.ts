@@ -4,6 +4,7 @@ import dbConnect from '../../../../lib/mongodb';
 import User from '../../../../models/User';
 
 import { uploadToCloudinary } from '../../../../lib/cloudinary';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
 
@@ -40,7 +41,8 @@ export async function PUT(req: Request) {
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
 
-        const body = await req.json();
+        const rawBody = await req.json();
+        const body = sanitizeInput(rawBody);
         const { name, avatar } = body;
 
         await dbConnect();

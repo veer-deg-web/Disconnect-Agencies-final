@@ -3,11 +3,13 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { emailOrPhone, password } = await req.json();
+    const rawBody = await req.json();
+    const { emailOrPhone, password } = sanitizeInput(rawBody, ['password']);
 
     if (!emailOrPhone || !password) {
       return NextResponse.json({ error: 'Email/Phone and password are required' }, { status: 400 });
@@ -15,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const isEmail = emailOrPhone.includes('@');
     const user = await User.findOne(
-      isEmail ? { email: emailOrPhone.toLowerCase().trim() } : { phone: emailOrPhone.trim() }
+      isEmail ? { email: emailOrPhone.toLowerCase() } : { phone: emailOrPhone }
     );
 
     if (!user) {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/sanitizer";
 import { getBlogScrapeJobStatus, requestStopBlogScrapeJob, startBlogScrapeJob } from "@/lib/blogScrapeJob";
 
 /* GET /api/admin/blogs/scrape — Live scrape job status */
@@ -15,10 +16,11 @@ export async function GET() {
 /* POST /api/admin/blogs/scrape — Start "scrape all" background job */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json().catch(() => ({}));
+    const rawBody = await req.json().catch(() => ({}));
+    const body = sanitizeInput(rawBody);
     const maxPages = Math.min(200, Math.max(1, parseInt(body.maxPages || "100")));
     const maxArticles = Math.min(200, Math.max(1, parseInt(body.maxArticles || "50")));
-    const category = typeof body.category === "string" ? body.category.trim() : "";
+    const category = typeof body.category === "string" ? body.category : "";
 
     const job = await startBlogScrapeJob(maxPages, maxArticles, category || undefined);
     return NextResponse.json({

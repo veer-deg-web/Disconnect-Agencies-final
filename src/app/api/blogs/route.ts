@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/sanitizer";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 
@@ -9,8 +10,8 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(50, parseInt(searchParams.get("limit") || "12"));
-    const category = searchParams.get("category") || "";
-    const search = searchParams.get("search") || "";
+    const category = sanitizeInput(searchParams.get("category") || "");
+    const search = sanitizeInput(searchParams.get("search") || "");
 
     const filter: Record<string, unknown> = { status: "published" };
     if (category) filter.category = category;

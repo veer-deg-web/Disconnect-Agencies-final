@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sanitizeInput } from '@/lib/sanitizer';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const { identifier, otp } = await req.json();
+    const rawBody = await req.json();
+    const { identifier, otp } = sanitizeInput(rawBody);
 
     if (!identifier || !otp) {
       return NextResponse.json({ error: 'Identifier and OTP are required' }, { status: 400 });
@@ -13,14 +15,14 @@ export async function POST(req: NextRequest) {
 
     const isEmail = identifier.includes('@');
     const user = isEmail
-      ? await User.findOne({ email: identifier.toLowerCase().trim() })
-      : await User.findOne({ phone: identifier.trim() });
+      ? await User.findOne({ email: identifier.toLowerCase() })
+      : await User.findOne({ phone: identifier });
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    if (!user.forgotPasswordOtp || user.forgotPasswordOtp !== otp.trim()) {
+    if (!user.forgotPasswordOtp || user.forgotPasswordOtp !== otp) {
       return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
     }
 

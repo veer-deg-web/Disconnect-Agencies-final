@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dbConnect from '../../../lib/mongodb';
 import Feedback from '../../../models/Feedback';
 import User from '../../../models/User';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
 
@@ -16,7 +17,8 @@ export async function POST(req: Request) {
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
 
-        const body = await req.json();
+        const rawBody = await req.json();
+        const body = sanitizeInput(rawBody);
         const { content, category, rating, position, company } = body;
 
         if (!content || !content.trim()) {

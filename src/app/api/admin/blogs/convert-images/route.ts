@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/sanitizer";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import { ensureWebpImage } from "@/lib/blogImageWebp";
@@ -7,7 +8,8 @@ import { ensureWebpImage } from "@/lib/blogImageWebp";
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const body = await req.json().catch(() => ({}));
+    const rawBody = await req.json().catch(() => ({}));
+    const body = sanitizeInput(rawBody);
     const limit = Math.min(200, Math.max(1, Number(body.limit || 50)));
 
     const blogs = await Blog.find({

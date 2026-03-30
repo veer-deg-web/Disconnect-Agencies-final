@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import BookingSettings from '@/models/BookingSettings';
 import { verifyAdminToken } from '@/lib/adminAuth';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +52,8 @@ export async function PUT(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {
-    const { meetingLink, adminEmails } = (await req.json()) as {
+    const rawBody = await req.json();
+    const { meetingLink, adminEmails } = sanitizeInput(rawBody) as {
       meetingLink: string;
       adminEmails: string[];
     };

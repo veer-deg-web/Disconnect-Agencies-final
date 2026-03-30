@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/sanitizer";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 
@@ -9,7 +10,8 @@ export async function GET(
 ) {
   try {
     await dbConnect();
-    const blog = await Blog.findOne({ slug: params.slug, status: "published" }).lean();
+    const slug = sanitizeInput(params.slug);
+    const blog = await Blog.findOne({ slug, status: "published" }).lean();
 
     if (!blog) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });

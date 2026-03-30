@@ -10,6 +10,7 @@ import {
   normalizeDisconnectBrand,
   sanitizeBlogHtmlContent,
 } from "@/lib/blogSeo";
+import { sanitizeInput } from "@/lib/sanitizer";
 
 /* GET /api/admin/blogs — Admin blog list (all statuses) */
 export async function GET(req: NextRequest) {
@@ -68,7 +69,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const body = await req.json();
+    const rawBody = await req.json();
+    const body = sanitizeInput(rawBody);
 
     if (!body.title || !body.content) {
       return NextResponse.json(
@@ -143,7 +145,8 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     await dbConnect();
-    const body = await req.json();
+    const rawBody = await req.json();
+    const body = sanitizeInput(rawBody);
 
     if (!body.id) {
       return NextResponse.json({ error: "Blog ID is required" }, { status: 400 });

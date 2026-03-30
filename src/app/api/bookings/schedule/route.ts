@@ -9,6 +9,8 @@ import {
 } from '@/lib/email';
 import { createGoogleMeetLink } from '@/lib/googleMeet';
 
+import { sanitizeInput } from '@/lib/sanitizer';
+
 export const dynamic = 'force-dynamic';
 
 interface BookingPayload {
@@ -30,13 +32,14 @@ function isValidEmail(value: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as BookingPayload;
+    const rawBody = (await req.json()) as BookingPayload;
+    const body = sanitizeInput(rawBody);
 
-    const name = body.name?.trim() || '';
-    const email = body.email?.trim().toLowerCase() || '';
+    const name = body.name || '';
+    const email = body.email || '';
     const category = body.category;
-    const time = body.time?.trim() || '';
-    const notes = body.notes?.trim() || '';
+    const time = body.time || '';
+    const notes = body.notes || '';
 
     if (!name || !/^[A-Za-z ]+$/.test(name)) {
       return NextResponse.json({ error: 'Valid name is required' }, { status: 400 });

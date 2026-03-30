@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { verifyAdminToken } from '@/lib/adminAuth';
+import { sanitizeInput } from '@/lib/sanitizer';
 
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminToken(req);
@@ -28,7 +29,8 @@ export async function PATCH(req: NextRequest) {
 
   try {
     await dbConnect();
-    const { id, isVerified, isSuspended } = await req.json();
+    const rawBody = await req.json();
+    const { id, isVerified, isSuspended } = sanitizeInput(rawBody);
 
     if (id === auth.userId && isSuspended === true) {
       return NextResponse.json({ error: 'You cannot suspend yourself' }, { status: 400 });
@@ -54,7 +56,8 @@ export async function DELETE(req: NextRequest) {
 
   try {
     await dbConnect();
-    const { id } = await req.json();
+    const rawBody = await req.json();
+    const { id } = sanitizeInput(rawBody);
 
     if (id === auth.userId) {
       return NextResponse.json({ error: 'You cannot delete yourself' }, { status: 400 });
