@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF } from "react-icons/fa";
 import styles from "./Footer.module.css";
