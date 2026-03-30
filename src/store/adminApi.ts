@@ -142,12 +142,12 @@ export const adminApi = createApi({
            FAQS
         ======================= */
         getFaqs: builder.query<{ faqs: AdminFaq[] }, void>({
-            query: () => '/faq',
+            query: () => 'faq',
             providesTags: ['Faq'],
         }),
         addFaq: builder.mutation<AdminFaq, { question: string; answer: string; category: string }>({
             query: (body) => ({
-                url: '/faq',
+                url: 'faq',
                 method: 'POST',
                 body,
             }),
@@ -155,7 +155,7 @@ export const adminApi = createApi({
         }),
         updateFaq: builder.mutation<AdminFaq, { id: string; question: string; answer: string; category: string }>({
             query: (body) => ({
-                url: '/faq',
+                url: 'faq',
                 method: 'PUT',
                 body,
             }),
@@ -163,7 +163,7 @@ export const adminApi = createApi({
         }),
         deleteFaq: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
-                url: '/faq',
+                url: 'faq',
                 method: 'DELETE',
                 body: { id },
             }),
@@ -174,24 +174,24 @@ export const adminApi = createApi({
            BOOKINGS & SETTINGS
         ======================= */
         getBookingSettings: builder.query<{ settings: { meetingLink: string; adminEmails: string[] } }, void>({
-            query: () => '/booking-settings',
+            query: () => 'booking-settings',
             providesTags: ['BookingSettings'],
         }),
         updateBookingSettings: builder.mutation<{ success: boolean }, { meetingLink: string; adminEmails: string[] }>({
             query: (body) => ({
-                url: '/booking-settings',
+                url: 'booking-settings',
                 method: 'PUT',
                 body,
             }),
             invalidatesTags: ['BookingSettings'],
         }),
         getBookings: builder.query<{ bookings: AdminBooking[] }, void>({
-            query: () => '/bookings',
+            query: () => 'bookings',
             providesTags: ['Booking'],
         }),
         updateBooking: builder.mutation<AdminBooking, { id: string; adminRemark?: string; status?: string }>({
             query: (body) => ({
-                url: '/bookings',
+                url: 'bookings',
                 method: 'PUT',
                 body,
             }),
@@ -199,7 +199,7 @@ export const adminApi = createApi({
         }),
         deleteBooking: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
-                url: '/bookings',
+                url: 'bookings',
                 method: 'DELETE',
                 body: { id },
             }),
@@ -210,12 +210,12 @@ export const adminApi = createApi({
            USERS
         ======================= */
         getUsers: builder.query<{ users: AdminUser[] }, void>({
-            query: () => '/users',
+            query: () => 'users',
             providesTags: ['User'],
         }),
         updateUser: builder.mutation<AdminUser, Partial<AdminUser> & { id: string }>({
             query: (body) => ({
-                url: '/users',
+                url: 'users',
                 method: 'PATCH',
                 body,
             }),
@@ -223,7 +223,7 @@ export const adminApi = createApi({
         }),
         deleteUser: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
-                url: '/users',
+                url: 'users',
                 method: 'DELETE',
                 body: { id },
             }),
@@ -234,12 +234,12 @@ export const adminApi = createApi({
            FEEDBACKS
         ======================= */
         getFeedbacks: builder.query<{ feedbacks: AdminFeedback[] }, void>({
-            query: () => '/feedback',
+            query: () => 'feedback',
             providesTags: ['Feedback'],
         }),
         updateFeedback: builder.mutation<AdminFeedback, Partial<AdminFeedback> & { id: string }>({
             query: (body) => ({
-                url: '/feedback',
+                url: 'feedback',
                 method: 'PUT',
                 body,
             }),
@@ -247,7 +247,7 @@ export const adminApi = createApi({
         }),
         deleteFeedback: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
-                url: '/feedback',
+                url: 'feedback',
                 method: 'DELETE',
                 body: { id },
             }),
@@ -258,12 +258,12 @@ export const adminApi = createApi({
            CAREER APPLICATIONS
         ======================= */
         getCareerApplications: builder.query<{ applications: AdminCareerApplication[] }, void>({
-            query: () => '/career-applications',
+            query: () => 'career-applications',
             providesTags: ['CareerApplication'],
         }),
         updateCareerApplication: builder.mutation<AdminCareerApplication, Partial<AdminCareerApplication> & { id: string }>({
             query: (body) => ({
-                url: '/career-applications',
+                url: 'career-applications',
                 method: 'PUT',
                 body,
             }),
@@ -290,13 +290,13 @@ export const adminApi = createApi({
                 if (p.category) sp.append('category', p.category);
                 if (p.search) sp.append('search', p.search);
                 const qs = sp.toString() ? `?${sp.toString()}` : '';
-                return `/blogs${qs}`;
+                return `blogs${qs}`;
             },
             providesTags: ['Blog'],
         }),
         createBlog: builder.mutation<AdminBlog, Partial<AdminBlog>>({
             query: (body) => ({
-                url: '/blogs',
+                url: 'blogs',
                 method: 'POST',
                 body,
             }),
@@ -304,7 +304,7 @@ export const adminApi = createApi({
         }),
         updateBlog: builder.mutation<AdminBlog, Partial<AdminBlog> & { id: string }>({
             query: (body) => ({
-                url: '/blogs',
+                url: 'blogs',
                 method: 'PUT',
                 body,
             }),
@@ -312,7 +312,7 @@ export const adminApi = createApi({
         }),
         deleteBlog: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
-                url: '/blogs',
+                url: 'blogs',
                 method: 'DELETE',
                 body: { id },
             }),
