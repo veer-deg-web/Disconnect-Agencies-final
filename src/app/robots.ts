@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.SITE_URL || "https://disconnect.one";
+  const siteUrl = process.env.SITE_URL || "https://disconnect-agencies-final.vercel.app";
   
   return {
     rules: {

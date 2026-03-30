@@ -1,7 +1,7 @@
 export const SITE_NAME = "Disconnect";
 
 export function getSiteUrl(): string {
-  return (process.env.SITE_URL || "https://disconnect.one").replace(/\/+$/, "");
+  return (process.env.SITE_URL || "https://disconnect-agencies-final.vercel.app").replace(/\/+$/, "");
 }
 
 export function toAbsoluteUrl(pathOrUrl?: string): string {

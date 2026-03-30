@@ -101,7 +101,7 @@ export const adminApi = createApi({
     reducerPath: 'adminApi',
     baseQuery: ((): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> => {
         const rawBaseQuery = fetchBaseQuery({
-            baseUrl: '/api/admin/',
+            baseUrl: '/api/admin',
             prepareHeaders: (headers) => {
                 headers.set('accept', 'application/json');
                 const token = getAuthToken();
@@ -115,6 +115,10 @@ export const adminApi = createApi({
         return async (args, api, extraOptions) => {
             const result = await rawBaseQuery(args, api, extraOptions);
 
+            if (result.error && (result.error.status === 'PARSING_ERROR' || result.error.status === 404)) {
+                console.error('CRITICAL API ERROR (HTML instead of JSON):', result.error);
+            }
+            
             if (result.error) {
                 console.error('ADMIN API ERROR:', {
                     args,
