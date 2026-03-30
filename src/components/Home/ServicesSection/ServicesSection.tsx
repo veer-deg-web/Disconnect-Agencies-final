@@ -7,14 +7,13 @@ import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
-import {
-  SiOpenai,
-  SiReact,
-  SiGooglecloud,
-  SiFigma,
-  SiAmazon,
-  SiGoogleanalytics,
-} from "react-icons/si";
+import { 
+  TbAutomation, 
+  TbSeo, 
+  TbWorld 
+} from "react-icons/tb";
+import { MdAppSettingsAlt } from "react-icons/md";
+import { CiCloudOn } from "react-icons/ci";
 
 /* =======================
    DATA
@@ -32,42 +31,42 @@ const services: Service[] = [
     title: "AI Models & Automation",
     description:
       "Our Web3 fintech simplifies complex finance for all to access.",
-    icon: <SiOpenai size={22} />,
+    icon: <TbAutomation size={22} />,
     route: "/AIModels",
   },
   {
     title: "App Development",
     description:
       "High-performance mobile and web apps built for speed and scalability.",
-    icon: <SiReact size={22} />,
+    icon: <MdAppSettingsAlt size={22} />,
     route: "/AppDevelopment",
   },
   {
     title: "Web Development",
     description:
       "Modern, responsive websites engineered for reliability and conversions.",
-    icon: <SiGooglecloud size={22} />,
+    icon: <TbWorld size={22} />,
     route: "/WebDevelopment",
   },
   {
     title: "UI/UX Design",
     description:
       "Intuitive, visually polished interfaces crafted to elevate engagement.",
-    icon: <SiFigma size={22} />,
+    icon: <CiCloudOn size={22} />,
     route: "/Uiux",
   },
   {
     title: "SEO & Growth Optimization",
     description:
       "Data-driven strategies that boost visibility and organic traffic.",
-    icon: <SiGoogleanalytics size={22} />,
+    icon: <TbSeo size={22} />,
     route: "/SEO",
   },
   {
     title: "Cloud Services",
     description:
       "End-to-end cloud engineering for secure, scalable digital systems.",
-    icon: <SiAmazon size={22} />,
+    icon: <CiCloudOn size={22} />,
     route: "/Cloud",
   },
 ];
