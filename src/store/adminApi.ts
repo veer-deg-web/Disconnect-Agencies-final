@@ -96,25 +96,6 @@ export interface AdminBlog {
     createdAt: string;
 }
 
-export interface ScrapeJobStatus {
-    jobId: string;
-    status: 'idle' | 'running' | 'completed' | 'failed' | 'stopping' | 'stopped';
-    total: number;
-    processed: number;
-    created: number;
-    errors: string[];
-    lastError?: string;
-}
-
-export interface GenerateJobStatus {
-    jobId: string;
-    status: 'idle' | 'running' | 'completed' | 'failed';
-    total: number;
-    processed: number;
-    created: number;
-    errors: string[];
-    lastError?: string;
-}
 
 export const adminApi = createApi({
     reducerPath: 'adminApi',
@@ -337,34 +318,6 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Blog'],
         }),
-        scrapeBlog: builder.mutation<{ success: boolean; jobId: string }, { maxPages?: number; maxArticles?: number; category?: string }>({
-            query: (body) => ({
-                url: '/blogs/scrape',
-                method: 'POST',
-                body,
-            }),
-            invalidatesTags: ['Blog'],
-        }),
-        stopScrapeBlog: builder.mutation<{ success: boolean }, void>({
-            query: () => ({
-                url: '/blogs/scrape',
-                method: 'DELETE',
-            }),
-        }),
-        getScrapeBlogStatus: builder.query<{ success: boolean; job: ScrapeJobStatus; message?: string }, void>({
-            query: () => '/blogs/scrape',
-        }),
-        generateBlog: builder.mutation<{ success: boolean; jobId: string; job?: GenerateJobStatus; message?: string }, { topic?: string; keyword?: string; category?: string; count?: number }>({
-            query: (body) => ({
-                url: '/blogs/generate',
-                method: 'POST',
-                body,
-            }),
-            invalidatesTags: ['Blog'],
-        }),
-        getGenerateBlogStatus: builder.query<{ success: boolean; job: GenerateJobStatus; message?: string }, void>({
-            query: () => '/blogs/generate',
-        }),
     }),
 });
 
@@ -391,9 +344,4 @@ export const {
     useCreateBlogMutation,
     useUpdateBlogMutation,
     useDeleteBlogMutation,
-    useScrapeBlogMutation,
-    useStopScrapeBlogMutation,
-    useGetScrapeBlogStatusQuery,
-    useGenerateBlogMutation,
-    useGetGenerateBlogStatusQuery,
 } = adminApi;

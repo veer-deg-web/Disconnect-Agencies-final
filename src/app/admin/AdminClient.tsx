@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -24,8 +24,6 @@ import {
   Video,
   Briefcase,
   FileText,
-  Sparkles,
-  Download,
 } from 'lucide-react';
 
 import {
@@ -47,15 +45,7 @@ import {
   useGetCareerApplicationsQuery,
   useUpdateCareerApplicationMutation,
   useDeleteCareerApplicationMutation,
-  useGetBlogsQuery,
   useCreateBlogMutation,
-  useUpdateBlogMutation,
-  useDeleteBlogMutation,
-  useScrapeBlogMutation,
-  useStopScrapeBlogMutation,
-  useGetScrapeBlogStatusQuery,
-  useGenerateBlogMutation,
-  useGetGenerateBlogStatusQuery,
 } from '@/store/adminApi';
 import './Admin.css';
 
@@ -1301,44 +1291,9 @@ function GoogleCalendarSection() {
 /* ─────────────────────────────────────────────
    BLOG ADMIN SECTION
 ───────────────────────────────────────────── */
-interface BlogRecord {
-  _id: string;
-  title: string;
-  slug: string;
-  category: string;
-  excerpt: string;
-  status: 'draft' | 'published';
-  source?: string;
-  readingTime?: string | number;
-  author: string;
-  tags: string[];
-  createdAt: string;
-}
-
-interface ScrapeJobStatus {
-  status: 'idle' | 'running' | 'stopping' | 'stopped' | 'completed' | 'failed';
-  phase?: 'collecting' | 'processing' | 'done';
-  total: number;
-  processed: number;
-  created: number;
-  skipped?: number;
-  currentTitle?: string;
-  currentUrl?: string;
-  lastError?: string;
-  errors: string[];
-}
-
-interface GenerateJobStatus {
-  status: 'idle' | 'running' | 'completed' | 'failed';
-  total: number;
-  processed: number;
-  created: number;
-  failed?: number;
-  currentTopic?: string;
-  lastError?: string;
-  errors: string[];
-}
-
+/* ─────────────────────────────────────────────
+   BLOG IMPORT SECTION (JSON COPY-PASTE)
+───────────────────────────────────────────── */
 const BLOG_ACTION_CATEGORIES = [
   'auto',
   'General',
@@ -1352,430 +1307,180 @@ const BLOG_ACTION_CATEGORIES = [
   'Business',
 ];
 
-function BlogAdminSection() {
-  const { data, isLoading, refetch: refetchBlogs } = useGetBlogsQuery({ limit: 200 });
-  const [createBlog, { isLoading: isCreating }] = useCreateBlogMutation();
-  const [updateBlog] = useUpdateBlogMutation();
-  const [deleteBlogMut] = useDeleteBlogMutation();
-  const [scrapeBlog, { isLoading: isScraping }] = useScrapeBlogMutation();
-  const [stopScrapeBlog, { isLoading: isStopping }] = useStopScrapeBlogMutation();
-  const { data: scrapeStatusData, refetch: refetchScrapeStatus } = useGetScrapeBlogStatusQuery();
-  const [generateBlog, { isLoading: isGenerating }] = useGenerateBlogMutation();
-  const { data: generateStatusData, refetch: refetchGenerateStatus } = useGetGenerateBlogStatusQuery();
-  const prevScrapeStatusRef = useRef<string>('');
+interface ImportLog {
+  id: string;
+  title: string;
+  status: 'pending' | 'success' | 'failed';
+  error?: string;
+}
 
-  const blogs: BlogRecord[] = data?.blogs || [];
-  const scrapeJob: ScrapeJobStatus | undefined = scrapeStatusData?.job;
-  const generateJob: GenerateJobStatus | undefined = generateStatusData?.job;
-  const scrapeActive = scrapeJob?.status === 'running' || scrapeJob?.status === 'stopping';
-  const scrapePercent = scrapeJob?.total
-    ? Math.round((scrapeJob.processed / Math.max(1, scrapeJob.total)) * 100)
-    : 0;
-  const generatePercent = generateJob?.total
-    ? Math.round((generateJob.processed / Math.max(1, generateJob.total)) * 100)
-    : 0;
-  const stats = (data as unknown as { stats: { total: number; published: number; draft: number; scraped: number; aiGenerated: number } })?.stats || { total: 0, published: 0, draft: 0, scraped: 0, aiGenerated: 0 };
-
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+function BlogImportSection() {
+  const [createBlog] = useCreateBlogMutation();
+  const [jsonInput, setJsonInput] = useState('');
+  const [importCategory, setImportCategory] = useState('Web Development');
+  const [isImporting, setIsImporting] = useState(false);
+  const [logs, setLogs] = useState<ImportLog[]>([]);
   const [error, setError] = useState('');
-  const [ok, setOk] = useState('');
-  const [genTopic, setGenTopic] = useState('');
-  const [scrapeCount, setScrapeCount] = useState(10);
-  const [scrapeCategory, setScrapeCategory] = useState('auto');
-  const [aiCount, setAiCount] = useState(1);
-  const [aiCategory, setAiCategory] = useState('General');
-  const [showCreate, setShowCreate] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_editBlog, setEditBlog] = useState<BlogRecord | null>(null);
+  const [stats, setStats] = useState({ total: 0, success: 0, failed: 0 });
 
-  // Create form state
-  const [formTitle, setFormTitle] = useState('');
-  const [formContent, setFormContent] = useState('');
-  const [formCategory, setFormCategory] = useState('Web Development');
-  const [formExcerpt, setFormExcerpt] = useState('');
-  const [formStatus, setFormStatus] = useState<'draft' | 'published'>('published');
+  const handleImport = async () => {
+    setError('');
+    setLogs([]);
+    setStats({ total: 0, success: 0, failed: 0 });
 
-  const filtered = blogs.filter((b) => {
-    const matchStatus = !statusFilter || b.status === statusFilter;
-    const q = search.toLowerCase();
-    const matchSearch = !q || b.title.toLowerCase().includes(q) || b.category.toLowerCase().includes(q);
-    return matchStatus && matchSearch;
-  });
-
-  const handleScrape = async () => {
-    setError(''); setOk('');
+    let data: any[];
     try {
-      const res = await scrapeBlog({
-        maxPages: 100,
-        maxArticles: Math.max(1, Math.min(200, scrapeCount)),
-        category: scrapeCategory === 'auto' ? '' : scrapeCategory,
-      }).unwrap();
-      setOk((res as { message?: string }).message || 'Scrape started');
-      refetchScrapeStatus();
-    } catch (err: unknown) {
-      const e = err as { data?: { error?: string } };
-      setError(e?.data?.error || 'Scrape failed');
+      const parsed = JSON.parse(jsonInput);
+      data = Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      setError('Invalid JSON format. Please check your input.');
+      return;
     }
-  };
 
-  const handleStopScrape = async () => {
-    setError(''); setOk('');
-    try {
-      const res = await stopScrapeBlog().unwrap();
-      setOk((res as { message?: string }).message || 'Stop requested');
-      refetchScrapeStatus();
-    } catch (err: unknown) {
-      const e = err as { data?: { error?: string } };
-      setError(e?.data?.error || 'Failed to stop scrape');
+    if (data.length === 0) {
+      setError('JSON array is empty.');
+      return;
     }
-  };
 
-  useEffect(() => {
-    if (!scrapeActive) return;
-    const id = setInterval(() => {
-      refetchScrapeStatus();
-    }, 2000);
-    return () => clearInterval(id);
-  }, [scrapeActive, refetchScrapeStatus]);
+    setIsImporting(true);
+    setStats({ total: data.length, success: 0, failed: 0 });
 
-  useEffect(() => {
-    const current = scrapeJob?.status || '';
-    const previous = prevScrapeStatusRef.current;
-    if (current === 'completed' && previous !== 'completed') {
-      setOk(`Scrape finished. Created ${scrapeJob?.created ?? 0} blog(s).`);
-      if (scrapeJob?.errors?.length) {
-        setError(scrapeJob.errors.slice(0, 3).join('; '));
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      const logId = Math.random().toString(36).substring(7);
+      const title = item.title || `Entry ${i + 1}`;
+
+      setLogs(prev => [{ id: logId, title, status: 'pending' }, ...prev]);
+
+      try {
+        await createBlog({
+          ...item,
+          category: importCategory, // Override or default to selected category
+          status: 'published' // Default to published for batch imports
+        }).unwrap();
+
+        setLogs(prev => prev.map(l => l.id === logId ? { ...l, status: 'success' } : l));
+        setStats(s => ({ ...s, success: s.success + 1 }));
+      } catch (err: any) {
+        const errMsg = err?.data?.error || err?.message || 'Failed to create';
+        setLogs(prev => prev.map(l => l.id === logId ? { ...l, status: 'failed', error: errMsg } : l));
+        setStats(s => ({ ...s, failed: s.failed + 1 }));
       }
-      refetchBlogs();
     }
-    if (current === 'failed' && previous !== 'failed') {
-      setError(scrapeJob?.lastError || 'Scrape job failed');
-    }
-    if (current === 'stopped' && previous !== 'stopped') {
-      setOk(`Scrape stopped. Created ${scrapeJob?.created ?? 0} blog(s).`);
-      if (scrapeJob?.errors?.length) {
-        setError(scrapeJob.errors.slice(0, 3).join('; '));
-      }
-      refetchBlogs();
-    }
-    prevScrapeStatusRef.current = current;
-  }, [scrapeJob, refetchBlogs]);
 
-  const handleGenerate = async () => {
-    setError(''); setOk('');
-    try {
-      const res = await generateBlog({
-        topic: genTopic || undefined,
-        count: Math.max(1, Math.min(3, aiCount)),
-        category: aiCategory === 'auto' ? '' : aiCategory,
-      }).unwrap();
-      if (res?.job?.status === 'failed') {
-        setError(res?.job?.lastError || 'AI generation failed');
-      } else {
-        setOk((res as { message?: string }).message || 'AI generation completed');
-      }
-      if (res?.job?.errors?.length) {
-        setError(res.job.errors.slice(0, 3).join('; '));
-      }
-      setGenTopic('');
-      refetchBlogs();
-      refetchGenerateStatus();
-    } catch (err: unknown) {
-      const e = err as { data?: { error?: string } };
-      setError(e?.data?.error || 'Generation failed');
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    setError(''); setOk('');
-    try {
-      await deleteBlogMut(id).unwrap();
-      setOk('Blog deleted');
-    } catch (err: unknown) {
-      const e = err as { data?: { error?: string } };
-      setError(e?.data?.error || 'Delete failed');
-    }
-  };
-
-  const handleToggleStatus = async (blog: BlogRecord) => {
-    setError(''); setOk('');
-    try {
-      await updateBlog({ id: blog._id, status: blog.status === 'published' ? 'draft' : 'published' }).unwrap();
-      setOk(`Blog ${blog.status === 'published' ? 'unpublished' : 'published'}`);
-    } catch (err: unknown) {
-      const e = err as { data?: { error?: string } };
-      setError(e?.data?.error || 'Update failed');
-    }
-  };
-
-  const openCreate = () => {
-    setFormTitle(''); setFormContent(''); setFormCategory('Web Development');
-    setFormExcerpt(''); setFormStatus('published');
-    setShowCreate(true);
-  };
-
-  const handleSaveCreate = async () => {
-    if (!formTitle.trim() || !formContent.trim()) return;
-    setError(''); setOk('');
-    try {
-      await createBlog({
-        title: formTitle, content: formContent, category: formCategory,
-        excerpt: formExcerpt, status: formStatus,
-      }).unwrap();
-      setOk('Blog created!');
-      setShowCreate(false);
-    } catch (err: unknown) {
-      const e = err as { data?: { error?: string } };
-      setError(e?.data?.error || 'Create failed');
-    }
+    setIsImporting(false);
+    setJsonInput('');
   };
 
   return (
     <div>
       <div className="adm-page-header">
         <div>
-          <span className="adm-page-title">Blog Management</span>
-          <p className="adm-page-subtitle">Create, edit, scrape, and AI-generate blog posts</p>
+          <span className="adm-page-title">Blog JSON Importer</span>
+          <p className="adm-page-subtitle">Paste a JSON array of blogs to upload them in batch to a category.</p>
         </div>
-        <button className="adm-btn adm-btn--primary" onClick={openCreate}>
-          <Plus size={15} /> New Blog
-        </button>
       </div>
 
-      {/* Stats */}
-      <div className="adm-stats">
-        {[
-          { label: 'Total Posts', value: stats.total },
-          { label: 'Published', value: stats.published },
-          { label: 'Drafts', value: stats.draft },
-          { label: 'AI Generated', value: stats.aiGenerated },
-          { label: 'Scraped', value: stats.scraped },
-        ].map((s) => (
-          <div className="adm-stat-card" key={s.label}>
-            <span className="adm-stat-label">{s.label}</span>
-            <span className="adm-stat-value">{s.value}</span>
-          </div>
-        ))}
-      </div>
-
-      {error && <div className="adm-error-bar">{error}</div>}
-      {ok && <div className="adm-ok-bar">{ok}</div>}
-
-      {/* AI Tools */}
-      <div className="adm-booking-grid" style={{ marginBottom: '24px' }}>
+      <div className="adm-booking-grid">
         <section className="adm-settings-card">
-          <h2 className="adm-table-heading"><Download size={14} style={{ marginRight: '6px' }} />Scrape &amp; Import</h2>
-          <p style={{ fontSize: '13px', opacity: 0.6, margin: '8px 0 14px' }}>
-            Scrape all blogs from xbsoftware.com, rewrite with AI, and publish with live progress.
-          </p>
-          <div className="adm-email-row" style={{ marginBottom: '10px' }}>
-            <input
-              className="adm-input"
-              type="number"
-              min={1}
-              max={200}
-              value={scrapeCount}
-              onChange={(e) => setScrapeCount(Math.max(1, Number(e.target.value || 1)))}
-              placeholder="How many blogs to scrape"
-            />
+          <h2 className="adm-table-heading">1. Select Category</h2>
+          <div className="adm-field" style={{ marginTop: '14px' }}>
             <select
               className="adm-select"
-              value={scrapeCategory}
-              onChange={(e) => setScrapeCategory(e.target.value)}
+              value={importCategory}
+              onChange={(e) => setImportCategory(e.target.value)}
             >
-              {BLOG_ACTION_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat === 'auto' ? 'Auto Category (Source)' : cat}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <button className="adm-btn adm-btn--primary" onClick={handleScrape} disabled={isScraping || scrapeActive}>
-              {scrapeActive ? 'Scraping in progress…' : isScraping ? 'Starting…' : 'Start Full Scrape'}
-            </button>
-            {scrapeActive && (
-              <button className="adm-btn adm-btn--outline" onClick={handleStopScrape} disabled={isStopping || scrapeJob?.status === 'stopping'}>
-                {scrapeJob?.status === 'stopping' || isStopping ? 'Stopping…' : 'Stop Scrape'}
-              </button>
-            )}
-          </div>
-          {scrapeJob && scrapeJob.status !== 'idle' && (
-            <div style={{ marginTop: '14px', fontSize: '12px', lineHeight: 1.6, opacity: 0.8 }}>
-              <div><strong>Status:</strong> {scrapeJob.status}</div>
-              <div><strong>Progress:</strong> {scrapeJob.processed}/{scrapeJob.total} ({scrapePercent}%)</div>
-              <div><strong>Created:</strong> {scrapeJob.created} · <strong>Skipped:</strong> {scrapeJob.skipped}</div>
-              {scrapeJob.currentTitle && <div><strong>Current:</strong> {scrapeJob.currentTitle}</div>}
-              {!scrapeJob.currentTitle && scrapeJob.currentUrl && <div><strong>Current URL:</strong> {scrapeJob.currentUrl}</div>}
-              {scrapeJob.lastError && <div style={{ color: '#fca5a5' }}><strong>Last error:</strong> {scrapeJob.lastError}</div>}
-            </div>
-          )}
-        </section>
-
-        <section className="adm-settings-card">
-          <h2 className="adm-table-heading"><Sparkles size={14} style={{ marginRight: '6px' }} />AI Generate</h2>
-          <p style={{ fontSize: '13px', opacity: 0.6, margin: '8px 0 14px' }}>
-            Generate 1-3 blog posts per request. This runs inside the request for better production reliability and lower API waste.
-          </p>
-          <div className="adm-email-row">
-            <input
-              className="adm-input"
-              value={genTopic}
-              onChange={(e) => setGenTopic(e.target.value)}
-              placeholder="e.g. Next.js 15 Server Actions"
-            />
-            <input
-              className="adm-input"
-              type="number"
-              min={1}
-              max={3}
-              value={aiCount}
-              onChange={(e) => setAiCount(Math.max(1, Number(e.target.value || 1)))}
-              placeholder="How many blogs"
-            />
-            <select
-              className="adm-select"
-              value={aiCategory}
-              onChange={(e) => setAiCategory(e.target.value)}
-            >
-              {BLOG_ACTION_CATEGORIES.filter((cat) => cat !== 'auto').map((cat) => (
+              {BLOG_ACTION_CATEGORIES.filter(c => c !== 'auto').map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <button className="adm-btn adm-btn--primary" onClick={handleGenerate} disabled={isGenerating}>
-              {isGenerating ? 'Generating…' : 'Generate'}
-            </button>
           </div>
-          {generateJob && generateJob.status !== 'idle' && (
-            <div style={{ marginTop: '14px', fontSize: '12px', lineHeight: 1.6, opacity: 0.8 }}>
-              <div><strong>Status:</strong> {generateJob.status}</div>
-              <div><strong>Progress:</strong> {generateJob.processed}/{generateJob.total} ({generatePercent}%)</div>
-              <div><strong>Created:</strong> {generateJob.created} · <strong>Failed:</strong> {generateJob.failed}</div>
-              {generateJob.currentTopic && <div><strong>Current Topic:</strong> {generateJob.currentTopic}</div>}
-              {generateJob.lastError && <div style={{ color: '#fca5a5' }}><strong>Last error:</strong> {generateJob.lastError}</div>}
+
+          <h2 className="adm-table-heading" style={{ marginTop: '24px' }}>2. Paste JSON Content</h2>
+          <div className="adm-field" style={{ marginTop: '14px' }}>
+            <textarea
+              className="adm-textarea"
+              rows={15}
+              value={jsonInput}
+              onChange={(e) => setJsonInput(e.target.value)}
+              placeholder='[
+  { "title": "Example Blog", "content": "HTML content...", "excerpt": "summary..." },
+  ...
+]'
+              style={{ fontFamily: 'monospace', fontSize: '13px' }}
+            />
+          </div>
+
+          {error && <div className="adm-error-bar">{error}</div>}
+
+          <button
+            className="adm-btn adm-btn--primary"
+            onClick={handleImport}
+            disabled={isImporting || !jsonInput.trim()}
+            style={{ marginTop: '10px', width: '100%', justifyContent: 'center', padding: '12px' }}
+          >
+            {isImporting ? <div className="adm-spinner" style={{ width: '16px', height: '16px' }} /> : <Plus size={16} />}
+            &nbsp;{isImporting ? 'Importing...' : 'Start Batch Import'}
+          </button>
+        </section>
+
+        <section className="adm-settings-card">
+          <h2 className="adm-table-heading">Import Status</h2>
+          
+          <div className="adm-stats" style={{ margin: '14px 0', gridTemplateColumns: '1fr 1fr 1fr' }}>
+            <div className="adm-stat-card" style={{ padding: '12px' }}>
+              <span className="adm-stat-label">Total</span>
+              <span className="adm-stat-value" style={{ fontSize: '18px' }}>{stats.total}</span>
             </div>
-          )}
+            <div className="adm-stat-card" style={{ padding: '12px' }}>
+              <span className="adm-stat-label" style={{ color: '#22c55e' }}>Success</span>
+              <span className="adm-stat-value" style={{ fontSize: '18px', color: '#22c55e' }}>{stats.success}</span>
+            </div>
+            <div className="adm-stat-card" style={{ padding: '12px' }}>
+              <span className="adm-stat-label" style={{ color: '#ef4444' }}>Failed</span>
+              <span className="adm-stat-value" style={{ fontSize: '18px', color: '#ef4444' }}>{stats.failed}</span>
+            </div>
+          </div>
+
+          <div style={{ 
+            maxHeight: '400px', 
+            overflowY: 'auto', 
+            background: 'rgba(0,0,0,0.2)', 
+            borderRadius: '8px',
+            padding: '10px'
+          }}>
+            {logs.length === 0 ? (
+              <p style={{ opacity: 0.4, textAlign: 'center', padding: '20px', fontSize: '13px' }}>No logs yet</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {logs.map((log) => (
+                  <div key={log.id} style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    fontSize: '12px',
+                    padding: '6px 10px',
+                    background: 'rgba(255,255,255,0.03)',
+                    borderRadius: '4px',
+                    borderLeft: `3px solid ${log.status === 'success' ? '#22c55e' : log.status === 'failed' ? '#ef4444' : '#f59e0b'}`
+                  }}>
+                    <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
+                      {log.title}
+                    </span>
+                    <span style={{ 
+                      color: log.status === 'success' ? '#22c55e' : log.status === 'failed' ? '#ef4444' : '#f59e0b',
+                      fontSize: '11px',
+                      fontWeight: 'bold'
+                    }}>
+                      {log.status.toUpperCase()}
+                      {log.error && <span style={{ opacity: 0.6, fontWeight: 'normal', marginLeft: '6px' }}>({log.error})</span>}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </section>
       </div>
-
-      {/* Blog List */}
-      <div className="adm-table-wrap">
-        <div className="adm-table-header">
-          <span className="adm-table-heading">Blog Posts ({filtered.length})</span>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <select
-              className="adm-select"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              style={{ width: 'auto', minWidth: '100px' }}
-            >
-              <option value="">All Statuses</option>
-              <option value="published">Published</option>
-              <option value="draft">Draft</option>
-            </select>
-            <div className="adm-search-wrap">
-              <Search size={13} />
-              <input
-                className="adm-search-input"
-                placeholder="Search blogs…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-
-        {isLoading ? (
-          <div className="adm-loader"><div className="adm-spinner" /><div>Loading blogs…</div></div>
-        ) : filtered.length === 0 ? (
-          <div className="adm-empty">
-            <FileText size={42} />
-            <p className="adm-empty-text">No blogs found</p>
-            <p className="adm-empty-sub">Click &ldquo;New Blog&rdquo; or use AI Generate to create your first post</p>
-          </div>
-        ) : (
-          <div className="adm-faq-list">
-            {filtered.map((blog, i) => (
-              <div className="adm-faq-item" key={blog._id}>
-                <div className="adm-faq-num">{i + 1}</div>
-                <div className="adm-faq-body" style={{ flex: 1 }}>
-                  <p className="adm-faq-question" style={{ marginBottom: '4px' }}>{blog.title}</p>
-                  <div style={{ display: 'flex', gap: '8px', fontSize: '11px', opacity: 0.5, flexWrap: 'wrap' }}>
-                    <span>{blog.category}</span>
-                    <span>·</span>
-                    <span>{blog.readingTime} min</span>
-                    <span>·</span>
-                    <span>{blog.source}</span>
-                    <span>·</span>
-                    <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                <div className={`adm-status-pill ${blog.status === 'published' ? 'done' : 'pending'}`} style={{ marginRight: '8px' }}>
-                  {blog.status === 'published' ? <CheckCircle2 size={12} /> : <Circle size={12} />}
-                  {blog.status}
-                </div>
-                <div className="adm-faq-actions">
-                  <button className="adm-btn adm-btn--ghost" title="Toggle Status" onClick={() => handleToggleStatus(blog)}>
-                    {blog.status === 'published' ? <Circle size={14} /> : <Check size={14} />}
-                  </button>
-                  <button className="adm-btn adm-btn--danger" title="Delete" onClick={() => handleDelete(blog._id)}>
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Create Blog Modal */}
-      {showCreate && (
-        <div className="adm-modal-backdrop" onClick={(e) => { if (e.target === e.currentTarget) setShowCreate(false); }}>
-          <div className="adm-modal" style={{ maxWidth: '640px' }}>
-            <div className="adm-modal-head">
-              <h2 className="adm-modal-title">Create Blog Post</h2>
-              <button type="button" className="adm-modal-close" onClick={() => setShowCreate(false)}><X size={16} /></button>
-            </div>
-            <div className="adm-modal-body">
-              <div className="adm-field">
-                <label className="adm-label">Title</label>
-                <input className="adm-input" value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="Blog title" />
-              </div>
-              <div className="adm-field">
-                <label className="adm-label">Category</label>
-                <input className="adm-input" value={formCategory} onChange={(e) => setFormCategory(e.target.value)} placeholder="Web Development" />
-              </div>
-              <div className="adm-field">
-                <label className="adm-label">Excerpt</label>
-                <input className="adm-input" value={formExcerpt} onChange={(e) => setFormExcerpt(e.target.value)} placeholder="Short summary" />
-              </div>
-              <div className="adm-field">
-                <label className="adm-label">Content (HTML)</label>
-                <textarea className="adm-textarea" rows={10} value={formContent} onChange={(e) => setFormContent(e.target.value)} placeholder="<h2>Introduction</h2><p>Your content here...</p>" />
-              </div>
-              <div className="adm-field">
-                <label className="adm-label">Status</label>
-                <select className="adm-select" value={formStatus} onChange={(e) => setFormStatus(e.target.value as 'draft' | 'published')}>
-                  <option value="published">Published</option>
-                  <option value="draft">Draft</option>
-                </select>
-              </div>
-            </div>
-            <div className="adm-modal-footer">
-              <button type="button" className="adm-btn adm-btn--outline" onClick={() => setShowCreate(false)}>Cancel</button>
-              <button
-                type="button"
-                className="adm-btn adm-btn--primary"
-                disabled={isCreating || !formTitle.trim() || !formContent.trim()}
-                onClick={handleSaveCreate}
-              >
-                {isCreating ? 'Creating…' : 'Create Blog'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -1944,19 +1649,11 @@ export default function AdminClient() {
             </button>
 
             <button
-              className={`adm-sidebar-item ${section === 'blog' ? 'active' : ''}`}
+              className={`adm-sidebar-item ${section === 'blog' && 'active'}`}
               onClick={() => setSection('blog')}
             >
               <FileText size={15} /> Blog Management
               {section === 'blog' && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
-            </button>
-
-            <button
-              className="adm-sidebar-item"
-              onClick={() => router.push('/admin/blog-importer')}
-            >
-              <Sparkles size={15} /> Blog Importer
-              <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />
             </button>
 
             <button
@@ -2006,7 +1703,7 @@ export default function AdminClient() {
           {section === 'careers' && <CareersAdminSection />}
           {section === 'users' && <UserAdminSection />}
           {section === 'settings' && <GoogleCalendarSection />}
-          {section === 'blog' && <BlogAdminSection />}
+          {section === 'blog' && <BlogImportSection />}
         </main>
       </div>
       </div>

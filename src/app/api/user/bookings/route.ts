@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dbConnect from '../../../../lib/mongodb';
 import Booking from '../../../../models/Booking';
 import User from '../../../../models/User';
+export const dynamic = 'force-dynamic';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
 

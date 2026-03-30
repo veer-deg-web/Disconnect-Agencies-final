@@ -10,7 +10,7 @@ import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import Footer from "@/components/Shared/Footer/Footer";
 import PricingSection from "@/components/PricingSection";
 import UIUXShowcaseLogos from "@/components/uiux/UIUXShowcaseLogos";
-import { partnerLogos } from "@/Data/PartnerLogo";
+import { showcaseLogos } from "@/Data/showcaseLogos";
 
 export const metadata: Metadata = {
   title: "AI Models & Automation",
@@ -54,7 +54,7 @@ export default function Ai() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <HeroSection />
-      <UIUXShowcaseLogos logos={partnerLogos} iconGap={200} title="Over 50+ businesses trusts us ." />
+      <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200} title="Over 50+ businesses trusts us ." />
       <section id="feature">
       <ServicesSection />
       </section>

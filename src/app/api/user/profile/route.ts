@@ -5,6 +5,7 @@ import User from '../../../../models/User';
 
 import { uploadToCloudinary } from '../../../../lib/cloudinary';
 import { sanitizeInput } from '@/lib/sanitizer';
+export const dynamic = 'force-dynamic';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
 
