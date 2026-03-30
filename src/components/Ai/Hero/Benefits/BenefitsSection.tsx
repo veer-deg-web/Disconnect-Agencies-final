@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import {
   SiLightning,
-  SiHappycow,
   SiClockify,
-  SiCashapp,
   SiGoogleanalytics,
-  SiKubernetes,
 } from "react-icons/si";
+import { RiCustomerService2Line } from "react-icons/ri";
+import { GiReceiveMoney } from "react-icons/gi";
+import { BsGraphUp } from "react-icons/bs";
 import "./BenefitsSection.css";
 
 const benefits = [
@@ -19,7 +19,7 @@ const benefits = [
     desc: "AI-driven automation reduces manual effort and accelerates decision-making.",
   },
   {
-    icon: SiHappycow,
+    icon: RiCustomerService2Line,
     title: "Better Customer Experience",
     desc: "Personalized AI interactions improve response times and satisfaction.",
   },
@@ -29,7 +29,7 @@ const benefits = [
     desc: "AI systems operate round-the-clock without downtime.",
   },
   {
-    icon: SiCashapp,
+    icon: GiReceiveMoney,
     title: "Cost Reduction",
     desc: "Automate repetitive work and optimize operational costs.",
   },
@@ -39,7 +39,7 @@ const benefits = [
     desc: "Leverage analytics to make smarter, faster business decisions.",
   },
   {
-    icon: SiKubernetes,
+    icon: BsGraphUp,
     title: "Scalability & Growth",
     desc: "AI adapts to your business needs without increasing overhead.",
   },

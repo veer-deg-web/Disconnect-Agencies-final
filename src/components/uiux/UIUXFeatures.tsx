@@ -2,6 +2,9 @@
 
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { FaAward } from "react-icons/fa";
+import { GiOnTarget } from "react-icons/gi";
+import { MdOutlineReplayCircleFilled } from "react-icons/md";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import styles from "./UIUXFeatures.module.css";
 
@@ -132,17 +135,17 @@ const FEATURES = [
   {
     title: "Award-Winning Designs",
     desc: "Top-tier creative quality that stands out.",
-    icon: svgIcon("award"),
+    icon: <FaAward size={52} className={styles.icon} />,
   },
   {
     title: "Unlimited Revisions",
     desc: "We revise until you’re 100% satisfied.",
-    icon: svgIcon("brush"),
+    icon: <MdOutlineReplayCircleFilled size={52} className={styles.icon} />,
   },
   {
     title: "Unique & All Yours",
     desc: "Every design is crafted exclusively for you.",
-    icon: svgIcon("fingerprint"),
+    icon: <GiOnTarget size={52} className={styles.icon} />,
   },
 ];
 
@@ -173,24 +176,6 @@ function svgIcon(type: string) {
         <>
           <circle cx="12" cy="12" r="9" />
           <path d="M8 12h8M12 8v8" />
-        </>
-      )}
-      {type === "award" && (
-        <>
-          <path d="M7 4h10v4a5 5 0 01-10 0z" />
-          <path d="M12 13v7" />
-        </>
-      )}
-      {type === "brush" && (
-        <>
-          <path d="M14 4l6 6" />
-          <path d="M4 20c4 0 6-2 6-6" />
-        </>
-      )}
-      {type === "fingerprint" && (
-        <>
-          <path d="M12 2a6 6 0 016 6v4" />
-          <path d="M12 6a2 2 0 012 2v6" />
         </>
       )}
     </svg>

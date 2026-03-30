@@ -5,11 +5,11 @@ import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import { MacbookScroll } from "@/components/ui/macbook-scroll";
 
 import {
-  SiAppstore,
-  SiReact,
-  SiTestinglibrary,
-  SiLightning,
-} from "react-icons/si";
+  MdAppSettingsAlt,
+  MdOutlineBuildCircle,
+  MdOutlineSecurityUpdateGood
+} from "react-icons/md";
+import { FaRegLightbulb } from "react-icons/fa";
 
 export default function ProductVisuals() {
   return (
@@ -59,7 +59,7 @@ export default function ProductVisuals() {
       className="we-card"
       spotlightColor="rgba(88,105,227,0.25)"
     >
-      <SiAppstore className="icon" />
+      <MdAppSettingsAlt className="icon" />
       <h3>All your app needs, in one place</h3>
       <p>
         Plan, design, develop, and launch your product smoothly with our
@@ -71,7 +71,7 @@ export default function ProductVisuals() {
       className="we-card"
       spotlightColor="rgba(88,105,227,0.25)"
     >
-      <SiReact className="icon" />
+      <MdOutlineBuildCircle className="icon" />
       <h3>Build smarter, faster apps</h3>
       <p>
         From UI to backend, we create scalable apps with clean code and
@@ -83,7 +83,7 @@ export default function ProductVisuals() {
       className="we-card"
       spotlightColor="rgba(88,105,227,0.25)"
     >
-      <SiTestinglibrary className="icon" />
+      <MdOutlineSecurityUpdateGood className="icon" />
       <h3>Stay ahead with quality delivery</h3>
       <p>
         We follow a clear process, timely updates, and testing—so your app
@@ -95,7 +95,7 @@ export default function ProductVisuals() {
       className="we-card"
       spotlightColor="rgba(88,105,227,0.25)"
     >
-      <SiLightning className="icon" />
+      <FaRegLightbulb className="icon" />
       <h3>Get expert ideas to grow</h3>
       <p>
         Disconnect Agency helps you improve features, UX, and performance
