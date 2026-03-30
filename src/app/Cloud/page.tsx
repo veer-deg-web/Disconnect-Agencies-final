@@ -4,7 +4,7 @@ import CloudServicesSection from "@/components/Cloud/CloudServiceSection/CloudSe
 import OurWorkFinal from "@/components/Cloud/WorkSection/OurWorkFinal";
 import ScrollZoomStats from "@/components/Cloud/SrollZoom/ScrollZoomStats";
 import MoreAboutSection from "@/components/Cloud/MoreAboutUs/MoreAboutSection";
-import Awards from "@/components/Cloud/Awards/Awards";
+// import Awards from "@/components/Cloud/Awards/Awards";
 import ProcessSection from "@/components/Cloud/Process/ProcessSection";
 import TestimonialsSection from "@/components/Cloud/Testimonials/TestimonialsSection";
 import HeroSection from "@/components/Cloud/Hero/HeroSection";
@@ -61,9 +61,11 @@ export default function CloudPage() {
       <OurWorkFinal />
       <ScrollZoomStats />
       <MoreAboutSection />
+      {/* 
       <section id="benefits">
-      <Awards />
-      </section>
+        <Awards />
+      </section> 
+      */}
       <ProcessSection />
       <section id="testimonials">
       <TestimonialsSection />

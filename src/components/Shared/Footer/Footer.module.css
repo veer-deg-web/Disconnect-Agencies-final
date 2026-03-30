@@ -13,6 +13,24 @@
   align-items: center;
 }
 
+.brandInfo {
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: 24px;
+}
+
+.brandLogo {
+  display: block;
+  margin: 0 auto 12px;
+  cursor: pointer;
+}
+
+.brandDesc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+}
+
 .nav {
   display: flex;
   gap: 32px;

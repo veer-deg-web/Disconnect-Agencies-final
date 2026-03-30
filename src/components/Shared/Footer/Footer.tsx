@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF } from "react-icons/fa";
 import styles from "./Footer.module.css";
@@ -64,6 +65,10 @@ export default function Footer() {
       scrollToAny(["faq"]);
       return;
     }
+    if (item === "About Us") {
+      router.push("/about");
+      return;
+    }
     if (item === "Careers") {
       router.push("/careers");
       return;
@@ -77,6 +82,27 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
+        {/* BRAND INFO SECTION - COMMENTED OUT AS REQUESTED */}
+        {/* 
+        <div className={styles.brandInfo}>
+          <div 
+            className={styles.brandLogo}
+            onClick={() => router.push("/")}
+          >
+            <Image
+              src="/assets/Home/HeroNavbar/photo/logo.webp"
+              alt="Disconnect"
+              width={116}
+              height={36}
+            />
+          </div>
+          <p className={styles.brandDesc}>
+            Disconnect builds production-grade digital products, platforms, and AI systems. 
+            We bridge the gap between complex technology and intuitive user experiences.
+          </p>
+        </div>
+        */}
+
         {/* NAV LINKS */}
         <nav className={styles.nav}>
           {[
@@ -86,7 +112,7 @@ export default function Footer() {
             "Pricing",
             "Testimonials",
             "FAQ",
-            "About Us",
+            // "About Us",
             "Careers",
             "Blog",
           ].map((item) => (
