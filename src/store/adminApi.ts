@@ -101,8 +101,9 @@ export const adminApi = createApi({
     reducerPath: 'adminApi',
     baseQuery: ((): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> => {
         const rawBaseQuery = fetchBaseQuery({
-            baseUrl: '/api/admin',
+            baseUrl: '/api/admin/',
             prepareHeaders: (headers) => {
+                headers.set('accept', 'application/json');
                 const token = getAuthToken();
                 if (token) {
                     headers.set('authorization', `Bearer ${token}`);
@@ -271,7 +272,7 @@ export const adminApi = createApi({
         }),
         deleteCareerApplication: builder.mutation<{ success: boolean }, string>({
             query: (id) => ({
-                url: `/career-applications?id=${id}`,
+                url: `career-applications?id=${id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['CareerApplication'],

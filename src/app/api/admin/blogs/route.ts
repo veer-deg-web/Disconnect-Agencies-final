@@ -136,6 +136,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ blog }, { status: 201 });
   } catch (err) {
+    console.error("CREATE BLOG ERROR:", err);
     const msg = err instanceof Error ? err.message : "Internal server error";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
@@ -237,6 +238,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ blog });
   } catch (err) {
+    console.error("UPDATE BLOG ERROR:", err);
     const msg = err instanceof Error ? err.message : "Internal server error";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
@@ -259,6 +261,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ message: "Blog deleted" });
   } catch (err) {
+    console.error("DELETE BLOG ERROR:", err);
     const msg = err instanceof Error ? err.message : "Internal server error";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
