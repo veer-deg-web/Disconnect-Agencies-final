@@ -115,6 +115,14 @@ export const adminApi = createApi({
         return async (args, api, extraOptions) => {
             const result = await rawBaseQuery(args, api, extraOptions);
 
+            if (result.error) {
+                console.error('ADMIN API ERROR:', {
+                    args,
+                    status: result.error.status,
+                    error: result.error
+                });
+            }
+
             if (typeof window !== 'undefined' && result.error) {
                 const status = result.error.status;
                 const payload = result.error.data as { error?: string } | undefined;
@@ -124,6 +132,7 @@ export const adminApi = createApi({
                     (status === 403 && (message.includes('jwt') || message.includes('token') || message.includes('unauthorized')));
 
                 if (looksExpired) {
+                    console.warn('ADMIN SESSION EXPIRED or UNAUTHORIZED:', result.error);
                     localStorage.removeItem('token');
                     localStorage.removeItem('user');
                     localStorage.removeItem('userName');

@@ -1362,6 +1362,7 @@ function BlogImportSection() {
         setLogs(prev => prev.map(l => l.id === logId ? { ...l, status: 'success' } : l));
         setStats(s => ({ ...s, success: s.success + 1 }));
       } catch (err: any) {
+        console.error('IMPORT ERROR FOR:', title, err);
         const errMsg = err?.data?.error || err?.message || 'Failed to create';
         setLogs(prev => prev.map(l => l.id === logId ? { ...l, status: 'failed', error: errMsg } : l));
         setStats(s => ({ ...s, failed: s.failed + 1 }));
