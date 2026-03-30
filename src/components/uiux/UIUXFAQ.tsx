@@ -1,3 +1,5 @@
+import styles from "./UIUXFAQ.module.css";
+
 export default function UIUXFAQ() {
   const faqs = [
     "Why wouldn’t I just hire a full-time designer?",
@@ -9,18 +11,11 @@ export default function UIUXFAQ() {
   ];
 
   return (
-    <section style={{ padding: "140px 24px", maxWidth: "900px", margin: "0 auto" }}>
+    <section className={styles.section}>
       {faqs.map((q: string) => (
-        <div
-          key={q}
-          style={{
-            padding: "24px",
-            borderRadius: "16px",
-            marginBottom: "16px",
-          }}
-        >
+        <div key={q} className={styles.faqItem}>
           <span>{q}</span>
-          <span style={{ float: "right" }}>+</span>
+          <span className={styles.plus}>+</span>
         </div>
       ))}
     </section>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF } from "react-icons/fa";
+import styles from "./Footer.module.css";
 
 export default function Footer() {
   const router = useRouter();
@@ -74,186 +75,75 @@ export default function Footer() {
   };
 
   return (
-    <>
-      {/* MOBILE OVERRIDES — 344px SAFE */}
-      <style>
-        {`
-          @media (max-width: 768px) {
-            .footer {
-              padding: 32px 16px !important;
-            }
-
-            .footer-nav {
-              gap: 16px !important;
-              row-gap: 12px !important;
-              font-size: 13px !important;
-            }
-
-            .footer-copy {
-              font-size: 12px !important;
-              text-align: center !important;
-              line-height: 1.6 !important;
-            }
-          }
-        `}
-      </style>
-
-      <footer
-        className="footer"
-        style={{
-          backgroundColor: "#0b0b0b",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-          padding: "40px 24px",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: "24px",
-            alignItems: "center",
-          }}
-        >
-          {/* NAV LINKS */}
-          <nav
-            className="footer-nav"
-            style={{
-              display: "flex",
-              gap: "32px",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              fontSize: "14px",
-              color: "rgba(255,255,255,0.85)",
-            }}
-          >
-            {[
-              "Home",
-              "Feature",
-              "Benefits",
-              "Pricing",
-              "Testimonials",
-              "FAQ",
-              "About Us",
-              "Careers",
-              "Blog",
-            ].map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => handleFooterNav(item)}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  padding: "6px 4px", // better tap area
-                  background: "transparent",
-                  border: "none",
-                  font: "inherit",
-                  cursor: "pointer",
-                }}
-              >
-                {item}
-              </button>
-            ))}
-          </nav>
-          
-          <div
-            className="footer-social"
-            style={{
-              display: "flex",
-              gap: "16px",
-              marginTop: "8px",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {[
-              { Icon: FaInstagram, href: "https://www.instagram.com/disconnect.agencies/", label: "Instagram" },
-              { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/disconnect-agencies/", label: "LinkedIn" },
-              { Icon: FaGithub, href: "https://github.com/veer-deg", label: "GitHub" },
-              { Icon: FaFacebookF, href: "https://www.facebook.com/disconnect.agencies", label: "Facebook" },
-            ].map(({ Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                style={{
-                  color: "rgba(255,255,255,0.6)",
-                  fontSize: "18px",
-                  transition: "all 0.3s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "50%",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  textDecoration: "none"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#fff";
-                  e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-                  e.currentTarget.style.transform = "translateY(-3px)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "rgba(255,255,255,0.6)";
-                  e.currentTarget.style.background = "rgba(255,255,255,0.03)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                }}
-              >
-                <Icon size={18} />
-              </a>
-            ))}
-          </div>
-
-          {/* FEEDBACK SECTION FOR LOGGED IN USERS */}
-          {userName && (
-            <div style={{ width: "100%", maxWidth: "500px", marginTop: "16px", marginBottom: "16px", textAlign: "center" }}>
-              <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: "12px", padding: "20px", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <h4 style={{ margin: "0 0 12px 0", fontSize: "16px", fontWeight: 500, color: "#fff" }}>Enjoying Disconnect?</h4>
-                <p style={{ margin: "0 0 16px 0", fontSize: "14px", color: "rgba(255,255,255,0.6)" }}>
-                  Have thoughts or suggestions? We&apos;d love to hear from you. Your feedback might be featured directly on our page!
-                </p>
-                <button
-                  onClick={() => router.push("/feedback")}
-                  style={{
-                    padding: "10px 24px",
-                    background: "#fff",
-                    color: "#000",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "14px",
-                    cursor: "pointer",
-                    transition: "opacity 0.2s"
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = "0.9"}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}
-                >
-                  Write Feedback
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* COPYRIGHT */}
-          <p
-            className="footer-copy"
-            style={{
-              fontSize: "13px",
-              color: "rgba(255,255,255,0.55)",
-            }}
-          >
-            2025 Copyright © Aset. All rights reserved.
-          </p>
+    <footer className={styles.footer}>
+      <div className={styles.container}>
+        {/* NAV LINKS */}
+        <nav className={styles.nav}>
+          {[
+            "Home",
+            "Feature",
+            "Benefits",
+            "Pricing",
+            "Testimonials",
+            "FAQ",
+            "About Us",
+            "Careers",
+            "Blog",
+          ].map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => handleFooterNav(item)}
+              className={styles.navBtn}
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
+        
+        <div className={styles.socialList}>
+          {[
+            { Icon: FaInstagram, href: "https://www.instagram.com/disconnect.agencies/", label: "Instagram" },
+            { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/disconnect.agencies/", label: "LinkedIn" },
+            { Icon: FaGithub, href: "https://github.com/veer-deg", label: "GitHub" },
+            { Icon: FaFacebookF, href: "https://www.facebook.com/disconnect.agencies", label: "Facebook" },
+          ].map(({ Icon, href, label }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className={styles.socialLink}
+            >
+              <Icon size={18} />
+            </a>
+          ))}
         </div>
-      </footer>
-    </>
+
+        {/* FEEDBACK SECTION FOR LOGGED IN USERS */}
+        {userName && (
+          <div className={styles.feedbackContainer}>
+            <div className={styles.feedbackBox}>
+              <h4 className={styles.feedbackTitle}>Enjoying Disconnect?</h4>
+              <p className={styles.feedbackText}>
+                Have thoughts or suggestions? We&apos;d love to hear from you. Your feedback might be featured directly on our page!
+              </p>
+              <button
+                onClick={() => router.push("/feedback")}
+                className={styles.feedbackBtn}
+              >
+                Write Feedback
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* COPYRIGHT */}
+        <p className={styles.copy}>
+          2025 Copyright © Aset. All rights reserved.
+        </p>
+      </div>
+    </footer>
   );
 }

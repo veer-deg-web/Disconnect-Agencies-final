@@ -12,7 +12,7 @@ import { useRef, useState, useMemo } from "react";
 import Image from "next/image";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
-import "./TestimonialsSection.css";
+import styles from "./TestimonialsSection.module.css";
 
 interface TestimonialData {
   type: string;
@@ -71,30 +71,30 @@ export default function TestimonialsSection() {
   });
 
   return (
-    <section ref={sectionRef} className="testimonials-section">
+    <section ref={sectionRef} className={styles.testimonialsSection}>
       {/* LABEL */}
-      <div className="testimonials-label">
-        <span className="dot" />
+      <div className={styles.testimonialsLabel}>
+        <span className={styles.dot} />
         TESTIMONIALS
       </div>
 
       {/* MARQUEE */}
       <div
-        className="testimonials-viewport"
+        className={styles.testimonialsViewport}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <motion.div className="testimonials-track" style={{ x }}>
+        <motion.div className={styles.testimonialsTrack} style={{ x }}>
           {[...finalTestimonials, ...finalTestimonials].map((item: TestimonialData, i: number) => (
-            <div key={i} className="testimonial-item">
+            <div key={i} className={styles.testimonialItem}>
               {item.type === "wide" ? (
-                <div className="testimonial-card wide">
-                  <span className="tag">{item.tag}</span>
-                  <p className="quote">“{item.text}”</p>
-                  <div className="author">
+                <div className={`${styles.testimonialCard} ${styles.wide}`}>
+                  <span className={styles.tag}>{item.tag}</span>
+                  <p className={styles.quote}>“{item.text}”</p>
+                  <div className={styles.author}>
                     <Image src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" width={40} height={40} />
                     <div>
-                      <strong style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <strong>
                         {item.name}
                         {item.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
                       </strong>
@@ -103,9 +103,9 @@ export default function TestimonialsSection() {
                   </div>
                 </div>
               ) : (
-                <div className="testimonial-card square">
+                <div className={`${styles.testimonialCard} ${styles.square}`}>
                   <Image src={item.avatar || "/assets/Cloud/Testimonials/photo/Section.webp"} alt="" width={40} height={40} />
-                  <strong style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '8px' }}>
+                  <strong>
                     {item.name}
                     {item.isVerified && <CheckCircle2 size={12} fill="#3b82f6" color="#fff" />}
                   </strong>
@@ -115,7 +115,7 @@ export default function TestimonialsSection() {
 
               {/* 🔥 REVEAL SPACER (THE KEY EFFECT) */}
               <motion.div
-                className="testimonial-spacer"
+                className={styles.testimonialSpacer}
                 style={{ width: spacer }}
               />
             </div>

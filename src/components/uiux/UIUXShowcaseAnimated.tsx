@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import styles from "./UIUXShowcaseAnimated.module.css";
 
 export default function UIUXShowcaseAnimated() {
   const ref = useRef<HTMLDivElement>(null);
@@ -15,30 +16,19 @@ export default function UIUXShowcaseAnimated() {
   const opacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
   return (
-    <motion.div
-      ref={ref}
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        pointerEvents: "none",
-      }}
-    >
+    <motion.div ref={ref} className={styles.container}>
       <motion.h2
+        className={styles.heading}
         style={{
           y,
           opacity,
-          color: "#fff",
-          fontSize: "clamp(2.8rem, 5vw, 4.2rem)",
-          fontWeight: 500,
-          textAlign: "center",
         }}
       >
-       <span style={{ fontFamily: "instrument-serif",fontStyle:"italic" }}> UI Designs
-        <br />
-        Made Easy</span>
+        <span className={styles.highlight}>
+          UI Designs
+          <br />
+          Made Easy
+        </span>
       </motion.h2>
     </motion.div>
   );

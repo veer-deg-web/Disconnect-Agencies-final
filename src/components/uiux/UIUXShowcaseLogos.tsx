@@ -3,6 +3,7 @@
 import LogoLoop from "@/components/Shared/LogoLoop/LogoLoop";
 import type { LogoItem } from "@/components/Shared/LogoLoop/LogoLoop";
 import React, { useEffect, useMemo, useState } from "react";
+import styles from "./UIUXShowcaseLogos.module.css";
 
 type UIUXShowcaseLogosProps = {
   title?: string;
@@ -39,43 +40,10 @@ export default function UIUXShowcaseLogos({
   const computedIconGap = Math.max(44, Math.round(iconGap * responsiveScale));
 
   return (
-    <section
-      style={{
-        width: "100%",
-        overflow: "hidden",
-        background: "#000",
-      }}
-    >
-      {/* HARD OVERRIDE */}
-      <style>{`
-        .logo-loop-fix,
-        .logo-loop-fix * {
-          mask-image: none !important;
-          -webkit-mask-image: none !important;
-        }
-        .logo-loop-fix::before,
-        .logo-loop-fix::after {
-          display: none !important;
-          content: none !important;
-        }
-      `}</style>
+    <section className={styles.section}>
+      {title && <h3 className={styles.title}>{title}</h3>}
 
-      {title && (
-        <h3
-          style={{
-            textAlign: "center",
-            marginBottom: 24,
-            opacity: 0.7,
-            fontWeight: 500,
-            color: "#fff",
-            fontSize: "18px",
-          }}
-        >
-          {title}
-        </h3>
-      )}
-
-      <div className="logo-loop-fix">
+      <div className={styles.logoLoopFix}>
         <LogoLoop
           logos={[...logos, ...logos, ...logos]}
           speed={80}

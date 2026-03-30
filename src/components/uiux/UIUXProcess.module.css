@@ -1,6 +1,6 @@
 .section {
   padding: 140px 24px;
-  background: #000;
+  background-color: #000;
 }
 
 .wrapper {
@@ -13,7 +13,7 @@
   text-align: center;
 }
 
-.featurePill {
+.pill {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -27,7 +27,7 @@
   border: 1px solid rgba(16, 185, 129, 0.35);
 }
 
-.pulseDot {
+.dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -37,61 +37,76 @@
 }
 
 .heading {
-  font-size: clamp(2.8rem, 5vw, 3.8rem);
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
   font-weight: 500;
   color: #fff;
-  line-height: 1.15;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  line-height: 1.1;
 }
 
-.loveText {
+.effortlesslyText {
   opacity: 0.55;
   font-style: italic;
-  font-family: "Instrument-serif", serif;
+  font-family: "instrument-serif", serif;
 }
 
-.subheading {
-  max-width: 640px;
-  margin: 0 auto 72px;
+.subText {
+  max-width: 560px;
+  margin: 0 auto 64px;
   color: #9ca3af;
   font-size: 16px;
 }
 
-.grid {
+.stepsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 56px;
+  gap: 48px;
+  margin-bottom: 72px;
 }
 
-.iconWrapper {
-  width: 52px;
-  height: 52px;
-  margin: 0 auto 18px;
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.icon {
-  opacity: 0.9;
-  stroke: white;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.stepIcon {
+  width: 72px;
+  height: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
+.stepIcon:hover {
+  transform: scale(1.25);
+  filter: drop-shadow(0 0 24px rgba(255, 255, 255, 0.85));
+}
 
-.cardTitle {
+.stepIcon :global(svg) {
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+
+.stepTitle {
+  margin-top: 16px;
   color: #fff;
-  margin-bottom: 8px;
 }
 
-.cardDesc {
+.stepDesc {
   color: #9ca3af;
   font-size: 14px;
 }
 
-.ctaWrapper {
-  margin-top: 80px;
+.ctaContainer {
   display: flex;
   justify-content: center;
+}
+
+.showcaseWrapper {
+  margin-top: 96px;
 }
 
 @keyframes pulse {
@@ -111,26 +126,19 @@
 
 @media (max-width: 768px) {
   .wrapper {
-    padding: 56px 20px !important;
+    padding: 64px 20px !important;
   }
 
   .heading {
     font-size: 2.2rem !important;
-    line-height: 1.25 !important;
   }
 
-  .subheading {
-    max-width: 320px !important;
-    margin-bottom: 56px !important;
-    line-height: 1.6 !important;
-  }
-
-  .grid {
+  .stepsGrid {
     grid-template-columns: 1fr !important;
     gap: 40px !important;
   }
 
-  .featureCard {
-    text-align: center !important;
+  .subText {
+    margin-bottom: 48px !important;
   }
 }

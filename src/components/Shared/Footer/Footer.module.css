@@ -1,0 +1,130 @@
+.footer {
+  background-color: #0b0b0b;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 40px 24px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.navBtn {
+  text-decoration: none;
+  color: inherit;
+  padding: 6px 4px;
+  background: transparent;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.socialList {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 18px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+}
+
+.socialLink:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.feedbackContainer {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.feedbackBox {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.feedbackTitle {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.feedbackText {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.feedbackBtn {
+  padding: 10px 24px;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.feedbackBtn:hover {
+  opacity: 0.9;
+}
+
+.copy {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 32px 16px !important;
+  }
+
+  .nav {
+    gap: 16px !important;
+    row-gap: 12px !important;
+    font-size: 13px !important;
+  }
+
+  .copy {
+    font-size: 12px !important;
+    text-align: center !important;
+    line-height: 1.6 !important;
+  }
+}

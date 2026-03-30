@@ -1,0 +1,42 @@
+.section {
+  padding: 160px 24px;
+  text-align: center;
+}
+
+.ctaBox {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 80px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.03); /* Adding a subtle background for visibility */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Adding a subtle border for visibility */
+}
+
+.footer {
+  margin-top: 120px;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.copy {
+  margin-top: 24px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 768px) {
+  .ctaBox {
+    padding: 40px 20px !important;
+  }
+  
+  .nav {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}

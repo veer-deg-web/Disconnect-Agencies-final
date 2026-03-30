@@ -24,9 +24,6 @@ export default function UIUXFeatures() {
         <div
           key={cycleKey}
           className={`${styles.wrapper} features-wrapper`}
-          style={{
-            /* Key still needed for reset, but styles moved to CSS */
-          }}
         >
           {/* FEATURE PILL */}
           <motion.div
@@ -65,11 +62,11 @@ export default function UIUXFeatures() {
           </motion.p>
 
           {/* FEATURES GRID */}
-          <div className={`${styles.grid} features-grid`}>
+          <div className={styles.grid}>
             {FEATURES.map((item, i: number) => (
               <motion.div
                 key={i}
-                className="feature-card"
+                className={styles.featureCard}
                 initial={{ opacity: 0, y: 28 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -81,8 +78,7 @@ export default function UIUXFeatures() {
                 <motion.div
                   whileHover={{
                     scale: 1.25,
-                    filter:
-                      "drop-shadow(0 0 22px rgba(255,255,255,0.85))",
+                    filter: "drop-shadow(0 0 22px rgba(255,255,255,0.85))",
                   }}
                   transition={{
                     type: "spring",
@@ -94,12 +90,8 @@ export default function UIUXFeatures() {
                   {item.icon}
                 </motion.div>
 
-                <h4 className={styles.cardTitle}>
-                  {item.title}
-                </h4>
-                <p className={styles.cardDesc}>
-                  {item.desc}
-                </p>
+                <h4 className={styles.cardTitle}>{item.title}</h4>
+                <p className={styles.cardDesc}>{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -161,13 +153,9 @@ function svgIcon(type: string) {
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      stroke="white"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       width="52"
       height="52"
-      style={{ opacity: 0.9 }}
+      className={styles.icon}
     >
       {type === "board" && (
         <>

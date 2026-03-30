@@ -1,0 +1,37 @@
+.section {
+  position: relative;
+  /* PULL SECTION UP OVER HERO (RESPONSIVE) */
+  margin-top: clamp(-120px, -20vw, -160px);
+  padding: clamp(24px, 6vw, 40px) 16px clamp(100px, 20vw, 140px);
+  background-color: #000;
+  z-index: 20;
+}
+
+.videoWrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: clamp(18px, 4vw, 28px);
+  overflow: hidden;
+}
+
+.video {
+  width: 100%;
+  height: clamp(260px, 60vw, 460px);
+  object-fit: cover;
+  display: block;
+}
+
+.logosSection {
+  margin-top: clamp(40px, 10vw, 72px);
+  text-align: center;
+  color: #9ca3af;
+}
+
+.logosGrid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(20px, 6vw, 40px);
+  opacity: 0.7;
+}
