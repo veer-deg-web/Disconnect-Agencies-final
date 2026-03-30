@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { sanitizeInput } from '@/lib/sanitizer';
 import jwt from 'jsonwebtoken';
