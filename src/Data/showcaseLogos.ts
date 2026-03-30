@@ -19,15 +19,5 @@ export const showcaseLogos: LogoItem[] = [
     title: "SIX India",
     href: "https://www.six.ind.in/",
   },
-  {
-    src: "/assets/logos%20SVG/six%20Health.svg",
-    alt: "Six Health",
-    title: "Six Health",
-    href: "https://www.six.ind.in/",
-  },
-  {
-    src: "/assets/logos%20SVG/JAIL.svg",
-    alt: "JAIL",
-    title: "JAIL",
-  },
+  
 ];
