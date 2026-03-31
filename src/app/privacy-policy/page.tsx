@@ -37,79 +37,67 @@ export default function PrivacyPolicyPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Overview</h2>
           <p className={styles.text}>
-            While delivering high-quality digital solutions — including AI Models &amp; Automation, App Development, Web Development, SEO, UI/UX Design, and Cloud Services — we&apos;re equally committed to handling your information with full transparency and care. This Privacy Policy explains how we collect, use, and protect your data.
+            Disconnect handles digital solutions across AI Models & Automation, App Development, Web Development, SEO, UI/UX Design, and Cloud Services. While we do that, we also take the protection of your personal data seriously. This disclaimer explains how we handle your information with transparency.
           </p>
         </section>
 
         <div className={styles.divider} />
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>How We Use Your Personal Data</h2>
+          <h2 className={styles.sectionTitle}>Data Collection and Usage</h2>
           <p className={styles.text}>
-            Disconnect may collect and process personal data to ensure you can access our website, platforms, and services without interruption. When you simply browse our website, you don&apos;t need to identify yourself. However, certain technical details may be collected automatically — such as your IP address, device type, browser details, operating system, and language preferences. This data is aggregated to help us understand traffic patterns, improve performance, enhance user experience, and keep the website secure.
+            When you use our website or services, we collect certain information to make things work. If you're just browsing, we might see technical details like your IP address, browser type, and how you're interacting with the site. We use this to keep the platform secure and improve how it performs.
           </p>
           <p className={styles.text}>
-            If you register for a service, request a consultation, or access a restricted area, we may collect additional details like your name, email address, company information, and login credentials. This helps us personalise your experience, manage your account, and respond effectively to your needs.
-          </p>
-        </section>
-
-        <div className={styles.divider} />
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Communication, Support & Service Delivery</h2>
-          <p className={styles.text}>
-            When you reach out to Disconnect with an inquiry, support request, or service-related discussion, we may process personal and professional information such as your contact details, business role, and the content of your communication. This allows us to provide accurate solutions, deliver technical assistance, and maintain consistently high standards across everything we do — from AI automation to cloud integration.
+            If you reach out to us — through a form, an email, or by signing up for a service — we'll collect the details you provide: name, contact info, and whatever professional details are needed to get the job done. This helps us communicate with you and deliver the services you signed up for.
           </p>
         </section>
 
         <div className={styles.divider} />
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Marketing and Business Engagement</h2>
+          <h2 className={styles.sectionTitle}>Marketing and Cookies</h2>
           <p className={styles.text}>
-            Disconnect may use your data to keep you informed about our services, latest developments, and relevant industry insights. These communications are sent through email or other professional channels, always in line with applicable laws and your stated preferences. You can opt out of marketing communications at any time — no questions asked.
-          </p>
-          <p className={styles.text}>
-            We may also look at engagement patterns to better understand what our clients need, refine our offerings, and deliver more relevant solutions in areas like SEO, UI/UX, and cloud services.
+            We might use your contact info to keep you updated on what's happening at Disconnect. If you don't want those updates, you can opt out at any time. We also use cookies to help the website function better and understand traffic. You can manage these through your browser settings.
           </p>
         </section>
 
         <div className={styles.divider} />
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Cookies and Third-Party Data</h2>
+          <h2 className={styles.sectionTitle}>Third-Party Links</h2>
           <p className={styles.text}>
-            Our website uses cookies and similar technologies to improve functionality, analyse usage, and personalise your experience. We may also receive limited data from trusted third parties — such as analytics providers or business partners — to help us improve service delivery and performance.
-          </p>
-          <p className={styles.text}>
-            Please note that our website may include links to third-party platforms. Disconnect isn&apos;t responsible for the privacy practices of those external sites, and we encourage you to review their individual policies before engaging with them.
+            Our site might link to other platforms. We don't control those, so their privacy practices are their own. Check them out if you're concerned about how they handle data.
           </p>
         </section>
 
         <div className={styles.divider} />
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Data Sharing and Security</h2>
+          <h2 className={styles.sectionTitle}>Data Security</h2>
           <p className={styles.text}>
-            We do not sell your personal data. Ever. We may share your information with trusted service providers or partners strictly for business operations — and only to the extent necessary. We apply appropriate technical and organisational measures to keep your information safe and protected against unauthorised access, loss, or misuse.
+            We don't sell your data. We only share it with trusted partners when it's necessary for our operations. We use standard security measures to protect your information, but remember that no system is 100% bulletproof.
           </p>
         </section>
 
         <div className={styles.divider} />
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Your Rights</h2>
+          <h2 className={styles.sectionTitle}>International Data Transfers</h2>
           <p className={styles.text}>
-            You have the right to access, correct, or request deletion of your personal data at any time. If you have questions about how your data is handled or wish to exercise any of your rights, please reach out to us through our official website or contact channels.
+            We operate globally, which means data sometimes crosses regional borders — for cloud operations, international project work, and so on. When it does, we make sure the appropriate protections are in place.
           </p>
         </section>
 
         <div className={styles.divider} />
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Changes to This Policy</h2>
+          <h2 className={styles.sectionTitle}>Your Rights and Contact Information</h2>
           <p className={styles.text}>
-            We may update this Privacy Policy from time to time. Any changes will be posted on this page with a revised effective date. We encourage you to review this page periodically to stay informed about how we protect your information.
+            You can ask to access, update, or delete your personal data at any time, subject to applicable law. If you want to do any of that — or if something in this disclaimer doesn't sit right with you — reach out through our website or official channels. We'll sort it out.
+          </p>
+          <p className={styles.text}>
+            Using Disconnect's services means you've read this and you're okay with how we handle things. We'll keep being straight with you about it.
           </p>
         </section>
 

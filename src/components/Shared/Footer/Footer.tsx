@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF } from "react-icons/fa";
 import styles from "./Footer.module.css";
@@ -82,8 +83,6 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        {/* BRAND INFO SECTION - COMMENTED OUT AS REQUESTED */}
-        {/* 
         <div className={styles.brandInfo}>
           <div 
             className={styles.brandLogo}
@@ -101,7 +100,6 @@ export default function Footer() {
             We bridge the gap between complex technology and intuitive user experiences.
           </p>
         </div>
-        */}
 
         {/* NAV LINKS */}
         <nav className={styles.nav}>
@@ -112,7 +110,7 @@ export default function Footer() {
             "Pricing",
             "Testimonials",
             "FAQ",
-            // "About Us",
+            "About Us",
             "Careers",
             "Blog",
           ].map((item) => (

@@ -35,9 +35,18 @@ export default function TermsPage() {
         <Link href="/" className={styles.backLink}>← Back to Home</Link>
 
         <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Acceptance of Terms</h2>
+          <p className={styles.text}>
+            Using Disconnect's website or services means you've read these Terms and agreed to them. If something here doesn't work for you, don't use the service. That's the honest version.
+          </p>
+        </section>
+
+        <div className={styles.divider} />
+
+        <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Services Offered</h2>
           <p className={styles.text}>
-            Disconnect provides professional digital solutions tailored to your business needs — from software development and automation to cloud-based services and optimisation. All services are delivered based on the agreed project scope, timelines, and contractual terms between Disconnect and the client.
+            Disconnect builds digital solutions — software development, automation, optimisation, cloud infrastructure. Every engagement runs on a defined project scope, timeline, and contract agreed between Disconnect and the client. No vague handshakes.
           </p>
         </section>
 
@@ -46,7 +55,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>User Responsibilities</h2>
           <p className={styles.text}>
-            You agree to use our website and services only for lawful purposes. Please don&apos;t misuse our platform, attempt unauthorised access, introduce malicious code, or engage in anything that could harm Disconnect, its clients, or its infrastructure. Any information you provide should be accurate, complete, and kept up to date.
+            Use the platform lawfully. Don't attempt unauthorised access, don't introduce malicious code, and don't do anything that could hurt Disconnect, its clients, or its systems. Whatever information you provide should be accurate and current — if it isn't, that's a problem you own.
           </p>
         </section>
 
@@ -55,7 +64,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Intellectual Property Rights</h2>
           <p className={styles.text}>
-            All content, designs, code, branding, and materials developed by Disconnect remain our intellectual property unless agreed otherwise in writing. Once full payment is received, clients may receive usage rights as outlined in the project agreement. Unauthorised reproduction, distribution, or modification of our work is strictly prohibited.
+            What Disconnect creates belongs to Disconnect — content, code, designs, branding — unless a written agreement says otherwise. After full payment, usage rights transfer as laid out in the project agreement. Taking our work and reproducing or distributing it without permission isn't allowed.
           </p>
         </section>
 
@@ -64,7 +73,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Payments and Pricing</h2>
           <p className={styles.text}>
-            All services are priced as agreed in proposals or contracts. Payments are expected within the specified timelines. Disconnect reserves the right to pause or terminate services in cases of delayed or non-payment. Unless stated otherwise, fees that have already been paid are non-refundable.
+            Pricing is what's agreed in the proposal or contract. Pay on time. If payment is late or doesn't come, Disconnect can pause or end the engagement. Fees already paid aren't refundable unless the agreement specifically says they are.
           </p>
         </section>
 
@@ -73,7 +82,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Project Delivery and Revisions</h2>
           <p className={styles.text}>
-            We make every reasonable effort to deliver projects within agreed timelines. That said, delays caused by client-side dependencies, third-party services, or unforeseen circumstances may affect delivery schedules. Revisions are limited to what&apos;s defined in the project agreement — additional changes beyond that scope may come with extra charges.
+            We hit our deadlines when we can. Sometimes delays happen — client dependencies, third-party tools, things no one saw coming. Those are real and they affect timelines. Revisions are scoped in the agreement; anything outside that scope is an additional conversation, potentially an additional cost.
           </p>
         </section>
 
@@ -82,7 +91,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Third-Party Services</h2>
           <p className={styles.text}>
-            Our solutions may involve third-party tools, platforms, or APIs — such as cloud providers or analytics tools. Disconnect isn&apos;t responsible for the performance, security, or policies of these external services. We encourage clients to review their respective terms before use.
+            Some of what we build pulls in third-party tools — cloud platforms, analytics services, APIs. Disconnect doesn't control those and isn't responsible for their performance or security. Check their terms if it matters to you.
           </p>
         </section>
 
@@ -91,7 +100,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Limitation of Liability</h2>
           <p className={styles.text}>
-            Disconnect won&apos;t be held liable for any indirect, incidental, or consequential damages resulting from your use of — or inability to use — our services. While we strive to deliver high-quality, secure solutions, we can&apos;t guarantee that every service will always be uninterrupted or error-free.
+            Disconnect isn't liable for indirect, incidental, or consequential damages from using — or not being able to use — our services. We build things well and take security seriously, but we can't promise every service runs perfectly at all times.
           </p>
         </section>
 
@@ -100,9 +109,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Data Protection and Privacy</h2>
           <p className={styles.text}>
-            We take your data seriously and handle it with care. By using our services, you agree to the collection and use of your data as outlined in our{" "}
-            <Link href="/privacy-policy" style={{ color: "#ff6b00" }}>Privacy Policy</Link>.
-            We take appropriate security measures to protect your information, though we can&apos;t guarantee absolute security in all scenarios.
+            Your data is handled as described in our Privacy Disclaimer, which you agreed to by using our services. We take appropriate security measures. No system is completely bulletproof, but we're not cavalier about it either.
           </p>
         </section>
 
@@ -111,7 +118,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Termination of Services</h2>
           <p className={styles.text}>
-            Disconnect reserves the right to suspend or terminate services if there&apos;s a breach of these Terms, non-payment, or misuse of our platform. Clients may also end services as defined in their service agreement.
+            Disconnect can suspend or terminate services for breach of these Terms, non-payment, or misuse. Clients can end things too — as defined in the service agreement.
           </p>
         </section>
 
@@ -120,7 +127,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Modifications to Terms</h2>
           <p className={styles.text}>
-            We may update these Terms and Conditions from time to time to reflect changes in our services, legal requirements, or business practices. Continuing to use our services after any updates means you accept the revised Terms.
+            These Terms get updated when needed — new services, legal changes, evolving practices. If you keep using Disconnect after an update, you've accepted the new version.
           </p>
         </section>
 
@@ -129,7 +136,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Governing Law</h2>
           <p className={styles.text}>
-            These Terms are governed by and interpreted in accordance with applicable laws of the Republic of India. Any disputes will be subject to the jurisdiction of relevant courts as specified in the service agreement.
+            Applicable law governs these Terms. Disputes go to the courts named in the service agreement.
           </p>
         </section>
 
@@ -138,7 +145,10 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Contact Information</h2>
           <p className={styles.text}>
-            If you have any questions or concerns about these Terms and Conditions, you&apos;re welcome to reach out through our official website or designated communication channels.
+            Questions about any of this? Reach out through our official website or communication channels. We'll respond properly.
+          </p>
+          <p className={styles.text}>
+            Using Disconnect's services means you've read and agreed to these Terms. We assume you have.
           </p>
         </section>
 

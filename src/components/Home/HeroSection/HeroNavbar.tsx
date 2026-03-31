@@ -78,6 +78,7 @@ export default function HeroNavbar() {
     // if (item === "Pricing") router.push("/pricing");
 
     if (item === "Book A Call") router.push("/book-call");
+    if (item === "About Us") router.push("/about");
     if (item === "login") router.push("/auth");
   };
 
@@ -221,7 +222,7 @@ export default function HeroNavbar() {
               color: "rgba(255,255,255,0.7)",
             }}
           >
-            {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
+            {["Home", "Pricing", "Services", "Benefit", "About Us", "Book A Call"].map(
               (item) => (
                 <li
                   key={item}
@@ -380,7 +381,7 @@ export default function HeroNavbar() {
               overflow: "hidden",
             }}
           >
-            {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
+            {["Home", "Pricing", "Services", "Benefit", "About Us", "Book A Call"].map(
               (item) => (
                 <div
                   key={item}
