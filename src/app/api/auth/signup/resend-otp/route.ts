@@ -6,11 +6,12 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendOtpEmail } from '@/lib/email';
 
+import crypto from 'crypto';
+
 function generateOtp(length = 4): string {
-  const digits = '0123456789';
   let otp = '';
   for (let i = 0; i < length; i++) {
-    otp += digits[Math.floor(Math.random() * 10)];
+    otp += crypto.randomInt(0, 10).toString();
   }
   return otp;
 }

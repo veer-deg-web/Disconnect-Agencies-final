@@ -6,11 +6,12 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendPasswordResetEmail } from '@/lib/email';
 
+import crypto from 'crypto';
+
 function generateOtp(length = 6): string {
-  const digits = '0123456789';
   let otp = '';
   for (let i = 0; i < length; i++) {
-    otp += digits[Math.floor(Math.random() * 10)];
+    otp += crypto.randomInt(0, 10).toString();
   }
   return otp;
 }
@@ -47,9 +48,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ message: `OTP resent to your ${isEmail ? 'email' : 'phone'}` });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Resend forgot password OTP error:', error);
-    const msg: string = error?.message || 'Internal server error';
+    const msg: string = (error as Error)?.message || 'Internal server error';
     const isDb = msg.toLowerCase().includes('whitelist') || msg.toLowerCase().includes('connect') || msg.toLowerCase().includes('atlas');
     return NextResponse.json({ error: isDb ? 'Database connection failed. Please try again shortly.' : msg }, { status: 500 });
   }
