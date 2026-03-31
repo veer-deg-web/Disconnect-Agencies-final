@@ -101,7 +101,7 @@ export const adminApi = createApi({
     reducerPath: 'adminApi',
     baseQuery: ((): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> => {
         const rawBaseQuery = fetchBaseQuery({
-            baseUrl: `${typeof window !== 'undefined' ? window.location.origin : 'https://disconnect-agencies-final.vercel.app'}/api/admin`,
+            baseUrl: '/api/admin',
             prepareHeaders: (headers) => {
                 headers.set('accept', 'application/json');
                 const token = getAuthToken();

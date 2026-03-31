@@ -1,8 +1,6 @@
-// Use relative path if BASE_URL is localhost or empty to avoid CORS issues on Vercel
-const envUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
-const BASE_URL = (envUrl.includes('localhost') && typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) 
-  ? '' 
-  : envUrl;
+// Always use relative paths — works on any domain (localhost, Vercel, custom domains)
+// without needing NEXT_PUBLIC_BASE_URL to be set.
+const BASE_URL = '';
 
 export const apiClient = {
   post: (path: string, body: Record<string, unknown>) => {
