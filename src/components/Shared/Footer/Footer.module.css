@@ -129,6 +129,30 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
+.legalLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.legalLink {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.legalLink:hover {
+  color: #ff6b00;
+}
+
+.legalDot {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+}
+
 @media (max-width: 768px) {
   .footer {
     padding: 32px 16px !important;

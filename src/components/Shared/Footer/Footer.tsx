@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF } from "react-icons/fa";
 import styles from "./Footer.module.css";
@@ -164,9 +165,18 @@ export default function Footer() {
           </div>
         )}
 
+        {/* LEGAL LINKS */}
+        <nav className={styles.legalLinks} aria-label="Legal">
+          <Link href="/privacy-policy" className={styles.legalLink}>Privacy Policy</Link>
+          <span className={styles.legalDot}>·</span>
+          <Link href="/disclaimer" className={styles.legalLink}>Disclaimer</Link>
+          <span className={styles.legalDot}>·</span>
+          <Link href="/terms-and-conditions" className={styles.legalLink}>Terms &amp; Conditions</Link>
+        </nav>
+
         {/* COPYRIGHT */}
         <p className={styles.copy}>
-          2025 Copyright © Aset. All rights reserved.
+          2025 Copyright © Disconnect Agencies. All rights reserved.
         </p>
       </div>
     </footer>
