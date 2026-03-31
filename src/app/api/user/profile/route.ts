@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { getAuthToken, verifyAndRotateToken } from '@/lib/auth';
 import dbConnect from '../../../../lib/mongodb';
 import User from '../../../../models/User';
 
@@ -7,17 +7,19 @@ import { uploadToCloudinary } from '../../../../lib/cloudinary';
 import { sanitizeInput } from '@/lib/sanitizer';
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+
 
 export async function GET(req: Request) {
     try {
-        const authHeader = req.headers.get('authorization');
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        const token = getAuthToken(req);
+        if (!token) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+        const { payload: decoded, newToken, error: authError } = verifyAndRotateToken(token);
+        if (!decoded) {
+            return NextResponse.json({ error: authError || 'Unauthorized' }, { status: 401 });
+        }
 
         await dbConnect();
         const user = await User.findById(decoded.userId).select('-password');
@@ -25,7 +27,11 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        return NextResponse.json({ user }, { status: 200 });
+        const response = NextResponse.json({ user }, { status: 200 });
+        if (newToken) {
+            response.headers.set('X-New-Token', newToken);
+        }
+        return response;
     } catch (error: unknown) {
         console.error('Get Profile Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -34,13 +40,15 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
     try {
-        const authHeader = req.headers.get('authorization');
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        const token = getAuthToken(req);
+        if (!token) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+        const { payload: decoded, newToken, error: authError } = verifyAndRotateToken(token);
+        if (!decoded) {
+            return NextResponse.json({ error: authError || 'Unauthorized' }, { status: 401 });
+        }
 
         const rawBody = await req.json();
         const body = sanitizeInput(rawBody);
@@ -67,10 +75,14 @@ export async function PUT(req: Request) {
 
         await user.save();
 
-        return NextResponse.json(
+        const response = NextResponse.json(
             { message: 'Profile updated successfully', user: { name: user.name, avatar: user.avatar, email: user.email, isVerified: user.isVerified } },
             { status: 200 }
         );
+        if (newToken) {
+            response.headers.set('X-New-Token', newToken);
+        }
+        return response;
     } catch (error: unknown) {
         console.error('Update Profile Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

@@ -18,7 +18,11 @@ export async function GET(req: NextRequest) {
       .limit(200)
       .lean();
 
-    return NextResponse.json({ bookings });
+    const response = NextResponse.json({ bookings });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to load bookings';
     return NextResponse.json({ error: message }, { status: 500 });
@@ -50,7 +54,11 @@ export async function PUT(req: NextRequest) {
     const booking = await Booking.findByIdAndUpdate(id, update, { new: true, runValidators: true }).lean();
     if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
 
-    return NextResponse.json({ booking });
+    const response = NextResponse.json({ booking });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to update booking';
     return NextResponse.json({ error: message }, { status: 500 });

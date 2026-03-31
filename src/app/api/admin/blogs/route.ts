@@ -145,7 +145,11 @@ export async function POST(req: NextRequest) {
       faq: body.faq || [],
     });
 
-    return NextResponse.json({ blog }, { status: 201 });
+    const response = NextResponse.json({ blog }, { status: 201 });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
   } catch (err) {
     console.error("CREATE BLOG ERROR:", err);
     const msg = err instanceof Error ? err.message : "Internal server error";
@@ -251,7 +255,11 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ blog });
+    const response = NextResponse.json({ blog });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
   } catch (err) {
     console.error("UPDATE BLOG ERROR:", err);
     const msg = err instanceof Error ? err.message : "Internal server error";

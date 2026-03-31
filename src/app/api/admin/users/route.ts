@@ -18,7 +18,11 @@ export async function GET(req: NextRequest) {
     const userCount = await User.countDocuments({ role: 'user' });
     const totalCount = await User.countDocuments({});
 
-    return NextResponse.json({ users, debug: { totalCount, adminCount, userCount } });
+    const response = NextResponse.json({ users, debug: { totalCount, adminCount, userCount } });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
@@ -45,7 +49,11 @@ export async function PATCH(req: NextRequest) {
     const user = await User.findByIdAndUpdate(id, update, { new: true });
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-    return NextResponse.json({ user });
+    const response = NextResponse.json({ user });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
@@ -68,7 +76,11 @@ export async function DELETE(req: NextRequest) {
     const user = await User.findByIdAndDelete(id);
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-    return NextResponse.json({ message: 'User deleted' });
+    const response = NextResponse.json({ message: 'User deleted' });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

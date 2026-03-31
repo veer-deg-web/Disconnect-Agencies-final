@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { getAuthToken, verifyAndRotateToken } from '@/lib/auth';
 import dbConnect from '../../../lib/mongodb';
 import Feedback from '../../../models/Feedback';
 import User from '../../../models/User';
 import { sanitizeInput } from '@/lib/sanitizer';
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+
 
 export async function POST(req: Request) {
     try {
-        const authHeader = req.headers.get('authorization');
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        const token = getAuthToken(req);
+        if (!token) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+        const { payload: decoded, newToken, error: authError } = verifyAndRotateToken(token);
+        if (!decoded) {
+            return NextResponse.json({ error: authError || 'Unauthorized' }, { status: 401 });
+        }
 
         const rawBody = await req.json();
         const body = sanitizeInput(rawBody);
@@ -44,10 +46,14 @@ export async function POST(req: Request) {
 
         await newFeedback.save();
 
-        return NextResponse.json(
+        const response = NextResponse.json(
             { message: 'Feedback submitted successfully', feedback: newFeedback },
             { status: 201 }
         );
+        if (newToken) {
+            response.headers.set('X-New-Token', newToken);
+        }
+        return response;
     } catch (error: unknown) {
         console.error('Submit Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
