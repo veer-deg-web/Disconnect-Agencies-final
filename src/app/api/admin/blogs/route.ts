@@ -13,9 +13,14 @@ import {
   sanitizeBlogHtmlContent,
 } from "@/lib/blogSeo";
 import { sanitizeInput } from "@/lib/sanitizer";
+import { verifyAdminToken } from "@/lib/adminAuth";
 
 /* GET /api/admin/blogs — Admin blog list (all statuses) */
 export async function GET(req: NextRequest) {
+  const auth = await verifyAdminToken(req);
+  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   try {
     await dbConnect();
     const { searchParams } = new URL(req.url);
@@ -69,6 +74,10 @@ export async function GET(req: NextRequest) {
 
 /* POST /api/admin/blogs — Create blog manually */
 export async function POST(req: NextRequest) {
+  const auth = await verifyAdminToken(req);
+  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   try {
     await dbConnect();
     const rawBody = await req.json();
@@ -146,6 +155,10 @@ export async function POST(req: NextRequest) {
 
 /* PUT /api/admin/blogs — Update blog */
 export async function PUT(req: NextRequest) {
+  const auth = await verifyAdminToken(req);
+  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   try {
     await dbConnect();
     const rawBody = await req.json();
@@ -248,6 +261,10 @@ export async function PUT(req: NextRequest) {
 
 /* DELETE /api/admin/blogs — Delete blog */
 export async function DELETE(req: NextRequest) {
+  const auth = await verifyAdminToken(req);
+  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   try {
     await dbConnect();
     const body = await req.json();

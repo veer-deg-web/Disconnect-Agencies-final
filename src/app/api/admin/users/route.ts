@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   try {
     await dbConnect();
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const users = await User.find({}).select('-password').sort({ createdAt: -1 });
     const adminCount = await User.countDocuments({ role: 'admin' });
     const userCount = await User.countDocuments({ role: 'user' });
     const totalCount = await User.countDocuments({});

@@ -5,7 +5,7 @@ import Booking from '../../../../models/Booking';
 import User from '../../../../models/User';
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 function verifyUser(req: Request) {
     const authHeader = req.headers.get('authorization');

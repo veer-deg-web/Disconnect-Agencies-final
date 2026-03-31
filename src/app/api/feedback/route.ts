@@ -5,7 +5,7 @@ import Feedback from '../../../models/Feedback';
 import User from '../../../models/User';
 import { sanitizeInput } from '@/lib/sanitizer';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function POST(req: Request) {
     try {

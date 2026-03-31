@@ -4,7 +4,7 @@ import dbConnect from '../../../../lib/mongodb';
 import Feedback from '../../../../models/Feedback';
 import { sanitizeInput } from '@/lib/sanitizer';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-here';
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 function verifyUser(req: Request) {
     const authHeader = req.headers.get('authorization');
