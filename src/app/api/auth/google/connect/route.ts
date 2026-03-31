@@ -47,14 +47,11 @@ export async function GET(req: NextRequest) {
     const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
 
     const url = oauth2Client.generateAuthUrl({
-        access_type: 'offline',   // required to get a refresh_token
-        prompt: 'consent',        // always show consent so we always get a refresh_token
+        access_type: 'offline',
+        prompt: 'consent', // 🔥 REQUIRED
         scope: [
             'https://www.googleapis.com/auth/calendar',
-            'openid',
-            'email',
         ],
-
     });
 
     return NextResponse.redirect(url);

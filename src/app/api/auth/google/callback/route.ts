@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
     try {
         // Exchange code → tokens
         const { tokens } = await oauth2Client.getToken(code);
+        console.log("TOKENS:", tokens);
 
         if (!tokens.refresh_token) {
             // This happens when consent was granted before without revoking.
