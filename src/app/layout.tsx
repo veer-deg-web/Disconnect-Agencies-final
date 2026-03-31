@@ -1,6 +1,5 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import SmoothScroll from "./providers/SmoothScroll";
 import { Toaster } from "react-hot-toast";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
@@ -38,15 +37,10 @@ export default function RootLayout({
           {/* Background */}
           <DotBackground />
 
-          {/* Smooth Scroll */}
-          <SmoothScroll />
-
           {/* Navbar */}
           <HeroNavbar />
 
-          {/* Locomotive Container */}
           <div
-            data-scroll-container
             style={{
               position: "relative",
               zIndex: 1,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -11,15 +11,7 @@ export default function Footer() {
   const router = useRouter();
   const pathname = usePathname();
   
-  const [userName, setUserName] = useState<string | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedName = localStorage.getItem("userName");
-    if (token && storedName) {
-      setUserName(storedName);
-    }
-  }, []);
 
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
@@ -83,99 +75,120 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        <div className={styles.brandInfo}>
-          <div 
-            className={styles.brandLogo}
-            onClick={() => router.push("/")}
-          >
-            <Image
-              src="/assets/Home/HeroNavbar/photo/logo.webp"
-              alt="Disconnect"
-              width={116}
-              height={36}
-            />
-          </div>
-          <p className={styles.brandDesc}>
-            Disconnect builds production-grade digital products, platforms, and AI systems. 
-            We bridge the gap between complex technology and intuitive user experiences.
-          </p>
-        </div>
-
-        {/* NAV LINKS */}
-        <nav className={styles.nav}>
-          {[
-            "Home",
-            "Feature",
-            "Benefits",
-            "Pricing",
-            "Testimonials",
-            "FAQ",
-            "About Us",
-            "Careers",
-            "Blog",
-          ].map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => handleFooterNav(item)}
-              className={styles.navBtn}
+        <div className={styles.mainContent}>
+          {/* BRAND SECTION */}
+          <div className={styles.brandSection}>
+            <div 
+              className={styles.brandLogo}
+              onClick={() => router.push("/")}
             >
-              {item}
-            </button>
-          ))}
-        </nav>
-        
-        <div className={styles.socialList}>
-          {[
-            { Icon: FaInstagram, href: "https://www.instagram.com/disconnect.agencies/", label: "Instagram" },
-            { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/disconnect.agencies/", label: "LinkedIn" },
-            { Icon: FaGithub, href: "https://github.com/veer-deg", label: "GitHub" },
-            { Icon: FaFacebookF, href: "https://www.facebook.com/disconnect.agencies", label: "Facebook" },
-          ].map(({ Icon, href, label }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={label}
-              className={styles.socialLink}
-            >
-              <Icon size={18} />
-            </a>
-          ))}
-        </div>
-
-        {/* FEEDBACK SECTION FOR LOGGED IN USERS */}
-        {userName && (
-          <div className={styles.feedbackContainer}>
-            <div className={styles.feedbackBox}>
-              <h4 className={styles.feedbackTitle}>Enjoying Disconnect?</h4>
-              <p className={styles.feedbackText}>
-                Have thoughts or suggestions? We&apos;d love to hear from you. Your feedback might be featured directly on our page!
-              </p>
-              <button
-                onClick={() => router.push("/feedback")}
-                className={styles.feedbackBtn}
-              >
-                Write Feedback
-              </button>
+              <Image
+                src="/assets/Home/HeroNavbar/photo/logo.webp"
+                alt="Disconnect"
+                width={180}
+                height={56}
+                priority
+              />
+            </div>
+            <p className={styles.brandDesc}>
+              Disconnect builds production-grade digital products, platforms, and AI systems. 
+              We bridge the gap between complex technology and intuitive user experiences.
+            </p>
+            <div className={styles.socialList}>
+              {[
+                { Icon: FaInstagram, href: "https://www.instagram.com/disconnect.agencies/", label: "Instagram" },
+                { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/disconnect.agencies/", label: "LinkedIn" },
+                { Icon: FaGithub, href: "https://github.com/veer-deg", label: "GitHub" },
+                { Icon: FaFacebookF, href: "https://www.facebook.com/disconnect.agencies", label: "Facebook" },
+              ].map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className={styles.socialLink}
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
             </div>
           </div>
-        )}
 
-        {/* LEGAL LINKS */}
-        <nav className={styles.legalLinks} aria-label="Legal">
-          <Link href="/privacy-policy" className={styles.legalLink}>Privacy Policy</Link>
-          <span className={styles.legalDot}>·</span>
-          <Link href="/disclaimer" className={styles.legalLink}>Disclaimer</Link>
-          <span className={styles.legalDot}>·</span>
-          <Link href="/terms-and-conditions" className={styles.legalLink}>Terms &amp; Conditions</Link>
-        </nav>
+          {/* QUICK LINKS */}
+          <div className={styles.navSection}>
+            <h4 className={styles.sectionTitle}>Quick Links</h4>
+            <nav className={styles.nav}>
+              {[
+                "Home",
+                "Feature",
+                "Benefits",
+                "Pricing",
+                "Testimonials",
+                "FAQ",
+                "About Us",
+                "Careers",
+                "Blog",
+              ].map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => handleFooterNav(item)}
+                  className={styles.navBtn}
+                >
+                  {item}
+                </button>
+              ))}
+            </nav>
+          </div>
 
-        {/* COPYRIGHT */}
-        <p className={styles.copy}>
-          2025 Copyright © Disconnect Agencies. All rights reserved.
-        </p>
+          {/* CONTACT INFO */}
+          <div className={styles.contactSection}>
+            <h4 className={styles.sectionTitle}>Contact Us</h4>
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>📞</span>
+              <a href="tel:+918585858586" className={styles.contactLink}>+91 8585858586</a>
+            </div>
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>📧</span>
+              <a href="mailto:Career@disconnect.software" className={styles.contactLink}>Career@disconnect.software</a>
+            </div>
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>📧</span>
+              <a href="mailto:Enquiry@disconnect.software" className={styles.contactLink}>Enquiry@disconnect.software</a>
+            </div>
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>📧</span>
+              <a href="mailto:Support@disconnect.software" className={styles.contactLink}>Support@disconnect.software</a>
+            </div>
+            
+
+          </div>
+        </div>
+        
+        <div className={styles.feedbackBox}>
+          <h4 className={styles.feedbackTitleSmall}>Loved our service?</h4>
+          <Link href="/feedback" className={styles.feedbackBtnSmall}>
+             Write a Review
+          </Link>
+        </div>
+
+
+
+        {/* BOTTOM BAR */}
+        <div className={styles.footerBottom}>
+          <p className={styles.copy}>
+            {new Date().getFullYear()} Copyright © Disconnect Agencies. All rights reserved.
+          </p>
+          
+          <nav className={styles.legalLinks} aria-label="Legal">
+            <Link href="/privacy-policy" className={styles.legalLink}>Privacy Policy</Link>
+            <span className={styles.legalDot}>·</span>
+            <Link href="/disclaimer" className={styles.legalLink}>Disclaimer</Link>
+            <span className={styles.legalDot}>·</span>
+            <Link href="/terms-and-conditions" className={styles.legalLink}>Terms &amp; Conditions</Link>
+          </nav>
+        </div>
       </div>
     </footer>
   );

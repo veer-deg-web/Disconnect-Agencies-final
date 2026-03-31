@@ -16,26 +16,12 @@ interface JobStatus {
 }
 
 export default function GenerationStatusPage() {
-  const [job, setJob] = useState<JobStatus | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [job] = useState<JobStatus | null>(null);
+  const [error] = useState<string | null>(null);
   const logEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const res = await fetch("/api/admin/generation-status");
-        if (!res.ok) throw new Error("Failed to fetch status");
-        const data = await res.json();
-        setJob(data);
-        setError(null);
-      } catch {
-        setError("Unable to connect to generation service.");
-      }
-    };
-
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 3000);
-    return () => clearInterval(interval);
+    // interval and fetchStatus were removed here to stop unnecessary 404s
   }, []);
 
   useEffect(() => {

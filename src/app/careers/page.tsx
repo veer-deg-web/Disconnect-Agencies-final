@@ -158,10 +158,11 @@ export default function CareersPage() {
             />
           </motion.h1>
           <motion.div 
-            className="careers-description-container"
+            className="careers-content-glass"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
           >
             <p className="careers-intro">
               Disconnect is a digital agency doing real work in AI Models & Automation, App Development, Web Development, SEO, UI/UX Design, and Cloud Services. We&apos;re not always hiring for everything, but when we are, we&apos;re looking for people who actually care about what they build.
@@ -174,7 +175,7 @@ export default function CareersPage() {
               </div>
               
               <div className="careers-info-section">
-                <h3>What We're Looking For</h3>
+                <h3>What We&apos;re Looking For</h3>
                 <p>Honestly? People who are good at something and want to get better at it. Specifically:</p>
                 <ul>
                   <li>Genuinely interested in technology and where it&apos;s going</li>

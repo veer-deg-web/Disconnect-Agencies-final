@@ -1,73 +1,55 @@
 .footer {
   background-color: #0b0b0b;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 40px 24px;
+  padding: 80px 24px 40px;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+/* BRAND SECTION */
+.brandSection {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  align-items: center;
-}
-
-.brandInfo {
-  text-align: center;
-  max-width: 600px;
-  margin-bottom: 24px;
 }
 
 .brandLogo {
   display: block;
-  margin: 0 auto 12px;
   cursor: pointer;
+  width: fit-content;
 }
 
 .brandDesc {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.6);
-  line-height: 1.6;
-}
-
-.nav {
-  display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-  justify-content: center;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.navBtn {
-  text-decoration: none;
-  color: inherit;
-  padding: 6px 4px;
-  background: transparent;
-  border: none;
-  font: inherit;
-  cursor: pointer;
+  line-height: 1.7;
+  max-width: 400px;
 }
 
 .socialList {
   display: flex;
-  gap: 16px;
-  margin-top: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .socialLink {
   color: rgba(255, 255, 255, 0.6);
-  font-size: 18px;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   text-decoration: none;
@@ -75,77 +57,157 @@
 
 .socialLink:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
   border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 20px -10px rgba(222, 94, 3, 0.3);
 }
 
-.feedbackContainer {
-  width: 100%;
-  max-width: 500px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.feedbackBox {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.feedbackTitle {
-  margin: 0 0 12px 0;
+/* SECTION TITLES */
+.sectionTitle {
+  color: #fff;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* NAV SECTION */
+.navSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 24px;
+}
+
+.navBtn {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  transition: color 0.2s, transform 0.2s;
+  width: fit-content;
+}
+
+.navBtn:hover {
+  color: #DE5E03;
+  transform: translateX(5px);
+}
+
+/* CONTACT SECTION */
+.contactSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+}
+
+.contactIcon {
+  font-size: 18px;
+}
+
+.contactLink {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contactLink:hover {
   color: #fff;
 }
 
-.feedbackText {
-  margin: 0 0 16px 0;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+/* FEEDBACK BOX REDESIGN */
+.feedbackBox {
+  background: rgba(20, 20, 20, 1);
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid rgba(222, 94, 3, 0.2);
+  margin: 0 auto 60px;
+  max-width: 600px;
+  text-align: center;
+  backdrop-filter: blur(10px);
 }
 
-.feedbackBtn {
-  padding: 10px 24px;
-  background: #fff;
-  color: #000;
+.feedbackTitleSmall {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.feedbackBtnSmall {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: #DE5E03;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
 }
 
-.feedbackBtn:hover {
-  opacity: 0.9;
+.feedbackBtnSmall:hover {
+  background: #ff6b00;
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(222, 94, 3, 0.3);
 }
 
-.copy {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
+/* BOTTOM BAR */
+.footerBottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* LEGAL LINKS WRAPPER */
+.legalLinksWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .legalLinks {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
+  gap: 16px;
 }
 
 .legalLink {
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.4);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .legalLink:hover {
-  color: #ff6b00;
+  color: #DE5E03;
 }
 
 .legalDot {
@@ -153,20 +215,57 @@
   font-size: 12px;
 }
 
+.copy {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 1024px) {
+  .mainContent {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+  }
+}
+
 @media (max-width: 768px) {
   .footer {
-    padding: 32px 16px !important;
+    padding: 60px 20px 40px;
+  }
+
+  .mainContent {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .brandSection {
+    align-items: center;
+    text-align: center;
+  }
+
+  .brandDesc {
+    max-width: 100%;
+  }
+
+  .navSection, .contactSection {
+    align-items: center;
+    text-align: center;
   }
 
   .nav {
-    gap: 16px !important;
-    row-gap: 12px !important;
-    font-size: 13px !important;
+    grid-template-columns: 1fr;
+    align-items: center;
   }
 
-  .copy {
-    font-size: 12px !important;
-    text-align: center !important;
-    line-height: 1.6 !important;
+  .navBtn {
+    text-align: center;
+  }
+
+  .navBtn:hover {
+    transform: none;
+  }
+  
+  .footerBottom {
+    flex-direction: column;
+    text-align: center;
   }
 }
