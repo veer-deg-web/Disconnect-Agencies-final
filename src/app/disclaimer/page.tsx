@@ -26,7 +26,7 @@ export default function DisclaimerPage() {
         <div className={styles.badge}>Legal</div>
         <h1 className={styles.title}>Disclaimer</h1>
         <p className={styles.subtitle}>
-          This website and all its content is owned and operated by Disconnect — a digital agency offering services in AI, Web &amp; App Development, SEO, UI/UX Design, and Cloud Solutions.
+          This website and all its content is owned and operated by Disconnect &mdash; a digital agency offering services in AI, Web &amp; App Development, SEO, UI/UX Design, and Cloud Solutions.
         </p>
       </section>
 
@@ -93,7 +93,7 @@ export default function DisclaimerPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Intellectual Property</h2>
           <p className={styles.text}>
-            All content on this Site is protected under applicable copyright and intellectual property laws. You agree to respect these laws and not allow any unauthorised use or duplication of materials. Unless explicitly stated otherwise, Disconnect does not grant any rights under patents, trademarks, copyrights, or trade secrets.
+            All content on this Site is protected under applicable copyright and intellectual property laws. You agree to respect these laws and not allow any unauthorised use or duplication of materials. Unless explicitly stated &mdash; Disconnect does not grant any rights under patents, trademarks, copyrights, or trade secrets.
           </p>
         </section>
 
@@ -102,7 +102,7 @@ export default function DisclaimerPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Limitation of Liability</h2>
           <p className={styles.text}>
-            In no event shall Disconnect or its affiliates be liable for any direct, indirect, incidental, consequential, or punitive damages — including loss of data, revenue, or business opportunities — arising from your use of or inability to use this Site or its services, even if we were made aware of the possibility of such damages.
+            In no event shall Disconnect or its affiliates be liable for any direct, indirect, incidental, consequential, or punitive damages &mdash; including loss of data, revenue, or business opportunities &mdash; arising from your use of or inability to use this Site or its services, even if we were made aware of the possibility of such damages.
           </p>
         </section>
 
@@ -111,7 +111,7 @@ export default function DisclaimerPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Governing Law</h2>
           <p className={styles.text}>
-            These terms are governed by the laws of the Republic of India. Any disputes arising from the use of this Site will fall under the exclusive jurisdiction of the competent courts in India. By continuing to use this Site, you confirm that you&apos;ve read, understood, and voluntarily agreed to these terms.
+            These terms are governed by the laws of the Republic of India. Any disputes arising from the use of this Site will fall under the exclusive jurisdiction of the competent courts &mdash; By continuing to use this Site, you confirm that you&apos;ve read, understood, and voluntarily agreed to these terms.
           </p>
         </section>
 

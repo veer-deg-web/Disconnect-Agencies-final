@@ -19,7 +19,7 @@ import ParticleCanvas from '@/components/Shared/ParticleCanvas/ParticleCanvas';
 const Input = ({
   icon: Icon, type = 'text', placeholder, value, onChange, required = true, autoFocus = false,
 }: {
-  icon: React.FC<{ size?: number }>; type?: string; placeholder: string;
+  icon: any; type?: string; placeholder: string;
   value: string; onChange: (v: string) => void; required?: boolean; autoFocus?: boolean;
 }) => (
   <div className="auth-input-wrap">

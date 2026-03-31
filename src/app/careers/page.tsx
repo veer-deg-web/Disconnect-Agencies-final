@@ -164,41 +164,41 @@ export default function CareersPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <p className="careers-intro">
-              Disconnect is a digital agency doing real work in AI Models & Automation, App Development, Web Development, SEO, UI/UX Design, and Cloud Services. We're not always hiring for everything, but when we are, we're looking for people who actually care about what they build.
+              Disconnect is a digital agency doing real work in AI Models & Automation, App Development, Web Development, SEO, UI/UX Design, and Cloud Services. We&apos;re not always hiring for everything, but when we are, we&apos;re looking for people who actually care about what they build.
             </p>
             
             <div className="careers-info-grid">
               <div className="careers-info-section">
                 <h3>Why Work with Us?</h3>
-                <p>It's a small, focused team. That means less hierarchy, more ownership, and faster decisions. You won't spend months waiting for approval to try something new. Ideas move here — sometimes messily, but they move. Projects are real, clients are real, and the work shows up in the world rather than sitting in a backlog.</p>
+                <p>It&apos;s a small, focused team. That means less hierarchy, more ownership, and faster decisions. You won&apos;t spend months waiting for approval to try something new. Ideas move here &mdash; sometimes messily, but they move. Projects are real, clients are real, and the work shows up in the world rather than sitting in a backlog.</p>
               </div>
               
               <div className="careers-info-section">
                 <h3>What We're Looking For</h3>
                 <p>Honestly? People who are good at something and want to get better at it. Specifically:</p>
                 <ul>
-                  <li>Genuinely interested in technology and where it's going</li>
+                  <li>Genuinely interested in technology and where it&apos;s going</li>
                   <li>Skilled in their domain and not afraid to stretch beyond it</li>
                   <li>Problem-solvers who default to figuring things out rather than waiting for instructions</li>
                   <li>People who can work well with others without needing constant direction</li>
                   <li>Someone who cares about the quality of what gets shipped, not just whether it shipped</li>
                 </ul>
-                <p className="careers-note">Experience level is less important than how you think. We've brought in people fresh out of college and people with fifteen years behind them. If the mindset fits, the skills can grow.</p>
+                <p className="careers-note">Experience level is less important than how you think. We&apos;ve brought in people fresh out of college and people with fifteen years behind them. If the mindset fits, the skills can grow.</p>
               </div>
 
               <div className="careers-info-section">
                 <h3>Growth and Opportunities</h3>
-                <p>You'll work on live projects with real stakes. Over time, you'll pick up depth in areas like AI, cloud architecture, and digital strategy — not just by reading about them, but by using them. If you perform well and want to lead, those paths open up. We don't keep good people stuck.</p>
+                <p>You&apos;ll work on live projects with real stakes. Over time, you&apos;ll pick up depth in areas like AI, cloud architecture, and digital strategy &mdash; not just by reading about them, but by using them. If you perform well and want to lead, those paths open up. We don&apos;t keep good people stuck.</p>
               </div>
 
               <div className="careers-info-section">
                 <h3>Work Culture</h3>
-                <p>We're direct. We give feedback and expect to receive it. Schedules are flexible where the work allows, and we don't measure output by hours logged. We do care about results, communication, and not leaving teammates hanging.</p>
+                <p>We&apos;re direct. We give feedback and expect to receive it. Schedules are flexible where the work allows, and we don&apos;t measure output by hours logged. We do care about results, communication, and not leaving teammates hanging.</p>
               </div>
             </div>
 
             <p className="careers-join-us">
-              If this sounds like a place you'd want to work, we'd genuinely like to hear from you. Fill out the career form below to apply and explore opportunities with Disconnect.
+              If this sounds like a place you&apos;d want to work, we&apos;d genuinely like to hear from you. Fill out the career form below to apply and explore opportunities with Disconnect.
             </p>
           </motion.div>
         </header>

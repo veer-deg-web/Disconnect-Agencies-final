@@ -120,16 +120,16 @@ export default function AboutUsPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <p className="about-description">
-              Disconnect Software builds technology that actually works for the businesses using it. We specialise in AI Models & Automation, App Development, Web Development, SEO, UI/UX Design, and Cloud Services — not because it's a good list to put on a website, but because these are the areas where we've built real capability and done work we're proud of.
+              Disconnect Software builds technology that actually works for the businesses using it. We specialise in AI Models & Automation, App Development, Web Development, SEO, UI/UX Design, and Cloud Services &mdash; not because it&apos;s a good list to put on a website, but because these are the areas where we&apos;ve built real capability and done work we&apos;re proud of.
             </p>
             <p className="about-description">
-              Most agencies talk about strategy. We put it next to execution and make sure they match. Whether that's an intelligent automation system cutting down hours of manual work, a user interface that stops people from bouncing, or a cloud setup that scales without drama — the benchmark is always whether it actually solves the problem.
+              Most agencies talk about strategy. We put it next to execution and make sure they match. Whether that&apos;s an intelligent automation system cutting down hours of manual work, a user interface that stops people from bouncing, or a cloud setup that scales without drama &mdash; the benchmark is always whether it actually solves the problem.
             </p>
             <p className="about-description">
-              We don't work with everyone. We work with businesses that are serious about what they're building and want a partner who'll be straight with them — about what's possible, what it'll cost, and what it'll take. We're not here to sell a project and disappear.
+              We don&apos;t work with everyone. We work with businesses that are serious about what they&apos;re building and want a partner who&apos;ll be straight with them &mdash; about what&apos;s possible, what it&apos;ll cost, and what it&apos;ll take. We&apos;re not here to sell a project and disappear.
             </p>
             <p className="about-description">
-              Internally, the team runs on curiosity. New tools, new methods, emerging frameworks — we stay close to what's developing because that's what keeps our work relevant. When something better comes along, we adapt. Our clients benefit from that without having to track it themselves.
+              Internally, the team runs on curiosity. New tools, new methods, emerging frameworks &mdash; we stay close to what&apos;s developing because that&apos;s what keeps our work relevant. When something better comes along, we adapt. Our clients benefit from that without having to track it themselves.
             </p>
           </motion.div>
         </header>

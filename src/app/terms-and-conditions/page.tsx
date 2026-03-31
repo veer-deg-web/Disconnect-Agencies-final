@@ -37,7 +37,7 @@ export default function TermsPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Acceptance of Terms</h2>
           <p className={styles.text}>
-            Using Disconnect's website or services means you've read these Terms and agreed to them. If something here doesn't work for you, don't use the service. That's the honest version.
+            Using Disconnect&apos;s website or services means you&apos;ve read these Terms and agreed to them. If something here doesn&apos;t work for you, don&apos;t use the service. That&apos;s the honest version.
           </p>
         </section>
 

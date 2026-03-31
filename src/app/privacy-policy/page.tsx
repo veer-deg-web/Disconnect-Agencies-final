@@ -46,10 +46,10 @@ export default function PrivacyPolicyPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Data Collection and Usage</h2>
           <p className={styles.text}>
-            When you use our website or services, we collect certain information to make things work. If you're just browsing, we might see technical details like your IP address, browser type, and how you're interacting with the site. We use this to keep the platform secure and improve how it performs.
+            When you use our website or services, we collect certain information to make things work. If you&apos;re just browsing, we might see technical details like your IP address, browser type, and how you&apos;re interacting with the site. We use this to keep the platform secure and improve how it performs.
           </p>
           <p className={styles.text}>
-            If you reach out to us — through a form, an email, or by signing up for a service — we'll collect the details you provide: name, contact info, and whatever professional details are needed to get the job done. This helps us communicate with you and deliver the services you signed up for.
+            If you reach out to us — through a form, an email, or by signing up for a service — we&apos;ll collect the details you provide: name, contact info, and whatever professional details are needed to get the job done. This helps us communicate with you and deliver the services you signed up for.
           </p>
         </section>
 
@@ -58,7 +58,7 @@ export default function PrivacyPolicyPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Marketing and Cookies</h2>
           <p className={styles.text}>
-            We might use your contact info to keep you updated on what's happening at Disconnect. If you don't want those updates, you can opt out at any time. We also use cookies to help the website function better and understand traffic. You can manage these through your browser settings.
+            We might use your contact info to keep you updated on what&apos;s happening at Disconnect. If you don&apos;t want those updates, you can opt out at any time. We also use cookies to help the website function better and understand traffic. You can manage these through your browser settings.
           </p>
         </section>
 
@@ -67,7 +67,7 @@ export default function PrivacyPolicyPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Third-Party Links</h2>
           <p className={styles.text}>
-            Our site might link to other platforms. We don't control those, so their privacy practices are their own. Check them out if you're concerned about how they handle data.
+            Our site might link to other platforms. We don&apos;t control those, so their privacy practices are their own. Check them out if you&apos;re concerned about how they handle data.
           </p>
         </section>
 
@@ -76,7 +76,7 @@ export default function PrivacyPolicyPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Data Security</h2>
           <p className={styles.text}>
-            We don't sell your data. We only share it with trusted partners when it's necessary for our operations. We use standard security measures to protect your information, but remember that no system is 100% bulletproof.
+            We don&apos;t sell your data. We only share it with trusted partners when it&apos;s necessary for our operations. We use standard security measures to protect your information, but remember that no system is 100% bulletproof.
           </p>
         </section>
 
@@ -94,10 +94,10 @@ export default function PrivacyPolicyPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Your Rights and Contact Information</h2>
           <p className={styles.text}>
-            You can ask to access, update, or delete your personal data at any time, subject to applicable law. If you want to do any of that — or if something in this disclaimer doesn't sit right with you — reach out through our website or official channels. We'll sort it out.
+            You can ask to access, update, or delete your personal data at any time, subject to applicable law. If you want to do any of that &mdash; or if something in this disclaimer doesn&apos;t sit right with you &mdash; reach out through our website or official channels. We&apos;ll sort it out.
           </p>
           <p className={styles.text}>
-            Using Disconnect's services means you've read this and you're okay with how we handle things. We'll keep being straight with you about it.
+            Using Disconnect&apos;s services means you&apos;ve read this and you&apos;re okay with how we handle things. We&apos;ll keep being straight with you about it.
           </p>
         </section>
 
