@@ -54,7 +54,7 @@ export default function Ai() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <HeroSection />
-      <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200} title="Over 50+ businesses trusts us ." />
+      <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200} title="Our Trusted Partners." />
       <section id="feature">
       <ServicesSection />
       </section>

@@ -19,12 +19,11 @@ export default function ProductVisuals() {
         {/* TEXT */}
         <div className="product-visuals__content">
           <h2>
-            Disconnect Agency builds high-quality mobile apps with modern design,
-            speed, and powerful performance for businesses.
+            Mobile Apps Built to Perform
           </h2>
 
           <p>
-            We create Android, iOS, and cross-platform apps for growth.
+            We Design And Develop High-Quality Android, iOS, And Cross-Platform Apps That Scale With Your Business.
           </p>
         </div>
 
