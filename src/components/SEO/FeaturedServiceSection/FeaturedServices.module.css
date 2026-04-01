@@ -160,3 +160,27 @@
 .card:hover::before {
   opacity: 1;
 }
+
+.cardAnchor {
+  text-decoration: none;
+  display: block;
+}
+
+.imageWrapper {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 12px;
+  position: relative;
+}
+
+.partnerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .partnerImage {
+  transform: scale(1.05);
+}

@@ -3,36 +3,19 @@
 import styles from "./FeaturedServices.module.css";
 import FeaturedServiceCard from "./FeaturedServiceCard";
 import { motion } from "framer-motion";
-import {
-  SiReact,
-  SiGoogleanalytics,
-  SiFigma,
-} from "react-icons/si";
 
 const services = [
   {
-    icon: SiReact,
-    title: "Code Solutions",
-    role: "Head of Development",
-    type: "Full-time",
-    date: "Nov 26, 2024",
-    featured: true,
+    image: "/assets/Partners/six.webp",
+    url: "https://www.six.ind.in/",
   },
   {
-    icon: SiGoogleanalytics,
-    title: "ABC Studios",
-    role: "UI/UX Designer",
-    type: "Full-time",
-    date: "Dec 20, 2024",
-    featured: true,
+    image: "/assets/Partners/doctar.webp",
+    url: "https://doctar.in/",
   },
   {
-    icon: SiFigma,
-    title: "Design Spark",
-    role: "Lead Product Designer",
-    type: "Full-time",
-    date: "Dec 30, 2024",
-    featured: true,
+    image: "/assets/Partners/sixfinance.webp",
+    url: "https://sixfinance.app/",
   },
 ];
 
@@ -49,14 +32,13 @@ export default function FeaturedServicesSection() {
         <span className={styles.label}>FEATURED SERVICE</span>
 
         <h2 className={styles.heading}>
-          Find the right SEO
+          Explore our partners’
           <br />
-          solution for your business.
+          top-performing pages
         </h2>
 
         <p className={styles.subheading}>
-          Explore our core SEO services designed to increase visibility,
-          drive qualified traffic, and convert organic growth into revenue.
+          Discover high-impact content that consistently outperforms and delivers value.
         </p>
       </motion.div>
 

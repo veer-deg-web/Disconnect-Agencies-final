@@ -1,27 +1,16 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import styles from "./FeaturedServices.module.css";
-import type { IconType } from "react-icons";
 
 type Props = {
-  icon: IconType;
-  title: string;
-  role: string;
-  type: string;
-  date: string;
-  featured?: boolean;
+  image: string;
+  url: string;
 };
 
-export default function FeaturedServiceCard({
-  icon: Icon,
-  title,
-  role,
-  type,
-  date,
-  featured,
-}: Props) {
+export default function FeaturedServiceCard({ image, url }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -32,8 +21,8 @@ export default function FeaturedServiceCard({
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const rotateX = ((y / rect.height) - 0.5) * 16;
-    const rotateY = ((x / rect.width) - 0.5) * -16;
+    const rotateX = (y / rect.height - 0.5) * 16;
+    const rotateY = (x / rect.width - 0.5) * -16;
 
     card.style.transform = `
       perspective(1400px)
@@ -57,31 +46,29 @@ export default function FeaturedServiceCard({
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       viewport={{ once: true }}
     >
-      <div
-        ref={cardRef}
-        className={styles.card}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={resetTilt}
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.cardAnchor}
       >
-        <div className={styles.cardHeader}>
-          <div className={styles.icon}>
-            <Icon size={18} />
+        <div
+          ref={cardRef}
+          className={styles.card}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={resetTilt}
+        >
+          <div className={styles.imageWrapper}>
+            <Image
+              src={image}
+              alt="Partner Page"
+              width={400}
+              height={300}
+              className={styles.partnerImage}
+            />
           </div>
-
-          <span className={styles.cardTitle}>{title}</span>
-
-          {featured && <span className={styles.badge}>FEATURED</span>}
         </div>
-
-        <div className={styles.divider} />
-
-        <p className={styles.role}>{role}</p>
-        <p className={styles.type}>{type}</p>
-
-        <button className={styles.button}>View details</button>
-
-        <p className={styles.date}>Posted on {date}</p>
-      </div>
+      </a>
     </motion.div>
   );
 }
