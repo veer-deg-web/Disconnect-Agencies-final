@@ -14,28 +14,28 @@ const steps = [
     step: "Step 1",
     title: "Smart Analyzing",
     description:
-      "We assess your needs and identify AI solutions to streamline workflows and improve efficiency.",
+      "We Assess Your Needs And Identify AI Solutions To Streamline Workflows And Improve Efficiency.",
     video: "/assets/AIModels/ProcessSection/video/step1.mov",
   },
   {
     step: "Step 2",
     title: "AI Development",
     description:
-      "Our team builds intelligent automation systems tailored to your business processes.",
+      "Our Team Builds Intelligent Automation Systems Tailored To Your Business Processes.",
     video: "/assets/AIModels/ProcessSection/video/step2.mov",
   },
   {
     step: "Step 3",
     title: "Seamless Integration",
     description:
-      "We integrate AI solutions smoothly into your existing systems with minimal disruption.",
+      "We Integrate AI Solutions Smoothly Into Your Existing Systems With Minimal Disruption.",
     video: "/assets/AIModels/ProcessSection/video/step3.mov",
   },
   {
     step: "Step 4",
     title: "Continuous Optimization",
     description:
-      "We continuously monitor and optimize performance to ensure long-term scalability.",
+      "We Continuously Monitor And Optimize Performance To Ensure Long-Term Scalability.",
     video: "/assets/AIModels/ProcessSection/video/step4.mov",
   },
 ];
@@ -136,8 +136,8 @@ export default function ProcessSection() {
             whileInView="show"
             viewport={{ once: true }}
           >
-            We design, develop, and implement automation tools that help you work
-            smarter, not harder.
+            We Design, Develop, And Implement Automation Tools That Help You Work
+            Smarter, Not Harder.
           </motion.p>
         </div>
 

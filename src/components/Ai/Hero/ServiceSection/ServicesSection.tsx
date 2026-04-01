@@ -6,28 +6,28 @@ import "./ServicesSection.css";
 const services = [
   {
     tag: "Workflow Automation",
-    title: "Automate repetitive tasks",
+    title: "Automate Repetitive Tasks",
     description:
-      "We help you streamline internal operations by automating manual workflows like data entry, reporting, and approval chains.",
+      "We Help You Streamline Internal Operations By Automating Manual Workflows Like Data Entry, Reporting, And Approval Chains.",
     video: "/assets/AIModels/ServiceSection/video/service1.mov",
   },
   {
     tag: "AI Assistants",
-    title: "Delegate daily tasks",
+    title: "Delegate Daily Tasks",
     description:
-      "Free your team from routine work by delegating daily tasks to intelligent AI agents.",
+      "Free Your Team From Routine Work By Delegating Daily Tasks To Intelligent AI Agents.",
     video: "/assets/AIModels/ServiceSection/video/service2.mov",
   },
   {
     tag: "Sales Automation",
-    title: "Accelerate sales growth",
+    title: "Accelerate Sales Growth",
     description:
-      "Automate lead qualification, follow-ups, and CRM updates to increase conversions.",
+      "Automate Lead Qualification, Follow-Ups, And CRM Updates To Increase Conversions.",
     video: "/assets/AIModels/ServiceSection/video/service3.mov",
   },
   {
     tag: "Custom AI Systems",
-    title: "Build smarter systems",
+    title: "Build Smarter Systems",
     description:
       "We design scalable AI systems tailored to your workflows.",
     video: "/assets/AIModels/ServiceSection/video/service4.mov",
