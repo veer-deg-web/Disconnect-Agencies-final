@@ -108,15 +108,15 @@ export default function PerformanceMetrics() {
         }}
       >
         <Stat
-          value="98.7%"
+          value="85.5%"
           label="Client Satisfaction & Retention Across All Projects"
         />
         <Stat
-          value="250+"
+          value="50+"
           label="Websites, Apps & Digital Products Successfully Delivered"
         />
         <Stat
-          value="120+"
+          value="60+"
           label="Custom Automation & AI Solutions Built for Businesses"
         />
       </motion.div>

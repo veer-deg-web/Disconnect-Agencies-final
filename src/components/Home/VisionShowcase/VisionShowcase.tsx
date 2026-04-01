@@ -30,7 +30,7 @@ export default function VisionShowcase() {
         {/* TEXT */}
         <div className="text">
           <h2> <ShinyText
-  text="Bring us your vision"
+  text="Your Vision. Our Expertise"
   speed={2}
   delay={0}
   color="#b5b5b5"
@@ -43,8 +43,7 @@ export default function VisionShowcase() {
 /></h2>
           <p>
             We&apos;re the full-service development agency helping teams in{" "}
-            <DynamicCity fallback="your city" /> handle design, engineering,
-            and launch end to end.
+            <DynamicCity fallback="your city" /> raft, design, and launch products that connect with audiences and make an impact.
           </p>
         </div>
 

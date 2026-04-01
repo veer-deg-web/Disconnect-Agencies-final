@@ -94,14 +94,14 @@ export default function TestimonialsSection() {
           className="testimonial-text"
         >
           <h2 className="testimonial-heading" style={heading}>
-            Trusted by Forward-
+            Trusted by 
             <br />
-            Thinking Investors
+            Visionary Investors
           </h2>
 
           <p className="testimonial-subtitle" style={subtitle}>
-            Real stories from users who&apos;ve transformed their investment
-            experience with AI-driven insights.
+            Discover How Users Are Transforming Their Investment Journey With Intelligent, AI-Powered Insights. Make Smarter Decisions With Real-Time Data And Predictive Analytics.Also, Unlock New Opportunities And Stay Ahead In A Rapidly Evolving Market.
+
           </p>
         </motion.div>
 

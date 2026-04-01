@@ -149,7 +149,7 @@ export default function HeroContent() {
           initial="hidden"
           animate={controls}
         >
-          {`Ideate, refine, and build your vision into a fully functional product with seamless design, smart strategy, and impactful user-focused execution.`
+          {`From concept to launch — connect your vision to experiences that engage and inspire users`
             .split(" ")
             .map((word, i) => (
               <motion.span

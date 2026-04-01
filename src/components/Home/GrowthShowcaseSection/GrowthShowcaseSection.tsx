@@ -13,7 +13,7 @@ export default function GrowthShowcaseSection() {
       <div className="growth-headingWrap">
         <h2 className="growth-heading">
           <ShinyText
-            text="Show Up Your Idea "
+            text="Share Your Vision ,"
             speed={2}
             color="#b5b5b5"
             shineColor="#ffffff"
@@ -21,7 +21,7 @@ export default function GrowthShowcaseSection() {
           />
           <br />
           <ShinyText
-            text="We Will Handle The Rest "
+            text="We’ll Make It Happen "
             speed={2}
             color="#b5b5b5"
             shineColor="#ffffff"
