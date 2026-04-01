@@ -65,7 +65,7 @@ export default function AboutUsPage() {
       {/* Brand Logo Top Right */}
       <div className="about-logo" onClick={() => router.push("/")}>
         <Image
-          src="/assets/Home/HeroNavbar/photo/logo.webp"
+          src="/assets/logo.png"
           alt="Disconnect"
           width={116}
           height={36}

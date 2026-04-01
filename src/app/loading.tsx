@@ -5,7 +5,7 @@ export default function Loading() {
     <div className="global-loader-container">
       <div className="global-loader-pulse">
         <Image 
-          src="/assets/Home/loading/photo/logo.webp" 
+          src="/assets/logo.png" 
           alt="Loading..." 
           width={96}
           height={96}

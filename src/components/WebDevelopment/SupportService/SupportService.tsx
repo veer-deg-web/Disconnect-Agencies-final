@@ -179,7 +179,7 @@ export default function SupportSection() {
                   className="brand-logo-img"
                 />
                 <Image
-                  src="/assets/Home/HeroNavbar/photo/logo.webp"
+                  src="/assets/logo.png"
                   alt="Disconnect"
                   width={120}
                   height={40}
