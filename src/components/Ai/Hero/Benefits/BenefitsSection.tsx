@@ -16,32 +16,32 @@ const benefits = [
   {
     icon: SiLightning,
     title: "Increased Productivity",
-    desc: "AI-driven automation reduces manual effort and accelerates decision-making.",
+    desc: "AI-Driven Automation Reduces Manual Effort and Accelerates Decision-Making.",
   },
   {
     icon: RiCustomerService2Line,
     title: "Better Customer Experience",
-    desc: "Personalized AI interactions improve response times and satisfaction.",
+    desc: "Personalized AI Interactions Improve Response Times and Satisfaction.",
   },
   {
     icon: SiClockify,
     title: "24/7 Availability",
-    desc: "AI systems operate round-the-clock without downtime.",
+    desc: "AI Systems Operate Round-The-Clock Without Downtime.",
   },
   {
     icon: GiReceiveMoney,
     title: "Cost Reduction",
-    desc: "Automate repetitive work and optimize operational costs.",
+    desc: "Automate Repetitive Work and Optimize Operational Costs.",
   },
   {
     icon: SiGoogleanalytics,
     title: "Data-Driven Insights",
-    desc: "Leverage analytics to make smarter, faster business decisions.",
+    desc: "Leverage Analytics to Make Smarter, Faster Business Decisions.",
   },
   {
     icon: BsGraphUp,
     title: "Scalability & Growth",
-    desc: "AI adapts to your business needs without increasing overhead.",
+    desc: "AI Adapts to Your Business Needs Without Increasing Overhead.",
   },
 ];
 
@@ -78,8 +78,8 @@ export default function BenefitsSection() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        Discover how AI automation enhances efficiency, reduces costs,
-        and drives smarter, faster business processes.
+        Discover How AI Automation Enhances Efficiency, Reduces Costs,
+        and Drives Smarter, Faster Business Processes.
       </motion.p>
 
       {/* GRID */}

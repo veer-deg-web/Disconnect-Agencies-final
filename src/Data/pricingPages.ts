@@ -43,7 +43,7 @@ export const pricingPages: ServicePricingPage[] = [
     slug: "cloud",
     title: "Cloud Infrastructure",
     subtitle: "Secure, scalable, and production-ready systems.",
-    tagline: "We don't sell features. We build systems — and maintain them.",
+    tagline: "We Don't Sell Features. We Build Systems — And Maintain Them.",
     intro:
       "Your infrastructure is the backbone of everything. We design and deploy cloud systems that hold up under real load — not just demo conditions. Whether you're shipping an MVP or running high-scale traffic, we build foundations that don't crack.",
     accent: "#DBFE49",

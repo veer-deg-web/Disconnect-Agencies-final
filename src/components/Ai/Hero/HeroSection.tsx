@@ -75,9 +75,9 @@ export default function HeroSection() {
           <ShinyText
             text={
               <>
-                Intelligent Automation for
+                Automate Smarter.
                 <br />
-                Modern Businesses.
+                Connect Better.
               </>
             }
             speed={2}
@@ -96,7 +96,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 2.1, ease: easeOut }}
         >
           <p className="hero-subtext">
-            Xtract brings AI automation to teams in <DynamicCity fallback="your city" /> and streamlines daily tasks.
+            Disconnects Team In  <DynamicCity fallback="your city" />  Streamlines Daily Tasks Using Intelligent AI Built For Real Efficiency.
           </p>
 
           <div className="hero-actions">

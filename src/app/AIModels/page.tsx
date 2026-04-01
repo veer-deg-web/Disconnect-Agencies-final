@@ -68,7 +68,7 @@ export default function Ai() {
       </section>
       <section id="pricing">
         <PricingSection
-          headingTitle="AI-Powered Pricing Built to Scale"
+          headingTitle="Pricing That Grows With Your AI"
           headingGradient={[
             "#7C3AED",
             "#A78BFA",
