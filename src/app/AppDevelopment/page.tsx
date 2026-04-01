@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import AppDevelopmentPage from "./client";
+import AppDevContent from "@/components/AppDevelopment/AppDevContent";
+import Footer from "@/components/Shared/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "App Development",
@@ -45,7 +46,8 @@ export default function Page() {
       <h1 style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 }}>
         App Development Services
       </h1>
-      <AppDevelopmentPage />
+      <AppDevContent />
+      <Footer />
     </>
   );
 }
