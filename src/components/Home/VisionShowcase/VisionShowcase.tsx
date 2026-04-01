@@ -42,8 +42,8 @@ export default function VisionShowcase() {
   disabled={false}
 /></h2>
           <p>
-            We&apos;re the full-service development agency helping teams in{" "}
-            <DynamicCity fallback="your city" /> raft, design, and launch products that connect with audiences and make an impact.
+            We Help Teams In{" "}
+            <DynamicCity fallback="your city" /> Craft, Design, And Launch Products That Connect With Audiences And Make An Impact.
           </p>
         </div>
 

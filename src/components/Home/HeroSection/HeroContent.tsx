@@ -149,7 +149,7 @@ export default function HeroContent() {
           initial="hidden"
           animate={controls}
         >
-          {`From concept to launch — connect your vision to experiences that engage and inspire users`
+          {`From Concept To Launch — Connect Your Vision To Experiences That Engage And Inspire Users`
             .split(" ")
             .map((word, i) => (
               <motion.span

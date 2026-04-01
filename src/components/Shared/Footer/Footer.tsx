@@ -96,8 +96,7 @@ export default function Footer() {
               />
             </div>
             <p className={styles.brandDesc}>
-              Disconnect builds production-grade digital products, platforms, and AI systems. 
-              We bridge the gap between complex technology and intuitive user experiences.
+             We Connect Powerful Technology With Seamless User Experiences — Building Digital Products, Platforms, And AI Systems That Truly Work.
             </p>
             <div className={styles.socialList}>
               {[
