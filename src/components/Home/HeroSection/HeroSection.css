@@ -29,7 +29,59 @@
   padding: 0 3rem;
 }
 
+.hero-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 240px; /* Original desktop padding */
+  width: 100%;
+}
+
+.hero-heading {
+  font-size: 75px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.hero-para {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 18px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.glow-pill {
+  width: 347px;
+  max-width: 100%;
+  padding: 0 16px;
+}
+
 /* Responsive adjustments */
+
+@media (max-width: 1200px) {
+  .hero-wrap {
+    padding: 0 100px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-wrap {
+    padding: 0 40px;
+  }
+  
+  .hero-heading {
+    font-size: 60px;
+  }
+}
 
 @media (max-width: 768px) {
   .hero-inner {
@@ -37,23 +89,23 @@
   }
 
   .hero-wrap {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+    padding: 0 20px;
   }
 
   .hero-heading {
-    font-size: clamp(36px, 9vw, 48px) !important;
-    line-height: 1.15 !important;
+    font-size: clamp(36px, 9vw, 48px);
+    line-height: 1.15;
   }
 
   .hero-para {
-    font-size: 15px !important;
+    font-size: 15px;
   }
 
   .hero-buttons {
     flex-direction: column;
     gap: 14px;
     width: 100%;
+    margin-bottom: 30px;
   }
 
   .hero-buttons > div {
@@ -63,9 +115,9 @@
   }
 
   .glow-pill {
-    width: 100% !important;
+    width: 100%;
     max-width: 320px;
-    font-size: 13px !important;
+    font-size: 13px;
   }
 }
 
@@ -73,10 +125,22 @@
   .hero-inner {
     padding: 0 1.5rem;
   }
+  
+  .hero-wrap {
+    padding: 0 15px;
+  }
+
+  .hero-heading {
+    font-size: 32px;
+  }
 }
 
 @media (max-width: 360px) {
   .hero-inner {
     padding: 0 1.2rem;
+  }
+  
+  .glow-pill {
+    max-width: 280px;
   }
 }

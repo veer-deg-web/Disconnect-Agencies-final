@@ -1185,7 +1185,7 @@ function GoogleCalendarSection() {
     // Pass JWT as a query param — window.location.href can't send headers,
     // so the connect route reads the token from ?token= instead.
     setNotice('Redirecting to Google…');
-    window.location.href = `/api/auth/google/connect?token=${encodeURIComponent(token)}`;
+    window.location.href = `/api/google/auth?token=${encodeURIComponent(token)}`;
   };
 
 

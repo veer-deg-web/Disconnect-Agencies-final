@@ -113,8 +113,6 @@ export default function HeroContent() {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
-          paddingLeft: "240px",
-          paddingRight: "240px",
           ...WILL_CHANGE_TRANSFORM,
         }}
       >
@@ -129,7 +127,6 @@ export default function HeroContent() {
           variants={panDown}
           initial="hidden"
           animate={controls}
-          style={{ fontSize: "75px", fontWeight: 600, lineHeight: 1.2 }}
         >
           <ShinyText
   text="Disconnect Agencies"
@@ -151,7 +148,6 @@ export default function HeroContent() {
           variants={textContainer}
           initial="hidden"
           animate={controls}
-          style={{ color: "rgba(255,255,255,0.6)", fontSize: "18px" }}
         >
           {`Ideate, refine, and build your vision into a fully functional product with seamless design, smart strategy, and impactful user-focused execution.`
             .split(" ")
@@ -172,7 +168,6 @@ export default function HeroContent() {
           variants={buttonGroup}
           initial="hidden"
           animate={controls}
-          style={{ display: "flex", gap: "16px", marginBottom: "40px" }}
         >
           <motion.div variants={riseUp}>
             <BookCallButton />
@@ -414,7 +409,6 @@ export function GlowingPill() {
     <div
       className="glow-pill"
       style={{
-        width: "347px",
         height: "27px",
         borderRadius: "999px",
         display: "flex",

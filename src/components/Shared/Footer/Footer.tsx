@@ -4,7 +4,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF } from "react-icons/fa";
+import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF, FaPhoneAlt } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -70,6 +71,10 @@ export default function Footer() {
       router.push("/blog");
       return;
     }
+    if (item === "How We Work") {
+      router.push("/how-we-work");
+      return;
+    }
   };
 
   return (
@@ -129,6 +134,7 @@ export default function Footer() {
                 "About Us",
                 "Careers",
                 "Blog",
+                "How We Work",
               ].map((item) => (
                 <button
                   key={item}
@@ -146,23 +152,21 @@ export default function Footer() {
           <div className={styles.contactSection}>
             <h4 className={styles.sectionTitle}>Contact Us</h4>
             <div className={styles.contactItem}>
-              <span className={styles.contactIcon}>📞</span>
+              <span className={styles.contactIcon}><FaPhoneAlt size={14} /></span>
               <a href="tel:+918585858586" className={styles.contactLink}>+91 8585858586</a>
             </div>
             <div className={styles.contactItem}>
-              <span className={styles.contactIcon}>📧</span>
+              <span className={styles.contactIcon}><MdEmail size={16} /></span>
               <a href="mailto:Career@disconnect.software" className={styles.contactLink}>Career@disconnect.software</a>
             </div>
             <div className={styles.contactItem}>
-              <span className={styles.contactIcon}>📧</span>
+              <span className={styles.contactIcon}><MdEmail size={16} /></span>
               <a href="mailto:Enquiry@disconnect.software" className={styles.contactLink}>Enquiry@disconnect.software</a>
             </div>
             <div className={styles.contactItem}>
-              <span className={styles.contactIcon}>📧</span>
+              <span className={styles.contactIcon}><MdEmail size={16} /></span>
               <a href="mailto:Support@disconnect.software" className={styles.contactLink}>Support@disconnect.software</a>
             </div>
-            
-
           </div>
         </div>
         
@@ -187,6 +191,8 @@ export default function Footer() {
             <Link href="/disclaimer" className={styles.legalLink}>Disclaimer</Link>
             <span className={styles.legalDot}>·</span>
             <Link href="/terms-and-conditions" className={styles.legalLink}>Terms &amp; Conditions</Link>
+            <span className={styles.legalDot}>·</span>
+            <Link href="/how-we-work" className={styles.legalLink}>How We Work</Link>
           </nav>
         </div>
       </div>

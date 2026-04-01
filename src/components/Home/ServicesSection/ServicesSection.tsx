@@ -14,6 +14,7 @@ import {
 } from "react-icons/tb";
 import { MdAppSettingsAlt } from "react-icons/md";
 import { CiCloudOn } from "react-icons/ci";
+import { VscPaintcan } from "react-icons/vsc";
 
 /* =======================
    DATA
@@ -52,7 +53,7 @@ const services: Service[] = [
     title: "UI/UX Design",
     description:
       "Intuitive, visually polished interfaces crafted to elevate engagement.",
-    icon: <CiCloudOn size={22} />,
+    icon: <VscPaintcan size={22} />,
     route: "/Uiux",
   },
   {
