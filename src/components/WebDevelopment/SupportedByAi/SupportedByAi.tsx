@@ -49,24 +49,17 @@ export default function SupportedByAISection() {
       {/* LEFT TEXT */}
       <div style={textWrap}>
         <ShinyText
-          text="Supported by leading AI and"
+          text="Connected to the Minds Building the Future"
           color="#ffffff"
           shineColor="rgba(255,255,255,0.85)"
           speed={2.4}
           spread={90}
         />
 
-        <ShinyText
-          text="future-of-work investors."
-          color="#ffffff"
-          shineColor="rgba(255,255,255,0.85)"
-          speed={2.4}
-          spread={90}
-        />
+        
 
         <p style={subText}>
-          Backed by operators, designers, engineers, and investors shaping the
-          next generation of intelligent digital products.
+          Supported By A Collective Of Experts And Investors Advancing AI-Driven Digital Innovation
         </p>
       </div>
 

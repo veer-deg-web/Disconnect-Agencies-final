@@ -99,25 +99,93 @@ export default function SupportSection() {
         {/* BIG CARD */}
         <motion.div variants={cardUp} className="support-item large">
           <SpotlightCard
-            className="support-card"
+            className="support-card refined-layout"
             spotlightColor="rgba(199, 255, 26, 0.15)"
           >
             <span className="pill">CEO’s Words</span>
 
+            <div className="partner-images-grid">
+              <a
+                href="https://doctar.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="partner-link"
+              >
+                <Image
+                  src="/assets/Partners/doctar.webp"
+                  alt="Doctar"
+                  width={200}
+                  height={120}
+                  className="partner-img"
+                />
+              </a>
+              <a
+                href="https://sixfinance.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="partner-link"
+              >
+                <Image
+                  src="/assets/Partners/sixfinance.webp"
+                  alt="Six Finance"
+                  width={200}
+                  height={120}
+                  className="partner-img"
+                />
+              </a>
+              <a
+                href="https://www.six.ind.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="partner-link"
+              >
+                <Image
+                  src="/assets/Partners/six.webp"
+                  alt="Six"
+                  width={200}
+                  height={120}
+                  className="partner-img"
+                />
+              </a>
+            </div>
+
             <motion.p className="quote" variants={textLeft}>
-              “Working with you was seamless from start to finish. The final
-              design exceeded our expectations. Your attention to detail and
-              ability to adaptable was outstanding throughout the entire
-              process to the world.”
+              “At Disconnect, we don’t just build products; we bridge the gap
+              between complex technology and intuitive human experiences. Our
+              commitment is to deliver excellence that fuels your vision.”
             </motion.p>
 
-            <motion.div className="author" variants={textLeft}>
-              <strong>Timofey Gr</strong>
-              <span>Co Founder of Metrilo</span>
-            </motion.div>
+            <div className="card-footer">
+              <motion.div className="bio-left" variants={textLeft}>
+                <strong>Aditya Singh Rajput</strong>
+                <span>
+                  Founder of Doctar, Six Finance, and Six Buy and Sell
+                </span>
+              </motion.div>
 
-            <div className="brand">
-              <Image src="/assets/WebDevelopment/SupportService/photo/logo.webp" alt="disconnect" width={120} height={40} />
+              <div className="logo-pill">
+                <Image
+                  src="/assets/logos SVG/finance logo.svg"
+                  alt="Six Finance"
+                  width={100}
+                  height={30}
+                  className="brand-logo-img"
+                />
+                <Image
+                  src="/assets/logos SVG/six logo.svg"
+                  alt="Six"
+                  width={100}
+                  height={30}
+                  className="brand-logo-img"
+                />
+                <Image
+                  src="/assets/Home/HeroNavbar/photo/logo.webp"
+                  alt="Disconnect"
+                  width={120}
+                  height={40}
+                  className="brand-logo-img main"
+                />
+              </div>
             </div>
           </SpotlightCard>
         </motion.div>

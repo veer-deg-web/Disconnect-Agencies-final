@@ -126,18 +126,102 @@
 }
 
 /* =====================================================
-   BRAND LOGO
-===================================================== */
+   REFINED LAYOUT STYLES
+   ===================================================== */
 
-.brand {
-  position: absolute;
-  bottom: 24px;
-  right: 24px;
-  opacity: 0.7;
+.support-card.refined-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
 }
 
-.brand img {
-  height: 18px;
+.partner-images-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.partner-link {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  aspect-ratio: 16 / 10;
+}
+
+.partner-link:hover {
+  border-color: #d9ff3f;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(217, 255, 63, 0.1);
+}
+
+.partner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.quote {
+  font-size: 22px;
+  line-height: 1.6;
+  margin: 16px 0;
+}
+
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.bio-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 60%;
+}
+
+.bio-left strong {
+  font-size: 18px;
+  color: #fff;
+}
+
+.bio-left span {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.logo-pill {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #d9ff3f; /* Same as CEO pill */
+  padding: 10px 24px;
+  border-radius: 999px; /* Pill shape */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.brand-logo-img {
+  height: 20px;
+  width: auto;
+  filter: brightness(0); /* Black logos on green bg */
+  opacity: 0.8;
+}
+
+.brand-logo-img.main {
+  height: 28px;
+  filter: brightness(0); /* Black main logo on green bg */
+  opacity: 1;
+}
+
+/* Removed absolute positioning for brand to integrate into logo pill */
+.brand {
+  display: none;
 }
 
 /* =====================================================
