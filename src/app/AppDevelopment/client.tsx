@@ -25,14 +25,115 @@ export default function HomePage() {
       </section>
      <section id="pricing">
         <PricingSection
-  headingTitle="AI-Powered Pricing Built to Scale"
-  headingGradient={[
-    "#5869E3", // primary indigo
-    "#7C8CF8", // soft indigo glow
-    "#A5B4FC", // light indigo highlight
-  ]}
-  accentColor="#5869E3"
-/>
+          headingTitle="App Development Pricing"
+          headingGradient={[
+            "#5869E3",
+            "#7C8CF8",
+            "#A5B4FC",
+          ]}
+          accentColor="#5869E3"
+          serviceSlug="AppDevelopment"
+          plansOverride={{
+            build: [
+              {
+                title: "Starter",
+                price: "From $7,999",
+                subtitle: "MVP build",
+                highlight: false,
+                badge: null,
+                note: "2+ months maintenance included",
+                features: [
+                  "Basic app (MVP)",
+                  "Core features",
+                  "UI integration",
+                  "Backend setup",
+                  "Deployment support",
+                ],
+                cta: "Start Project",
+              },
+              {
+                title: "Core",
+                price: "From $12,999",
+                subtitle: "Full-featured app",
+                highlight: false,
+                badge: null,
+                note: "2+ months maintenance included",
+                features: [
+                  "Everything in Starter",
+                  "Advanced features",
+                  "API integrations",
+                  "Scalable backend",
+                  "Performance optimization",
+                ],
+                cta: "Start Project",
+              },
+              {
+                title: "Vision",
+                price: "From $19,999",
+                subtitle: "End-to-end product",
+                highlight: true,
+                badge: "Best Value",
+                note: "2+ months maintenance included",
+                features: [
+                  "Everything in Core",
+                  "Full product build",
+                  "End-to-end system",
+                  "High scalability",
+                  "Deployment + optimization",
+                ],
+                cta: "Start Project",
+              },
+            ],
+            maintenance: [
+              {
+                title: "Starter",
+                price: "From $7,999",
+                subtitle: "+ $3,199/year",
+                highlight: false,
+                badge: null,
+                note: "40% of project cost yearly",
+                features: [
+                  "System monitoring",
+                  "Bug fixes",
+                  "Security updates",
+                  "Performance upkeep",
+                ],
+                cta: "Continue Maintenance",
+              },
+              {
+                title: "Core",
+                price: "From $12,999",
+                subtitle: "+ $5,199/year",
+                highlight: false,
+                badge: null,
+                note: "40% of project cost yearly",
+                features: [
+                  "Priority monitoring",
+                  "Faster issue resolution",
+                  "Health optimization",
+                  "Priority support",
+                ],
+                cta: "Continue Maintenance",
+              },
+              {
+                title: "Vision",
+                price: "From $19,999",
+                subtitle: "+ $7,999/year",
+                highlight: true,
+                badge: "Recommended",
+                note: "40% of project cost yearly",
+                features: [
+                  "Dedicated team oversight",
+                  "Advanced monitoring",
+                  "Critical priority support",
+                  "Long-term system stability",
+                ],
+                cta: "Full Partnership",
+              },
+            ],
+          }}
+        />
+
 </section>
 <section id="faq">
 <FAQSection

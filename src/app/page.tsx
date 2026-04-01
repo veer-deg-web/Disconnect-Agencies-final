@@ -74,7 +74,9 @@ export default function Home() {
       
       <PerformanceMetrics />
       <section id="pricing">
-      <PricingSection/>
+      <PricingSection
+        headingTitle="Simple, Transparent Pricing"
+      />
 </section>
       <section id="testimonials">
       <TestimonialsSection/>

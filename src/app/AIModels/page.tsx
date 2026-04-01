@@ -70,11 +70,110 @@ export default function Ai() {
         <PricingSection
           headingTitle="AI-Powered Pricing Built to Scale"
           headingGradient={[
-            "#7C3AED", // violet
-            "#A78BFA", // soft purple
-            "#22D3EE", // cyan accent
+            "#7C3AED",
+            "#A78BFA",
+            "#22D3EE",
           ]}
           accentColor="#7C3AED"
+          serviceSlug="AIModels"
+          plansOverride={{
+            build: [
+              {
+                title: "Starter",
+                price: "From $5,999",
+                subtitle: "AI integration",
+                highlight: false,
+                badge: null,
+                note: "2+ months maintenance included",
+                features: [
+                  "Basic automation workflows",
+                  "API-based AI integrations",
+                  "Deployment support",
+                  "Post-delivery handover",
+                ],
+                cta: "Start Project",
+              },
+              {
+                title: "Core",
+                price: "From $11,999",
+                subtitle: "Custom AI logic",
+                highlight: false,
+                badge: null,
+                note: "2+ months maintenance included",
+                features: [
+                  "Everything in Starter",
+                  "Custom AI logic",
+                  "Workflow automation systems",
+                  "Data handling pipelines",
+                  "Priority execution",
+                ],
+                cta: "Start Project",
+              },
+              {
+                title: "Vision",
+                price: "From $18,999",
+                subtitle: "Enterprise AI systems",
+                highlight: true,
+                badge: "Best Value",
+                note: "2+ months maintenance included",
+                features: [
+                  "Everything in Core",
+                  "Advanced AI systems",
+                  "Multi-layer automation",
+                  "Business process transformation",
+                  "On-site strategy session",
+                ],
+                cta: "Start Project",
+              },
+            ],
+            maintenance: [
+              {
+                title: "Starter",
+                price: "From $5,999",
+                subtitle: "+ $2,399/year",
+                highlight: false,
+                badge: null,
+                note: "40% of project cost yearly",
+                features: [
+                  "Workflow monitoring",
+                  "Bug fixes & integration upkeep",
+                  "Security updates",
+                  "Email support",
+                ],
+                cta: "Continue Maintenance",
+              },
+              {
+                title: "Core",
+                price: "From $11,999",
+                subtitle: "+ $4,799/year",
+                highlight: false,
+                badge: null,
+                note: "40% of project cost yearly",
+                features: [
+                  "Priority monitoring",
+                  "Pipeline health checks",
+                  "Faster issue resolution",
+                  "Priority support",
+                ],
+                cta: "Continue Maintenance",
+              },
+              {
+                title: "Vision",
+                price: "From $18,999",
+                subtitle: "+ $7,599/year",
+                highlight: true,
+                badge: "Recommended",
+                note: "40% of project cost yearly",
+                features: [
+                  "Dedicated AI oversight",
+                  "Advanced system monitoring",
+                  "Critical priority support",
+                  "Long-term AI stability",
+                ],
+                cta: "Full Partnership",
+              },
+            ],
+          }}
         /></section>
       <section id="testimonials">
       <TestimonialsSection />

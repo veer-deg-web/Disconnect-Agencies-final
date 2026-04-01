@@ -59,7 +59,35 @@ export default function SEOPage() {
       <FeaturedServicesSection />
       </section>
       <section id="pricing">
-        <UIUXPricing />
+        <UIUXPricing
+          serviceSlug="SEO"
+          pillLabel="SEO Pricing"
+          heading={
+            <>
+              SEO pricing that&apos;s{" "}
+              <span style={{ opacity: 0.55, fontStyle: "italic", fontFamily: "instrument-serif, serif" }}>built for growth.</span>
+            </>
+          }
+          subText="Cancel anytime on monthly. Save ~$6,000 with the yearly plan."
+          basePrice={2999}
+          addonPrice={27000}
+          spotText="Monthly billing"
+          cardSub="Core SEO — Technical optimization, on-page improvements, keyword tracking & monthly reporting."
+          features={[
+            "Technical SEO optimization",
+            "On-page SEO (continuous improvements)",
+            "Keyword tracking & optimization",
+            "Performance monitoring",
+            "Monthly reporting",
+            "Competitor tracking",
+          ]}
+          notIncluded={[
+            "Long-term strategy (yearly plan only)",
+            "Priority support (yearly plan only)",
+          ]}
+          toggleLabel="Switch to Yearly"
+          addonLabel="Yearly — Save ~$6,000"
+        />
       </section>
       <section id="testimonials">
       <ReviewsSection />

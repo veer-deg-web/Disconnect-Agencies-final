@@ -10,24 +10,71 @@
   font-weight: 700;
 }
 
-.subtitle {
-  opacity: 0.7;
-  margin-top: 12px;
+.tagline {
+  font-size: 1rem;
+  font-style: italic;
+  color: #ff7b00;
+  margin-top: 16px;
+  opacity: 0.9;
+  letter-spacing: 0.01em;
 }
 
-.toggleWrap {
+.subtitle {
+  opacity: 0.55;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+/* ── Service Tabs ─────────────────────────── */
+.serviceTabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
   margin-top: 40px;
+}
+
+.serviceTab {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #888;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.serviceTab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ccc;
+}
+
+.serviceTabActive {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--tab-accent, #ff7b00);
+  color: #fff;
+}
+
+/* ── Toggle ───────────────────────────────── */
+.toggleWrap {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
 .toggle {
   position: relative;
-  width: 200px;
-  height: 44px;
+  width: 340px;
+  height: 46px;
   background: #1f1f1f;
   border-radius: 999px;
   display: flex;
   overflow: hidden;
-  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .toggleThumb {
@@ -43,28 +90,49 @@
   flex: 1;
   border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   z-index: 1;
+  transition: color 0.2s;
+  white-space: nowrap;
+  padding: 0 12px;
 }
 
+.maintenanceNote {
+  font-size: 0.8rem;
+  color: #888;
+  max-width: 400px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Grid ─────────────────────────────────── */
 .grid {
   max-width: 1200px;
-  margin: 80px auto 0;
+  margin: 72px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  justify-content: center;
 }
 
+/* ── Card ─────────────────────────────────── */
 .card {
   background: #1a1a1a;
   border-radius: 18px;
-  padding: 28px;
+  padding: 32px 28px;
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .cardHighlighted {
@@ -72,50 +140,198 @@
   border: 2px solid var(--accent-color);
 }
 
+.cardHighlighted:hover {
+  border-color: var(--accent-color);
+}
+
+/* ── Card header ──────────────────────────── */
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 4px;
+}
+
+.cardHeader h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
 }
 
 .badge {
-  background: #fff;
-  padding: 4px 10px;
+  background: rgba(255, 123, 0, 0.12);
+  border: 1px solid rgba(255, 123, 0, 0.35);
+  padding: 4px 12px;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
+/* ── Price ────────────────────────────────── */
 .priceWrap {
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 .price {
-  font-size: 44px;
-  font-weight: 700;
-}
-
-.strike {
-  text-decoration: line-through;
-  opacity: 0.5;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 .billingText {
-  opacity: 0.6;
-  margin-bottom: 20px;
+  font-size: 0.85rem;
+  color: #888;
+  margin: 6px 0 0;
 }
 
+/* ── Note pill ────────────────────────────── */
+.notePill {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.75rem;
+  color: #aaa;
+  font-weight: 500;
+}
+
+/* ── Features list ────────────────────────── */
 .list {
   list-style: none;
   padding: 0;
-  line-height: 2;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-@media (max-width: 768px) {
+.list li {
+  font-size: 0.88rem;
+  color: #bbb;
+  line-height: 1.5;
+}
+
+.listExcluded {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.listExcluded li {
+  color: #666;
+}
+
+/* ── CTA button ───────────────────────────── */
+.ctaBtn {
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.ctaBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.ctaBtnHighlight {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #000;
+}
+
+.ctaBtnHighlight:hover {
+  background: var(--accent-color);
+  filter: brightness(1.1);
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 960px) {
   .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .toggle {
+    width: 300px;
+  }
+
+  .toggleBtn {
+    font-size: 11px;
+  }
+
+  .serviceTabs {
+    gap: 8px;
+  }
+
+  .serviceTab {
+    font-size: 12px;
+    padding: 7px 14px;
+  }
+}
+
+/* ── Know More Row ───────────────────────── */
+.knowMoreRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1080px;
+  margin: 16px auto 0;
+  padding: 0 24px;
+}
+
+.knowMoreCell {
+  display: flex;
+  justify-content: center;
+}
+
+.knowMorePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.knowMorePill:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .knowMoreRow {
     grid-template-columns: 1fr !important;
   }
 }

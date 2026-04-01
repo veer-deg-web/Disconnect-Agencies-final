@@ -2,8 +2,26 @@
 
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import styles from "./UIUXPricing.module.css";
+
+/* ---------------- PROPS ---------------- */
+
+interface UIUXPricingProps {
+  pillLabel?: string;
+  heading?: React.ReactNode;
+  subText?: string;
+  basePrice?: number;
+  addonLabel?: string;
+  addonPrice?: number;
+  spotText?: string;
+  cardSub?: string;
+  features?: string[];
+  notIncluded?: string[];
+  toggleLabel?: string;
+  serviceSlug?: string;
+}
 
 /* ---------------- UTILS ---------------- */
 
@@ -12,64 +30,83 @@ const randomBetween = (min: number, max: number) =>
 
 /* ---------------- COMPONENT ---------------- */
 
-export default function UIUXPricing() {
+export default function UIUXPricing({
+  pillLabel = "Pricing",
+  heading = (
+    <>
+      Pricing that&apos;s so{" "}
+      <span className={styles.simpleText}>simple.</span>
+    </>
+  ),
+  subText = "One flat price. No surprises. Fully delivered and handed off.",
+  basePrice = 2999,
+  addonLabel = "Annual Maintenance",
+  addonPrice = 1199,
+  spotText = "3 spots left",
+  cardSub = "One-time project fee. Design system delivered & handed off.",
+  features = [
+    "Product research & competitor analysis",
+    "Wireframing (low → high fidelity)",
+    "Design system (colors, typography, components)",
+    "Full UI design (web/app)",
+    "Responsive layouts",
+    "Developer handoff (Figma/Docs)",
+  ],
+  notIncluded = ["Development", "Maintenance (unless add-on enabled)"],
+  toggleLabel = "Add Maintenance",
+  serviceSlug,
+}: UIUXPricingProps = {}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "-120px" });
 
   const [cycleKey, setCycleKey] = useState(0);
-  const [framerOn, setFramerOn] = useState(false);
-  const [price, setPrice] = useState(10000); // Base price: $10,000
+  const [maintenanceOn, setMaintenanceOn] = useState(false);
+  const [price, setPrice] = useState(basePrice);
   const [isAnimating, setIsAnimating] = useState(false);
 
   /* 🔁 restart animation on every scroll */
   useEffect(() => {
     if (inView) {
       setCycleKey((k: number) => k + 1);
-      setFramerOn(false);
-      setPrice(10000);
+      setMaintenanceOn(false);
+      setPrice(basePrice);
       setIsAnimating(false);
     }
-  }, [inView]);
+  }, [inView, basePrice]);
 
   /* 💸 price scribble animation */
   useEffect(() => {
-    if (!framerOn) {
-      // When toggle is OFF, reset to base price immediately
-      setPrice(10000);
+    if (!maintenanceOn) {
+      setPrice(basePrice);
       setIsAnimating(false);
       return;
     }
 
-    // When toggle is ON, start the scribble animation
     setIsAnimating(true);
     let ticks = 0;
-    const basePrice = 10000;
-    const addonPrice = 500;
-    const targetPrice = basePrice + addonPrice; // $10,500
+    const targetPrice = basePrice + addonPrice;
 
     const interval = setInterval(() => {
       ticks++;
-      // Animate between base price and target price
       setPrice(randomBetween(basePrice, targetPrice));
 
       if (ticks > 12) {
         clearInterval(interval);
-        setPrice(targetPrice); // Settle at $10,500
+        setPrice(targetPrice);
         setIsAnimating(false);
       }
     }, 90);
 
     return () => clearInterval(interval);
-  }, [framerOn]);
+  }, [maintenanceOn, basePrice, addonPrice]);
 
   const handleToggle = () => {
-    setFramerOn((prev: boolean) => !prev);
+    setMaintenanceOn((prev: boolean) => !prev);
   };
 
   return (
     <section ref={ref} className={styles.section}>
       <div key={cycleKey} className={styles.container}>
-        {/* ---------- PILL ---------- */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -77,7 +114,7 @@ export default function UIUXPricing() {
           className={styles.pill}
         >
           <span className={styles.dot} />
-          Pricing
+          {pillLabel}
         </motion.div>
 
         {/* ---------- HEADING ---------- */}
@@ -87,10 +124,7 @@ export default function UIUXPricing() {
           transition={{ delay: 0.15, duration: 0.55 }}
           className={styles.heading}
         >
-          Pricing that&apos;s so{" "}
-          <span className={styles.simpleText}>
-            simple.
-          </span>
+          {heading}
         </motion.h2>
 
         {/* ---------- SUB ---------- */}
@@ -100,7 +134,7 @@ export default function UIUXPricing() {
           transition={{ delay: 0.3, duration: 0.45 }}
           className={styles.subText}
         >
-          We like to keep things simple with one, limitless plan.
+          {subText}
         </motion.p>
 
         {/* ---------- CARD + SPHERE ---------- */}
@@ -135,19 +169,19 @@ export default function UIUXPricing() {
 
             <div className={styles.card}>
               <div className={styles.spotsPill}>
-                <span className={styles.greenDot} /> 3 spots left
+                <span className={styles.greenDot} /> {spotText}
               </div>
 
               <div className={styles.priceContainer}>
                 <div className={styles.priceDisplay}>
                   ${price.toLocaleString()}
-                  {framerOn && <span className={styles.addonText}> + $500</span>}
+                  {maintenanceOn && <span className={styles.addonText}> /yr maintenance</span>}
                 </div>
                 {isAnimating && <div className={styles.priceChangeIndicator}>...</div>}
               </div>
 
               <p className={styles.cardSub}>
-                One request at a time. Pause or cancel anytime.
+                {cardSub}
               </p>
 
               {/* BUTTONS */}
@@ -155,24 +189,40 @@ export default function UIUXPricing() {
                 <BookCallButton />
               </div>
 
+              {/* Know more pill — single centered pill below buttons */}
+              {serviceSlug && (
+                <div style={{ textAlign: "center", marginTop: "16px", display: "flex", justifyContent: "center" }}>
+                  <Link
+                    href={`/${serviceSlug}/pricing`}
+                    className={styles.knowMorePill}
+                    style={{
+                      borderColor: "rgba(255,255,255,0.2)",
+                      color: "rgba(255,255,255,0.6)",
+                    }}
+                  >
+                    Know more →
+                  </Link>
+                </div>
+              )}
+
               {/* TOGGLE (BELOW BUTTONS) */}
               <div className={styles.toggleContainer}>
-                <div className={styles.toggleLabel}>Add-ons</div>
+                <div className={styles.toggleLabel}>{toggleLabel}</div>
                 <div className={styles.togglePill}>
                   <div className={styles.toggleLabelContainer}>
                     <span className={styles.framerText}>
-                      Framer Development
+                      {addonLabel}
                     </span>
-                    <span className={styles.addonValuePill}>+ $500</span>
+                    <span className={styles.addonValuePill}>+ ${addonPrice.toLocaleString()}/yr</span>
                   </div>
                   <button
                     onClick={handleToggle}
-                    className={`${styles.toggleTrack} ${framerOn ? styles.active : ""}`}
+                    className={`${styles.toggleTrack} ${maintenanceOn ? styles.active : ""}`}
                   >
                     <motion.span
-                      animate={{ x: framerOn ? 24 : 0 }}
+                      animate={{ x: maintenanceOn ? 24 : 0 }}
                       transition={{ type: "spring", stiffness: 500, damping: 32 }}
-                      className={`${styles.toggleThumb} ${framerOn ? styles.active : ""}`}
+                      className={`${styles.toggleThumb} ${maintenanceOn ? styles.active : ""}`}
                     />
                   </button>
                 </div>
@@ -180,17 +230,15 @@ export default function UIUXPricing() {
 
               {/* FEATURES LIST */}
               <div className={styles.featuresList}>
-                {[
-                  "Unlimited design requests",
-                  "One request at a time",
-                  "Average 48 hours delivery",
-                  "Unlimited revisions",
-                  "Unlimited brands",
-                  "Invite unlimited users",
-                  "Pause or cancel anytime",
-                ].map((item, i) => (
+                {features.map((item, i) => (
                   <div key={i} className={styles.featureItem}>
                     <span className={styles.checkIcon}>✓</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+                {notIncluded.map((item, i) => (
+                  <div key={i} className={styles.featureItem} style={{ opacity: 0.45 }}>
+                    <span className={styles.checkIcon} style={{ color: "#888" }}>✕</span>
                     <span>{item}</span>
                   </div>
                 ))}

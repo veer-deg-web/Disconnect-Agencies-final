@@ -68,7 +68,7 @@ export default function UIUXPage() {
       </section>
       <UIUXSolutions />
       <section id="pricing">
-        <UIUXPricing />
+        <UIUXPricing serviceSlug="Uiux" />
       </section>
        <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200}/>
       <UIUXTutorials />
