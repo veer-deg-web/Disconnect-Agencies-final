@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     description:
       "Custom websites and web products engineered for performance, scalability, and growth.",
   },
+  keywords: [
+    "web development",
+    "custom website design",
+    "React.js",
+    "Next.js",
+    "full-stack development",
+    "e-commerce solutions",
+    "responsive design",
+    "frontend engineering",
+    "backend development",
+    "high-performance web",
+  ],
 };
 
 export default function WebDevelopmentPage() {

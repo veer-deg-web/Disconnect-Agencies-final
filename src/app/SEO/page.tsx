@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     description:
       "Data-driven SEO services built to increase visibility, rankings, and conversions.",
   },
+  keywords: [
+    "SEO services",
+    "search engine optimization",
+    "technical SEO",
+    "on-page SEO",
+    "content strategy",
+    "rank tracking",
+    "SEO audit",
+    "local SEO",
+    "keyword optimization",
+    "organic growth",
+  ],
 };
 
 export default function SEOPage() {

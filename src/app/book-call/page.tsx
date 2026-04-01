@@ -20,6 +20,14 @@ export const metadata: Metadata = {
     description:
       "Schedule a project discovery call with Disconnect Agencies.",
   },
+  keywords: [
+    "book a strategy call",
+    "free consultation",
+    "service discovery",
+    "Disconnect sales",
+    "project booking",
+    "expert consultation",
+  ],
 };
 
 export default function Page() {

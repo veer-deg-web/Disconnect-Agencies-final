@@ -35,6 +35,18 @@ export const metadata: Metadata = {
     description:
       "End-to-end product design, engineering, and launch support for modern businesses.",
   },
+  keywords: [
+    "Disconnect agencies",
+    "digital product agency",
+    "software development company",
+    "AI solutions",
+    "web development",
+    "app development",
+    "cloud infrastructure",
+    "SEO services",
+    "UI/UX design",
+    "product engineering",
+  ],
 };
 
 

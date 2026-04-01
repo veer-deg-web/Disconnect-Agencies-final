@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     description:
       "Modern interface design and product UX systems crafted for engagement and growth.",
   },
+  keywords: [
+    "UI/UX design",
+    "user experience design",
+    "interface design",
+    "product design",
+    "Figma design",
+    "wireframing",
+    "prototyping",
+    "design systems",
+    "visual identity",
+    "user-centric design",
+  ],
 };
 
 export default function UIUXPage() {

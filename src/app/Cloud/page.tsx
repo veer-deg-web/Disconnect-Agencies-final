@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     description:
       "Secure and scalable cloud engineering for high-growth businesses.",
   },
+  keywords: [
+    "cloud infrastructure",
+    "cloud migration",
+    "CI/CD",
+    "AWS architecture",
+    "Azure deployment",
+    "Google Cloud Platform",
+    "cloud security",
+    "scalable hosting",
+    "DevOps services",
+    "high-performance infra",
+  ],
 };
 
 export default function CloudPage() {

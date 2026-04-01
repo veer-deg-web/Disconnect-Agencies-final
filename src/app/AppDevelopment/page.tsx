@@ -24,6 +24,17 @@ export const metadata: Metadata = {
     description:
       "End-to-end app development for modern businesses, built for speed and scalability.",
   },
+  keywords: [
+    "app development",
+    "mobile app development",
+    "iOS apps",
+    "Android apps",
+    "React Native development",
+    "Flutter apps",
+    "custom app builder",
+    "mobile product engineering",
+    "app design",
+  ],
 };
 
 export default function Page() {

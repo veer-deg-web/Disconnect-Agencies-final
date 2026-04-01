@@ -16,6 +16,18 @@ export const metadata: Metadata = {
     template: "%s | Disconnect",
   },
   description: "Disconnect builds production-grade digital products, platforms, and AI systems.",
+  keywords: [
+    "Disconnect agencies",
+    "digital product agency",
+    "software development company",
+    "AI solutions",
+    "web development",
+    "app development",
+    "cloud infrastructure",
+    "SEO services",
+    "UI/UX design",
+    "elite engineering",
+  ],
 };
 
 export default function RootLayout({

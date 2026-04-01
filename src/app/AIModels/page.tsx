@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     description:
       "AI automation, integration, and optimization services for modern teams.",
   },
+  keywords: [
+    "AI automation",
+    "custom AI models",
+    "large language models",
+    "LLM integration",
+    "workflow automation",
+    "AI agents",
+    "machine learning",
+    "business AI",
+    "predictive analytics",
+    "AI consulting",
+  ],
 };
 
 export default function Ai() {
