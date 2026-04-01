@@ -27,14 +27,6 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // ── Lowercase Service Redirects ──────────────────────────────────────
-      { source: "/cloud/:city",           destination: "/Cloud/:city",          permanent: true },
-      { source: "/webdevelopment/:city",  destination: "/WebDevelopment/:city", permanent: true },
-      { source: "/appdevelopment/:city",  destination: "/AppDevelopment/:city", permanent: true },
-      { source: "/aimodels/:city",        destination: "/AIModels/:city",       permanent: true },
-      { source: "/seo/:city",             destination: "/SEO/:city",            permanent: true },
-      { source: "/uiux/:city",            destination: "/Uiux/:city",           permanent: true },
-      
       // ── Alias City Redirects ─────────────────────────────────────────────
       ...aliasRedirects,
     ];
