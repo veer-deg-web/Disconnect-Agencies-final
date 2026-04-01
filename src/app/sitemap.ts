@@ -5,20 +5,38 @@ import { getSiteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
-  const baseEntries: MetadataRoute.Sitemap = [
-    {
-      url: siteUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1,
-    },
-    {
-      url: `${siteUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
+
+  const routes = [
+    "",
+    "/WebDevelopment",
+    "/WebDevelopment/pricing",
+    "/AppDevelopment",
+    "/AppDevelopment/pricing",
+    "/AIModels",
+    "/AIModels/pricing",
+    "/Cloud",
+    "/Cloud/pricing",
+    "/SEO",
+    "/SEO/pricing",
+    "/Uiux",
+    "/Uiux/pricing",
+    "/blog",
+    "/careers",
+    "/about",
+    "/feedback",
+    "/book-call",
+    "/how-we-work",
+    "/privacy-policy",
+    "/terms-and-conditions",
+    "/disclaimer",
   ];
+
+  const baseEntries: MetadataRoute.Sitemap = routes.map((route) => ({
+    url: `${siteUrl}${route}`,
+    lastModified: new Date(),
+    changeFrequency: route.includes("pricing") ? "weekly" : "daily",
+    priority: route === "" ? 1 : route.includes("pricing") ? 0.9 : 0.8,
+  }));
 
   try {
     await dbConnect();
