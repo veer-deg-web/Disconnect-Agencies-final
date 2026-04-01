@@ -76,6 +76,7 @@ export default function Home() {
       <section id="pricing">
       <PricingSection
         headingTitle="Simple, Transparent Pricing"
+        hoverScale={true}
       />
 </section>
       <section id="testimonials">

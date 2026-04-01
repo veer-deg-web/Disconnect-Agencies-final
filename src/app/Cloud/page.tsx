@@ -74,6 +74,7 @@ export default function CloudPage() {
           headingGradient={["#84cc16", "#DBFE49", "#a3e635"]}
           accentColor="#DBFE49"
           serviceSlug="Cloud"
+          hoverScale={true}
           plansOverride={{
             build: [
               {

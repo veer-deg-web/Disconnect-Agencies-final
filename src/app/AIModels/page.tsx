@@ -76,6 +76,7 @@ export default function Ai() {
           ]}
           accentColor="#7C3AED"
           serviceSlug="AIModels"
+          hoverScale={true}
           plansOverride={{
             build: [
               {

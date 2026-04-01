@@ -152,6 +152,7 @@ export default function PricingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: i * 0.1 }}
             viewport={{ once: true }}
+            whileHover={{ scale: 1.05}}
             style={plan.highlight ? enterpriseCard : starterCard}
           >
             {plan.highlight && (

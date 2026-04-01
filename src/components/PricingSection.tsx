@@ -35,6 +35,7 @@ interface PricingSectionProps {
   plansOverride?: PricingPlans;
   /** When set, every card CTA links to /[serviceSlug]/pricing */
   serviceSlug?: string;
+  hoverScale?: boolean;
 }
 
 /* =======================
@@ -191,6 +192,7 @@ export default function PricingSection({
   accentColor = "#FF7B00",
   plansOverride,
   serviceSlug,
+  hoverScale = false,
 }: PricingSectionProps) {
   const plans = plansOverride ?? defaultPlans;
 
@@ -279,6 +281,7 @@ export default function PricingSection({
               variants={cardVariant}
               initial="hidden"
               animate="visible"
+              whileHover={hoverScale ? { scale: 1.05 } : {}}
               className={`${styles.card} ${plan.highlight ? styles.cardHighlighted : ""}`}
               style={{
                 ...WILL_CHANGE_TRANSFORM,

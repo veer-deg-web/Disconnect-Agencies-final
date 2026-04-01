@@ -33,6 +33,7 @@ export default function HomePage() {
           ]}
           accentColor="#5869E3"
           serviceSlug="AppDevelopment"
+          hoverScale={true}
           plansOverride={{
             build: [
               {
