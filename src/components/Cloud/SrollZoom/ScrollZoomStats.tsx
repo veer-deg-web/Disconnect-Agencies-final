@@ -5,8 +5,8 @@ import { useRef, useState } from "react";
 import "./ScrollZoomStats.css";
 
 const stats = [
-  { label: "HAPPY CLIENTS", value: "98+" },
-  { label: "OUR REVENUE", value: "200M" },
+  { label: "HAPPY CLIENTS", value: "50+" },
+  { label: "OUR REVENUE", value: "20M" },
   { label: "PROJECT DONE", value: "99%" },
 ];
 

@@ -71,9 +71,9 @@ export default function UIUXHeroAnimatedContent() {
         className={styles.subtext}
       >
         Say goodbye to expensive freelancers, and hello to{" "}
-        <span className={styles.limitlessText}>
+      
           limitless,
-        </span>{" "}
+        
         lightning fast design for teams in <DynamicCity fallback="your city" />.
       </motion.p>
 

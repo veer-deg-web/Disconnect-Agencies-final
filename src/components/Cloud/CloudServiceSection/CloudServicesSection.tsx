@@ -68,7 +68,7 @@ export default function CloudServicesSection() {
               }}
             >
               <div className="card-top">
-                <span className="service-id">#{service.id}</span>
+                <span className="service-id">{service.id}</span>
                 <Icon className="service-icon" />
               </div>
 
