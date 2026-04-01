@@ -474,7 +474,7 @@ const KeystrokePreview = () => {
           >
             <motion.span
               initial={{ opacity: 0, scale: 1.2, filter: "blur(10px)" }}
-              animate={{ opacity: 0.6, scale: 1, filter: "blur(0px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 0.05 }}
               className="kbd-preview-glyph"
             >

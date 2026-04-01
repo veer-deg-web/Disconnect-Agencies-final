@@ -1,11 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
 import { Keyboard } from "@/components/ui/keyboard";
 import "./Feedback.css";
 
-const CATEGORIES = ["Home", "AI", "Cloud", "SEO", "WebDev"];
+const CATEGORIES = [
+  "Home",
+  "AI Models & Automation",
+  "App Development",
+  "Web Development",
+  "SEO & Growth",
+  "UI/UX Design",
+  "Cloud Infrastructure",
+];
 
 export default function FeedbackPage() {
   const router = useRouter();
@@ -18,6 +27,8 @@ export default function FeedbackPage() {
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [position, setPosition] = useState("");
   const [company, setCompany] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
@@ -31,6 +42,14 @@ export default function FeedbackPage() {
     } else {
       setAuthorized(true);
     }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -100,9 +119,47 @@ export default function FeedbackPage() {
               {/* Category */}
               <div className="fb-field">
                 <label>Category</label>
-                <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <div className="fb-select-wrapper" ref={dropdownRef}>
+                  <div 
+                    className={`fb-select-trigger ${isOpen ? 'open' : ''}`} 
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <span>{category}</span>
+                    <svg className="fb-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="fb-options-list"
+                      >
+                        {CATEGORIES.map((c) => (
+                          <div 
+                            key={c} 
+                            className={`fb-option ${category === c ? 'selected' : ''}`}
+                            onClick={() => {
+                              setCategory(c);
+                              setIsOpen(false);
+                            }}
+                          >
+                            {c}
+                            {category === c && (
+                              <svg className="fb-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            )}
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
               {/* Rating */}
