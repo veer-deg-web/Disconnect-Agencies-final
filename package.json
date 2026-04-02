@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node run-tests.js",
+    "test:html": "node run-tests.js && open test-reports/api-test-report.html"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -57,6 +59,8 @@
     "@types/three": "^0.183.1",
     "autoprefixer": "^10.4.23",
     "eslint": "^8.57.1",
+    "newman": "^6.2.2",
+    "newman-reporter-htmlextra": "^1.23.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.21.0",
