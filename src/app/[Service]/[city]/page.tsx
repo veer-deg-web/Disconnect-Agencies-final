@@ -1,7 +1,7 @@
 // src/app/[Service]/[city]/page.tsx
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSeoCityBySlug, seoCities } from "@/lib/seoCities";
+import { getSeoCityBySlug, seoCities } from "@/Data/seoCities";
 import Footer from "@/components/Shared/Footer/Footer";
 
 // Service content components (reusable across routes)

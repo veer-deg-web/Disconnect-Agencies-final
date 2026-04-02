@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
-import { seoCities } from "@/lib/seoCities";
+import { seoCities } from "@/Data/seoCities";
 
 const BASE = "https://disconnect.software";
 const SERVICES = ["Cloud", "WebDevelopment", "AppDevelopment", "AIModels", "SEO", "Uiux"];

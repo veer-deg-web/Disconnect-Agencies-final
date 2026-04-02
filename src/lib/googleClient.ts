@@ -148,5 +148,5 @@ async function _clearStoredToken(): Promise<void> {
   try {
     await dbConnect();
     await GoogleToken.deleteMany({});
-  } catch (_) { /* non-fatal */ }
+  } catch { /* non-fatal */ }
 }
