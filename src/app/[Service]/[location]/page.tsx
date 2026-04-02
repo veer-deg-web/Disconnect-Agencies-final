@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getSeoCityBySlug, seoCities } from "@/Data/seoCities";
+import { getSeoCountryBySlug, seoCountries } from "@/Data/seoCountries";
 import Footer from "@/components/Shared/Footer/Footer";
 
 // Service content components (reusable across routes)
@@ -55,36 +56,47 @@ const serviceDesc: Record<string, string> = {
 };
 
 type Props = {
-  params: Promise<{ Service: string; city: string }>;
+  params: Promise<{ Service: string; location: string }>;
 };
 
 export async function generateStaticParams() {
   const SERVICES = ["Cloud", "WebDevelopment", "AppDevelopment", "AIModels", "SEO", "Uiux"];
-  return SERVICES.flatMap((Service) =>
-    seoCities.map((city) => ({ Service, city: city.slug }))
+  
+  const cityParams = SERVICES.flatMap((Service) =>
+    seoCities.map((city) => ({ Service, location: city.slug }))
   );
+
+  const countryParams = SERVICES.flatMap((Service) =>
+    seoCountries.map((country) => ({ Service, location: country.slug }))
+  );
+
+  return [...cityParams, ...countryParams];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { Service, city } = await params;
-  const cityData       = getSeoCityBySlug(city);
-  if (!cityData || !serviceNames[Service]) return { title: "Not Found" };
+  const { Service, location } = await params;
+  
+  const cityData = getSeoCityBySlug(location);
+  const countryData = getSeoCountryBySlug(location);
+  const locData = cityData || countryData;
 
-  const cityName       = cityData.name;
-  const canonicalSlug  = cityData.slug;
-  const canonical      = `https://disconnect.software/${Service}/${canonicalSlug}`;
-  const shortName      = serviceShort[Service] ?? "Services";
-  const fullName       = serviceNames[Service] ?? "Digital Services";
-  const desc           = serviceDesc[Service]  ?? "professional digital services";
-  const cityLower      = cityName.toLowerCase();
+  if (!locData || !serviceNames[Service]) return { title: "Not Found" };
+
+  const locName = locData.name;
+  const canonicalSlug = locData.slug;
+  const canonical = `https://disconnect.software/${Service}/${canonicalSlug}`;
+  const shortName = serviceShort[Service] ?? "Services";
+  const fullName = serviceNames[Service] ?? "Digital Services";
+  const desc = serviceDesc[Service] ?? "professional digital services";
+  const locLower = locName.toLowerCase();
 
   // ── Dynamic title: 37–47 chars raw ─────────────────────
   // Template adds " | Disconnect" (13 chars) → 50–60 rendered
-  const rawTitle = `${shortName} in ${cityName} — Proven Results`;
+  const rawTitle = `${shortName} in ${locName} — Proven Results`;
 
   // ── Dynamic description: 140–158 chars with CTA ────────
   const rawDesc =
-    `Disconnect delivers ${desc} for businesses in ${cityName}. Trusted by teams across ${cityName}. Book a free call.`;
+    `Disconnect delivers ${desc} for businesses in ${locName}. Trusted by teams across ${locName}. Book a free call.`;
 
   return {
     title: rawTitle,
@@ -107,7 +119,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: rawTitle,
       description:
-        `Trusted ${fullName} for ${cityName} businesses. Disconnect builds scalable, results-driven digital products.`,
+        `Trusted ${fullName} for ${locName} businesses. Disconnect builds scalable, results-driven digital products.`,
       url: canonical,
       siteName: "Disconnect",
       images: [
@@ -115,7 +127,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: `/assets/og/${Service.toLowerCase()}.png`,
           width: 1200,
           height: 630,
-          alt: `${shortName} in ${cityName} — Disconnect`,
+          alt: `${shortName} in ${locName} — Disconnect`,
         },
       ],
     },
@@ -124,41 +136,44 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: rawTitle,
       description:
-        `Expert ${shortName} in ${cityName}. Book a free strategy call with Disconnect.`,
+        `Expert ${shortName} in ${locName}. Book a free strategy call with Disconnect.`,
     },
 
     keywords: [
-      `${shortName.toLowerCase()} in ${cityLower}`,
-      `${shortName.toLowerCase()} ${cityLower}`,
-      `${cityLower} ${Service.toLowerCase()} company`,
-      `${shortName.toLowerCase()} agency ${cityLower}`,
-      `${cityLower} digital agency`,
-      `hire ${shortName.toLowerCase()} ${cityLower}`,
-      `disconnect ${cityLower}`,
-      `${fullName.toLowerCase()} ${cityLower}`,
-      ...(cityData.aliases?.map((a) => `${shortName.toLowerCase()} ${a}`) ?? []),
+      `${shortName.toLowerCase()} in ${locLower}`,
+      `${shortName.toLowerCase()} ${locLower}`,
+      `${locLower} ${Service.toLowerCase()} company`,
+      `${shortName.toLowerCase()} agency ${locLower}`,
+      `${locLower} digital agency`,
+      `hire ${shortName.toLowerCase()} ${locLower}`,
+      `disconnect ${locLower}`,
+      `${fullName.toLowerCase()} ${locLower}`,
+      ...(cityData?.aliases?.map((a) => `${shortName.toLowerCase()} ${a}`) ?? []),
     ],
   };
 }
 
 export default async function CityServicePage({ params }: Props) {
-  const { Service, city } = await params;
-  const cityData = getSeoCityBySlug(city);
+  const { Service, location } = await params;
+  
+  const cityData = getSeoCityBySlug(location);
+  const countryData = getSeoCountryBySlug(location);
+  const locData = cityData || countryData;
   const ContentComponent = SERVICE_CONTENT[Service];
 
-  if (!cityData || !ContentComponent) notFound();
+  if (!locData || !ContentComponent) notFound();
 
-  const cityName = cityData.name;
+  const locName = locData.name;
   const shortName = serviceShort[Service] ?? Service;
   const fullName = serviceNames[Service] ?? Service;
-  const canonical = `https://disconnect.software/${Service}/${cityData.slug}`;
+  const canonical = `https://disconnect.software/${Service}/${locData.slug}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Service",
-        "name": `${fullName} in ${cityName}`,
+        "name": `${fullName} in ${locName}`,
         "provider": {
           "@type": "Organization",
           "name": "Disconnect",
@@ -168,9 +183,9 @@ export default async function CityServicePage({ params }: Props) {
           "email": "enquiry@disconnect.software",
         },
         "areaServed": {
-          "@type": "City",
-          "name": cityName,
-          "addressCountry": "IN",
+          "@type": cityData ? "City" : "Country",
+          "name": locName,
+          "addressCountry": cityData ? "IN" : (countryData?.code || "US"),
         },
         "serviceType": fullName,
         "url": canonical,
@@ -178,9 +193,9 @@ export default async function CityServicePage({ params }: Props) {
       {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home",       "item": "https://disconnect.software" },
-          { "@type": "ListItem", "position": 2, "name": shortName,    "item": `https://disconnect.software/${Service}` },
-          { "@type": "ListItem", "position": 3, "name": cityName,     "item": canonical },
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://disconnect.software" },
+          { "@type": "ListItem", "position": 2, "name": shortName, "item": `https://disconnect.software/${Service}` },
+          { "@type": "ListItem", "position": 3, "name": locName, "item": canonical },
         ],
       },
     ],
@@ -195,7 +210,7 @@ export default async function CityServicePage({ params }: Props) {
       
       {/* SEO Title - Hidden from UI, remains for Search Engines */}
       <h1 style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 }}>
-        {fullName} in {cityName}
+        {fullName} in {locName}
       </h1>
 
       <ContentComponent />

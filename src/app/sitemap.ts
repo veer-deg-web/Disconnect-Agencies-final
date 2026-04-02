@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import { seoCities } from "@/Data/seoCities";
+import { seoCountries } from "@/Data/seoCountries";
 
 const BASE = "https://disconnect.software";
 const SERVICES = ["Cloud", "WebDevelopment", "AppDevelopment", "AIModels", "SEO", "Uiux"];
@@ -52,6 +53,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
+  const countryEntries: MetadataRoute.Sitemap = SERVICES.flatMap((service) =>
+    seoCountries.map((country) => ({
+      url: `${BASE}/${service}/${country.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.65,
+    }))
+  );
+
   // ── Blog Entries ────────────────────────────────────────────────────────
   let blogEntries: MetadataRoute.Sitemap = [];
   try {
@@ -78,6 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...supportingEntries,
     ...legalEntries,
     ...cityEntries,
+    ...countryEntries,
     ...blogEntries,
   ];
 }
