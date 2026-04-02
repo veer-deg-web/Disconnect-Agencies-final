@@ -21,7 +21,7 @@ const fs     = require('fs');
 const BASE_URL       = process.env.BASE_URL       || 'http://localhost:3000/api';
 const ADMIN_EMAIL    = process.env.ADMIN_EMAIL    || '';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
-const TIMEOUT_MS     = parseInt(process.env.REQUEST_TIMEOUT || '15000', 10);
+const TIMEOUT_MS     = parseInt(process.env.REQUEST_TIMEOUT || '30000', 10);
 
 const collectionPath  = path.join(__dirname, 'collection.json');
 const environmentPath = path.join(__dirname, 'environment.json');

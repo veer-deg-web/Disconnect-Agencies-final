@@ -70,17 +70,24 @@ export async function POST(req: NextRequest) {
     });
     const serviceTitle = serviceData[category].title;
 
-    // 1. Attempt to create Google Meet link (don't fail the whole booking if this fails)
+    // 1. Attempt to create Google Meet link with a 10s timeout
     let meetingLink = '';
     try {
-      meetingLink = await createGoogleMeetLink({
+      const meetPromise = createGoogleMeetLink({
         title: `${serviceTitle} Consultation – ${name}`,
         dateIso,
         time,
         guestEmail: email,
       });
+
+      // Timeout after 10 seconds to avoid hanging the entire request
+      const timeoutPromise = new Promise<string>((_, reject) =>
+        setTimeout(() => reject(new Error('Google Meet generation timed out')), 10000)
+      );
+
+      meetingLink = await Promise.race([meetPromise, timeoutPromise]);
     } catch (meetErr) {
-      console.error('[bookings/schedule] Google Meet generation failed:', meetErr);
+      console.error('[bookings/schedule] Google Meet generation failed or timed out:', meetErr);
       // We continue without a link — better to have a booking without a link than no booking at all.
     }
 
