@@ -10,6 +10,7 @@ import {
 import { createGoogleMeetLink } from '@/lib/googleMeet';
 
 import { sanitizeInput } from '@/lib/sanitizer';
+import { safeParseJson } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +33,10 @@ function isValidEmail(value: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
-    const rawBody = (await req.json()) as BookingPayload;
+    const rawBody = await safeParseJson<BookingPayload>(req);
+    if (!rawBody) {
+      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+    }
     const body = sanitizeInput(rawBody);
 
     const name = body.name || '';
@@ -66,13 +70,19 @@ export async function POST(req: NextRequest) {
     });
     const serviceTitle = serviceData[category].title;
 
-    // Create a unique Google Meet link via Calendar API
-    const meetingLink = await createGoogleMeetLink({
-      title: `${serviceTitle} Consultation – ${name}`,
-      dateIso,
-      time,
-      guestEmail: email,
-    });
+    // 1. Attempt to create Google Meet link (don't fail the whole booking if this fails)
+    let meetingLink = '';
+    try {
+      meetingLink = await createGoogleMeetLink({
+        title: `${serviceTitle} Consultation – ${name}`,
+        dateIso,
+        time,
+        guestEmail: email,
+      });
+    } catch (meetErr) {
+      console.error('[bookings/schedule] Google Meet generation failed:', meetErr);
+      // We continue without a link — better to have a booking without a link than no booking at all.
+    }
 
     // Collect admin e-mails
     let settings = await BookingSettings.findOne();
@@ -91,7 +101,7 @@ export async function POST(req: NextRequest) {
       )
     );
 
-    // Persist booking
+    // 2. Persist booking (This is the critical part)
     const booking = await Booking.create({
       name, email, category, serviceTitle,
       dateIso, dateLabel, time, notes,
@@ -99,22 +109,28 @@ export async function POST(req: NextRequest) {
       adminEmailsNotified: adminEmails,
     });
 
+    // 3. Attempt to send emails (background — don't block the response / don't fail on error)
     const mailDetails = { name, email, serviceTitle, dateLabel, time, notes, meetingLink };
-
-    // Send emails in parallel
-    await Promise.all([
+    
+    // We don't await this directly in a way that blocks the 200 response if it fails,
+    // but we want to ensure it's at least triggered.
+    Promise.all([
       sendBookingScheduledEmailToUser(mailDetails),
       adminEmails.length
         ? sendBookingScheduledEmailToAdmins(adminEmails, mailDetails)
         : Promise.resolve(),
-    ]);
+    ]).catch(mailErr => {
+      console.error('[bookings/schedule] Email delivery failed AFTER booking saved:', mailErr);
+    });
 
     return NextResponse.json({
       message: 'Meeting scheduled successfully',
       bookingId: booking._id,
-      meetingLink,
+      meetingLink: meetingLink || null,
+      info: meetingLink ? undefined : 'Meeting link will be sent manually later.'
     });
   } catch (err: unknown) {
+    console.error('[bookings/schedule] CRITICAL ERROR:', err);
     const message = err instanceof Error ? err.message : 'Failed to schedule meeting';
     return NextResponse.json({ error: message }, { status: 500 });
   }

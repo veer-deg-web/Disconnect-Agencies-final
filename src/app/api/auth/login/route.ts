@@ -4,13 +4,19 @@ import { signToken } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sanitizeInput } from '@/lib/sanitizer';
+import { safeParseJson } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await req.json();
+    const rawBody = await safeParseJson<any>(req);
+    
+    if (!rawBody) {
+      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+    }
+
     const { emailOrPhone, password } = sanitizeInput(rawBody, ['password']);
 
     if (!emailOrPhone || !password) {

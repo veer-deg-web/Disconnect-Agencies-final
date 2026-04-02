@@ -275,13 +275,14 @@ export async function DELETE(req: NextRequest) {
 
   try {
     await dbConnect();
-    const body = await req.json();
+    const rawBody = await req.json();
+    const { id } = sanitizeInput(rawBody);
 
-    if (!body.id) {
+    if (!id) {
       return NextResponse.json({ error: "Blog ID is required" }, { status: 400 });
     }
 
-    const blog = await Blog.findByIdAndDelete(body.id);
+    const blog = await Blog.findByIdAndDelete(id);
     if (!blog) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }

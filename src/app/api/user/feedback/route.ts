@@ -1,42 +1,42 @@
-import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '../../../../lib/mongodb';
 import Feedback from '../../../../models/Feedback';
 import { sanitizeInput } from '@/lib/sanitizer';
+import { getAuthToken, verifyAndRotateToken } from '@/lib/auth';
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+export const dynamic = 'force-dynamic';
 
-function verifyUser(req: Request) {
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        throw new Error('Unauthorized');
-    }
-
-    const token = authHeader.split(' ')[1];
-    return jwt.verify(token, JWT_SECRET) as { userId: string };
-}
-
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
     try {
-        const decoded = verifyUser(req);
+        const token = getAuthToken(req);
+        if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+        const { payload: decoded, newToken } = verifyAndRotateToken(token);
+        if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
         await dbConnect();
 
         const feedbacks = await Feedback.find({ user: decoded.userId }).sort({ createdAt: -1 });
 
-        return NextResponse.json({ feedbacks }, { status: 200 });
-    } catch (error: unknown) {
-        const err = error as Error;
-        if (err.message === 'Unauthorized') {
-            return NextResponse.json({ error: err.message }, { status: 401 });
+        const response = NextResponse.json({ feedbacks }, { status: 200 });
+        if (newToken) {
+            response.headers.set('X-New-Token', newToken);
         }
+        return response;
+    } catch (error: unknown) {
         console.error('Fetch User Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 
-export async function PUT(req: Request) {
+export async function PUT(req: NextRequest) {
     try {
-        const decoded = verifyUser(req);
+        const token = getAuthToken(req);
+        if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+        const { payload: decoded, newToken } = verifyAndRotateToken(token);
+        if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
         const rawBody = await req.json();
         const body = sanitizeInput(rawBody);
         const { id, content, rating } = body;
@@ -61,20 +61,25 @@ export async function PUT(req: Request) {
 
         await feedback.save();
 
-        return NextResponse.json({ feedback, message: 'Feedback updated successfully' }, { status: 200 });
-    } catch (error: unknown) {
-        const err = error as Error;
-        if (err.message === 'Unauthorized') {
-            return NextResponse.json({ error: err.message }, { status: 401 });
+        const response = NextResponse.json({ feedback, message: 'Feedback updated successfully' }, { status: 200 });
+        if (newToken) {
+            response.headers.set('X-New-Token', newToken);
         }
+        return response;
+    } catch (error: unknown) {
         console.error('Update User Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: NextRequest) {
     try {
-        const decoded = verifyUser(req);
+        const token = getAuthToken(req);
+        if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+        const { payload: decoded, newToken } = verifyAndRotateToken(token);
+        if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
         const rawBody = await req.json();
         const { id } = sanitizeInput(rawBody);
 
@@ -91,12 +96,12 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: 'Feedback not found or unauthorized' }, { status: 404 });
         }
 
-        return NextResponse.json({ message: 'Feedback deleted successfully' }, { status: 200 });
-    } catch (error: unknown) {
-        const err = error as Error;
-        if (err.message === 'Unauthorized') {
-            return NextResponse.json({ error: err.message }, { status: 401 });
+        const response = NextResponse.json({ message: 'Feedback deleted successfully' }, { status: 200 });
+        if (newToken) {
+            response.headers.set('X-New-Token', newToken);
         }
+        return response;
+    } catch (error: unknown) {
         console.error('Delete User Feedback Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }

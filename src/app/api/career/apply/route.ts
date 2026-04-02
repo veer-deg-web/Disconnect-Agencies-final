@@ -3,21 +3,30 @@ import dbConnect from '@/lib/mongodb';
 import CareerApplication from '@/models/CareerApplication';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { sanitizeInput } from '@/lib/sanitizer';
+import { safeParseForm } from '@/lib/utils';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     
-    const formData = await req.formData();
+    const formData = await safeParseForm(req);
+    if (!formData) {
+      return NextResponse.json({ error: 'Invalid or empty form data' }, { status: 400 });
+    }
+
     const name = sanitizeInput(formData.get('name') as string);
     const email = sanitizeInput(formData.get('email') as string);
     const phone = sanitizeInput(formData.get('phone') as string);
     const role = sanitizeInput(formData.get('role') as string);
     const message = sanitizeInput(formData.get('message') as string);
-    const resume = formData.get('resume') as File;
+    const resume = formData.get('resume');
 
     if (!name || !email || !phone || !role || !message || !resume) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+      return NextResponse.json({ error: 'All fields (name, email, phone, role, message, resume) are required' }, { status: 400 });
+    }
+
+    if (!(resume instanceof File)) {
+      return NextResponse.json({ error: 'Resume must be a valid file upload' }, { status: 400 });
     }
 
     // Validate file size (5MB)

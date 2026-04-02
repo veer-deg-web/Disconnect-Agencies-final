@@ -5,11 +5,17 @@ import { sanitizeInput } from '@/lib/sanitizer';
 import jwt from 'jsonwebtoken';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
+import { safeParseJson } from '@/lib/utils';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await req.json();
+    const rawBody = await safeParseJson<any>(req);
+    
+    if (!rawBody) {
+      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+    }
+
     const { email, emailOtp } = sanitizeInput(rawBody);
 
     if (!email || !emailOtp) {

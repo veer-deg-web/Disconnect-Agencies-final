@@ -6,6 +6,7 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sanitizeInput } from '@/lib/sanitizer';
 import { sendOtpEmail } from '@/lib/email';
+import { safeParseJson } from '@/lib/utils';
 
 import crypto from 'crypto';
 
@@ -20,11 +21,20 @@ function generateOtp(length = 4): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await req.json();
+    const rawBody = await safeParseJson<any>(req);
+    
+    if (!rawBody) {
+      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+    }
+
     const { name, email, phone, password } = sanitizeInput(rawBody, ['password']);
 
     if (!name || !email || !phone || !password) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+      return NextResponse.json({ error: 'All fields (name, email, phone, password) are required' }, { status: 400 });
+    }
+
+    if (!email.includes('@')) {
+      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });

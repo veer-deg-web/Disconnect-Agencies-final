@@ -1,8 +1,35 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { NextRequest } from "next/server";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+/**
+ * Safely parse JSON from a NextRequest without throwing.
+ * Returns null if parsing fails (e.g. empty body).
+ */
+export async function safeParseJson<T>(req: NextRequest): Promise<T | null> {
+  try {
+    const text = await req.text();
+    if (!text) return null;
+    return JSON.parse(text) as T;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Safely parse FormData from a NextRequest without throwing.
+ * Returns null if parsing fails.
+ */
+export async function safeParseForm(req: NextRequest): Promise<FormData | null> {
+  try {
+    return await req.formData();
+  } catch {
+    return null;
+  }
 }
 
 export function createSlug(title: string): string {

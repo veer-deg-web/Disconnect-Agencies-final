@@ -5,6 +5,7 @@ import { sanitizeInput } from '@/lib/sanitizer';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendPasswordResetEmail } from '@/lib/email';
+import { safeParseJson } from '@/lib/utils';
 
 import crypto from 'crypto';
 
@@ -19,7 +20,12 @@ function generateOtp(length = 6): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await req.json();
+    const rawBody = await safeParseJson<any>(req);
+    
+    if (!rawBody) {
+      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+    }
+
     const { identifier } = sanitizeInput(rawBody);
 
     if (!identifier) {

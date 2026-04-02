@@ -88,7 +88,8 @@ export async function DELETE(req: NextRequest) {
   if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   try {
     await dbConnect();
-    const { id } = await req.json();
+    const rawBody = await req.json();
+    const { id } = sanitizeInput(rawBody);
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
     const faq = await Faq.findByIdAndDelete(id);
     if (!faq) return NextResponse.json({ error: 'FAQ not found' }, { status: 404 });

@@ -1,25 +1,22 @@
-import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import dbConnect from '../../../../lib/mongodb';
-import Booking from '../../../../models/Booking';
-import User from '../../../../models/User';
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/lib/mongodb';
+import Booking from '@/models/Booking';
+import User from '@/models/User';
+import { getAuthToken, verifyAndRotateToken } from '@/lib/auth';
+
 export const dynamic = 'force-dynamic';
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-
-function verifyUser(req: Request) {
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        throw new Error('Unauthorized');
-    }
-
-    const token = authHeader.split(' ')[1];
-    return jwt.verify(token, JWT_SECRET) as { userId: string; email?: string };
-}
-
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
     try {
-        const decoded = verifyUser(req);
+        const token = getAuthToken(req);
+        if (!token || !token.startsWith('Bearer ')) {
+            // getAuthToken in auth.ts handles 'Bearer ' prefixing already
+        }
+        
+        const authToken = token || '';
+        const { payload: decoded, newToken } = verifyAndRotateToken(authToken);
+        if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
         await dbConnect();
 
         // Need the user object to get their email accurately
@@ -30,12 +27,12 @@ export async function GET(req: Request) {
 
         const bookings = await Booking.find({ email: user.email }).sort({ createdAt: -1 });
 
-        return NextResponse.json({ bookings }, { status: 200 });
-    } catch (error: unknown) {
-        const err = error as Error;
-        if (err.message === 'Unauthorized') {
-            return NextResponse.json({ error: err.message }, { status: 401 });
+        const response = NextResponse.json({ bookings }, { status: 200 });
+        if (newToken) {
+            response.headers.set('X-New-Token', newToken);
         }
+        return response;
+    } catch (error: unknown) {
         console.error('Fetch User Bookings Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
