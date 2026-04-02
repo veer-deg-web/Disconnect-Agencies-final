@@ -2,7 +2,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getSeoCityBySlug, seoCities } from "@/lib/seoCities";
-import { CityIntro } from "@/components/SEO/CityIntro";
 import Footer from "@/components/Shared/Footer/Footer";
 
 // Service content components (reusable across routes)
@@ -191,11 +190,10 @@ export default async function CityServicePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <CityIntro 
-        service={Service} 
-        cityName={cityName} 
-        serviceShortName={shortName} 
-      />
+      {/* SEO Title - Hidden from UI, remains for Search Engines */}
+      <h1 style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 }}>
+        {fullName} in {cityName}
+      </h1>
 
       <ContentComponent />
       <Footer />
