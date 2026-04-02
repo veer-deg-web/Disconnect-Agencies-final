@@ -1,98 +1,52 @@
-import { google } from "googleapis";
-import { randomUUID } from "crypto";
-import dbConnect from "@/lib/mongodb";
-import GoogleToken from "@/models/GoogleToken";
+/**
+ * googleMeet.ts
+ *
+ * Creates a Google Calendar event with an automatically-generated Meet link.
+ * Uses getGoogleAuthClient() which handles token refresh, DB persistence and
+ * all invalid_grant scenarios automatically.
+ */
+
+import { google } from 'googleapis';
+import { randomUUID } from 'crypto';
+import { getGoogleAuthClient } from '@/lib/googleClient';
+
+export interface MeetDetails {
+  title: string;
+  dateIso: string;       // ISO date string, e.g. "2027-06-15T00:00:00.000Z"
+  time: string;          // "10:00 AM" or "14:30"
+  durationMinutes?: number; // default 30
+  guestEmail?: string;
+}
 
 /**
- * Creates a Google Calendar event with a Meet link, using the stored
- * admin OAuth2 refresh token (written by /api/auth/google/callback).
+ * Creates a Google Calendar event and returns the Google Meet link.
+ *
+ * @throws if Google is not connected, token is invalid, or Calendar API fails.
  */
-export async function createGoogleMeetLink(details: {
-  title: string;
-  dateIso: string;
-  time: string;
-  durationMinutes?: number;
-  guestEmail?: string;
-}): Promise<string> {
+export async function createGoogleMeetLink(details: MeetDetails): Promise<string> {
+  // Get a fully-authenticated, token-refreshed OAuth2 client
+  const auth = await getGoogleAuthClient();
+  const calendar = google.calendar({ version: 'v3', auth });
 
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI;
-
-  if (!clientId || !clientSecret || !redirectUri) {
-    throw new Error(
-      "Google OAuth env vars missing: set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI in .env.local"
-    );
-  }
-
-  // Load stored tokens
-  await dbConnect();
-  const stored = await GoogleToken.findOne().lean();
-
-  if (!stored) {
-    throw new Error(
-      'Google account not connected. Please go to the Admin panel and click "Connect Google Account".'
-    );
-  }
-
-  // Build OAuth2 client with stored credentials
-  const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
-
-  oauth2Client.setCredentials({
-    access_token: stored.accessToken,
-    refresh_token: stored.refreshToken,
-    expiry_date: stored.expiresAt,
-  });
-
-  // When the access token is silently refreshed, persist the new one back to DB
-  oauth2Client.on("tokens", async (freshTokens) => {
-    try {
-      await GoogleToken.findOneAndUpdate(
-        {},
-        {
-          accessToken: freshTokens.access_token ?? stored.accessToken,
-          ...(freshTokens.refresh_token
-            ? { refreshToken: freshTokens.refresh_token }
-            : {}),
-          expiresAt: freshTokens.expiry_date ?? stored.expiresAt,
-        }
-      );
-    } catch (e) {
-      console.error("Failed to persist refreshed Google token:", e);
-    }
-  });
-
-  const calendar = google.calendar({ version: "v3", auth: oauth2Client });
-
-  // Build start / end times
-  const baseDate = new Date(details.dateIso);
+  const baseDate     = new Date(details.dateIso);
   const startDateTime = parseDateWithTime(baseDate, details.time);
-  const duration = (details.durationMinutes ?? 30) * 60 * 1000;
-  const endDateTime = new Date(startDateTime.getTime() + duration);
-
-  const requestId = randomUUID();
+  const duration     = (details.durationMinutes ?? 30) * 60 * 1000;
+  const endDateTime  = new Date(startDateTime.getTime() + duration);
+  const requestId    = randomUUID();
 
   try {
     const response = await calendar.events.insert({
-      calendarId: "primary",
-      conferenceDataVersion: 1,
-
+      calendarId:            'primary',
+      conferenceDataVersion: 1,         // required to generate Meet link
+      sendUpdates:           'all',     // send invite emails to attendees
       requestBody: {
-        summary: details.title,
-
+        summary:  details.title,
         description: details.guestEmail
-          ? `Guest Email: ${details.guestEmail}`
+          ? `Consultation booked by: ${details.guestEmail}`
           : undefined,
 
-        start: {
-          dateTime: startDateTime.toISOString(),
-          timeZone: "UTC",
-        },
-
-        end: {
-          dateTime: endDateTime.toISOString(),
-          timeZone: "UTC",
-        },
+        start: { dateTime: startDateTime.toISOString(), timeZone: 'UTC' },
+        end:   { dateTime: endDateTime.toISOString(),   timeZone: 'UTC' },
 
         attendees: details.guestEmail
           ? [{ email: details.guestEmail }]
@@ -101,56 +55,70 @@ export async function createGoogleMeetLink(details: {
         conferenceData: {
           createRequest: {
             requestId,
-            conferenceSolutionKey: { type: "hangoutsMeet" },
+            conferenceSolutionKey: { type: 'hangoutsMeet' },
           },
         },
       },
     });
 
     const meetLink = response.data.conferenceData?.entryPoints?.find(
-      (entry) => entry.entryPointType === "video"
+      (ep) => ep.entryPointType === 'video'
     )?.uri;
 
     if (!meetLink) {
-      throw new Error("Google Calendar created the event but did not return a Meet link.");
+      // Calendar event was created but Meet link was not attached.
+      // This can happen if the Google Workspace account does not have Meet enabled,
+      // or if conferenceDataVersion was ignored.
+      throw new Error(
+        'Google Calendar created the event but did not return a Meet link. ' +
+        'Ensure the Google account has Google Meet enabled (Workspace or personal).'
+      );
     }
 
     return meetLink;
 
-  } catch (error: unknown) {
-    const err = error as { errors?: unknown[]; code?: string | number; message?: string };
-    console.error("Google Calendar API error:", err?.errors ?? err);
-    throw new Error(
-      `Google Calendar API failed (${err.code ?? "?"}): ${err.message}`
-    );
+  } catch (err: unknown) {
+    const e = err as { code?: number | string; message?: string; errors?: unknown[] };
+    const msg = e.message ?? 'Unknown Google Calendar error';
+
+    // Surface invalid_grant so admins know to reconnect
+    if (msg.includes('invalid_grant') || e.code === 401) {
+      throw new Error(
+        'Google Calendar API: auth expired (invalid_grant). ' +
+        'Please reconnect: /api/google/connect'
+      );
+    }
+
+    console.error('[googleMeet] Calendar API error:', e.errors ?? e);
+    throw new Error(`Google Calendar API failed (${e.code ?? '?'}): ${msg}`);
   }
 }
 
-// ── helpers ────────────────────────────────────────────────────────────────
+// ─── helpers ──────────────────────────────────────────────────────────────────
 
-function parseDateWithTime(baseDate: Date, time: string): Date {
-  const result = new Date(baseDate);
+function parseDateWithTime(base: Date, time: string): Date {
+  const d = new Date(base);
 
-  // 12-hour format: "3:30 PM"
-  const match12 = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-  if (match12) {
-    let hours = parseInt(match12[1]);
-    const minutes = parseInt(match12[2]);
-    const meridiem = match12[3].toUpperCase();
-    if (meridiem === "PM" && hours !== 12) hours += 12;
-    if (meridiem === "AM" && hours === 12) hours = 0;
-    result.setUTCHours(hours, minutes, 0, 0);
-    return result;
+  // 12-hour: "3:30 PM"
+  const m12 = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (m12) {
+    let h = parseInt(m12[1]);
+    const min = parseInt(m12[2]);
+    const mer = m12[3].toUpperCase();
+    if (mer === 'PM' && h !== 12) h += 12;
+    if (mer === 'AM' && h === 12) h  = 0;
+    d.setUTCHours(h, min, 0, 0);
+    return d;
   }
 
-  // 24-hour format: "15:30"
-  const match24 = time.match(/(\d{1,2}):(\d{2})/);
-  if (match24) {
-    result.setUTCHours(parseInt(match24[1]), parseInt(match24[2]), 0, 0);
-    return result;
+  // 24-hour: "14:30"
+  const m24 = time.match(/(\d{1,2}):(\d{2})/);
+  if (m24) {
+    d.setUTCHours(parseInt(m24[1]), parseInt(m24[2]), 0, 0);
+    return d;
   }
 
-  // fallback — 9 AM
-  result.setUTCHours(9, 0, 0, 0);
-  return result;
+  // Fallback: 9 AM UTC
+  d.setUTCHours(9, 0, 0, 0);
+  return d;
 }

@@ -1,78 +1,126 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { google } from 'googleapis';
-import dbConnect from '@/lib/mongodb';
-import GoogleToken from '@/models/GoogleToken';
-
 /**
  * GET /api/google/callback
  *
- * Google redirects here after the user grants (or denies) access.
- * We exchange the authorization code for tokens, persist them, then
- * redirect the admin back to /admin?google=connected.
+ * Step 2 of the one-time OAuth flow.
+ * Google redirects here with an authorization code.
+ * We exchange the code for tokens, persist them, then redirect the admin.
  *
- * Email is extracted from the id_token JWT payload — no extra API call needed.
+ * Critical requirements:
+ *   - This URL must be EXACTLY listed in Google Cloud Console as an
+ *     "Authorized redirect URI" for the OAuth2 client.
+ *   - The GOOGLE_REDIRECT_URI env var must match this URL exactly.
  */
+export const dynamic = 'force-dynamic';
+
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/lib/mongodb';
+import GoogleToken from '@/models/GoogleToken';
+import { buildOAuth2Client, googleRedirectUri } from '@/lib/googleClient';
+
 export async function GET(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
-    const code = searchParams.get('code');
-    const error = searchParams.get('error');
+  const { searchParams, origin } = new URL(req.url);
 
-    if (error || !code) {
-        return NextResponse.redirect(new URL('/admin?google=denied', req.url));
+  const code  = searchParams.get('code');
+  const error = searchParams.get('error');
+
+  // ── 1. Handle Google auth denial ──────────────────────────────────────────
+  if (error || !code) {
+    console.warn('[google/callback] Access denied or missing code:', error);
+    return NextResponse.redirect(`${origin}/admin?google=denied`);
+  }
+
+  const redirectUri = googleRedirectUri();
+
+  try {
+    const oauth2Client = buildOAuth2Client();
+
+    // ── 2. Exchange authorization code for tokens ────────────────────────────
+    // IMPORTANT: redirect_uri passed here must EXACTLY match what was used to
+    // generate the auth URL. buildOAuth2Client sets it in the constructor, but
+    // we pass it explicitly to be safe.
+    const { tokens } = await oauth2Client.getToken({
+      code,
+      redirect_uri: redirectUri,
+    });
+
+    console.log('[google/callback] Tokens received:', {
+      has_access_token:  !!tokens.access_token,
+      has_refresh_token: !!tokens.refresh_token,
+      expiry_date:       tokens.expiry_date,
+    });
+
+    // ── 3. Guard: refresh_token and scope validation ─────────────────────────────
+    // Check if the user actually granted the required scopes (e.g. Calendar)
+    const grantedScopes = tokens.scope || '';
+    const hasCalendarScope = grantedScopes.includes('https://www.googleapis.com/auth/calendar');
+
+    if (!hasCalendarScope) {
+      console.error('[google/callback] Missing required scope: calendar');
+      return NextResponse.redirect(`${origin}/admin?google=insufficient_scopes`);
     }
 
-    const clientId = process.env.GOOGLE_CLIENT_ID!;
-    const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
-    const redirectUri = process.env.GOOGLE_REDIRECT_URI!;
-
-    const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
-
-    try {
-        // Exchange code → tokens
-        const { tokens } = await oauth2Client.getToken(code);
-        console.log("TOKENS:", tokens);
-
-        if (!tokens.refresh_token) {
-            // Happens when consent was previously granted without revoking.
-            // The connect route forces prompt:'consent' to prevent this mostly,
-            // but handle it defensively.
-            return NextResponse.redirect(
-                new URL('/admin?google=no_refresh_token', req.url)
-            );
-        }
-
-        // ── Extract email from id_token (no extra API call needed) ────────────
-        let email = '';
-        if (tokens.id_token) {
-            try {
-                // id_token is a JWT — decode the payload (middle segment)
-                const payloadB64 = tokens.id_token.split('.')[1];
-                const decoded = JSON.parse(
-                    Buffer.from(payloadB64, 'base64').toString('utf-8')
-                );
-                email = decoded.email ?? '';
-            } catch {
-                // non-fatal — email display is cosmetic only
-            }
-        }
-
-        await dbConnect();
-
-        // Upsert — there is always only one document in this collection
-        await GoogleToken.findOneAndUpdate(
-            {},
-            {
-                accessToken: tokens.access_token!,
-                refreshToken: tokens.refresh_token,
-                expiresAt: tokens.expiry_date ?? Date.now() + 3600 * 1000,
-                email,
-            },
-            { upsert: true, new: true }
-        );
-
-        return NextResponse.redirect(new URL('/admin?google=connected', req.url));
-    } catch (err) {
-        console.error('Google OAuth callback error:', err);
-        return NextResponse.redirect(new URL('/admin?google=error', req.url));
+    // Refresh token check
+    // If it's missing: the app was already authorized without revoking first.
+    // Prompt:consent in the auth URL should prevent this, but guard defensively.
+    if (!tokens.refresh_token) {
+      console.error(
+        '[google/callback] No refresh_token returned. ' +
+        'The user must revoke app access at https://myaccount.google.com/permissions ' +
+        'and then reconnect.'
+      );
+      return NextResponse.json(
+        { error: 'No refresh_token returned. Please revoke app access at your Google Account settings and try again.' },
+        { status: 400 }
+      );
     }
+
+    // ── 4. Extract Google account email from id_token ─────────────────────
+    let email = '';
+    if (tokens.id_token) {
+      try {
+        const payloadB64 = tokens.id_token.split('.')[1];
+        const decoded = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
+        email = decoded.email ?? '';
+      } catch {
+        // non-fatal — email is cosmetic only
+      }
+    }
+
+    // ── 5. Persist tokens (upsert singleton) ─────────────────────────────────
+    await dbConnect();
+    await GoogleToken.findOneAndUpdate(
+      {},
+      {
+        accessToken:  tokens.access_token!,
+        refreshToken: tokens.refresh_token,
+        expiresAt:    tokens.expiry_date ?? Date.now() + 3_600_000,
+        email,
+        scopes:       grantedScopes.split(' '),
+      },
+      { upsert: true, new: true }
+    );
+
+    console.log(`[google/callback] Token stored for account: ${email}`);
+    return NextResponse.redirect(`${origin}/admin?google=connected`);
+
+  } catch (err: unknown) {
+    const msg = (err as Error)?.message ?? String(err);
+    console.error('[google/callback] Error exchanging code:', msg);
+
+    // Provide specific guidance on common errors
+    if (msg.includes('redirect_uri_mismatch')) {
+      console.error(
+        '[google/callback] REDIRECT URI MISMATCH. ' +
+        `Current: ${redirectUri} — ` +
+        'Add this EXACT URL to Google Cloud Console under Authorized redirect URIs.'
+      );
+      return NextResponse.redirect(`${origin}/admin?google=redirect_uri_mismatch`);
+    }
+
+    if (msg.includes('invalid_grant')) {
+      return NextResponse.redirect(`${origin}/admin?google=invalid_grant`);
+    }
+
+    return NextResponse.redirect(`${origin}/admin?google=error`);
+  }
 }

@@ -5,16 +5,18 @@ export interface IGoogleToken extends Document {
     refreshToken: string;
     expiresAt: number; // unix ms
     email: string;     // connected Google account email (for display)
+    scopes: string[];   // granted permissions
     createdAt: Date;
     updatedAt: Date;
 }
 
 const GoogleTokenSchema = new Schema<IGoogleToken>(
     {
-        accessToken: { type: String, required: true },
+        accessToken:  { type: String, required: true },
         refreshToken: { type: String, required: true },
-        expiresAt: { type: Number, required: true },
-        email: { type: String, default: '' },
+        expiresAt:    { type: Number, required: true },
+        email:        { type: String, default: '' },
+        scopes:       { type: [String], default: [] },
     },
     { timestamps: true }
 );
