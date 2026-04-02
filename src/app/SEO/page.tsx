@@ -2,25 +2,28 @@ import type { Metadata } from "next";
 import SeoContent from "@/components/SEO/SeoContent";
 import Footer from "@/components/Shared/Footer/Footer";
 
+// ── /SEO ─────────────────────────────────────────────────
+// Title (raw):      "SEO Services — Technical & On-Page SEO" [38 chars]
+// Title (rendered): "SEO Services — Technical & On-Page SEO | Disconnect" [51 chars] ✅
+// Description:      [154 chars] ✅
+// Canonical:        https://disconnect.software/SEO ✅
 export const metadata: Metadata = {
-  title: "SEO Services",
+  title: "SEO Services — Technical & On-Page SEO",
   description:
-    "Technical SEO, on-page optimization, content strategy, and growth-focused search performance services.",
-  robots: {
-    index: true,
-    follow: true,
-  },
+    "Data-driven SEO services — technical audits, on-page optimization, keyword tracking, and content strategy that delivers real organic growth. Explore now.",
+  robots: { index: true, follow: true },
   alternates: { canonical: "/SEO" },
   openGraph: {
-    title: "SEO Services",
+    title: "SEO Services — Technical & On-Page SEO",
     description:
       "Data-driven SEO services built to increase visibility, rankings, and conversions.",
     type: "website",
     url: "/SEO",
+    siteName: "Disconnect",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SEO Services",
+    title: "SEO Services — Technical & On-Page SEO",
     description:
       "Data-driven SEO services built to increase visibility, rankings, and conversions.",
   },

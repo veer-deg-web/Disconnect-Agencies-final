@@ -15,19 +15,25 @@ import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import CTASection from "@/components/Shared/CTASection/CTASection";
 import Footer from "@/components/Shared/Footer/Footer";
 
+// ── Homepage / ───────────────────────────────────────────
+// Title (absolute): "Disconnect | Full-Service Design & Development Agency"  [53 chars] ✅
+// Description:      [146 chars] ✅
+// Canonical:        https://disconnect.software ✅
 export const metadata: Metadata = {
   title: {
     absolute: "Disconnect | Full-Service Design & Development Agency",
   },
   description:
-    "Disconnect helps founders and teams design, build, and scale products across web, app, UI/UX, SEO, cloud, and AI.",
+    "Disconnect helps teams design, build, and scale products across web, app, AI, cloud, SEO, and UI/UX — delivering proven results. Book a free call.",
   alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "Disconnect | Full-Service Design & Development Agency",
     description:
-      "End-to-end product design, engineering, and launch support for modern businesses.",
+      "End-to-end product design, engineering, and launch support for modern businesses — trusted by teams worldwide.",
     type: "website",
     url: "/",
+    siteName: "Disconnect",
   },
   twitter: {
     card: "summary_large_image",

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /book-call
+Disallow: /api/
+Disallow: /_next/
+Sitemap: https://disconnect.software/sitemap.xml

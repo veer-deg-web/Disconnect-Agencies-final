@@ -18,12 +18,10 @@ export default function HeroSection() {
   initial={{
     opacity: 0,
     y: 70,
-    filter: "blur(14px)",
   }}
   animate={{
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
   }}
   transition={{
     duration: 1.4,
@@ -36,8 +34,8 @@ export default function HeroSection() {
         {/* LEFT */}
         <motion.h1
           className="cloud-left"
-          initial={{ opacity: 0, filter: "blur(14px)", y: 20 }}
-          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1],delay: 1.25 }}
         >
           Cloud<span>.</span>
@@ -46,8 +44,8 @@ export default function HeroSection() {
         {/* RIGHT */}
         <motion.div
           className="cloud-right"
-          initial={{ opacity: 0, filter: "blur(14px)", y: 24 }}
-          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, delay: 1.45 }}
         >
           <span className="services">Services</span>

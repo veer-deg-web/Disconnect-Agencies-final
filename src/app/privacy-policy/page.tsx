@@ -2,20 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "@/app/legal.module.css";
 
+// ── /privacy-policy ──────────────────────────────────────
+// Title (raw):      "Privacy Policy — How We Handle Your Data" [40 chars]
+// Title (rendered): 53 chars ✅ | Description: [148 chars] ✅
 export const metadata: Metadata = {
-  title: "Privacy Policy | Disconnect Agencies",
-  description: "Learn how Disconnect Agencies collects, uses, and protects your personal data across our AI, Web, App, SEO, and Cloud services.",
-  keywords: ["privacy policy", "data protection", "personal data", "Disconnect Agencies", "digital agency privacy"],
+  title: "Privacy Policy — How We Handle Your Data",
+  description:
+    "Learn how Disconnect collects, uses, and protects your personal data across AI, web, app, SEO, and cloud services with full transparency. Explore now.",
+  robots: { index: true, follow: false },
+  keywords: ["privacy policy", "data protection", "personal data", "Disconnect", "digital agency privacy"],
   openGraph: {
-    title: "Privacy Policy | Disconnect Agencies",
-    description: "Learn how Disconnect Agencies collects, uses, and protects your personal data.",
-    url: "https://disconnect-agencies-final.vercel.app/privacy-policy",
-    siteName: "Disconnect Agencies",
+    title: "Privacy Policy — How We Handle Your Data",
+    description:
+      "How Disconnect collects, uses, and protects your personal data with full transparency.",
+    url: "/privacy-policy",
+    siteName: "Disconnect",
     type: "website",
   },
-  alternates: {
-    canonical: "https://disconnect-agencies-final.vercel.app/privacy-policy",
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy — How We Handle Your Data",
+    description:
+      "How Disconnect collects, uses, and protects your personal data with full transparency.",
   },
+  alternates: { canonical: "/privacy-policy" },
 };
 
 export default function PrivacyPolicyPage() {

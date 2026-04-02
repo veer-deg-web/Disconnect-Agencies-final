@@ -5,17 +5,17 @@ import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
 import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
 import StoreProvider from "@/store/StoreProvider";
-import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = getSiteUrl();
-
+// ── Root Layout ──────────────────────────────────────────
+// Description: [153 chars] ✅
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL("https://disconnect.software"),
   title: {
     default: "Disconnect",
     template: "%s | Disconnect",
   },
-  description: "Disconnect builds production-grade digital products, platforms, and AI systems.",
+  description:
+    "Disconnect builds production-grade digital products — web, app, AI, cloud, SEO, and UI/UX — delivering proven results for modern businesses. Explore now.",
   keywords: [
     "Disconnect agencies",
     "digital product agency",
@@ -28,6 +28,13 @@ export const metadata: Metadata = {
     "UI/UX design",
     "elite engineering",
   ],
+  openGraph: {
+    siteName: "Disconnect",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

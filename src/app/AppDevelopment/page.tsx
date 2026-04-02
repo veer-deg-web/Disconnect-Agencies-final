@@ -2,25 +2,28 @@ import type { Metadata } from "next";
 import AppDevContent from "@/components/AppDevelopment/AppDevContent";
 import Footer from "@/components/Shared/Footer/Footer";
 
+// ── /AppDevelopment ──────────────────────────────────────
+// Title (raw):      "App Development for iOS, Android & Web"  [38 chars]
+// Title (rendered): "App Development for iOS, Android & Web | Disconnect" [51 chars] ✅
+// Description:      [144 chars] ✅
+// Canonical:        https://disconnect.software/AppDevelopment ✅
 export const metadata: Metadata = {
-  title: "App Development",
+  title: "App Development for iOS, Android & Web",
   description:
-    "Design, development, launch, and scaling support for high-performance mobile and web applications.",
-  robots: {
-    index: true,
-    follow: true,
-  },
+    "iOS, Android, React Native, and Flutter app development from MVP to enterprise scale — proven results for modern product teams. Book a free call.",
+  robots: { index: true, follow: true },
   alternates: { canonical: "/AppDevelopment" },
   openGraph: {
-    title: "App Development",
+    title: "App Development for iOS, Android & Web",
     description:
       "End-to-end app development for modern businesses, built for speed and scalability.",
     type: "website",
     url: "/AppDevelopment",
+    siteName: "Disconnect",
   },
   twitter: {
     card: "summary_large_image",
-    title: "App Development",
+    title: "App Development for iOS, Android & Web",
     description:
       "End-to-end app development for modern businesses, built for speed and scalability.",
   },

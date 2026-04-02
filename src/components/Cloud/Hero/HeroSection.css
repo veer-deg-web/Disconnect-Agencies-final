@@ -60,6 +60,9 @@
   right: 10%;
   top: 47%;
   line-height: 0.9;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .cloud-right .services {
@@ -67,6 +70,8 @@
   font-size: clamp(3.2rem, 6vw, 6.2rem);
   font-weight: 300;
   color: #dbfe49;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .cloud-right .ready {
@@ -74,6 +79,8 @@
   font-size: clamp(3.2rem, 6vw, 6.2rem);
   font-weight: 300;
   color: #ffffff;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* =========================

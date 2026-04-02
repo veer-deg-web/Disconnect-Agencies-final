@@ -68,7 +68,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { Service, city } = await params;
   const cityData       = getSeoCityBySlug(city);
-  if (!cityData || !serviceNames[Service]) return { title: "Not Found | Disconnect" };
+  if (!cityData || !serviceNames[Service]) return { title: "Not Found" };
 
   const cityName       = cityData.name;
   const canonicalSlug  = cityData.slug;
@@ -78,15 +78,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const desc           = serviceDesc[Service]  ?? "professional digital services";
   const cityLower      = cityName.toLowerCase();
 
-  return {
-    title: `${shortName} in ${cityName} | Disconnect`,
-    description:
-      `Looking for ${fullName} in ${cityName}? Disconnect delivers ${desc} ` +
-      `for businesses in ${cityName}. Proven results. Book a free call.`,
+  // ── Dynamic title: 37–47 chars raw ─────────────────────
+  // Template adds " | Disconnect" (13 chars) → 50–60 rendered
+  const rawTitle = `${shortName} in ${cityName} — Proven Results`;
 
-    alternates: {
-      canonical,
-    },
+  // ── Dynamic description: 140–158 chars with CTA ────────
+  const rawDesc =
+    `Disconnect delivers ${desc} for businesses in ${cityName}. Trusted by teams across ${cityName}. Book a free call.`;
+
+  return {
+    title: rawTitle,
+    description: rawDesc,
+
+    alternates: { canonical },
 
     robots: {
       index: true,
@@ -101,10 +105,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
 
     openGraph: {
-      title: `${shortName} in ${cityName} | Disconnect`,
+      title: rawTitle,
       description:
-        `Top-rated ${fullName} for ${cityName} businesses. ` +
-        `Disconnect builds scalable, results-driven digital products. Explore our work.`,
+        `Trusted ${fullName} for ${cityName} businesses. Disconnect builds scalable, results-driven digital products.`,
       url: canonical,
       siteName: "Disconnect",
       images: [
@@ -119,7 +122,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     twitter: {
       card: "summary_large_image",
-      title: `${shortName} in ${cityName} | Disconnect`,
+      title: rawTitle,
       description:
         `Expert ${shortName} in ${cityName}. Book a free strategy call with Disconnect.`,
     },
@@ -128,7 +131,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${shortName.toLowerCase()} in ${cityLower}`,
       `${shortName.toLowerCase()} ${cityLower}`,
       `${cityLower} ${Service.toLowerCase()} company`,
-      `best ${shortName.toLowerCase()} ${cityLower}`,
+      `${shortName.toLowerCase()} agency ${cityLower}`,
       `${cityLower} digital agency`,
       `hire ${shortName.toLowerCase()} ${cityLower}`,
       `disconnect ${cityLower}`,

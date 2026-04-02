@@ -2,6 +2,7 @@ import { seoCities } from "./src/lib/seoCities.js";
 
 const SERVICES = ["Cloud", "WebDevelopment", "AppDevelopment", "AIModels", "SEO", "Uiux"];
 
+// ── Alias Redirects (e.g. /Cloud/bangalore → /Cloud/bengaluru) ──────────────
 const aliasRedirects = SERVICES.flatMap((service) =>
   seoCities.flatMap((city) =>
     (city.aliases ?? []).map((alias) => ({
@@ -11,6 +12,20 @@ const aliasRedirects = SERVICES.flatMap((service) =>
     }))
   )
 );
+
+// ── Lowercase Redirects (e.g. /cloud → /Cloud) ─────────────────────────────
+const lowercaseRedirects = SERVICES.filter((s) => s !== s.toLowerCase()).map(
+  (service) => ({
+    source: `/${service.toLowerCase()}`,
+    destination: `/${service}`,
+    permanent: true,
+  })
+);
+
+// ── Environment Detection ───────────────────────────────────────────────────
+const isStaging =
+  process.env.VERCEL_ENV === "preview" ||
+  process.env.VERCEL_URL?.includes("vercel.app");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -26,22 +41,19 @@ const nextConfig = {
   },
 
   async redirects() {
-    return [
-      // ── Alias City Redirects ─────────────────────────────────────────────
-      ...aliasRedirects,
-    ];
+    return [...aliasRedirects, ...lowercaseRedirects];
   },
 
   async headers() {
-    const isVercelPreview =
-      process.env.VERCEL_ENV === "preview" ||
-      process.env.VERCEL_URL?.includes("vercel.app");
-
     return [
-      // ── Default Headers ──────────────────────────────────────────────────
+      // ── Catch-All: security headers + environment-aware robots ────────
       {
         source: "/(.*)",
         headers: [
+          {
+            key: "X-Robots-Tag",
+            value: isStaging ? "noindex, nofollow" : "index, follow",
+          },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -57,31 +69,19 @@ const nextConfig = {
         ],
       },
 
-      // ── Block staging/preview from being indexed ──────────────────────────
-      ...(isVercelPreview
-        ? [
-            {
-              source: "/(.*)",
-              headers: [
-                { key: "X-Robots-Tag", value: "noindex, nofollow" },
-              ],
-            },
-          ]
-        : []),
+      // ── City Pages: explicitly indexable with rich snippets ───────────
+      {
+        source:
+          "/:Service(Cloud|WebDevelopment|AppDevelopment|AIModels|SEO|Uiux)/:city",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "index, follow, max-image-preview:large",
+          },
+        ],
+      },
 
-      // ── Production: city pages explicitly indexable ───────────────────────
-      ...(!isVercelPreview
-        ? [
-            {
-              source: "/:Service(Cloud|WebDevelopment|AppDevelopment|AIModels|SEO|Uiux)/:city",
-              headers: [
-                { key: "X-Robots-Tag", value: "index, follow, max-image-preview:large" },
-              ],
-            },
-          ]
-        : []),
-
-      // ── book-call pages always noindex ────────────────────────────────────
+      // ── book-call: always noindex ─────────────────────────────────────
       {
         source: "/book-call(.*)",
         headers: [

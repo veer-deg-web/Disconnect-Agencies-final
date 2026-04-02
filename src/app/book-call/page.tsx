@@ -2,23 +2,29 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import BookCallClient from "./BookCallClient";
 
+// ── /book-call ───────────────────────────────────────────
+// Title (raw):      "Book a Free Strategy Call With Our Team" [39 chars]
+// Title (rendered): 52 chars ✅ | Description: [155 chars] ✅
+// Robots: noindex, nofollow ✅
 export const metadata: Metadata = {
-  title: "Book A Call",
+  title: "Book a Free Strategy Call With Our Team",
   description:
-    "Book a call with Disconnect to discuss your project requirements and next steps.",
+    "Book a free strategy call with Disconnect to discuss your project requirements, technical scope, and next steps — no commitment required. Get started today.",
+  robots: { index: false, follow: false },
   alternates: { canonical: "/book-call" },
   openGraph: {
-    title: "Book A Call | Disconnect Agencies",
+    title: "Book a Free Strategy Call With Our Team",
     description:
-      "Schedule a project discovery call with Disconnect Agencies.",
+      "Schedule a project discovery call with Disconnect — no commitment required.",
     type: "website",
     url: "/book-call",
+    siteName: "Disconnect",
   },
   twitter: {
     card: "summary",
-    title: "Book A Call | Disconnect Agencies",
+    title: "Book a Free Strategy Call With Our Team",
     description:
-      "Schedule a project discovery call with Disconnect Agencies.",
+      "Schedule a project discovery call with Disconnect — no commitment required.",
   },
   keywords: [
     "book a strategy call",

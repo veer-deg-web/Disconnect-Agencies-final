@@ -2,20 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "@/app/legal.module.css";
 
+// ── /terms-and-conditions ────────────────────────────────
+// Title (raw):      "Terms & Conditions for Using Our Services" [41 chars]
+// Title (rendered): 54 chars ✅ | Description: [154 chars] ✅
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Disconnect Agencies",
-  description: "Read the Terms & Conditions for using Disconnect Agencies' website and services — covering intellectual property, payments, data protection, and more.",
-  keywords: ["terms and conditions", "terms of service", "Disconnect Agencies", "digital agency terms", "service agreement"],
+  title: "Terms & Conditions for Using Our Services",
+  description:
+    "Review the terms and conditions for using Disconnect services — covering IP rights, payments, data protection, and project delivery terms. Explore now.",
+  robots: { index: true, follow: false },
+  keywords: ["terms and conditions", "terms of service", "Disconnect", "digital agency terms", "service agreement"],
   openGraph: {
-    title: "Terms & Conditions | Disconnect Agencies",
-    description: "Read the Terms & Conditions for using Disconnect Agencies' website and services.",
-    url: "https://disconnect-agencies-final.vercel.app/terms-and-conditions",
-    siteName: "Disconnect Agencies",
+    title: "Terms & Conditions for Using Our Services",
+    description:
+      "Terms and conditions for Disconnect services — IP rights, payments, data protection, and delivery.",
+    url: "/terms-and-conditions",
+    siteName: "Disconnect",
     type: "website",
   },
-  alternates: {
-    canonical: "https://disconnect-agencies-final.vercel.app/terms-and-conditions",
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms & Conditions for Using Our Services",
+    description:
+      "Terms and conditions for Disconnect services — IP rights, payments, data protection, and delivery.",
   },
+  alternates: { canonical: "/terms-and-conditions" },
 };
 
 export default function TermsPage() {

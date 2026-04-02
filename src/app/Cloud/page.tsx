@@ -2,27 +2,28 @@ import type { Metadata } from "next";
 import CloudContent from "@/components/Cloud/CloudContent";
 import Footer from "@/components/Shared/Footer/Footer";
 
+// ── /Cloud ───────────────────────────────────────────────
+// Title (raw):      "Cloud Infrastructure & DevOps Services"   [38 chars]
+// Title (rendered): 51 chars ✅ | Description: [147 chars] ✅
 export const metadata: Metadata = {
-  title: "Cloud Services",
+  title: "Cloud Infrastructure & DevOps Services",
   description:
-    "Cloud architecture, migration, optimization, and scalable infrastructure services for modern products.",
-  robots: {
-    index: true,
-    follow: true,
-  },
+    "Scalable cloud architecture, CI/CD pipelines, cloud security, and managed infrastructure services trusted by growing businesses. Get started today.",
+  robots: { index: true, follow: true },
   alternates: { canonical: "/Cloud" },
   openGraph: {
-    title: "Cloud Services",
+    title: "Cloud Infrastructure & DevOps Services",
     description:
-      "Secure and scalable cloud engineering for high-growth businesses.",
+      "Secure, scalable cloud engineering — architecture, migration, and optimization for high-growth businesses.",
     type: "website",
     url: "/Cloud",
+    siteName: "Disconnect",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cloud Services",
+    title: "Cloud Infrastructure & DevOps Services",
     description:
-      "Secure and scalable cloud engineering for high-growth businesses.",
+      "Secure, scalable cloud engineering — architecture, migration, and optimization for high-growth businesses.",
   },
   keywords: [
     "cloud infrastructure",

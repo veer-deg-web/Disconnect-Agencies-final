@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import SpotlightCard from "@/components/Shared/SpotlightCard/SpotlightCard";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+import styles from "./ServicesSection.module.css";
 
 import { 
   TbAutomation, 
@@ -149,16 +150,11 @@ function ServiceCard({
         onMouseMove={handleMouseMove}
         onMouseLeave={resetTilt}
         onClick={handleCardClick}
-        style={{
-          position: "relative",
-          transformStyle: "preserve-3d",
-          transition:
-            "transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease",
-        }}
+        className={styles.serviceCardWrapper}
       >
         {/* Glow Layer */}
         <div
-          className="card-glow"
+          className={styles.cardGlow}
           style={{
             background: `radial-gradient(circle at ${glow.x}% ${glow.y}%,
               rgba(255,90,0,0.35),
@@ -168,9 +164,9 @@ function ServiceCard({
 
         <SpotlightCard
           spotlightColor="rgba(255, 90, 0, 0.25)"
-          className="service-card"
+          className={styles.serviceCard}
         >
-          <div className="service-icon">{service.icon}</div>
+          <div className={styles.serviceIcon}>{service.icon}</div>
           <h3>{service.title}</h3>
           <p>{service.description}</p>
         </SpotlightCard>
@@ -188,15 +184,16 @@ export default function ServicesSection() {
   const inView = useInView(ref, { once: true, margin: "-120px" });
 
   return (
-    <section ref={ref} style={{ padding: "120px 20px" }}>
+    <section ref={ref} className={styles.servicesSection}>
       {/* HEADING */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: EASE_SMOOTH }}
-        style={{ textAlign: "center", marginBottom: 80, ...WILL_CHANGE_TRANSFORM }}
+        className={styles.servicesHeadingContainer}
+        style={WILL_CHANGE_TRANSFORM}
       >
-        <h2 className="services-heading">
+        <h2 className={styles.servicesHeading}>
           <ShinyText
             text="Smarter Development."
             speed={2}
@@ -214,15 +211,7 @@ export default function ServicesSection() {
       </motion.div>
 
       {/* GRID */}
-      <div
-        className="services-grid"
-        style={{
-          display: "grid",
-          gap: 24,
-          maxWidth: 1200,
-          margin: "0 auto",
-        }}
-      >
+      <div className={styles.servicesGrid}>
         {services.map((service) => (
           <ServiceCard
             key={service.title}
@@ -231,90 +220,6 @@ export default function ServicesSection() {
           />
         ))}
       </div>
-
-      {/* STYLES */}
-      <style>{`
-        .services-heading {
-          font-size: clamp(1.8rem, 4vw, 3rem);
-          font-weight: 700;
-        }
-
-        .service-card {
-          padding: 28px;
-          cursor: pointer;
-        }
-
-        .service-icon {
-          width: 44px;
-          height: 44px;
-          border-radius: 10px;
-          background: rgba(255,90,0,0.15);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 16px;
-          color: #ff5a00;
-        }
-
-        .service-card h3 {
-          font-size: 1.1rem;
-          margin-bottom: 8px;
-        }
-
-        .service-card p {
-          font-size: 0.95rem;
-          line-height: 1.6;
-          color: rgba(255,255,255,0.75);
-        }
-
-        .card-glow {
-          position: absolute;
-          inset: -2px;
-          border-radius: 20px;
-          pointer-events: none;
-          transition: background 0.2s ease;
-          z-index: 0;
-          opacity: 0.9;
-        }
-
-        .service-card {
-          position: relative;
-          z-index: 1;
-          border-radius: 20px;
-          border: none !important;
-          box-shadow:
-            0 20px 50px rgba(0,0,0,0.6);
-          transition:
-            transform 0.4s cubic-bezier(0.22,1,0.36,1),
-            box-shadow 0.4s ease;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          transform: translateZ(0);
-          will-change: transform;
-        }
-
-        .card-glow {
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          transform: translateZ(0);
-        }
-
-        .services-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-
-        @media (max-width: 1024px) {
-          .services-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (max-width: 640px) {
-          .services-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
     </section>
   );
 }

@@ -2,20 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "@/app/legal.module.css";
 
+// ── /disclaimer ──────────────────────────────────────────
+// Title (raw):      "Disclaimer — Legal Notice & Site Terms" [38 chars]
+// Title (rendered): 51 chars ✅ | Description: [156 chars] ✅
 export const metadata: Metadata = {
-  title: "Disclaimer | Disconnect Agencies",
-  description: "Read the official disclaimer for Disconnect Agencies — a digital agency offering AI, Web, App, SEO, UI/UX, and Cloud services.",
-  keywords: ["disclaimer", "Disconnect Agencies", "digital agency disclaimer", "terms of access", "legal notice"],
+  title: "Disclaimer — Legal Notice & Site Terms",
+  description:
+    "Read the official disclaimer for Disconnect covering site access, intellectual property, liability limitations, and legal terms for all digital services. Explore now.",
+  robots: { index: true, follow: false },
+  keywords: ["disclaimer", "Disconnect", "digital agency disclaimer", "terms of access", "legal notice"],
   openGraph: {
-    title: "Disclaimer | Disconnect Agencies",
-    description: "Read the official disclaimer for Disconnect Agencies.",
-    url: "https://disconnect-agencies-final.vercel.app/disclaimer",
-    siteName: "Disconnect Agencies",
+    title: "Disclaimer — Legal Notice & Site Terms",
+    description:
+      "Official disclaimer for Disconnect — site access, IP, liability, and legal terms.",
+    url: "/disclaimer",
+    siteName: "Disconnect",
     type: "website",
   },
-  alternates: {
-    canonical: "https://disconnect-agencies-final.vercel.app/disclaimer",
+  twitter: {
+    card: "summary_large_image",
+    title: "Disclaimer — Legal Notice & Site Terms",
+    description:
+      "Official disclaimer for Disconnect — site access, IP, liability, and legal terms.",
   },
+  alternates: { canonical: "/disclaimer" },
 };
 
 export default function DisclaimerPage() {

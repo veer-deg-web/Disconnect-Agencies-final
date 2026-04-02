@@ -2,27 +2,35 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "@/app/legal.module.css";
 
+// ── /how-we-work ─────────────────────────────────────────
+// Title (raw):      "Our Process — How Disconnect Delivers" [37 chars]
+// Title (rendered): 50 chars ✅ | Description: [150 chars] ✅
 export const metadata: Metadata = {
-  title: "How We Work | Disconnect Agencies",
+  title: "Our Process — How Disconnect Delivers",
   description:
-    "Learn how Disconnect Agencies operates — simple, transparent, and deeply collaborative. From kickoff to delivery, we build together.",
+    "Learn how Disconnect works — from kickoff to on-site collaboration, roadmap planning, and delivery with full transparency and proven precision. Explore now.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/how-we-work" },
   keywords: [
     "how we work",
-    "Disconnect Agencies process",
+    "Disconnect process",
     "client collaboration",
     "digital agency workflow",
     "project process",
   ],
   openGraph: {
-    title: "How We Work | Disconnect Agencies",
+    title: "Our Process — How Disconnect Delivers",
     description:
-      "Simple, transparent, and deeply collaborative — discover how Disconnect Agencies brings your vision to life.",
-    url: "https://disconnect-agencies-final.vercel.app/how-we-work",
-    siteName: "Disconnect Agencies",
+      "Simple, transparent, and deeply collaborative — discover how Disconnect brings your vision to life.",
+    url: "/how-we-work",
+    siteName: "Disconnect",
     type: "website",
   },
-  alternates: {
-    canonical: "https://disconnect-agencies-final.vercel.app/how-we-work",
+  twitter: {
+    card: "summary_large_image",
+    title: "Our Process — How Disconnect Delivers",
+    description:
+      "Simple, transparent, and deeply collaborative — discover how Disconnect brings your vision to life.",
   },
 };
 
