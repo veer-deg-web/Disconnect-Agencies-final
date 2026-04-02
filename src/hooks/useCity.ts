@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { getSeoCityBySlug } from "@/Data/seoCities";
+import { getSeoCountryBySlug } from "@/Data/seoCountries";
 
 const CITY_STORAGE_KEY = "disconnect_city";
 const CITY_COOKIE_KEY = "disconnect_city";
@@ -40,13 +41,16 @@ const readCityFromPathname = (pathname: string): string => {
   const segments = cleanPath.split("/").filter(Boolean);
   if (segments.length < 2) return "";
 
-  const maybeCitySlug = normalizeCity(
-    decodeURIComponent(segments[segments.length - 1] ?? "")
+  const maybeSlug = normalizeCity(
+    decodeURI(segments[segments.length - 1] ?? "")
   ).toLowerCase();
-  if (!maybeCitySlug) return "";
+  if (!maybeSlug) return "";
 
-  const matchedCity = getSeoCityBySlug(maybeCitySlug);
-  return matchedCity?.name ?? "";
+  const matchedCity = getSeoCityBySlug(maybeSlug);
+  if (matchedCity) return matchedCity.name;
+
+  const matchedCountry = getSeoCountryBySlug(maybeSlug);
+  return matchedCountry?.name ?? "";
 };
 
 const fetchCityOnce = async (): Promise<string> => {

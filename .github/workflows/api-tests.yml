@@ -33,7 +33,21 @@ jobs:
       - name: Install Newman
         run: npm install -g newman newman-reporter-htmlextra
 
-      # ── 5. Start Next.js dev server in background ──────────────────────────
+      # ── 5. Build and Start Next.js server ───────────────────────────────────
+      - name: Build Next.js
+        run: npm run build
+        env:
+          PORT: 3000
+          NODE_ENV: production
+          MONGODB_URI:   ${{ secrets.MONGODB_URI }}
+          JWT_SECRET:    ${{ secrets.JWT_SECRET }}
+          EMAIL_USER:    ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS:    ${{ secrets.EMAIL_PASS }}
+          ADMIN_EMAIL:   ${{ secrets.ADMIN_EMAIL }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY:    ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+
       - name: Start Next.js server
         run: npx next start &
         env:
