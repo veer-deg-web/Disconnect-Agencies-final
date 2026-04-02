@@ -12,16 +12,6 @@ const aliasRedirects = SERVICES.flatMap((service) =>
     }))
   )
 );
-
-// ── Lowercase Redirects (e.g. /cloud → /Cloud) ─────────────────────────────
-const lowercaseRedirects = SERVICES.filter((s) => s !== s.toLowerCase()).map(
-  (service) => ({
-    source: `/${service.toLowerCase()}`,
-    destination: `/${service}`,
-    permanent: true,
-  })
-);
-
 // ── Environment Detection ───────────────────────────────────────────────────
 const isStaging =
   process.env.VERCEL_ENV === "preview" ||
@@ -39,9 +29,8 @@ const nextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },
-
   async redirects() {
-    return [...aliasRedirects, ...lowercaseRedirects];
+    return [...aliasRedirects];
   },
 
   async headers() {
