@@ -44,13 +44,17 @@ const nextConfig = {
             key: "X-Robots-Tag",
             value: isStaging ? "noindex, nofollow" : "index, follow",
           },
-          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           {
             key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
+            value: "max-age=31536000",
           },
           {
             key: "Permissions-Policy",
@@ -67,13 +71,17 @@ const nextConfig = {
             key: "X-Robots-Tag",
             value: "index, follow, max-image-preview:large",
           },
-          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           {
             key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
+            value: "max-age=31536000",
           },
           {
             key: "Permissions-Policy",
@@ -87,13 +95,17 @@ const nextConfig = {
         source: "/book-call(.*)",
         headers: [
           { key: "X-Robots-Tag", value: "noindex, nofollow" },
-          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           {
             key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
+            value: "max-age=31536000",
           },
           {
             key: "Permissions-Policy",
@@ -106,9 +118,9 @@ const nextConfig = {
       {
         source: "/(api|admin|_next)(.*)",
         headers: [
-          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          { key: "Strict-Transport-Security", value: "max-age=31536000" },
         ],
       },
     ];

@@ -133,7 +133,7 @@ export const pricingPages: ServicePricingPage[] = [
     plans: [
       {
         name: "Starter",
-        price: "$4,999",
+        price: "$39,999",
         bestFor: "Business websites and landing pages",
         features: [
           "Custom website design & development",
@@ -149,7 +149,7 @@ export const pricingPages: ServicePricingPage[] = [
       },
       {
         name: "Advanced",
-        price: "$8,999",
+        price: "$84,999",
         bestFor: "Platforms and dynamic systems",
         features: [
           "Everything in Starter",
@@ -207,7 +207,7 @@ export const pricingPages: ServicePricingPage[] = [
     plans: [
       {
         name: "Starter",
-        price: "From $7,999",
+        price: "From $34,999",
         bestFor: "MVPs and proof-of-concept builds",
         features: [
           "Core feature development",
@@ -222,7 +222,7 @@ export const pricingPages: ServicePricingPage[] = [
       },
       {
         name: "Core",
-        price: "From $12,999",
+        price: "From $59,999",
         bestFor: "Growing applications with real users",
         features: [
           "Everything in Starter",
@@ -237,7 +237,7 @@ export const pricingPages: ServicePricingPage[] = [
       },
       {
         name: "Vision",
-        price: "From $19,999",
+        price: "From $99,999",
         bestFor: "Full product builds from idea to launch",
         features: [
           "Complete system architecture",
@@ -296,7 +296,7 @@ export const pricingPages: ServicePricingPage[] = [
     plans: [
       {
         name: "Starter",
-        price: "From $5,999",
+        price: "From $34,999",
         bestFor: "Teams automating their first workflows",
         features: [
           "Basic automation workflows",
@@ -310,7 +310,7 @@ export const pricingPages: ServicePricingPage[] = [
       },
       {
         name: "Core",
-        price: "From $11,999",
+        price: "From $59,999",
         bestFor: "Businesses ready to automate core operations",
         features: [
           "Everything in Starter",
@@ -326,7 +326,7 @@ export const pricingPages: ServicePricingPage[] = [
       },
       {
         name: "Vision",
-        price: "From $18,999",
+        price: "From $99,999",
         bestFor: "Enterprise-level AI transformation",
         features: [
           "Everything in Core",
@@ -387,7 +387,7 @@ export const pricingPages: ServicePricingPage[] = [
     plans: [
       {
         name: "UI/UX Design",
-        price: "$2,999",
+        price: "$21,999 one tym",
         bestFor: "Products that need a complete design system",
         features: [
           "User research & competitor analysis",
@@ -445,7 +445,7 @@ export const pricingPages: ServicePricingPage[] = [
     plans: [
       {
         name: "Monthly",
-        price: "$2,999/month",
+        price: "$3,999/month",
         bestFor: "Businesses testing SEO or in early growth",
         features: [
           "Technical SEO optimization",
@@ -461,7 +461,7 @@ export const pricingPages: ServicePricingPage[] = [
       },
       {
         name: "Yearly",
-        price: "$29,999/year",
+        price: "$39,999/year",
         bestFor: "Businesses serious about long-term SEO growth",
         features: [
           "Everything in Monthly",
@@ -471,7 +471,7 @@ export const pricingPages: ServicePricingPage[] = [
           "Dedicated SEO support",
         ],
         outcome:
-          "A compound SEO system that saves ~$6,000 annually and drives serious growth.",
+          "A compound SEO system that saves long-term and drives serious growth.",
         highlight: true,
       },
     ],

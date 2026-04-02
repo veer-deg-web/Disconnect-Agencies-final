@@ -108,7 +108,7 @@ export default function PerformanceMetrics() {
         }}
       >
         <Stat
-          value="85.5%"
+          value="95.5%"
           label="Client Satisfaction & Retention Across All Projects"
         />
         <Stat

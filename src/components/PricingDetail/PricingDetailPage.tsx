@@ -168,6 +168,7 @@ export default function PricingDetailPage({ page }: Props) {
             </p>
           </FadeUp>
 
+
           <div className={styles.maintenanceGrid}>
             <FadeUp delay={0.12}>
               <div className={styles.maintenanceCard}>

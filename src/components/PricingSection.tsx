@@ -46,7 +46,7 @@ const defaultPlans: PricingPlans = {
   build: [
     {
       title: "Starter Plan",
-      price: "$4,999",
+      price: "$39,999",
       subtitle: "One-time project",
       highlight: false,
       badge: null,
@@ -63,7 +63,7 @@ const defaultPlans: PricingPlans = {
     },
     {
       title: "Core Plan",
-      price: "$8,999",
+      price: "$59,999",
       subtitle: "One-time project",
       highlight: false,
       badge: null,
@@ -80,7 +80,7 @@ const defaultPlans: PricingPlans = {
     },
     {
       title: "Vision Plan",
-      price: "$15,999",
+      price: "$99,999",
       subtitle: "End-to-end execution",
       highlight: true,
       badge: "Best Value",
@@ -99,8 +99,8 @@ const defaultPlans: PricingPlans = {
   maintenance: [
     {
       title: "Starter Plan",
-      price: "$4,999",
-      subtitle: "+ $1,999/year",
+      price: "$39,999",
+      subtitle: "+ $15,999/year",
       highlight: false,
       badge: null,
       note: "40% of project cost yearly",
@@ -116,8 +116,8 @@ const defaultPlans: PricingPlans = {
     },
     {
       title: "Core Plan",
-      price: "$8,999",
-      subtitle: "+ $3,599/year",
+      price: "$59,999",
+      subtitle: "+ $23,999/year",
       highlight: false,
       badge: null,
       note: "40% of project cost yearly",
@@ -133,8 +133,8 @@ const defaultPlans: PricingPlans = {
     },
     {
       title: "Vision Plan",
-      price: "$15,999",
-      subtitle: "+ $6,399/year",
+      price: "$99,999",
+      subtitle: "+ $39,999/year",
       highlight: true,
       badge: "Recommended",
       note: "40% of project cost yearly",
