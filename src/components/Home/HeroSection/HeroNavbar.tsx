@@ -14,6 +14,11 @@ export default function HeroNavbar() {
   const router = useRouter();
   const pathname = usePathname();
 
+  // Hide Navbar on /auth and /admin pages
+  if (pathname === "/auth" || pathname.startsWith("/admin")) {
+    return null;
+  }
+
   useEffect(() => {
     const sync = () => {
       const nextUserName = localStorage.getItem("userName");
@@ -204,8 +209,8 @@ export default function HeroNavbar() {
             <Image
               src="/assets/logo.png"
               alt="Disconnect"
-              width={116}
-              height={36}
+              width={162}
+              height={54}
               priority
             />
           </div>
@@ -222,8 +227,9 @@ export default function HeroNavbar() {
               color: "rgba(255,255,255,0.7)",
             }}
           >
-            {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
-              (item) => (
+            {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
+              .filter(item => !(item === "Pricing" && pathname?.startsWith("/Cloud")))
+              .map((item) => (
                 <li
                   key={item}
                   style={{ cursor: "pointer" }}
@@ -381,8 +387,9 @@ export default function HeroNavbar() {
               overflow: "hidden",
             }}
           >
-            {["Home", "Pricing", "Services", "Benefit", "Book A Call"].map(
-              (item) => (
+            {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
+              .filter(item => !(item === "Pricing" && pathname?.startsWith("/Cloud")))
+              .map((item) => (
                 <div
                   key={item}
                   style={{

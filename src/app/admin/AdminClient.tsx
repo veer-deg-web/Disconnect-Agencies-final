@@ -1589,8 +1589,15 @@ export default function AdminClient() {
     <div className="admin-container">
         <header className="adm-header">
           <div className="adm-header-left">
-            <div className="adm-header-logo">DA</div>
-          <span className="adm-header-title">Disconnect Agencies</span>
+            <Image
+              src="/assets/logo.png"
+              alt="Disconnect"
+              width={100}
+              height={31}
+              priority
+              style={{ flexShrink: 0, cursor: "pointer", objectFit: 'contain' }}
+              onClick={() => router.push("/")}
+            />
           <span className="adm-header-badge">Admin</span>
         </div>
         <div className="adm-header-right">
