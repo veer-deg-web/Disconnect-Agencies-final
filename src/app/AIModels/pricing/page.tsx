@@ -7,24 +7,24 @@ import Footer from "@/components/Shared/Footer/Footer";
 // Title (raw):      "AI & Automation Pricing Plans & Tiers"  [37 chars]
 // Title (rendered): 50 chars ✅ | Description: [152 chars] ✅
 export const metadata: Metadata = {
-  title: "AI & Automation Pricing Plans & Tiers",
+  title: "AI & Automation Pricing | Starting from $34,999",
   description:
-    "AI and automation pricing from Disconnect. Starter plans from $5,999 — turn manual workflows into intelligent, scalable automation. Get started today.",
+    "AI automation built for real business impact. Plans starting from $34,999 — turn manual workflows into intelligent, scalable systems. Get started today.",
   robots: { index: true, follow: true },
   alternates: { canonical: "/AIModels/pricing" },
   openGraph: {
-    title: "AI & Automation Pricing Plans & Tiers",
+    title: "AI & Automation Pricing | Starting from $34,999",
     description:
-      "AI automation pricing — starter from $5,999. Turn manual workflows into intelligent systems.",
+      "Explore AI automation plans starting from $34,999. We build intelligent systems that scale your operations.",
     type: "website",
     url: "/AIModels/pricing",
     siteName: "Disconnect",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI & Automation Pricing Plans & Tiers",
+    title: "AI & Automation Pricing | Starting from $34,999",
     description:
-      "AI automation pricing — starter from $5,999. Turn manual workflows into intelligent systems.",
+      "Explore AI automation plans starting from $34,999. We build intelligent systems that scale your operations.",
   },
 };
 

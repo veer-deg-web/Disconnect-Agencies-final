@@ -25,7 +25,12 @@ export default function UiuxContent() {
       </section>
       <UIUXSolutions />
       <section id="pricing">
-        <UIUXPricing serviceSlug="Uiux" />
+        <UIUXPricing 
+          serviceSlug="Uiux" 
+          basePrice={21999}
+          addonPrice={0}
+          notIncluded={["Development", "Updates & Revisions (Post-handoff)"]}
+        />
       </section>
       <UIUXShowcaseLogos logos={showcaseLogos} iconGap={200} />
       <UIUXTutorials />

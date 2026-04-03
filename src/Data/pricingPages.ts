@@ -245,7 +245,7 @@ export const pricingPages: ServicePricingPage[] = [
           "Database architecture & design",
           "Deployment & scaling configuration",
           "Full ownership from concept to launch",
-          "2+ months premium maintenance included",
+          "2+ months maintenance included",
         ],
         outcome:
           "Your complete product — shipped, stable, and ready for the world.",
@@ -334,7 +334,7 @@ export const pricingPages: ServicePricingPage[] = [
           "Multi-layer automation architecture",
           "End-to-end workflow transformation",
           "On-site strategy session",
-          "2+ months premium maintenance included",
+          "2+ months maintenance included",
         ],
         outcome:
           "A business that runs smarter — with less manual effort at every level.",
@@ -387,7 +387,7 @@ export const pricingPages: ServicePricingPage[] = [
     plans: [
       {
         name: "UI/UX Design",
-        price: "$21,999 one tym",
+        price: "$21,999 (one-time)",
         bestFor: "Products that need a complete design system",
         features: [
           "User research & competitor analysis",
@@ -412,7 +412,7 @@ export const pricingPages: ServicePricingPage[] = [
     ],
     maintenance: {
       includedMonths: "Not applicable",
-      yearlyRate: "$1,199/year (optional)",
+      yearlyRate: "No maintenance fee",
       included: [
         "Design file updates",
         "Minor component additions",
@@ -483,8 +483,8 @@ export const pricingPages: ServicePricingPage[] = [
       "Monthly reporting & adjustment",
     ],
     maintenance: {
-      includedMonths: "Ongoing (part of plan)",
-      yearlyRate: "Included in subscription",
+      includedMonths: "Not applicable",
+      yearlyRate: "No maintenance fee",
       included: [
         "Monthly optimization cycles",
         "Technical health monitoring",

@@ -79,131 +79,134 @@ export default function PricingDetailPage({ page }: Props) {
 
       <hr className={styles.divider} />
 
-      {/* ══════════════════ PLANS ══════════════════ */}
-      <section className={styles.plansSection}>
-        <div className={styles.plansInner}>
-          <FadeUp delay={0}>
-            <span className={styles.label}>Plans</span>
-          </FadeUp>
-          <FadeUp delay={0.06}>
-            <h2 className={styles.plansHeading}>Choose your scope</h2>
-          </FadeUp>
-
-          <div className={styles.plansGrid}>
-            {page.plans.map((plan, i) => (
-              <FadeUp key={plan.name} delay={i * 0.1}>
-                <div
-                  className={`${styles.card} ${plan.highlight ? styles.cardHighlight : ""}`}
-                >
-                  {plan.highlight && (
-                    <span className={styles.cardBadge}>Best Value</span>
-                  )}
-
-                  <p className={styles.cardName}>{plan.name}</p>
-                  <p className={styles.cardPrice}>{plan.price}</p>
-                  <p className={styles.cardBestFor}>
-                    Best for: {plan.bestFor}
-                  </p>
-
-                  <ul className={styles.cardFeatures}>
-                    {plan.features.map((f) => (
-                      <li key={f}>
-                        <span className={styles.checkIcon}>✓</span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <p className={styles.cardOutcome}>{plan.outcome}</p>
-                </div>
+      {page.slug !== "cloud" && (
+        <>
+          {/* ══════════════════ PLANS ══════════════════ */}
+          <section className={styles.plansSection}>
+            <div className={styles.plansInner}>
+              <FadeUp delay={0}>
+                <span className={styles.label}>Plans</span>
               </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <hr className={styles.divider} />
-
-      {/* ══════════════════ PROCESS ══════════════════ */}
-      <section className={styles.processSection}>
-        <div className={styles.processInner}>
-          <FadeUp delay={0}>
-            <span className={styles.label}>Process</span>
-          </FadeUp>
-          <FadeUp delay={0.06}>
-            <h2 className={styles.processHeading}>How we work</h2>
-          </FadeUp>
-
-          <div className={styles.processList}>
-            {page.process.map((step, i) => (
-              <FadeUp key={i} delay={i * 0.07}>
-                <div className={styles.processStep}>
-                  <div className={styles.processNum}>{i + 1}</div>
-                  <p className={styles.processText}>{step}</p>
-                </div>
+              <FadeUp delay={0.06}>
+                <h2 className={styles.plansHeading}>Choose your scope</h2>
               </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <hr className={styles.divider} />
+              <div className={styles.plansGrid}>
+                {page.plans.map((plan, i) => (
+                  <FadeUp key={plan.name} delay={i * 0.1}>
+                    <div
+                      className={`${styles.card} ${plan.highlight ? styles.cardHighlight : ""}`}
+                    >
+                      {plan.highlight && (
+                        <span className={styles.cardBadge}>Best Value</span>
+                      )}
 
-      {/* ══════════════════ MAINTENANCE ══════════════════ */}
-      <section className={styles.maintenanceSection}>
-        <div className={styles.maintenanceInner}>
-          <FadeUp delay={0}>
-            <span className={styles.label}>Maintenance</span>
-          </FadeUp>
-          <FadeUp delay={0.06}>
-            <h2 className={styles.maintenanceHeading}>
-              We don&apos;t disappear after delivery.
-            </h2>
-          </FadeUp>
-          <FadeUp delay={0.1}>
-            <p className={styles.maintenanceMeta}>
-              <strong>{page.maintenance.includedMonths}</strong> included with
-              every project.{" "}
-              <strong>{page.maintenance.yearlyRate}</strong> ongoing.
-            </p>
-          </FadeUp>
+                      <p className={styles.cardName}>{plan.name}</p>
+                      <p className={styles.cardPrice}>{plan.price}</p>
+                      <p className={styles.cardBestFor}>
+                        Best for: {plan.bestFor}
+                      </p>
 
+                      <ul className={styles.cardFeatures}>
+                        {plan.features.map((f) => (
+                          <li key={f}>
+                            <span className={styles.checkIcon}>✓</span>
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
 
-          <div className={styles.maintenanceGrid}>
-            <FadeUp delay={0.12}>
-              <div className={styles.maintenanceCard}>
-                <p className={styles.maintenanceCardTitle}>
-                  ✓ What&apos;s included
+                      <p className={styles.cardOutcome}>{plan.outcome}</p>
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <hr className={styles.divider} />
+
+          {/* ══════════════════ PROCESS ══════════════════ */}
+          <section className={styles.processSection}>
+            <div className={styles.processInner}>
+              <FadeUp delay={0}>
+                <span className={styles.label}>Process</span>
+              </FadeUp>
+              <FadeUp delay={0.06}>
+                <h2 className={styles.processHeading}>How we work</h2>
+              </FadeUp>
+
+              <div className={styles.processList}>
+                {page.process.map((step, i) => (
+                  <FadeUp key={i} delay={i * 0.07}>
+                    <div className={styles.processStep}>
+                      <div className={styles.processNum}>{i + 1}</div>
+                      <p className={styles.processText}>{step}</p>
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <hr className={styles.divider} />
+
+          {/* ══════════════════ MAINTENANCE ══════════════════ */}
+          <section className={styles.maintenanceSection}>
+            <div className={styles.maintenanceInner}>
+              <FadeUp delay={0}>
+                <span className={styles.label}>Maintenance</span>
+              </FadeUp>
+              <FadeUp delay={0.06}>
+                <h2 className={styles.maintenanceHeading}>
+                  We don&apos;t disappear after delivery.
+                </h2>
+              </FadeUp>
+              <FadeUp delay={0.1}>
+                <p className={styles.maintenanceMeta}>
+                  <strong>{page.maintenance.includedMonths}</strong> included with
+                  every project.{" "}
+                  <strong>{page.maintenance.yearlyRate}</strong> ongoing.
                 </p>
-                <ul className={styles.maintenanceList}>
-                  {page.maintenance.included.map((item) => (
-                    <li key={item}>
-                      <span className={styles.inclIcon}>✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeUp>
+              </FadeUp>
 
-            <FadeUp delay={0.18}>
-              <div className={styles.maintenanceCard}>
-                <p className={styles.maintenanceCardTitle}>✕ Not included</p>
-                <ul className={styles.maintenanceList}>
-                  {page.maintenance.notIncluded.map((item) => (
-                    <li key={item}>
-                      <span className={styles.exclIcon}>✕</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeUp>
-          </div>
-        </div>
-      </section>
+              <div className={styles.maintenanceGrid}>
+                <FadeUp delay={0.12}>
+                  <div className={styles.maintenanceCard}>
+                    <p className={styles.maintenanceCardTitle}>
+                      ✓ What&apos;s included
+                    </p>
+                    <ul className={styles.maintenanceList}>
+                      {page.maintenance.included.map((item) => (
+                        <li key={item}>
+                          <span className={styles.inclIcon}>✓</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </FadeUp>
 
-      <hr className={styles.divider} />
+                <FadeUp delay={0.18}>
+                  <div className={styles.maintenanceCard}>
+                    <p className={styles.maintenanceCardTitle}>✕ Not included</p>
+                    <ul className={styles.maintenanceList}>
+                      {page.maintenance.notIncluded.map((item) => (
+                        <li key={item}>
+                          <span className={styles.exclIcon}>✕</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </FadeUp>
+              </div>
+            </div>
+          </section>
+
+          <hr className={styles.divider} />
+        </>
+      )}
 
       {/* ══════════════════ TRANSPARENCY ══════════════════ */}
       <section className={styles.transparencySection}>

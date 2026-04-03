@@ -30,9 +30,9 @@ export default function SeoContent() {
               <span style={{ opacity: 0.55, fontStyle: "italic", fontFamily: "instrument-serif, serif" }}>built for growth.</span>
             </>
           }
-          subText="Cancel anytime on monthly. Save ~$6,000 with the yearly plan."
-          basePrice={2999}
-          addonPrice={27000}
+          subText="Cancel anytime on monthly. Save ~$8,000 with the yearly plan."
+          basePrice={3999}
+          addonPrice={39999}
           spotText="Monthly billing"
           cardSub="Core SEO — Technical optimization, on-page improvements, keyword tracking & monthly reporting."
           features={[
@@ -48,7 +48,7 @@ export default function SeoContent() {
             "Priority support (yearly plan only)",
           ]}
           toggleLabel="Switch to Yearly"
-          addonLabel="Yearly — Save ~$6,000"
+          addonLabel="Yearly — Save ~$8,000"
         />
       </section>
       <section id="testimonials">

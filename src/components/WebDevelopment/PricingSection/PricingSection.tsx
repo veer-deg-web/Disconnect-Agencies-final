@@ -9,7 +9,7 @@ const PLANS = {
     {
       id: "starter",
       name: "Starter",
-      price: "$4,999",
+      price: "$39,999",
       suffix: "one-time",
       desc: "Perfect for small businesses and startups looking to establish their digital presence.",
       features: [
@@ -25,7 +25,7 @@ const PLANS = {
     {
       id: "advanced",
       name: "Advanced",
-      price: "$8,999",
+      price: "$84,999",
       suffix: "one-time",
       desc: "For businesses ready to scale with dynamic features and robust architecture.",
       features: [
@@ -43,8 +43,8 @@ const PLANS = {
     {
       id: "starter-m",
       name: "Starter",
-      price: "$4,999",
-      suffix: "+ $1,999/year",
+      price: "$39,999",
+      suffix: "+ $15,999/year",
       desc: "Keep your starter site running smoothly with ongoing upkeep.",
       features: [
         "Full system maintenance",
@@ -59,8 +59,8 @@ const PLANS = {
     {
       id: "advanced-m",
       name: "Advanced",
-      price: "$8,999",
-      suffix: "+ $3,599/year",
+      price: "$84,999",
+      suffix: "+ $33,999/year",
       desc: "Priority maintenance for advanced systems — always secure and optimised.",
       features: [
         "Everything in Starter Maintenance",

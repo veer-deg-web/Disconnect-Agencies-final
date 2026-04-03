@@ -206,28 +206,30 @@ export default function UIUXPricing({
                 </div>
               )}
 
-              {/* TOGGLE (BELOW BUTTONS) */}
-              <div className={styles.toggleContainer}>
-                <div className={styles.toggleLabel}>{toggleLabel}</div>
-                <div className={styles.togglePill}>
-                  <div className={styles.toggleLabelContainer}>
-                    <span className={styles.framerText}>
-                      {addonLabel}
-                    </span>
-                    <span className={styles.addonValuePill}>+ ${addonPrice.toLocaleString()}/yr</span>
+              {/* TOGGLE (BELOW BUTTONS) - Only show if addonPrice > 0 */}
+              {addonPrice > 0 && (
+                <div className={styles.toggleContainer}>
+                  <div className={styles.toggleLabel}>{toggleLabel}</div>
+                  <div className={styles.togglePill}>
+                    <div className={styles.toggleLabelContainer}>
+                      <span className={styles.framerText}>
+                        {addonLabel}
+                      </span>
+                      <span className={styles.addonValuePill}>+ ${addonPrice.toLocaleString()}/yr</span>
+                    </div>
+                    <button
+                      onClick={handleToggle}
+                      className={`${styles.toggleTrack} ${maintenanceOn ? styles.active : ""}`}
+                    >
+                      <motion.span
+                        animate={{ x: maintenanceOn ? 24 : 0 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                        className={`${styles.toggleThumb} ${maintenanceOn ? styles.active : ""}`}
+                      />
+                    </button>
                   </div>
-                  <button
-                    onClick={handleToggle}
-                    className={`${styles.toggleTrack} ${maintenanceOn ? styles.active : ""}`}
-                  >
-                    <motion.span
-                      animate={{ x: maintenanceOn ? 24 : 0 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 32 }}
-                      className={`${styles.toggleThumb} ${maintenanceOn ? styles.active : ""}`}
-                    />
-                  </button>
                 </div>
-              </div>
+              )}
 
               {/* FEATURES LIST */}
               <div className={styles.featuresList}>

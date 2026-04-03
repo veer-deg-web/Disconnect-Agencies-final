@@ -1,8 +1,8 @@
 // src/app/[Service]/[city]/page.tsx
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSeoCityBySlug, seoCities } from "@/Data/seoCities";
-import { getSeoCountryBySlug, seoCountries } from "@/Data/seoCountries";
+import { getSeoCityBySlug, seoCities, type SeoCity } from "@/Data/seoCities";
+import { getSeoCountryBySlug, seoCountries, type SeoCountry } from "@/Data/seoCountries";
 import Footer from "@/components/Shared/Footer/Footer";
 
 // Service content components (reusable across routes)
@@ -56,28 +56,28 @@ const serviceDesc: Record<string, string> = {
 };
 
 type Props = {
-  params: Promise<{ Service: string; location: string }>;
+  params: Promise<{ Service: string; city: string }>;
 };
 
 export async function generateStaticParams() {
   const SERVICES = ["Cloud", "WebDevelopment", "AppDevelopment", "AIModels", "SEO", "Uiux"];
   
   const cityParams = SERVICES.flatMap((Service) =>
-    seoCities.map((city) => ({ Service, location: city.slug }))
+    seoCities.map((city: SeoCity) => ({ Service, city: city.slug }))
   );
 
   const countryParams = SERVICES.flatMap((Service) =>
-    seoCountries.map((country) => ({ Service, location: country.slug }))
+    seoCountries.map((country: SeoCountry) => ({ Service, city: country.slug }))
   );
 
   return [...cityParams, ...countryParams];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { Service, location } = await params;
+  const { Service, city } = await params;
   
-  const cityData = getSeoCityBySlug(location);
-  const countryData = getSeoCountryBySlug(location);
+  const cityData = getSeoCityBySlug(city);
+  const countryData = getSeoCountryBySlug(city);
   const locData = cityData || countryData;
 
   if (!locData || !serviceNames[Service]) return { title: "Not Found" };
@@ -148,16 +148,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `hire ${shortName.toLowerCase()} ${locLower}`,
       `disconnect ${locLower}`,
       `${fullName.toLowerCase()} ${locLower}`,
-      ...(cityData?.aliases?.map((a) => `${shortName.toLowerCase()} ${a}`) ?? []),
+      ...(cityData?.aliases?.map((a: string) => `${shortName.toLowerCase()} ${a}`) ?? []),
     ],
   };
 }
 
 export default async function CityServicePage({ params }: Props) {
-  const { Service, location } = await params;
+  const { Service, city } = await params;
   
-  const cityData = getSeoCityBySlug(location);
-  const countryData = getSeoCountryBySlug(location);
+  const cityData = getSeoCityBySlug(city);
+  const countryData = getSeoCountryBySlug(city);
   const locData = cityData || countryData;
   const ContentComponent = SERVICE_CONTENT[Service];
 

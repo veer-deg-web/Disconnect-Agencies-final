@@ -38,11 +38,11 @@ export default function AppDevContent() {
             build: [
               {
                 title: "Starter",
-                price: "From $7,999",
+                price: "From $34,999",
                 subtitle: "MVP build",
                 highlight: false,
                 badge: null,
-                note: "2+ months maintenance included",
+                note: "2 months ",
                 features: [
                   "Basic app (MVP)",
                   "Core features",
@@ -54,7 +54,7 @@ export default function AppDevContent() {
               },
               {
                 title: "Core",
-                price: "From $12,999",
+                price: "From $59,999",
                 subtitle: "Full-featured app",
                 highlight: false,
                 badge: null,
@@ -70,7 +70,7 @@ export default function AppDevContent() {
               },
               {
                 title: "Vision",
-                price: "From $19,999",
+                price: "From $99,999",
                 subtitle: "End-to-end product",
                 highlight: true,
                 badge: "Best Value",
@@ -88,8 +88,8 @@ export default function AppDevContent() {
             maintenance: [
               {
                 title: "Starter",
-                price: "From $7,999",
-                subtitle: "+ $3,199/year",
+                price: "From $34,999",
+                subtitle: "+ $13,999/year",
                 highlight: false,
                 badge: null,
                 note: "40% of project cost yearly",
@@ -103,8 +103,8 @@ export default function AppDevContent() {
               },
               {
                 title: "Core",
-                price: "From $12,999",
-                subtitle: "+ $5,199/year",
+                price: "From $59,999",
+                subtitle: "+ $23,999/year",
                 highlight: false,
                 badge: null,
                 note: "40% of project cost yearly",
@@ -118,8 +118,8 @@ export default function AppDevContent() {
               },
               {
                 title: "Vision",
-                price: "From $19,999",
-                subtitle: "+ $7,999/year",
+                price: "From $99,999",
+                subtitle: "+ $39,999/year",
                 highlight: true,
                 badge: "Recommended",
                 note: "40% of project cost yearly",

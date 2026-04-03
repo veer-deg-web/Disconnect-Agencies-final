@@ -39,7 +39,7 @@ const itemVariants: Variants = {
 
 const cards = [
   "/assets/Cloud/MoreAboutUs/photo/moreaboutus1.webp",
-  "/assets/Cloud/MoreAboutUs/photo/moreaboutus2.webp",
+  "/assets/images/adress.webp",
   "/assets/Cloud/MoreAboutUs/photo/scrollzoom.webp",
   "/assets/Cloud/MoreAboutUs/photo/moreaboutus4.webp",
 ];
