@@ -2,21 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import BookingSettings from '@/models/BookingSettings';
 import { verifyAdminToken } from '@/lib/adminAuth';
-import { sanitizeInput } from '@/lib/sanitizer';
+import { safeParseJson } from '@/lib/utils';
+import { adminBookingSettingsSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 export const dynamic = 'force-dynamic';
 
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function isValidUrl(value: string): boolean {
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
-  } catch {
-    return false;
-  }
 }
 
 async function getOrCreateSettings() {
@@ -30,8 +23,8 @@ async function getOrCreateSettings() {
 
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     const settings = await getOrCreateSettings();
@@ -41,38 +34,40 @@ export async function GET(req: NextRequest) {
         adminEmails: settings.adminEmails || [],
       },
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || 'Failed to load settings' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin booking settings get error:', err);
+    return dbSafeError(err);
   }
 }
 
 export async function PUT(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
-    const rawBody = await req.json();
-    const { meetingLink, adminEmails } = sanitizeInput(rawBody) as {
-      meetingLink: string;
-      adminEmails: string[];
-    };
-
-    const safeLink = (meetingLink || '').trim();
-    if (!safeLink || !isValidUrl(safeLink)) {
-      return NextResponse.json({ error: 'Enter a valid meeting link' }, { status: 400 });
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = adminBookingSettingsSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { meetingLink, adminEmails } = parsed.data;
 
     const uniqueEmails = Array.from(
       new Set(
-        (Array.isArray(adminEmails) ? adminEmails : [])
-          .map((email) => email.trim().toLowerCase())
-          .filter((email) => isValidEmail(email))
+        adminEmails
+          .map((email: string) => email.trim().toLowerCase())
+          .filter((email: string) => isValidEmail(email))
       )
     );
 
     const settings = await getOrCreateSettings();
-    settings.meetingLink = safeLink;
+    settings.meetingLink = meetingLink;
     settings.adminEmails = uniqueEmails;
     await settings.save();
 
@@ -82,7 +77,8 @@ export async function PUT(req: NextRequest) {
         adminEmails: settings.adminEmails,
       },
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || 'Failed to save settings' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin booking settings update error:', err);
+    return dbSafeError(err);
   }
 }

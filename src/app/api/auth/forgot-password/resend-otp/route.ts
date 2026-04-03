@@ -5,6 +5,9 @@ import { sanitizeInput } from '@/lib/sanitizer';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendPasswordResetEmail } from '@/lib/email';
+import { safeParseJson } from '@/lib/utils';
+import { forgotPasswordResendOtpSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 import crypto from 'crypto';
 
@@ -19,12 +22,18 @@ function generateOtp(length = 6): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await req.json();
-    const { identifier } = sanitizeInput(rawBody);
+    const rawBody = await safeParseJson<unknown>(req);
 
-    if (!identifier) {
-      return NextResponse.json({ error: 'Identifier is required' }, { status: 400 });
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = forgotPasswordResendOtpSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { identifier } = sanitizeInput(parsed.data);
 
     const isEmail = identifier.includes('@');
     const user = isEmail
@@ -32,7 +41,7 @@ export async function POST(req: NextRequest) {
       : await User.findOne({ phone: identifier });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return apiError(ErrorCode.NOT_FOUND, 'User not found', 404);
     }
 
     const otpLength = isEmail ? 6 : 4;
@@ -50,8 +59,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: `OTP resent to your ${isEmail ? 'email' : 'phone'}` });
   } catch (error: unknown) {
     console.error('Resend forgot password OTP error:', error);
-    const msg: string = (error as Error)?.message || 'Internal server error';
-    const isDb = msg.toLowerCase().includes('whitelist') || msg.toLowerCase().includes('connect') || msg.toLowerCase().includes('atlas');
-    return NextResponse.json({ error: isDb ? 'Database connection failed. Please try again shortly.' : msg }, { status: 500 });
+    return dbSafeError(error);
   }
 }

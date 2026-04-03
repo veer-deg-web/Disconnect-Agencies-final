@@ -51,7 +51,7 @@ interface CobeProps {
   opacity?: number
 }
 
-type CobeState = Record<string, unknown>
+// CobeState was removed as it's no longer used with globe.update()
 
 export function Cobe({
   variant = "default",
@@ -300,47 +300,53 @@ export function Cobe({
       scale: variant === "scaled" ? 2.5 : undefined,
       offset: variant === "scaled" ? [0, width * 2 * 0.4 * 0.6] : undefined,
       opacity: opacity,
-      onRender: (state: CobeState) => {
-        switch (variant) {
-          case "default":
-            state.phi = phi + r.get()
-            phi += 0.005
-            break
-          case "draggable":
-            state.phi = r.get()
-            break
-          case "auto-draggable":
-            if (!pointerInteracting.current) {
-              phi += 0.005
-            }
-            state.phi = phi + r.get()
-            break
-          case "auto-rotation":
-            state.phi = phi
-            phi += 0.005
-            break
-          case "rotate-to-location":
-            state.phi = currentPhi
-            state.theta = currentTheta
-            const [focusPhi, focusTheta] = focusRef.current
-            const distPositive = (focusPhi - currentPhi + doublePi) % doublePi
-            const distNegative = (currentPhi - focusPhi + doublePi) % doublePi
-            if (distPositive < distNegative) {
-              currentPhi += distPositive * 0.08
-            } else {
-              currentPhi -= distNegative * 0.08
-            }
-            currentTheta = currentTheta * 0.92 + focusTheta * 0.08
-            break
-          case "scaled":
-            // No rotation for scaled variant
-            break
-        }
-
-        state.width = width * 2
-        state.height = variant === "scaled" ? width * 2 * 0.4 : width * 2
-      },
     })
+
+    let rafId: number
+    const render = () => {
+      const state: any = {}
+      switch (variant) {
+        case "default":
+          state.phi = phi + r.get()
+          phi += 0.005
+          break
+        case "draggable":
+          state.phi = r.get()
+          break
+        case "auto-draggable":
+          if (!pointerInteracting.current) {
+            phi += 0.005
+          }
+          state.phi = phi + r.get()
+          break
+        case "auto-rotation":
+          state.phi = phi
+          phi += 0.005
+          break
+        case "rotate-to-location":
+          state.phi = currentPhi
+          state.theta = currentTheta
+          const [focusPhi, focusTheta] = focusRef.current
+          const distPositive = (focusPhi - currentPhi + doublePi) % doublePi
+          const distNegative = (currentPhi - focusPhi + doublePi) % doublePi
+          if (distPositive < distNegative) {
+            currentPhi += distPositive * 0.08
+          } else {
+            currentPhi -= distNegative * 0.08
+          }
+          currentTheta = currentTheta * 0.92 + focusTheta * 0.08
+          break
+        case "scaled":
+          // No rotation for scaled variant
+          break
+      }
+
+      state.width = width * 2
+      state.height = variant === "scaled" ? width * 2 * 0.4 : width * 2
+      globe.update(state)
+      rafId = requestAnimationFrame(render)
+    }
+    rafId = requestAnimationFrame(render)
 
     if (canvasRef.current) {
       setTimeout(() => {
@@ -353,6 +359,9 @@ export function Cobe({
     return () => {
       globe.destroy()
       window.removeEventListener("resize", onResize)
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
     }
   }, [
     variant,

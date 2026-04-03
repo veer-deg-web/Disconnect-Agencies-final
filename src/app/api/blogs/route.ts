@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sanitizeInput } from "@/lib/sanitizer";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
+import { dbSafeError } from "@/lib/apiErrors";
 
 /* GET /api/blogs — Public paginated blog listing */
 export async function GET(req: NextRequest) {
@@ -36,8 +37,8 @@ export async function GET(req: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+  } catch (err: unknown) {
+    console.error("Blogs list error:", err);
+    return dbSafeError(err);
   }
 }

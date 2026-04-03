@@ -13,9 +13,16 @@ import {
   sanitizeBlogHtmlContent,
   validateBlogSeo,
 } from "@/lib/blogSeo";
+import { verifyAdminToken } from "@/lib/adminAuth";
+import { apiError, dbSafeError, ErrorCode } from "@/lib/apiErrors";
 
 /* POST /api/admin/blogs/normalize-seo — Normalize existing blog SEO + heading structure */
 export async function POST(req: NextRequest) {
+  // 🔴 SECURITY FIX: Was previously unprotected
+  const auth = await verifyAdminToken(req);
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
+
   try {
     await dbConnect();
     const rawBody = await req.json().catch(() => ({}));
@@ -84,14 +91,18 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "SEO normalization completed",
       processed: blogs.length,
       updated,
       warnings,
     });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
+  } catch (err: unknown) {
+    console.error("NORMALIZE SEO ERROR:", err);
+    return dbSafeError(err);
   }
 }

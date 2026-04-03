@@ -6,6 +6,8 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendPasswordResetEmail } from '@/lib/email';
 import { safeParseJson } from '@/lib/utils';
+import { forgotPasswordInitiateSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 import crypto from 'crypto';
 
@@ -20,17 +22,18 @@ function generateOtp(length = 6): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await safeParseJson<any>(req);
-    
+    const rawBody = await safeParseJson<unknown>(req);
+
     if (!rawBody) {
-      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
 
-    const { identifier } = sanitizeInput(rawBody);
-
-    if (!identifier) {
-      return NextResponse.json({ error: 'Email or phone number is required' }, { status: 400 });
+    const parsed = forgotPasswordInitiateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
     }
+
+    const { identifier } = sanitizeInput(parsed.data);
 
     const isEmail = identifier.includes('@');
     const user = isEmail
@@ -38,7 +41,7 @@ export async function POST(req: NextRequest) {
       : await User.findOne({ phone: identifier });
 
     if (!user) {
-      return NextResponse.json({ error: 'No account found with this identifier' }, { status: 404 });
+      return apiError(ErrorCode.NOT_FOUND, 'No account found with this identifier', 404);
     }
 
     const otpLength = isEmail ? 6 : 4;
@@ -53,13 +56,10 @@ export async function POST(req: NextRequest) {
     if (isEmail) {
       await sendPasswordResetEmail(user.email, otp);
     }
-    // Phone OTP (SMS) would go here if SMS provider is configured
 
     return NextResponse.json({ message: `OTP sent to your ${isEmail ? 'email' : 'phone'}` });
   } catch (error: unknown) {
     console.error('Forgot password initiate error:', error);
-    const msg: string = (error as Error)?.message || 'Internal server error';
-    const isDb = msg.toLowerCase().includes('whitelist') || msg.toLowerCase().includes('connect') || msg.toLowerCase().includes('atlas');
-    return NextResponse.json({ error: isDb ? 'Database connection failed. Please try again shortly.' : msg }, { status: 500 });
+    return dbSafeError(error);
   }
 }

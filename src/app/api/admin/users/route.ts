@@ -4,12 +4,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { verifyAdminToken } from '@/lib/adminAuth';
-import { sanitizeInput } from '@/lib/sanitizer';
+import { safeParseJson } from '@/lib/utils';
+import { adminUserPatchSchema, adminUserDeleteSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
@@ -23,23 +25,33 @@ export async function GET(req: NextRequest) {
       response.headers.set('X-New-Token', auth.newToken);
     }
     return response;
-  } catch {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin users list error:', err);
+    return dbSafeError(err);
   }
 }
 
 export async function PATCH(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
-    const rawBody = await req.json();
-    const { id, isVerified, isSuspended } = sanitizeInput(rawBody);
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
+    }
+
+    const parsed = adminUserPatchSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { id, isVerified, isSuspended } = parsed.data;
 
     if (id === auth.userId && isSuspended === true) {
-      return NextResponse.json({ error: 'You cannot suspend yourself' }, { status: 400 });
+      return apiError(ErrorCode.VALIDATION_ERROR, 'You cannot suspend yourself', 400);
     }
 
     const update: { isVerified?: boolean; isSuspended?: boolean } = {};
@@ -47,41 +59,52 @@ export async function PATCH(req: NextRequest) {
     if (typeof isSuspended === 'boolean') update.isSuspended = isSuspended;
 
     const user = await User.findByIdAndUpdate(id, update, { new: true });
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (!user) return apiError(ErrorCode.NOT_FOUND, 'User not found', 404);
 
     const response = NextResponse.json({ user });
     if (auth.newToken) {
       response.headers.set('X-New-Token', auth.newToken);
     }
     return response;
-  } catch {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin user patch error:', err);
+    return dbSafeError(err);
   }
 }
 
 export async function DELETE(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
-    const rawBody = await req.json();
-    const { id } = sanitizeInput(rawBody);
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
+    }
+
+    const parsed = adminUserDeleteSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { id } = parsed.data;
 
     if (id === auth.userId) {
-      return NextResponse.json({ error: 'You cannot delete yourself' }, { status: 400 });
+      return apiError(ErrorCode.VALIDATION_ERROR, 'You cannot delete yourself', 400);
     }
 
     const user = await User.findByIdAndDelete(id);
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (!user) return apiError(ErrorCode.NOT_FOUND, 'User not found', 404);
 
     const response = NextResponse.json({ message: 'User deleted' });
     if (auth.newToken) {
       response.headers.set('X-New-Token', auth.newToken);
     }
     return response;
-  } catch {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin user delete error:', err);
+    return dbSafeError(err);
   }
 }

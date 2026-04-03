@@ -3,13 +3,16 @@ import dbConnect from '@/lib/mongodb';
 import Booking from '@/models/Booking';
 import { verifyAdminToken } from '@/lib/adminAuth';
 import { sanitizeInput } from '@/lib/sanitizer';
+import { safeParseJson } from '@/lib/utils';
+import { adminBookingUpdateSchema, adminBookingDeleteSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
@@ -24,27 +27,28 @@ export async function GET(req: NextRequest) {
     }
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Failed to load bookings';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('Admin bookings list error:', err);
+    return dbSafeError(err);
   }
 }
 
 export async function PUT(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
-    const rawBody = await req.json();
-    const { id, adminRemark, status } = sanitizeInput(rawBody) as {
-      id: string;
-      adminRemark?: string;
-      status?: 'pending' | 'completed';
-    };
-
-    if (!id) {
-      return NextResponse.json({ error: 'Booking id is required' }, { status: 400 });
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = adminBookingUpdateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { id, adminRemark, status } = sanitizeInput(parsed.data);
 
     const update: { adminRemark?: string; status?: 'pending' | 'completed' } = {};
     if (typeof adminRemark === 'string') update.adminRemark = adminRemark;
@@ -52,7 +56,7 @@ export async function PUT(req: NextRequest) {
 
     await dbConnect();
     const booking = await Booking.findByIdAndUpdate(id, update, { new: true, runValidators: true }).lean();
-    if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    if (!booking) return apiError(ErrorCode.NOT_FOUND, 'Booking not found', 404);
 
     const response = NextResponse.json({ booking });
     if (auth.newToken) {
@@ -60,28 +64,36 @@ export async function PUT(req: NextRequest) {
     }
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Failed to update booking';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('Admin booking update error:', err);
+    return dbSafeError(err);
   }
 }
 
 export async function DELETE(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
-    const rawBody = await req.json();
-    const { id } = sanitizeInput(rawBody) as { id: string };
-    if (!id) return NextResponse.json({ error: 'Booking id is required' }, { status: 400 });
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
+    }
+
+    const parsed = adminBookingDeleteSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { id } = parsed.data;
 
     await dbConnect();
     const booking = await Booking.findByIdAndDelete(id).lean();
-    if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    if (!booking) return apiError(ErrorCode.NOT_FOUND, 'Booking not found', 404);
 
     return NextResponse.json({ message: 'Booking deleted' });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Failed to delete booking';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('Admin booking delete error:', err);
+    return dbSafeError(err);
   }
 }

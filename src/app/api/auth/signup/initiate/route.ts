@@ -7,6 +7,8 @@ import User from '@/models/User';
 import { sanitizeInput } from '@/lib/sanitizer';
 import { sendOtpEmail } from '@/lib/email';
 import { safeParseJson } from '@/lib/utils';
+import { signupInitiateSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 import crypto from 'crypto';
 
@@ -21,25 +23,22 @@ function generateOtp(length = 4): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await safeParseJson<any>(req);
-    
+    const rawBody = await safeParseJson<unknown>(req);
+
     if (!rawBody) {
-      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
 
-    const { name, email, phone, password } = sanitizeInput(rawBody, ['password']);
-
-    if (!name || !email || !phone || !password) {
-      return NextResponse.json({ error: 'All fields (name, email, phone, password) are required' }, { status: 400 });
+    const parsed = signupInitiateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
     }
 
-    if (!email.includes('@')) {
-      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
-    }
+    const { name, email, phone, password } = sanitizeInput(parsed.data, ['password']);
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser && existingUser.emailVerified) {
-      return NextResponse.json({ error: 'Email is already registered' }, { status: 409 });
+      return apiError(ErrorCode.CONFLICT, 'Email is already registered', 409);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
     const emailOtpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     if (existingUser) {
-      // Update existing unverified user
       existingUser.name = name;
       existingUser.phone = phone;
       existingUser.password = hashedPassword;
@@ -73,14 +71,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'OTP sent to your email. Please verify.' }, { status: 200 });
   } catch (error: unknown) {
     console.error('Signup initiate error:', error);
-    const msg: string = (error as Error)?.message || 'Internal server error';
-    const isDbError = msg.toLowerCase().includes('whitelist') ||
-      msg.toLowerCase().includes('ip') ||
-      msg.toLowerCase().includes('atlas') ||
-      msg.toLowerCase().includes('connect');
-    return NextResponse.json(
-      { error: isDbError ? 'Database connection failed. Please try again shortly.' : msg },
-      { status: 500 }
-    );
+    return dbSafeError(error);
   }
 }

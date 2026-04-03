@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
+import { dbSafeError } from "@/lib/apiErrors";
 
 /* GET /api/blogs/categories — List all categories with counts */
 export async function GET() {
@@ -18,8 +19,8 @@ export async function GET() {
         count: c.count,
       })),
     });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+  } catch (err: unknown) {
+    console.error("Blog categories error:", err);
+    return dbSafeError(err);
   }
 }

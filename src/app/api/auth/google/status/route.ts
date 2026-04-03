@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import GoogleToken from '@/models/GoogleToken';
+import { apiError, ErrorCode } from '@/lib/apiErrors';
 
 export async function GET() {
   try {
@@ -37,6 +38,6 @@ export async function GET() {
 
   } catch (err) {
     console.error('[google/status] Error:', err);
-    return NextResponse.json({ connected: false, error: 'Database error' }, { status: 500 });
+    return apiError(ErrorCode.DB_ERROR, 'Database error', 500);
   }
 }

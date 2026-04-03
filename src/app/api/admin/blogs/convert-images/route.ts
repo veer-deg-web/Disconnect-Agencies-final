@@ -5,9 +5,16 @@ import { sanitizeInput } from "@/lib/sanitizer";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import { ensureWebpImage } from "@/lib/blogImageWebp";
+import { verifyAdminToken } from "@/lib/adminAuth";
+import { apiError, dbSafeError, ErrorCode } from "@/lib/apiErrors";
 
 /* POST /api/admin/blogs/convert-images — Backfill existing featured images to webp */
 export async function POST(req: NextRequest) {
+  // 🔴 SECURITY FIX: Was previously unprotected
+  const auth = await verifyAdminToken(req);
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
+
   try {
     await dbConnect();
     const rawBody = await req.json().catch(() => ({}));
@@ -47,15 +54,19 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "Blog image conversion completed",
       processed: blogs.length,
       converted,
       skipped,
       errors,
     });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
+  } catch (err: unknown) {
+    console.error("CONVERT IMAGES ERROR:", err);
+    return dbSafeError(err);
   }
 }

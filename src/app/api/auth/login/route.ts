@@ -5,23 +5,26 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sanitizeInput } from '@/lib/sanitizer';
 import { safeParseJson } from '@/lib/utils';
+import { loginSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await safeParseJson<any>(req);
-    
+    const rawBody = await safeParseJson<unknown>(req);
+
     if (!rawBody) {
-      return NextResponse.json({ error: 'Invalid or empty request body' }, { status: 400 });
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
 
-    const { emailOrPhone, password } = sanitizeInput(rawBody, ['password']);
-
-    if (!emailOrPhone || !password) {
-      return NextResponse.json({ error: 'Email/Phone and password are required' }, { status: 400 });
+    const parsed = loginSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
     }
+
+    const { emailOrPhone, password } = sanitizeInput(parsed.data, ['password']);
 
     const isEmail = emailOrPhone.includes('@');
     const user = await User.findOne(
@@ -29,23 +32,23 @@ export async function POST(req: NextRequest) {
     );
 
     if (!user) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+      return apiError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentials', 401);
     }
 
     if (!user.emailVerified) {
-      return NextResponse.json({ error: 'Please verify your email before logging in' }, { status: 401 });
+      return apiError(ErrorCode.EMAIL_NOT_VERIFIED, 'Please verify your email before logging in', 401);
     }
 
     if (user.isSuspended) {
-      return NextResponse.json({ error: 'Your account has been suspended. Please contact support.' }, { status: 403 });
+      return apiError(ErrorCode.ACCOUNT_SUSPENDED, 'Your account has been suspended. Please contact support.', 403);
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+      return apiError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentials', 401);
     }
 
-    const token = signToken({userId: user._id.toString(), email: user.email, role: user.role ?? 'user'});
+    const token = signToken({ userId: user._id.toString(), email: user.email, role: user.role ?? 'user' });
 
     return NextResponse.json({
       token,
@@ -59,8 +62,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: unknown) {
     console.error('Login error:', error);
-    const msg: string = (error as Error)?.message || 'Internal server error';
-    const isDb = msg.toLowerCase().includes('whitelist') || msg.toLowerCase().includes('connect') || msg.toLowerCase().includes('atlas');
-    return NextResponse.json({ error: isDb ? 'Database connection failed. Please try again shortly.' : msg }, { status: 500 });
+    return dbSafeError(error);
   }
 }

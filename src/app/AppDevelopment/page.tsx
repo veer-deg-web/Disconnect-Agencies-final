@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 import AppDevContent from "@/components/AppDevelopment/AppDevContent";
 import Footer from "@/components/Shared/Footer/Footer";
 
-// ── /AppDevelopment ──────────────────────────────────────
-// Title (raw):      "App Development for iOS, Android & Web"  [38 chars]
-// Title (rendered): "App Development for iOS, Android & Web | Disconnect" [51 chars] ✅
-// Description:      [144 chars] ✅
-// Canonical:        https://disconnect.software/AppDevelopment ✅
+
 export const metadata: Metadata = {
   title: "App Development for iOS, Android & Web",
   description:

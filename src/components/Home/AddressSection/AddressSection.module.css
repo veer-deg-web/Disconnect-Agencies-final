@@ -1,56 +1,42 @@
 .addressSection {
-  padding: 120px 40px;
+  padding: 100px 40px;
   background-color: transparent;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   position: relative;
-  overflow: hidden;
-}
-
-.container {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  align-items: center;
-  gap: 80px;
-}
-
-.content {
-  z-index: 2;
-}
-
-.globeWrapper {
-  position: relative;
-  height: 650px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at center, rgba(222, 94, 3, 0.08), transparent 70%);
-  border-radius: 50%;
+  text-align: center;
 }
 
 .heading {
   font-size: 56px;
   font-weight: 800;
   line-height: 1.1;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: #fff;
   letter-spacing: -0.02em;
 }
 
-/* ... other styles from previous version ... */
 .description {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
-  margin-bottom: 48px;
-  max-width: 540px;
+  margin-bottom: 0;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mapWrapper {
+  width: 100%;
+  margin: 40px 0;
 }
 
 .cardsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
 }
 
 .addressCard {
@@ -59,18 +45,19 @@
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  padding: 24px;
+  padding: 28px 24px;
   display: flex;
-  gap: 20px;
+  gap: 18px;
+  align-items: flex-start;
+  text-align: left;
   transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
 .addressCard:hover {
-  transform: translateY(-5px);
   border-color: rgba(222, 94, 3, 0.3);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .cardIcon {
@@ -88,6 +75,7 @@
 
 .cardBody {
   flex: 1;
+  min-width: 0;
 }
 
 .cardTitle {
@@ -113,18 +101,33 @@
   line-height: 1.5;
 }
 
+/* Tablet */
 @media (max-width: 1024px) {
-  .container {
-    grid-template-columns: 1fr;
-    text-align: center;
+  .addressSection {
+    padding: 80px 24px;
   }
-  .globeWrapper {
-    width: 100%;
-    height: 500px;
-    grid-row: 1;
+  .heading {
+    font-size: 44px;
+  }
+  .cardsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
 }
+
+/* Mobile */
 @media (max-width: 768px) {
-  .heading { font-size: 38px; }
-  .globeWrapper { height: 400px; }
+  .addressSection {
+    padding: 60px 16px;
+  }
+  .heading {
+    font-size: 36px;
+  }
+  .description {
+    font-size: 16px;
+  }
+  .cardsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }

@@ -5,11 +5,14 @@ import dbConnect from '@/lib/mongodb';
 import Feedback from '@/models/Feedback';
 import { verifyAdminToken } from '@/lib/adminAuth';
 import { sanitizeInput } from '@/lib/sanitizer';
+import { safeParseJson } from '@/lib/utils';
+import { adminFeedbackUpdateSchema, adminFeedbackDeleteSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
@@ -18,70 +21,83 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 });
 
     return NextResponse.json({ feedbacks }, { status: 200 });
-  } catch {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin feedback list error:', err);
+    return dbSafeError(err);
   }
 }
 
 export async function PUT(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
-    const rawBody = await req.json();
-    const { id, isTestimonial, isFeatured, category } = sanitizeInput(rawBody);
-
-    if (!id) {
-      return NextResponse.json({ error: 'Feedback ID is required' }, { status: 400 });
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = adminFeedbackUpdateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const body = sanitizeInput(parsed.data);
 
     await dbConnect();
 
     const updateData: Record<string, unknown> = {};
-    if (typeof isTestimonial === 'boolean') updateData.isTestimonial = isTestimonial;
-    if (typeof isFeatured === 'boolean') updateData.isFeatured = isFeatured;
-    if (category !== undefined) updateData.category = category;
+    if (typeof body.isTestimonial === 'boolean') updateData.isTestimonial = body.isTestimonial;
+    if (typeof body.isFeatured === 'boolean') updateData.isFeatured = body.isFeatured;
+    if (body.category !== undefined) updateData.category = body.category;
 
     if (Object.keys(updateData).length === 0) {
-      return NextResponse.json({ error: 'No fields to update' }, { status: 400 });
+      return apiError(ErrorCode.VALIDATION_ERROR, 'No fields to update', 400);
     }
 
-    const feedback = await Feedback.findByIdAndUpdate(id, updateData, { new: true })
+    const feedback = await Feedback.findByIdAndUpdate(body.id, updateData, { new: true })
       .populate('user', 'name email avatar isVerified');
 
     if (!feedback) {
-      return NextResponse.json({ error: 'Feedback not found' }, { status: 404 });
+      return apiError(ErrorCode.NOT_FOUND, 'Feedback not found', 404);
     }
 
     return NextResponse.json({ feedback }, { status: 200 });
-  } catch {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin feedback update error:', err);
+    return dbSafeError(err);
   }
 }
 
 export async function DELETE(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
-    const body = await req.json();
-    const { id } = body;
-
-    if (!id) {
-      return NextResponse.json({ error: 'Feedback ID is required' }, { status: 400 });
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = adminFeedbackDeleteSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { id } = parsed.data;
 
     await dbConnect();
 
     const deleted = await Feedback.findByIdAndDelete(id);
     if (!deleted) {
-      return NextResponse.json({ error: 'Feedback not found' }, { status: 404 });
+      return apiError(ErrorCode.NOT_FOUND, 'Feedback not found', 404);
     }
 
     return NextResponse.json({ message: 'Feedback deleted successfully' }, { status: 200 });
-  } catch {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (err: unknown) {
+    console.error('Admin feedback delete error:', err);
+    return dbSafeError(err);
   }
 }

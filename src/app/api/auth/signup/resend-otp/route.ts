@@ -5,6 +5,9 @@ import { sanitizeInput } from '@/lib/sanitizer';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendOtpEmail } from '@/lib/email';
+import { safeParseJson } from '@/lib/utils';
+import { resendOtpSchema } from '@/lib/validations';
+import { apiError, dbSafeError, ErrorCode } from '@/lib/apiErrors';
 
 import crypto from 'crypto';
 
@@ -19,23 +22,29 @@ function generateOtp(length = 4): string {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
-    const rawBody = await req.json();
-    const { email, type } = sanitizeInput(rawBody);
+    const rawBody = await safeParseJson<unknown>(req);
 
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = resendOtpSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { email, type } = sanitizeInput(parsed.data);
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return apiError(ErrorCode.NOT_FOUND, 'User not found', 404);
     }
 
     const otpType = type || 'email';
 
     if (otpType === 'email') {
       if (user.emailVerified) {
-        return NextResponse.json({ error: 'Email already verified' }, { status: 400 });
+        return apiError(ErrorCode.ALREADY_VERIFIED, 'Email already verified', 400);
       }
       const emailOtp = generateOtp(4);
       user.emailOtp = emailOtp;
@@ -45,11 +54,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'OTP resent to email' });
     }
 
-    return NextResponse.json({ error: 'Invalid OTP type' }, { status: 400 });
+    return apiError(ErrorCode.VALIDATION_ERROR, 'Invalid OTP type', 400);
   } catch (error: unknown) {
     console.error('Resend OTP error:', error);
-    const msg: string = (error as Error)?.message || 'Internal server error';
-    const isDb = msg.toLowerCase().includes('whitelist') || msg.toLowerCase().includes('connect') || msg.toLowerCase().includes('atlas');
-    return NextResponse.json({ error: isDb ? 'Database connection failed. Please try again shortly.' : msg }, { status: 500 });
+    return dbSafeError(error);
   }
 }

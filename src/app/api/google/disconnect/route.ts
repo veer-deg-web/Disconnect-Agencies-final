@@ -13,11 +13,12 @@ import { verifyAdminToken } from '@/lib/adminAuth';
 import dbConnect from '@/lib/mongodb';
 import GoogleToken from '@/models/GoogleToken';
 import { buildOAuth2Client } from '@/lib/googleClient';
+import { apiError, ErrorCode } from '@/lib/apiErrors';
 
 export async function DELETE(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid)   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden'    }, { status: 403 });
+  if (!auth.valid)   return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
@@ -46,9 +47,6 @@ export async function DELETE(req: NextRequest) {
 
   } catch (err: unknown) {
     console.error('[google/disconnect] Error:', err);
-    return NextResponse.json(
-      { error: (err as Error).message ?? 'Failed to disconnect Google account' },
-      { status: 500 }
-    );
+    return apiError(ErrorCode.INTERNAL_ERROR, 'Failed to disconnect Google account', 500);
   }
 }

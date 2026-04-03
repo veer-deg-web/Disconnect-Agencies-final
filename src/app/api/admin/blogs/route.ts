@@ -14,12 +14,15 @@ import {
 } from "@/lib/blogSeo";
 import { sanitizeInput } from "@/lib/sanitizer";
 import { verifyAdminToken } from "@/lib/adminAuth";
+import { safeParseJson } from "@/lib/utils";
+import { adminBlogCreateSchema, adminBlogUpdateSchema, adminBlogDeleteSchema } from "@/lib/validations";
+import { apiError, dbSafeError, ErrorCode } from "@/lib/apiErrors";
 
 /* GET /api/admin/blogs — Admin blog list (all statuses) */
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
@@ -55,7 +58,7 @@ export async function GET(req: NextRequest) {
         Blog.countDocuments({ source: "ai-generated" }),
       ]);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       blogs,
       stats: {
         total: publishedCount + draftCount,
@@ -66,29 +69,35 @@ export async function GET(req: NextRequest) {
       },
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    if (auth.newToken) {
+      response.headers.set('X-New-Token', auth.newToken);
+    }
+    return response;
+  } catch (err: unknown) {
+    console.error("ADMIN BLOGS LIST ERROR:", err);
+    return dbSafeError(err);
   }
 }
 
 /* POST /api/admin/blogs — Create blog manually */
 export async function POST(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
-    const rawBody = await req.json();
-    const body = sanitizeInput(rawBody);
-
-    if (!body.title || !body.content) {
-      return NextResponse.json(
-        { error: "Title and content are required" },
-        { status: 400 }
-      );
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = adminBlogCreateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const body = sanitizeInput(parsed.data);
 
     // Generate slug
     let slug = normalizeBlogSlug(String(body.slug || body.title || ""));
@@ -110,14 +119,13 @@ export async function POST(req: NextRequest) {
       title: normalizedTitle,
     });
 
-    // Calculate reading time
     const text = normalizedContent.replace(/<[^>]+>/g, " ");
     const words = text.split(/\s+/).filter(Boolean).length;
     const readingTime = Math.max(1, Math.ceil(words / 200));
 
     const featuredImage = await ensureWebpImage(
       String(body.featuredImage || ""),
-      String(body.title || "blog-image")
+      String(body.title || "blog-image"),
     );
 
     const blog = await Blog.create({
@@ -127,7 +135,7 @@ export async function POST(req: NextRequest) {
       excerpt: normalizedExcerpt,
       metaTitle: buildProfessionalMetaTitle(
         normalizedTitle,
-        String(body.metaTitle || "")
+        String(body.metaTitle || ""),
       ),
       metaDescription: buildProfessionalMetaDescription({
         provided: String(body.metaDescription || ""),
@@ -150,27 +158,31 @@ export async function POST(req: NextRequest) {
       response.headers.set('X-New-Token', auth.newToken);
     }
     return response;
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("CREATE BLOG ERROR:", err);
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return dbSafeError(err);
   }
 }
 
 /* PUT /api/admin/blogs — Update blog */
 export async function PUT(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
-    const rawBody = await req.json();
-    const body = sanitizeInput(rawBody);
-
-    if (!body.id) {
-      return NextResponse.json({ error: "Blog ID is required" }, { status: 400 });
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = adminBlogUpdateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const body = sanitizeInput(parsed.data);
 
     const update: Record<string, unknown> = {};
     const allowedFields = [
@@ -180,8 +192,8 @@ export async function PUT(req: NextRequest) {
     ];
 
     for (const field of allowedFields) {
-      if (body[field] !== undefined) {
-        update[field] = body[field];
+      if ((body as Record<string, unknown>)[field] !== undefined) {
+        update[field] = (body as Record<string, unknown>)[field];
       }
     }
 
@@ -206,11 +218,10 @@ export async function PUT(req: NextRequest) {
     if (body.featuredImage !== undefined) {
       update.featuredImage = await ensureWebpImage(
         String(body.featuredImage || ""),
-        String(body.title || "blog-image")
+        String(body.title || "blog-image"),
       );
     }
 
-    // Recalculate reading time if content changed
     if (update.content && typeof update.content === "string") {
       const text = update.content.replace(/<[^>]+>/g, " ");
       const words = text.split(/\s+/).filter(Boolean).length;
@@ -232,7 +243,7 @@ export async function PUT(req: NextRequest) {
     if (body.metaTitle !== undefined || body.title !== undefined) {
       update.metaTitle = buildProfessionalMetaTitle(
         resolvedTitle,
-        String(body.metaTitle || update.metaTitle || "")
+        String(body.metaTitle || update.metaTitle || ""),
       );
     }
     if (
@@ -252,7 +263,7 @@ export async function PUT(req: NextRequest) {
     const blog = await Blog.findByIdAndUpdate(body.id, update, { new: true });
 
     if (!blog) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      return apiError(ErrorCode.NOT_FOUND, 'Blog not found', 404);
     }
 
     const response = NextResponse.json({ blog });
@@ -260,37 +271,40 @@ export async function PUT(req: NextRequest) {
       response.headers.set('X-New-Token', auth.newToken);
     }
     return response;
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("UPDATE BLOG ERROR:", err);
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return dbSafeError(err);
   }
 }
 
 /* DELETE /api/admin/blogs — Delete blog */
 export async function DELETE(req: NextRequest) {
   const auth = await verifyAdminToken(req);
-  if (!auth.valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!auth.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!auth.valid) return apiError(ErrorCode.UNAUTHORIZED, 'Unauthorized', 401);
+  if (!auth.isAdmin) return apiError(ErrorCode.FORBIDDEN, 'Forbidden', 403);
 
   try {
     await dbConnect();
-    const rawBody = await req.json();
-    const { id } = sanitizeInput(rawBody);
-
-    if (!id) {
-      return NextResponse.json({ error: "Blog ID is required" }, { status: 400 });
+    const rawBody = await safeParseJson<unknown>(req);
+    if (!rawBody) {
+      return apiError(ErrorCode.INVALID_JSON, 'Invalid or empty request body', 400);
     }
+
+    const parsed = adminBlogDeleteSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return apiError(ErrorCode.VALIDATION_ERROR, parsed.error.issues[0].message, 400);
+    }
+
+    const { id } = parsed.data;
 
     const blog = await Blog.findByIdAndDelete(id);
     if (!blog) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      return apiError(ErrorCode.NOT_FOUND, 'Blog not found', 404);
     }
 
     return NextResponse.json({ message: "Blog deleted" });
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("DELETE BLOG ERROR:", err);
-    const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return dbSafeError(err);
   }
 }
