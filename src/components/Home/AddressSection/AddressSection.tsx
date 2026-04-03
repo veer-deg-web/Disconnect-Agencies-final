@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Globe } from "@/components/Shared/Globe/Globe";
+import { Cobe } from "@/components/ui/cobe-globe";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import styles from "./AddressSection.module.css";
@@ -89,7 +89,26 @@ export default function AddressSection() {
           transition={{ duration: 1, delay: 0.4 }}
           className={styles.globeWrapper}
         >
-          <Globe />
+          <div className="relative z-10 h-[300px] w-full overflow-hidden rounded-lg sm:h-[550px] md:h-[600px]">
+            <Cobe
+              variant="default"
+              phi={0}
+              theta={0.2}
+              mapSamples={16000}
+              mapBrightness={1.8}
+              mapBaseBrightness={0.05}
+              diffuse={3}
+              dark={1.1}
+              baseColor="#ffffff"
+              markerColor="#fb6415"
+              markerSize={0.05}
+              glowColor="#ffffff"
+              scale={1.0}
+              offsetX={0.0}
+              offsetY={0.0}
+              opacity={0.7}
+            />
+          </div>
         </motion.div>
       </div>
     </section>
