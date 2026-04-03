@@ -228,7 +228,7 @@ export default function HeroNavbar() {
             }}
           >
             {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
-              .filter(item => !(item === "Pricing" && pathname?.startsWith("/Cloud")))
+              .filter(item => !(item === "Pricing" && (pathname === "/" || pathname?.startsWith("/Cloud"))))
               .map((item) => (
                 <li
                   key={item}
@@ -388,7 +388,7 @@ export default function HeroNavbar() {
             }}
           >
             {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
-              .filter(item => !(item === "Pricing" && pathname?.startsWith("/Cloud")))
+              .filter(item => !(item === "Pricing" && (pathname === "/" || pathname?.startsWith("/Cloud"))))
               .map((item) => (
                 <div
                   key={item}

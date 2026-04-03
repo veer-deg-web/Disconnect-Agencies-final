@@ -134,7 +134,8 @@ export default function Footer() {
                 "Careers",
                 "Blog",
                 "How We Work",
-              ].map((item) => (
+              ].filter(item => !(item === "Pricing" && (pathname === "/" || pathname?.startsWith("/Cloud"))))
+              .map((item) => (
                 <button
                   key={item}
                   type="button"
