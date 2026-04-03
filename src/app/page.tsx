@@ -9,10 +9,10 @@ import SmartGrowthSection from "@/components/Home/SmartGrowthSection/SmartGrowth
 import VisionShowcase from "@/components/Home/VisionShowcase/VisionShowcase";
 
 import PerformanceMetrics from "@/components/Home/PerformanceMetrics/PerformanceMetrics";
+import PricingSection from "@/components/PricingSection";
 import TestimonialsSection from "@/components/Home/TestimonialsSection/TestimonialsSection";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";
 import CTASection from "@/components/Shared/CTASection/CTASection";
-import AddressSection from "@/components/Home/AddressSection/AddressSection";
 import Footer from "@/components/Shared/Footer/Footer";
 
 // ── Homepage / ───────────────────────────────────────────
@@ -91,6 +91,12 @@ export default function Home() {
       </section>
       
       <PerformanceMetrics />
+      <section id="pricing">
+      <PricingSection
+        headingTitle="Simple, Transparent Pricing"
+        hoverScale={true}
+      />
+</section>
       <section id="testimonials">
       <TestimonialsSection/>
       </section>
@@ -107,7 +113,6 @@ export default function Home() {
   tiltGlow="#DE5E03"
   tiltIntensity={14}
 />
-<AddressSection />
       <Footer/></PageBackground>
     
     

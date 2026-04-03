@@ -59,17 +59,6 @@ export default function HeroNavbar() {
     router.push("/");
   };
 
-  const scrollToAny = (ids: string[]) => {
-    for (const id of ids) {
-      const section = document.getElementById(id);
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
-        return true;
-      }
-    }
-    return false;
-  };
-
   const handleNavigate = (item: string) => {
     setOpen(false);
 
@@ -78,23 +67,34 @@ export default function HeroNavbar() {
       return;
     }
 
-    if (item === "Benefits") {
-      if (!scrollToAny(["benefits", "benefit"])) {
-        router.push("/#benefits");
+    if (item === "Benefit") {
+      const section =
+        document.getElementById("benefits") ||
+        document.getElementById("benefit");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
       }
+      router.push(`${pathname}#benefits`);
       return;
     }
 
-    if (item === "Testimonials") {
-      if (!scrollToAny(["testimonials", "testimonial", "reviews"])) {
-        router.push("/#testimonials");
-      }
-      return;
-    }
+    // ❌ removed old Pricing route
+    // if (item === "Pricing") router.push("/pricing");
 
     if (item === "Book A Call") router.push("/book-call");
     if (item === "About Us") router.push("/about");
     if (item === "login") router.push("/auth");
+  };
+
+  const handlePricingClick = () => {
+    setOpen(false);
+    const section = document.getElementById("pricing");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    router.push(`${pathname}#pricing`);
   };
 
   const handleServicesClick = () => {
@@ -227,7 +227,8 @@ export default function HeroNavbar() {
               color: "rgba(255,255,255,0.7)",
             }}
           >
-            {["Home", "Services", "Benefits", "Testimonials", "Book A Call"]
+            {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
+              .filter(item => !(item === "Pricing" && pathname?.startsWith("/Cloud")))
               .map((item) => (
                 <li
                   key={item}
@@ -257,6 +258,23 @@ export default function HeroNavbar() {
                     >
                       Services
                     </button>
+                  ) : item === "Pricing" ? (
+                    <button
+                      type="button"
+                      onClick={handlePricingClick}
+                      style={{
+                        color: "inherit",
+                        textDecoration: "none",
+                        background: "transparent",
+                        border: "none",
+                        padding: 0,
+                        margin: 0,
+                        font: "inherit",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Pricing
+                    </button>
                   ) : (
                     <span onClick={() => handleNavigate(item)}>
                       {item}
@@ -269,6 +287,7 @@ export default function HeroNavbar() {
 
           {/* DESKTOP CTA */}
           <div className="login-btn" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Replaced static avatar with unified MorphingLoginButton from HeroContent */}
             {userName && userRole === 'admin' && (
               <a
                 href="/admin"
@@ -368,7 +387,8 @@ export default function HeroNavbar() {
               overflow: "hidden",
             }}
           >
-            {["Home", "Services", "Benefits", "Testimonials", "Book A Call"]
+            {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
+              .filter(item => !(item === "Pricing" && pathname?.startsWith("/Cloud")))
               .map((item) => (
                 <div
                   key={item}
@@ -397,6 +417,23 @@ export default function HeroNavbar() {
                       }}
                     >
                       Services
+                    </button>
+                  ) : item === "Pricing" ? (
+                    <button
+                      type="button"
+                      onClick={handlePricingClick}
+                      style={{
+                        color: "#fff",
+                        textDecoration: "none",
+                        background: "transparent",
+                        border: "none",
+                        padding: 0,
+                        margin: 0,
+                        font: "inherit",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Pricing
                     </button>
                   ) : (
                     <span onClick={() => handleNavigate(item)}>
