@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { FaInstagram, FaLinkedinIn, FaGithub, FaFacebookF, FaPhoneAlt } from "react-icons/fa";
+import { FaInstagram, FaLinkedinIn, FaFacebookF, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import styles from "./Footer.module.css";
 
@@ -100,10 +100,9 @@ export default function Footer() {
             </p>
             <div className={styles.socialList}>
               {[
-                { Icon: FaInstagram, href: "https://www.instagram.com/disconnect.agencies/", label: "Instagram" },
-                { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/disconnect.agencies/", label: "LinkedIn" },
-                { Icon: FaGithub, href: "https://github.com/veer-deg", label: "GitHub" },
-                { Icon: FaFacebookF, href: "https://www.facebook.com/disconnect.agencies", label: "Facebook" },
+                { Icon: FaInstagram, href: "https://www.instagram.com/disconnect.software/?hl=en", label: "Instagram" },
+                { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/113335263/", label: "LinkedIn" },
+                { Icon: FaFacebookF, href: "https://www.facebook.com/disconnectsoftware", label: "Facebook" },
               ].map(({ Icon, href, label }) => (
                 <a
                   key={label}
