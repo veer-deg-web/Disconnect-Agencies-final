@@ -14,11 +14,6 @@ export default function HeroNavbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Hide Navbar on /auth and /admin pages
-  if (pathname === "/auth" || pathname.startsWith("/admin")) {
-    return null;
-  }
-
   useEffect(() => {
     const sync = () => {
       const nextUserName = localStorage.getItem("userName");
@@ -79,9 +74,6 @@ export default function HeroNavbar() {
       return;
     }
 
-    // ❌ removed old Pricing route
-    // if (item === "Pricing") router.push("/pricing");
-
     if (item === "Book A Call") router.push("/book-call");
     if (item === "About Us") router.push("/about");
     if (item === "login") router.push("/auth");
@@ -106,6 +98,11 @@ export default function HeroNavbar() {
     }
     router.push("/?scroll=services");
   };
+
+  // Hide Navbar on /auth and /admin pages
+  if (pathname === "/auth" || pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <>
@@ -287,7 +284,6 @@ export default function HeroNavbar() {
 
           {/* DESKTOP CTA */}
           <div className="login-btn" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Replaced static avatar with unified MorphingLoginButton from HeroContent */}
             {userName && userRole === 'admin' && (
               <a
                 href="/admin"
