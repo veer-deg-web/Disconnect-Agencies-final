@@ -47,10 +47,6 @@ export default function Footer() {
       scrollToAny(["benefits", "benefit"]);
       return;
     }
-    if (item === "Pricing") {
-      scrollToSection("pricing");
-      return;
-    }
     if (item === "Testimonials") {
       scrollToAny(["testimonials", "testimonial", "reviews"]);
       return;
@@ -127,7 +123,6 @@ export default function Footer() {
                 "Home",
                 "Feature",
                 "Benefits",
-                "Pricing",
                 "Testimonials",
                 "FAQ",
                 "About Us",
