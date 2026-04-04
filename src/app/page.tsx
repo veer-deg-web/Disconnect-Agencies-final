@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import GrowthShowcaseSection from "@/components/Home/GrowthShowcaseSection/GrowthShowcaseSection";
-import HeroSection  from "@/components/Home/HeroSection/HeroSection";
+import HeroSection from "@/components/Home/HeroSection/HeroSection";
 import PageBackground from "@/components/Home/PageBackground/PageBackground";
 import ScrollToQuerySection from "@/components/Home/ScrollToQuerySection";
 
@@ -80,36 +80,37 @@ export default function Home() {
         <HeroSection />
       </main>
       <section id="feature">
-      <VisionShowcase />
+        <VisionShowcase />
       </section>
       <section id="services">
-      <ServicesSection/>
+        <ServicesSection />
       </section>
       <GrowthShowcaseSection />
       <section id="benefits">
-      <SmartGrowthSection />
+        <SmartGrowthSection />
       </section>
-      
+
       <PerformanceMetrics />
       <section id="testimonials">
-      <TestimonialsSection/>
+        <TestimonialsSection />
       </section>
       <section id="faq">
-      <FAQSection
-  title="FAQ"
-  category="general"
-  accentColor="#DE5E03"
-  defaultOpenIndex={0}
-/>
+        <FAQSection
+          title="FAQ"
+          category="general"
+          accentColor="#DE5E03"
+          defaultOpenIndex={0}
+        />
       </section>
+      <AddressSection />
       <CTASection
-  gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
-  tiltGlow="#DE5E03"
-  tiltIntensity={14}
-/>
-<AddressSection />
-      <Footer/></PageBackground>
-    
-    
+        gradient="radial-gradient(80% 120% at 50% 100%, #DE5E03 0%, rgba(222,94,3,0.45) 35%, #0b0b0b 75%)"
+        tiltGlow="#DE5E03"
+        tiltIntensity={14}
+      />
+      
+      <Footer /></PageBackground>
+
+
   );
 }

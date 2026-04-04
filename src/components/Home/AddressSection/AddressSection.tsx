@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { WorldMapDemo } from "@/components/Shared/Globe/Globe";
+
 import { FaMapMarkerAlt } from "react-icons/fa";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import styles from "./AddressSection.module.css";
@@ -47,15 +47,6 @@ export default function AddressSection() {
         regardless of geography.
       </motion.p>
 
-      {/* World Map */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 1, delay: 0.3 }}
-        className={styles.mapWrapper}
-      >
-        <WorldMapDemo />
-      </motion.div>
 
       {/* Three cards in a row */}
       <div className={styles.cardsGrid}>

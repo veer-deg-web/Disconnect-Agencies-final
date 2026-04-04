@@ -1,0 +1,26 @@
+.globe-container {
+  position: absolute;
+  inset: 0;
+  margin-left: auto;
+  margin-right: auto;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 600px;
+}
+
+.globe-canvas {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 500ms ease;
+  contain: layout paint size;
+  cursor: grab;
+}
+
+.globe-canvas-grabbing {
+  cursor: grabbing !important;
+}
+
+.globe-canvas-visible {
+  opacity: 1 !important;
+}

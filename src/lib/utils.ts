@@ -85,19 +85,5 @@ export function ensureWebpImage(url: string, _title?: string): Promise<string> {
   return Promise.resolve(url);
 }
 
-export async function safeParseJson<T>(req: Request): Promise<T | null> {
-  try {
-    return await req.json();
-  } catch {
-    return null;
-  }
-}
 
-export async function safeParseForm(req: Request): Promise<FormData | null> {
-  try {
-    return await req.formData();
-  } catch {
-    return null;
-  }
-}
 
