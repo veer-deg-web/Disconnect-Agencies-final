@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
  * Safely parse JSON from a NextRequest without throwing.
  * Returns null if parsing fails (e.g. empty body).
  */
-export async function safeParseJson<T>(req: NextRequest): Promise<T | null> {
+export async function safeParseJson<T>(req: NextRequest | Request): Promise<T | null> {
   try {
     const text = await req.text();
     if (!text) return null;
@@ -24,7 +24,7 @@ export async function safeParseJson<T>(req: NextRequest): Promise<T | null> {
  * Safely parse FormData from a NextRequest without throwing.
  * Returns null if parsing fails.
  */
-export async function safeParseForm(req: NextRequest): Promise<FormData | null> {
+export async function safeParseForm(req: NextRequest | Request): Promise<FormData | null> {
   try {
     return await req.formData();
   } catch {

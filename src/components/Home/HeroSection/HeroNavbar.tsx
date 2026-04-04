@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MorphingLoginButton } from "./HeroContent";
+import styles from "./HeroNavbar.module.css";
 
 export default function HeroNavbar() {
   const [open, setOpen] = useState(false);
@@ -104,103 +105,16 @@ export default function HeroNavbar() {
     return null;
   }
 
+  const navItems = ["Home", "Pricing", "Services", "Benefit", "Book A Call"]
+    .filter(item => !(item === "Pricing" && (pathname === "/" || pathname?.startsWith("/Cloud"))));
+
   return (
     <>
-      <style>
-        {`
-          .nav {
-            box-sizing: border-box;
-            width: 100%;
-          }
-
-          .nav-links {
-            align-items: center;
-          }
-
-          @media (max-width: 1200px) {
-            .nav {
-              padding: 0 24px !important;
-            }
-
-            .nav-links {
-              gap: 28px !important;
-            }
-          }
-
-          @media (max-width: 980px) {
-            .nav {
-              padding: 0 18px !important;
-            }
-
-            .nav-links {
-              gap: 18px !important;
-              font-size: 13px !important;
-            }
-          }
-
-          @media (max-width: 860px) {
-            .nav {
-              max-width: 100% !important;
-              padding: 0 14px !important;
-              height: 64px !important;
-            }
-
-            .nav-links,
-            .login-btn {
-              display: none !important;
-            }
-
-            .hamburger {
-              display: flex !important;
-            }
-          }
-
-          @media (max-width: 768px) {
-            .nav {
-              max-width: 100% !important;
-              padding: 0 16px !important;
-            }
-
-            .nav-links,
-            .login-btn {
-              display: none !important;
-            }
-
-            .hamburger {
-              display: flex !important;
-            }
-          }
-        `}
-      </style>
-
-      <header
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          maxWidth: "100vw",
-          overflowX: "clip",
-          zIndex: 50,
-          background: "rgba(0,0,0,0.65)",
-          backdropFilter: "blur(12px)",
-        }}
-      >
-        <nav
-          className="nav"
-          style={{
-            maxWidth: "1320px",
-            height: "70px",
-            margin: "0 auto",
-            padding: "0 40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      <header className={styles.header}>
+        <nav className={styles.nav}>
           {/* LOGO */}
           <div
-            style={{ flexShrink: 0, cursor: "pointer" }}
+            className={styles.logo}
             onClick={() => router.push("/")}
           >
             <Image
@@ -213,45 +127,15 @@ export default function HeroNavbar() {
           </div>
 
           {/* DESKTOP LINKS */}
-          <ul
-            className="nav-links"
-            style={{
-              display: "flex",
-              gap: "40px",
-              listStyle: "none",
-              fontSize: "14px",
-              fontWeight: 500,
-              color: "rgba(255,255,255,0.7)",
-            }}
-          >
-            {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
-              .filter(item => !(item === "Pricing" && (pathname === "/" || pathname?.startsWith("/Cloud"))))
-              .map((item) => (
-                <li
-                  key={item}
-                  style={{ cursor: "pointer" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#fff")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color =
-                      "rgba(255,255,255,0.7)")
-                  }
-                >
+          <ul className={styles.navLinks}>
+            {navItems.map((item) => (
+                <li key={item} className={styles.navItem}>
                   {item === "Services" ? (
                     <button
                       type="button"
                       onClick={handleServicesClick}
-                      style={{
-                        color: "inherit",
-                        textDecoration: "none",
-                        background: "transparent",
-                        border: "none",
-                        padding: 0,
-                        margin: 0,
-                        font: "inherit",
-                        cursor: "pointer",
-                      }}
+                      className={styles.navButton}
+                      aria-label="Scroll to services"
                     >
                       Services
                     </button>
@@ -259,23 +143,20 @@ export default function HeroNavbar() {
                     <button
                       type="button"
                       onClick={handlePricingClick}
-                      style={{
-                        color: "inherit",
-                        textDecoration: "none",
-                        background: "transparent",
-                        border: "none",
-                        padding: 0,
-                        margin: 0,
-                        font: "inherit",
-                        cursor: "pointer",
-                      }}
+                      className={styles.navButton}
+                      aria-label="Scroll to pricing"
                     >
                       Pricing
                     </button>
                   ) : (
-                    <span onClick={() => handleNavigate(item)}>
+                    <button
+                      type="button"
+                      onClick={() => handleNavigate(item)}
+                      className={styles.navButton}
+                      aria-label={`Navigate to ${item}`}
+                    >
                       {item}
-                    </span>
+                    </button>
                   )}
                 </li>
               )
@@ -283,22 +164,9 @@ export default function HeroNavbar() {
           </ul>
 
           {/* DESKTOP CTA */}
-          <div className="login-btn" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className={styles.loginBtnWrap}>
             {userName && userRole === 'admin' && (
-              <a
-                href="/admin"
-                style={{
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: '#ff6b00',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(255,107,0,0.45)',
-                  borderRadius: '999px',
-                  padding: '6px 16px',
-                  background: 'rgba(255,107,0,0.12)',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+              <a href="/admin" className={styles.adminLink}>
                 Admin
               </a>
             )}
@@ -307,58 +175,29 @@ export default function HeroNavbar() {
 
           {/* HAMBURGER */}
           <button
-            aria-label="Open menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
             onClick={() => setOpen(!open)}
-            className="hamburger"
-            style={{
-              display: "none",
-              width: "44px",
-              height: "44px",
-              padding: 0,
-              marginLeft: "auto",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              position: "relative",
-              overflow: "visible",
-            }}
+            className={styles.hamburger}
           >
             <span
+              className={styles.hamburgerLine}
               style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: "24px",
-                height: "2px",
-                background: "#fff",
-                transition: "0.25s",
                 transform: open
                   ? "translate(-50%, -50%) rotate(45deg)"
                   : "translate(-50%, calc(-50% - 7px)) rotate(0deg)",
               }}
             />
             <span
+              className={styles.hamburgerLine}
               style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: "24px",
-                height: "2px",
-                background: "#fff",
                 opacity: open ? 0 : 1,
-                transition: "0.25s",
                 transform: "translate(-50%, -50%)",
               }}
             />
             <span
+              className={styles.hamburgerLine}
               style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: "24px",
-                height: "2px",
-                background: "#fff",
-                transition: "0.25s",
                 transform: open
                   ? "translate(-50%, -50%) rotate(-45deg)"
                   : "translate(-50%, calc(-50% + 7px)) rotate(0deg)",
@@ -376,41 +215,16 @@ export default function HeroNavbar() {
               animate={{ opacity: 1, y: 0, height: "auto" }}
               exit={{ opacity: 0, y: -10, height: 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              background: "#000",
-              padding: "20px 16px",
-              borderTop: "1px solid rgba(255,255,255,0.08)",
-              overflow: "hidden",
-            }}
-          >
-            {["Home", "Pricing", "Services", "Benefit", "Book A Call"]
-              .filter(item => !(item === "Pricing" && (pathname === "/" || pathname?.startsWith("/Cloud"))))
-              .map((item) => (
-                <div
-                  key={item}
-                  style={{
-                    padding: "14px 0",
-                    fontSize: "16px",
-                    color: "#fff",
-                    borderBottom:
-                      "1px solid rgba(255,255,255,0.08)",
-                    cursor: "pointer",
-                  }}
-                >
+              className={styles.mobileMenu}
+            >
+              {navItems.map((item) => (
+                <div key={item} className={styles.mobileItem}>
                   {item === "Services" ? (
                     <button
                       type="button"
                       onClick={handleServicesClick}
-                      style={{
-                        color: "#fff",
-                        textDecoration: "none",
-                        background: "transparent",
-                        border: "none",
-                        padding: 0,
-                        margin: 0,
-                        font: "inherit",
-                        cursor: "pointer",
-                      }}
+                      className={styles.mobileButton}
+                      aria-label="Scroll to services"
                     >
                       Services
                     </button>
@@ -418,142 +232,86 @@ export default function HeroNavbar() {
                     <button
                       type="button"
                       onClick={handlePricingClick}
-                      style={{
-                        color: "#fff",
-                        textDecoration: "none",
-                        background: "transparent",
-                        border: "none",
-                        padding: 0,
-                        margin: 0,
-                        font: "inherit",
-                        cursor: "pointer",
-                      }}
+                      className={styles.mobileButton}
+                      aria-label="Scroll to pricing"
                     >
                       Pricing
                     </button>
                   ) : (
-                    <span onClick={() => handleNavigate(item)}>
-                      {item}
-                    </span>
-                  )}
-                </div>
-              )
-            )}
-            {/* Login / Logout in mobile menu */}
-            <div
-              style={{
-                padding: "14px 0",
-                fontSize: "16px",
-                color: "#fff",
-                cursor: "pointer",
-              }}
-            >
-              {userName ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      {userAvatar ? (
-                        <Image 
-                          src={userAvatar} 
-                          alt="Profile" 
-                          width={32} 
-                          height={32} 
-                          style={{ borderRadius: '50%', objectFit: 'cover' }} 
-                        />
-                      ) : (
-                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', color: '#fff' }}>
-                          {userName.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px", display: "flex", flexDirection: "column" }}>
-                        <span>Hi, {userName}</span>
-                        {userRole === "admin" && (
-                          <span style={{
-                            fontSize: "10px",
-                            background: "rgba(255,107,0,0.2)",
-                            color: "#ff6b00",
-                            border: "1px solid rgba(255,107,0,0.4)",
-                            borderRadius: "4px",
-                            padding: "1px 5px",
-                            fontWeight: 600,
-                            marginTop: "2px",
-                            width: "fit-content"
-                          }}>ADMIN</span>
-                        )}
-                      </span>
-                    </div>
                     <button
-                      onClick={handleLogout}
-                      style={{
-                        background: "rgba(255,80,80,0.15)",
-                        border: "1px solid rgba(255,100,100,0.4)",
-                        color: "#ff8080",
-                        borderRadius: "999px",
-                        padding: "6px 18px",
-                        fontSize: "13px",
-                        fontWeight: 500,
-                        cursor: "pointer",
-                      }}
+                      type="button"
+                      onClick={() => handleNavigate(item)}
+                      className={styles.mobileButton}
+                      aria-label={`Navigate to ${item}`}
                     >
-                      Logout
+                      {item}
                     </button>
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <a
-                      href="/profile"
-                      onClick={() => setOpen(false)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        color: "#fff",
-                        fontSize: "14px",
-                        fontWeight: 500,
-                        textDecoration: "none",
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: "8px",
-                        padding: "8px 14px",
-                        flex: 1,
-                        justifyContent: "center"
-                      }}
-                    >
-                      👤 Profile
-                    </a>
-                  {userRole === "admin" && (
-                    <a
-                      href="/admin"
-                      onClick={() => setOpen(false)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        color: "#ff6b00",
-                        fontSize: "14px",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        background: "rgba(255,107,0,0.1)",
-                        border: "1px solid rgba(255,107,0,0.35)",
-                        borderRadius: "8px",
-                        padding: "8px 14px",
-                        flex: 1,
-                        justifyContent: "center"
-                      }}
-                    >
-                      ⚙️ Admin Panel
-                    </a>
                   )}
-                  </div>
                 </div>
-              ) : (
-                <span
-                  onClick={() => { setOpen(false); router.push("/auth"); }}
-                  style={{ color: "rgba(255,170,90,0.9)", fontWeight: 600 }}
-                >
-                  Login
-                </span>
-              )}
-            </div>
+              ))}
+
+              {/* Login / Logout in mobile menu */}
+              <div className={styles.mobileAuth}>
+                {userName ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <div className={styles.mobileAuthHeader}>
+                      <div className={styles.mobileUserInfo}>
+                        {userAvatar ? (
+                          <Image
+                            src={userAvatar}
+                            alt="Profile"
+                            width={32}
+                            height={32}
+                            style={{ borderRadius: '50%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div className={styles.mobileAvatar}>
+                            {userName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <span className={styles.mobileUserText}>
+                          <span>Hi, {userName}</span>
+                          {userRole === "admin" && (
+                            <span className={styles.mobileAdminBadge}>ADMIN</span>
+                          )}
+                        </span>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className={styles.mobileLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                    <div className={styles.mobileLinksRow}>
+                      <a
+                        href="/profile"
+                        onClick={() => setOpen(false)}
+                        className={styles.mobileProfileLink}
+                      >
+                        👤 Profile
+                      </a>
+                      {userRole === "admin" && (
+                        <a
+                          href="/admin"
+                          onClick={() => setOpen(false)}
+                          className={styles.mobileAdminLink}
+                        >
+                          ⚙️ Admin Panel
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => { setOpen(false); router.push("/auth"); }}
+                    className={`${styles.mobileButton} ${styles.mobileLoginText}`}
+                  >
+                    Login
+                  </button>
+                )}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

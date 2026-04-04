@@ -1,10 +1,26 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import DotBackground from "@/components/DotBackground/DotBackground";
 import "@/components/DotBackground/DotBackground.css";
 import HeroNavbar from "@/components/Home/HeroSection/HeroNavbar";
 import StoreProvider from "@/store/StoreProvider";
+
+/* ── Fonts (self-hosted via next/font — no render-blocking requests) ── */
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+  weight: ["500", "600", "700"],
+});
 
 // ── Root Layout ──────────────────────────────────────────
 // Description: [153 chars] ✅
@@ -43,14 +59,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          padding: 0,
-          margin: 0,
-        }}
-      >
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+      <body>
         <StoreProvider>
           <Toaster position="top-center" toastOptions={{ style: { zIndex: 9999, fontFamily: 'inherit' } }} />
           {/* Background */}
@@ -63,7 +73,7 @@ export default function RootLayout({
             style={{
               position: "relative",
               zIndex: 1,
-              backgroundColor: "#000000",
+              backgroundColor: "var(--color-bg-deep)",
             }}
           >
             {children}

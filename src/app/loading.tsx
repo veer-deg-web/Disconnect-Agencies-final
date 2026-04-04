@@ -20,7 +20,7 @@ export default function Loading() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #0a0a12;
+          background: var(--color-bg-deep);
           z-index: 999999;
         }
 

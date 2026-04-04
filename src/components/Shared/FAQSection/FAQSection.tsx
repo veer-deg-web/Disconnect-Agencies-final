@@ -178,6 +178,9 @@ export default function FAQSection({
               {/* QUESTION */}
               <button
                 onClick={() => setOpenIndex(isOpen ? null : index)}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${index}`}
+                id={`faq-question-${index}`}
                 style={{
                   ...questionRow,
                   color: isOpen ? accentColor : "#ffffff",
@@ -192,6 +195,7 @@ export default function FAQSection({
                     ...iconStyle,
                     color: accentColor,
                   }}
+                  aria-hidden="true"
                 >
                   {isOpen ? "−" : "+"}
                 </motion.span>
@@ -201,6 +205,9 @@ export default function FAQSection({
               <AnimatePresence initial={false}>
                 {isOpen && (
                   <motion.div
+                    id={`faq-answer-${index}`}
+                    role="region"
+                    aria-labelledby={`faq-question-${index}`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -225,8 +232,8 @@ export default function FAQSection({
 ======================= */
 
 const sectionStyle: React.CSSProperties = {
-  padding: "80px 24px",
-  background: "radial-gradient(circle at center, #141414, #000)",
+  padding: "var(--section-padding-y) var(--container-padding)",
+  background: "radial-gradient(circle at center, var(--color-bg-card), var(--color-bg-deep))",
 };
 
 const headingStyle: React.CSSProperties = {

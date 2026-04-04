@@ -1,8 +1,8 @@
 .growth-section {
-  max-width: 1240px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 70px 24px;
-  color: white;
+  padding: 70px var(--container-padding);
+  color: var(--color-text-primary);
 }
 
 .growth-headingWrap {
@@ -11,9 +11,10 @@
 
 .growth-heading {
   text-align: center;
-  font-size: 52px;
+  font-size: clamp(32px, 5vw, 52px);
   font-weight: 700;
   line-height: 1.15;
+  font-family: var(--font-display);
 }
 
 .growth-wrapper {
@@ -37,12 +38,21 @@
 }
 
 .growth-card {
-  background: #121212;
-  border-radius: 18px;
-  padding: 24px;
-  border: 1px solid rgba(255, 122, 24, 0.32);
+  padding: var(--space-lg);
   position: relative;
   overflow: hidden;
+}
+
+.growth-card h3 {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
+
+.growth-card p {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
 }
 
 /* DESKTOP CARD SIZES */
@@ -125,17 +135,13 @@
     flex-direction: column;
   }
 
-  .growth-heading {
-    font-size: 38px;
-  }
-
   .growth-largeCard,
   .growth-wideCard,
   .growth-smallCard,
   .growth-tallCard {
     height: auto;
-    padding-bottom: 24px !important;
-    padding-right: 24px !important;
+    padding-bottom: var(--space-lg) !important;
+    padding-right: var(--space-lg) !important;
   }
 
   .growth-cardTextWrap {
@@ -155,12 +161,6 @@
     height: 200px !important;
     inset: auto !important;
     transform: none !important;
-    margin-top: 16px;
-  }
-}
-
-@media (max-width: 360px) {
-  .growth-heading {
-    font-size: 32px;
+    margin-top: var(--space-md);
   }
 }

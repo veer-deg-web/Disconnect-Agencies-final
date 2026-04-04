@@ -282,7 +282,7 @@ export default function PricingSection({
               initial="hidden"
               animate="visible"
               whileHover={hoverScale ? { scale: 1.05 } : {}}
-              className={`${styles.card} ${plan.highlight ? styles.cardHighlighted : ""}`}
+              className={`${styles.card} glass-panel glass-panel-hover ${plan.highlight ? styles.cardHighlighted : ""}`}
               style={{
                 ...WILL_CHANGE_TRANSFORM,
                 ...(plan.highlight

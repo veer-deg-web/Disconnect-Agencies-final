@@ -1,27 +1,28 @@
 .section {
-  padding: 160px 24px;
-  background: radial-gradient(circle at top, #151515, #000);
-  color: #fff;
+  padding: var(--section-padding-y) var(--container-padding);
+  background: radial-gradient(circle at top, var(--color-bg-elevated), var(--color-bg-deep));
+  color: var(--color-text-primary);
   text-align: center;
 }
 
 .heading {
   font-size: clamp(42px, 5vw, 56px);
   font-weight: 700;
+  font-family: var(--font-display);
 }
 
 .tagline {
   font-size: 1rem;
   font-style: italic;
-  color: #ff7b00;
-  margin-top: 16px;
+  color: var(--color-primary);
+  margin-top: var(--space-md);
   opacity: 0.9;
   letter-spacing: 0.01em;
 }
 
 .subtitle {
   opacity: 0.55;
-  margin-top: 8px;
+  margin-top: var(--space-sm);
   font-size: 0.9rem;
 }
 
@@ -36,30 +37,30 @@
 
 .serviceTab {
   padding: 8px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
   background: rgba(255, 255, 255, 0.04);
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
 .serviceTab:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: #ccc;
+  color: var(--color-text-secondary);
 }
 
 .serviceTabActive {
   background: rgba(255, 255, 255, 0.1);
-  border-color: var(--tab-accent, #ff7b00);
-  color: #fff;
+  border-color: var(--tab-accent, var(--color-primary));
+  color: var(--color-text-primary);
 }
 
 /* ── Toggle ───────────────────────────────── */
 .toggleWrap {
-  margin-top: 32px;
+  margin-top: var(--space-xl);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,11 +71,11 @@
   position: relative;
   width: 340px;
   height: 46px;
-  background: #1f1f1f;
-  border-radius: 999px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-full);
   display: flex;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
 }
 
 .toggleThumb {
@@ -83,7 +84,7 @@
   bottom: 0;
   width: 50%;
   background: #fff;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
 }
 
 .toggleBtn {
@@ -94,14 +95,14 @@
   font-weight: 600;
   cursor: pointer;
   z-index: 1;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
   white-space: nowrap;
   padding: 0 12px;
 }
 
 .maintenanceNote {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--color-text-muted);
   max-width: 400px;
   text-align: center;
   line-height: 1.6;
@@ -110,33 +111,25 @@
 
 /* ── Grid ─────────────────────────────────── */
 .grid {
-  max-width: 1200px;
+  max-width: var(--container-max);
   margin: 72px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: var(--space-lg);
   justify-content: center;
 }
 
 /* ── Card ─────────────────────────────────── */
 .card {
-  background: #1a1a1a;
-  border-radius: 18px;
-  padding: 32px 28px;
+  padding: var(--space-xl) var(--space-xl);
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  transition: border-color 0.25s, transform 0.25s;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.18);
-}
 
 .cardHighlighted {
-  background: linear-gradient(180deg, var(--accent-glow), #1a1a1a);
+  background: linear-gradient(180deg, var(--accent-glow), var(--color-bg-card));
   border: 2px solid var(--accent-color);
 }
 
@@ -155,15 +148,15 @@
 .cardHeader h3 {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .badge {
-  background: rgba(255, 123, 0, 0.12);
+  background: var(--color-primary-muted);
   border: 1px solid rgba(255, 123, 0, 0.35);
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -183,11 +176,12 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
+  font-family: var(--font-display);
 }
 
 .billingText {
   font-size: 0.85rem;
-  color: #888;
+  color: var(--color-text-muted);
   margin: 6px 0 0;
 }
 
@@ -197,11 +191,11 @@
   margin-top: 10px;
   margin-bottom: 20px;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border);
   font-size: 0.75rem;
-  color: #aaa;
+  color: var(--color-text-muted);
   font-weight: 500;
 }
 
@@ -217,7 +211,7 @@
 
 .list li {
   font-size: 0.88rem;
-  color: #bbb;
+  color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
@@ -228,21 +222,21 @@
 }
 
 .listExcluded li {
-  color: #666;
+  color: var(--color-text-faint);
 }
 
 /* ── CTA button ───────────────────────────── */
 .ctaBtn {
   width: 100%;
   padding: 13px 20px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-hover);
   background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  color: var(--color-text-primary);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  transition: background var(--transition-fast), border-color var(--transition-fast), transform 0.15s ease;
 }
 
 .ctaBtn:hover {
@@ -295,10 +289,10 @@
 .knowMoreRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: var(--space-lg);
   max-width: 1080px;
   margin: 16px auto 0;
-  padding: 0 24px;
+  padding: 0 var(--space-lg);
 }
 
 .knowMoreCell {
@@ -311,22 +305,22 @@
   align-items: center;
   gap: 6px;
   padding: 8px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-hover);
   background: transparent;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-text-muted);
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.01em;
   text-decoration: none;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
 }
 
 .knowMorePill:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.85);
-  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-active);
   transform: translateY(-1px);
 }
 

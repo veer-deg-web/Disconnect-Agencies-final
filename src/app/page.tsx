@@ -108,8 +108,9 @@ export default function Home() {
         tiltGlow="#DE5E03"
         tiltIntensity={14}
       />
-      
-      <Footer /></PageBackground>
+
+      <Footer />
+    </PageBackground>
 
 
   );

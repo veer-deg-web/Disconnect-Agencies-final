@@ -79,7 +79,7 @@ export default function AddressSection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.5 + i * 0.12 }}
             whileHover={{ scale: 1.02 }}
-            className={styles.addressCard}
+            className={`${styles.addressCard} glass-panel glass-panel-hover`}
           >
             <div className={styles.cardIcon}>{card.icon}</div>
             <div className={styles.cardBody}>

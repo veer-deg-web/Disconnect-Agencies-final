@@ -34,6 +34,26 @@ export const fadeLeft = (duration = 0.8, delay = 0) => ({
     },
 });
 
+/** Slide in from the right */
+export const fadeRight = (duration = 0.8, delay = 0) => ({
+    hidden: { opacity: 0, x: 60 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: { duration, ease: EASE_SMOOTH, delay },
+    },
+});
+
+/** Scale in from slightly smaller */
+export const scaleIn = (duration = 0.7, delay = 0) => ({
+    hidden: { opacity: 0, scale: 0.92 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: { duration, ease: EASE_SMOOTH, delay },
+    },
+});
+
 /** Parent container that staggers its children */
 export const staggerContainer = (stagger = 0.18, delayChildren = 0.15) => ({
     hidden: {},

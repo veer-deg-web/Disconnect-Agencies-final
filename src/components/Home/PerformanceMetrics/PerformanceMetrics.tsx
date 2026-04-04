@@ -3,6 +3,7 @@
 import { motion, useAnimation, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { EASE_SMOOTH } from "@/lib/animations";
+import styles from "./PerformanceMetrics.module.css";
 
 /* =======================
    TYPEWRITER SCRIBBLE
@@ -63,8 +64,7 @@ function TypewriterScribbleHeading({ play }: { play: boolean }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: play ? 1 : 0, y: play ? 0 : 20 }}
       transition={{ duration: 0.5, ease: EASE_SMOOTH }}
-      className="performance-heading"
-      style={headingStyle}
+      className={styles.heading}
     >
       {text}
     </motion.h2>
@@ -89,16 +89,15 @@ export default function PerformanceMetrics() {
   }, [inView, controls]);
 
   return (
-    <section ref={ref} style={sectionStyle}>
+    <section ref={ref} className={styles.section}>
       {/* HEADING */}
-      <div className="performance-heading-wrap">
+      <div className={styles.headingWrap}>
         <TypewriterScribbleHeading play={inView} />
       </div>
 
       {/* STATS */}
       <motion.div
-        className="stats-grid"
-        style={statsGridStyle}
+        className={styles.statsGrid}
         initial="hidden"
         animate={controls}
         variants={{
@@ -120,36 +119,6 @@ export default function PerformanceMetrics() {
           label="Custom Automation & AI Solutions Built for Businesses"
         />
       </motion.div>
-
-      {/* MOBILE OVERRIDES */}
-      <style>{`
-        /* =========================
-           MOBILE RESPONSIVE ONLY
-           Safe down to 344px
-        ========================= */
-
-        @media (max-width: 768px) {
-          .performance-heading-wrap {
-            margin-bottom: 40px;
-          }
-
-          .performance-heading {
-            font-size: 32px !important;
-            line-height: 1.2;
-          }
-
-          .stats-grid {
-            grid-template-columns: 1fr !important;
-            gap: 32px !important;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .performance-heading {
-            font-size: 28px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
@@ -178,56 +147,10 @@ function Stat({
           },
         },
       }}
-      style={statItemStyle}
+      className={styles.statItem}
     >
-      <div style={statValueStyle}>{value}</div>
-      <p style={statLabelStyle}>{label}</p>
+      <div className={styles.statValue}>{value}</div>
+      <p className={styles.statLabel}>{label}</p>
     </motion.div>
   );
 }
-
-/* =======================
-   STYLES
-======================= */
-
-const sectionStyle: React.CSSProperties = {
-  background: "radial-gradient(circle at top, #151515 0%, #000 70%)",
-  padding: "100px 24px",
-  color: "#fff",
-  textAlign: "center",
-};
-
-const headingStyle: React.CSSProperties = {
-  fontSize: "clamp(36px, 5vw, 56px)",
-  fontWeight: 700,
-  lineHeight: 1.15,
-  letterSpacing: "-0.02em",
-};
-
-const statsGridStyle: React.CSSProperties = {
-  maxWidth: 1200,
-  margin: "0 auto",
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: 50,
-};
-
-const statItemStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-};
-
-const statValueStyle: React.CSSProperties = {
-  fontSize: "clamp(64px, 6vw, 88px)",
-  fontWeight: 700,
-  color: "#ff5a00",
-  marginBottom: 12,
-};
-
-const statLabelStyle: React.CSSProperties = {
-  fontSize: 16,
-  lineHeight: 1.6,
-  color: "rgba(255,255,255,0.75)",
-  maxWidth: 300,
-};
