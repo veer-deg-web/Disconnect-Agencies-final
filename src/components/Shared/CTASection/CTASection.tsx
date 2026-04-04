@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import BookCallButton from "@/components/Shared/BookCallButton/BookCallButton";
 import ShinyText from "@/components/Shared/ShinyText/ShinyText";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
+import styles from "./CTASection.module.css";
 
 /* =====================
    TYPES
@@ -12,8 +13,8 @@ import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM } from "@/lib/animations";
 
 type CTASectionProps = {
   gradient?: string;
-  tiltGlow?: string;        // 🔥 NEW
-  tiltIntensity?: number;   // 🔥 NEW
+  tiltGlow?: string;
+  tiltIntensity?: number;
 };
 
 /* =====================
@@ -90,132 +91,73 @@ export default function CTASection({
   };
 
   return (
-    <>
-      {/* MOBILE SAFE OVERRIDES */}
-      <style>
-        {`
-          @media (max-width: 768px) {
-            .cta-section {
-              height: auto !important;
-              padding: 40px 16px 80px !important;
-            }
-
-            .cta-card {
-              padding: 56px 20px !important;
-              border-radius: 22px !important;
-            }
-
-            .cta-heading {
-              font-size: 28px !important;
-              line-height: 1.25 !important;
-            }
-
-            .cta-sub {
-              font-size: 14px !important;
-              margin-bottom: 28px !important;
-            }
-          }
-        `}
-      </style>
-
-      <motion.section
-        className="cta-section"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.35 }}
+    <motion.section
+      className={styles.ctaSection}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.35 }}
+      role="region"
+      aria-label="Call to action"
+    >
+      <motion.div
+        ref={cardRef}
+        className={styles.ctaCard}
+        variants={cardVariant}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={resetTilt}
         style={{
-          width: "100%",
-          height: "auto",
-          padding: "80px 24px 120px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#0b0b0b",
+          background: gradient,
+          ...WILL_CHANGE_TRANSFORM,
+          boxShadow: `
+            0 0 0 1px rgba(255,255,255,0.05),
+            0 40px 120px rgba(0,0,0,0.8),
+            0 0 60px ${tiltGlow}40
+          `,
         }}
       >
-        <motion.div
-          ref={cardRef}
-          className="cta-card"
-          variants={cardVariant}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={resetTilt}
+        {/* Dynamic glow overlay */}
+        <div
           style={{
-            position: "relative",
-            maxWidth: "1200px",
-            width: "100%",
-            borderRadius: "28px",
-            padding: "96px 32px",
-            textAlign: "center",
-            background: gradient,
-            ...WILL_CHANGE_TRANSFORM,
-            boxShadow: `
-              0 0 0 1px rgba(255,255,255,0.05),
-              0 40px 120px rgba(0,0,0,0.8),
-              0 0 60px ${tiltGlow}40
-            `,
-            transition:
-              "transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease",
-            transformStyle: "preserve-3d",
-            overflow: "hidden",
+            position: "absolute",
+            inset: 0,
+            background: `radial-gradient(600px circle at 50% 0%, ${tiltGlow}30, transparent 70%)`,
+            pointerEvents: "none",
+            opacity: 0.7,
           }}
-        >
-          {/* Dynamic glow overlay */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: `radial-gradient(600px circle at 50% 0%, ${tiltGlow}30, transparent 70%)`,
-              pointerEvents: "none",
-              opacity: 0.7,
-            }}
-          />
+        />
 
-          <motion.div variants={containerVariant}>
-            <motion.h2
-              className="cta-heading"
-              variants={fadeUp}
-              style={{
-                fontSize: "42px",
-                fontWeight: 700,
-                color: "#ffffff",
-                marginBottom: "16px",
-              }}
-            >
-              <ShinyText
-                text="Start Investing Smarter Today"
-                speed={2}
-                delay={0}
-                color="#b5b5b5"
-                shineColor="#ffffff"
-                spread={120}
-                direction="left"
-              />
-            </motion.h2>
+        <motion.div variants={containerVariant}>
+          <motion.h2
+            className={styles.ctaHeading}
+            variants={fadeUp}
+          >
+            <ShinyText
+              text="Start Investing Smarter Today"
+              speed={2}
+              delay={0}
+              color="#b5b5b5"
+              shineColor="#ffffff"
+              spread={120}
+              direction="left"
+            />
+          </motion.h2>
 
-            <motion.p
-              className="cta-sub"
-              variants={fadeUp}
-              style={{
-                maxWidth: "620px",
-                margin: "0 auto 40px",
-                fontSize: "16px",
-                lineHeight: 1.6,
-                color: "rgba(255,255,255,0.85)",
-              }}
-            >
-              Harness the power of AI to grow your portfolio with confidence and
-              clarity.
-            </motion.p>
+          <motion.p
+            className={styles.ctaSub}
+            variants={fadeUp}
+          >
+            Harness the power of AI to grow your portfolio with confidence and
+            clarity.
+          </motion.p>
 
-            <motion.div
-              variants={fadeUp}
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              <BookCallButton circleColor={tiltGlow} />
-            </motion.div>
+          <motion.div
+            variants={fadeUp}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <BookCallButton circleColor={tiltGlow} />
           </motion.div>
         </motion.div>
-      </motion.section>
-    </>
+      </motion.div>
+    </motion.section>
   );
 }

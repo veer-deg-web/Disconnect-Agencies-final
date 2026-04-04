@@ -6,6 +6,7 @@ import Image from "next/image";
 import { EASE_SMOOTH, WILL_CHANGE_TRANSFORM_ONLY } from "@/lib/animations";
 import { useDynamicTestimonials, DynamicTestimonial } from "@/lib/useDynamicTestimonials";
 import { CheckCircle2 } from "lucide-react";
+import styles from "./TestimonialsSection.module.css";
 
 /* =======================
    DATA
@@ -17,7 +18,6 @@ type Testimonial = {
   quote: string;
   isVerified?: boolean;
 };
-// Arrays removed as everything is fetched via API now
 
 /* =======================
    ANIMATION CONFIG
@@ -72,10 +72,9 @@ export default function TestimonialsSection() {
         company: t.company,
         rating: t.rating
       }))
-      .slice(0, 6); // Hard limit to 6 for 2-column layout (3 each)
+      .slice(0, 6);
 
     const mid = Math.ceil(formatted.length / 2);
-    // Duplicate the array just to ensure infinite scrolling marquee logic stays intact
     return {
       finalLeftColumn: formatted.slice(0, mid),
       finalRightColumn: formatted.slice(mid)
@@ -83,25 +82,23 @@ export default function TestimonialsSection() {
   }, [dynTestimonials]);
 
   return (
-    <section ref={ref} style={sectionStyle}>
-      <div className="testimonial-container" style={container}>
+    <section ref={ref} className={styles.section}>
+      <div className={styles.container}>
         {/* LEFT TEXT */}
         <motion.div
           variants={textVariant}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={leftContent}
-          className="testimonial-text"
+          className={styles.leftContent}
         >
-          <h2 className="testimonial-heading" style={heading}>
-            Trusted by 
+          <h2 className={styles.heading}>
+            Trusted by
             <br />
             Visionary Investors
           </h2>
 
-          <p className="testimonial-subtitle" style={subtitle}>
+          <p className={styles.subtitle}>
             Discover How Users Are Transforming Their Investment Journey With Intelligent, AI-Powered Insights. Make Smarter Decisions With Real-Time Data And Predictive Analytics.Also, Unlock New Opportunities And Stay Ahead In A Rapidly Evolving Market.
-
           </p>
         </motion.div>
 
@@ -110,14 +107,13 @@ export default function TestimonialsSection() {
           variants={columnsVariant}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={rightContent}
-          className="testimonial-columns"
+          className={styles.rightContent}
           onAnimationComplete={() => setStartScroll(true)}
         >
           {/* COLUMN 1 (always visible) */}
           <motion.div
-            className="testimonial-column"
-            style={{ ...column, ...WILL_CHANGE_TRANSFORM_ONLY }}
+            className={styles.column}
+            style={WILL_CHANGE_TRANSFORM_ONLY}
             animate={startScroll ? { y: ["0%", "-50%"] } : { y: 0 }}
             transition={{
               duration: 14,
@@ -132,8 +128,8 @@ export default function TestimonialsSection() {
 
           {/* COLUMN 2 (hidden on mobile) */}
           <motion.div
-            className="testimonial-column hide-mobile"
-            style={{ ...column, ...WILL_CHANGE_TRANSFORM_ONLY }}
+            className={`${styles.column} ${styles.hideMobile}`}
+            style={WILL_CHANGE_TRANSFORM_ONLY}
             animate={startScroll ? { y: ["-50%", "0%"] } : { y: 0 }}
             transition={{
               duration: 14,
@@ -147,43 +143,6 @@ export default function TestimonialsSection() {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* ===============================
-         MOBILE ONLY OVERRIDES
-      =============================== */}
-      <style>{`
-        @media (max-width: 768px) {
-          .testimonial-container {
-            display: flex !important;
-            flex-direction: column;
-            gap: 48px;
-          }
-
-          .testimonial-heading {
-            font-size: 28px !important;
-            line-height: 1.2;
-          }
-
-          .testimonial-subtitle {
-            font-size: 14px !important;
-          }
-
-          .testimonial-columns {
-            grid-template-columns: 1fr !important;
-            height: 420px;
-          }
-
-          .hide-mobile {
-            display: none !important;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .testimonial-heading {
-            font-size: 24px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
@@ -194,15 +153,15 @@ export default function TestimonialsSection() {
 
 function TestimonialCard({ name, role, quote, avatar, isVerified }: Testimonial & { avatar?: string }) {
   return (
-    <div style={card}>
-      <div style={cardHeader}>
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
         {avatar ? (
           <Image
             src={avatar}
             alt={name}
             width={42}
             height={42}
-            style={avatarImage}
+            className={styles.avatar}
           />
         ) : (
           <Image
@@ -210,106 +169,18 @@ function TestimonialCard({ name, role, quote, avatar, isVerified }: Testimonial 
             alt={name}
             width={42}
             height={42}
-            style={avatarImage}
+            className={styles.avatar}
           />
         )}
         <div>
-          <div style={nameStyle}>
+          <div className={styles.name}>
             {name}
             {isVerified && <CheckCircle2 size={13} fill="#3b82f6" color="#fff" style={{ display: 'inline-block', marginLeft: '6px', verticalAlign: 'middle' }} />}
           </div>
-          <div style={roleStyle}>{role}</div>
+          <div className={styles.role}>{role}</div>
         </div>
       </div>
-      <p style={quoteStyle}>{quote}</p>
+      <p className={styles.quote}>{quote}</p>
     </div>
   );
 }
-
-/* =======================
-   STYLES
-======================= */
-
-const sectionStyle: React.CSSProperties = {
-  padding: "160px 24px",
-  background: "radial-gradient(circle at bottom left, #1a0f08, #000)",
-  color: "#fff",
-};
-
-const container: React.CSSProperties = {
-  maxWidth: 1200,
-  margin: "0 auto",
-  display: "grid",
-  gridTemplateColumns: "1fr 1.2fr",
-  gap: 80,
-};
-
-const leftContent: React.CSSProperties = {
-  maxWidth: 480,
-  willChange: "transform, opacity",
-};
-
-const heading: React.CSSProperties = {
-  fontSize: "clamp(36px, 5vw, 52px)",
-  fontWeight: 700,
-  lineHeight: 1.1,
-};
-
-const subtitle: React.CSSProperties = {
-  marginTop: 20,
-  fontSize: 16,
-  lineHeight: 1.6,
-  opacity: 0.75,
-};
-
-const rightContent: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 24,
-  height: 520,
-  overflow: "hidden",
-};
-
-const column: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 24,
-};
-
-const card: React.CSSProperties = {
-  background:
-    "linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01))",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: 16,
-  padding: 20,
-  backdropFilter: "blur(14px)",
-};
-
-const cardHeader: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: 12,
-  marginBottom: 12,
-};
-const avatarImage: React.CSSProperties = {
-  width: 42,
-  height: 42,
-  borderRadius: "50%",
-  objectFit: "cover",
-  border: "1px solid rgba(255,255,255,0.15)",
-};
-
-const nameStyle: React.CSSProperties = {
-  fontWeight: 600,
-};
-
-const roleStyle: React.CSSProperties = {
-  fontSize: 13,
-  opacity: 0.6,
-};
-
-const quoteStyle: React.CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.6,
-  opacity: 0.85,
-};

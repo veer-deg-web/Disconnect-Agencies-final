@@ -1,0 +1,64 @@
+/* =====================================================
+   CTASection — Styles
+   ===================================================== */
+
+.ctaSection {
+  width: 100%;
+  height: auto;
+  padding: var(--space-4xl) var(--space-lg) 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-bg-base);
+}
+
+.ctaCard {
+  position: relative;
+  max-width: var(--container-max);
+  width: 100%;
+  border-radius: var(--radius-xl);
+  padding: 96px var(--space-xl);
+  text-align: center;
+  overflow: hidden;
+  transition: transform 0.4s var(--ease-smooth), box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.ctaHeading {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+  font-family: var(--font-display);
+}
+
+.ctaSub {
+  max-width: 620px;
+  margin: 0 auto 40px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .ctaSection {
+    height: auto;
+    padding: 40px var(--space-md) var(--space-4xl);
+  }
+
+  .ctaCard {
+    padding: 56px 20px;
+    border-radius: 22px;
+  }
+
+  .ctaHeading {
+    font-size: 28px;
+    line-height: 1.25;
+  }
+
+  .ctaSub {
+    font-size: 14px;
+    margin-bottom: var(--space-xl);
+  }
+}

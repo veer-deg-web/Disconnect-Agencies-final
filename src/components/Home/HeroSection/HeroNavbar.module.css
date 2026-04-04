@@ -1,0 +1,328 @@
+/* =====================================================
+   HeroNavbar — Styles
+   ===================================================== */
+
+/* ── Header Container ── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background var(--transition-smooth), border-color var(--transition-smooth);
+}
+
+/* ── Nav Container ── */
+.nav {
+  box-sizing: border-box;
+  max-width: 1320px;
+  height: 70px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Logo ── */
+.logo {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* ── Desktop Links ── */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding: 0;
+  margin: 0;
+}
+
+.navItem {
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.navItem:hover {
+  color: var(--color-text-primary);
+}
+
+.navButton {
+  color: inherit;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+/* ── Desktop CTA ── */
+.loginBtnWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adminLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary-hover);
+  text-decoration: none;
+  border: 1px solid rgba(255, 107, 0, 0.45);
+  border-radius: var(--radius-full);
+  padding: 6px 16px;
+  background: var(--color-primary-muted);
+  white-space: nowrap;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.adminLink:hover {
+  background: rgba(255, 107, 0, 0.2);
+  border-color: rgba(255, 107, 0, 0.6);
+}
+
+/* ── Hamburger ── */
+.hamburger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
+
+.hamburgerLine {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  transition: transform 0.25s var(--ease-smooth), opacity 0.25s var(--ease-smooth);
+}
+
+/* ── Mobile Menu ── */
+.mobileMenu {
+  background: var(--color-bg-base);
+  padding: 20px 16px;
+  border-top: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.mobileItem {
+  padding: 14px 0;
+  font-size: 16px;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+}
+
+.mobileButton {
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mobileAuth {
+  padding: 14px 0;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.mobileAuthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobileUserInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobileAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+}
+
+.mobileUserText {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileAdminBadge {
+  font-size: 10px;
+  background: var(--color-primary-muted);
+  color: var(--color-primary-hover);
+  border: 1px solid rgba(255, 107, 0, 0.4);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-weight: 600;
+  margin-top: 2px;
+  width: fit-content;
+  text-transform: uppercase;
+}
+
+.mobileLogout {
+  background: rgba(255, 80, 80, 0.15);
+  border: 1px solid rgba(255, 100, 100, 0.4);
+  color: #ff8080;
+  border-radius: var(--radius-full);
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.mobileLogout:hover {
+  background: rgba(255, 80, 80, 0.25);
+}
+
+.mobileLinksRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.mobileProfileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  flex: 1;
+  justify-content: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.mobileProfileLink:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-border-hover);
+}
+
+.mobileAdminLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary-hover);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--color-primary-muted);
+  border: 1px solid rgba(255, 107, 0, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  flex: 1;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.mobileAdminLink:hover {
+  background: rgba(255, 107, 0, 0.2);
+}
+
+.mobileLoginText {
+  color: rgba(255, 170, 90, 0.9);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1200px) {
+  .nav {
+    padding: 0 24px;
+  }
+
+  .navLinks {
+    gap: 28px;
+  }
+}
+
+@media (max-width: 980px) {
+  .nav {
+    padding: 0 18px;
+  }
+
+  .navLinks {
+    gap: 18px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    max-width: 100%;
+    padding: 0 14px;
+    height: 64px;
+  }
+
+  .navLinks,
+  .loginBtnWrap {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  .navLinks,
+  .loginBtnWrap {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}

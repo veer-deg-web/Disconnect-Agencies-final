@@ -41,25 +41,19 @@ export default function BookCallButton({
         onMouseLeave={() => setHover(false)}
         onTouchStart={() => setHover(true)}
         onTouchEnd={() => setHover(false)}
+        className="glass-button"
         style={{
           height: "44px",
           padding: "0 16px 0 20px",
           borderRadius: "999px",
-          background: "linear-gradient(to bottom, #f4e9e2, #efe3db)",
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "space-between",
           gap: "16px",
           fontSize: "14px",
-          fontWeight: 500,
-          color: "#000",
+          fontWeight: 600,
           cursor: "pointer",
           userSelect: "none",
-          boxShadow:
-            hover
-              ? "0 12px 30px rgba(0,0,0,0.2)"
-              : "0 6px 18px rgba(0,0,0,0.1)",
-          transition: "box-shadow 0.25s ease",
         }}
       >
         <span style={{ whiteSpace: "nowrap" }}>

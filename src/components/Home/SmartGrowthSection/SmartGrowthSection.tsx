@@ -166,10 +166,10 @@ export default function SmartGrowthSection() {
       {/* STYLES */}
       <style jsx>{`
         .section {
-          max-width: 1200px;
+          max-width: var(--container-max);
           margin: 0 auto;
-          padding: clamp(60px, 10vw, 110px) clamp(16px, 4vw, 24px);
-          color: white;
+          padding: clamp(60px, 10vw, 110px) var(--container-padding);
+          color: var(--color-text-primary);
           position: relative;
         }
 
@@ -177,6 +177,7 @@ export default function SmartGrowthSection() {
           text-align: center;
           font-size: clamp(34px, 6vw, 56px);
           font-weight: 700;
+          font-family: var(--font-display);
           margin-bottom: clamp(40px, 7vw, 80px);
           line-height: 1.1;
         }

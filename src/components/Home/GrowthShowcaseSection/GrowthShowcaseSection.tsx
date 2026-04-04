@@ -34,7 +34,7 @@ export default function GrowthShowcaseSection() {
         {/* LEFT COLUMN */}
         <div className="growth-leftCol">
           {/* LARGE CARD */}
-          <div className="growth-card growth-largeCard">
+          <div className="growth-card growth-largeCard glass-panel glass-panel-hover">
             <div className="growth-cardTextWrap">
               <h3>Precision-Driven Digital Growth</h3>
               <p>
@@ -57,7 +57,7 @@ export default function GrowthShowcaseSection() {
           </div>
 
           {/* WIDE CARD */}
-          <div className="growth-card growth-wideCard">
+          <div className="growth-card growth-wideCard glass-panel glass-panel-hover">
             <div className="growth-cardTextWrap">
               <h3>Maximize Returns, Minimize Effort</h3>
               <p>
@@ -89,7 +89,7 @@ export default function GrowthShowcaseSection() {
         {/* RIGHT COLUMN */}
         <div className="growth-rightCol">
           {/* SMALL CARD */}
-          <div className="growth-card growth-smallCard">
+          <div className="growth-card growth-smallCard glass-panel glass-panel-hover">
             <div className="growth-cardTextWrap center">
               <h3>Diversified Digital Solutions</h3>
               <p>
@@ -118,7 +118,7 @@ export default function GrowthShowcaseSection() {
           </div>
 
           {/* TALL CARD */}
-          <div className="growth-card growth-tallCard">
+          <div className="growth-card growth-tallCard glass-panel glass-panel-hover">
             <div className="growth-cardTextWrap center">
               <h3>Your Portfolio, Optimized in Real-Time</h3>
               <p>

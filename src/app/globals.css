@@ -1,19 +1,83 @@
 @import "tailwindcss/preflight";
 @import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
+
+/* =====================================================
+   DESIGN TOKENS — Single source of truth
+   ===================================================== */
+:root {
+  /* ── Brand Colors ── */
+  --color-primary: #E85D04;
+  --color-primary-hover: #FF6D14;
+  --color-primary-muted: rgba(232, 93, 4, 0.15);
+  --color-primary-glow: rgba(232, 93, 4, 0.35);
+
+  /* ── Background Palette ── */
+  --color-bg-deep: #050505;
+  --color-bg-base: #0a0a0a;
+  --color-bg-elevated: #0f0f0f;
+  --color-bg-card: #161616;
+  --color-bg-card-hover: #1c1c1c;
+
+  /* ── Text Palette ── */
+  --color-text-primary: rgba(255, 255, 255, 0.95);
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-text-faint: rgba(255, 255, 255, 0.35);
+
+  /* ── Border ── */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.16);
+  --color-border-active: rgba(255, 255, 255, 0.24);
+
+  /* ── Typography ── */
+  --font-primary: var(--font-inter, 'Inter', sans-serif);
+  --font-display: var(--font-space-grotesk, 'Space Grotesk', sans-serif);
+  --font-serif: 'Instrument Serif', Georgia, serif;
+
+  /* ── Spacing (8px grid) ── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+
+  /* ── Layout ── */
+  --container-max: 1200px;
+  --container-padding: clamp(16px, 4vw, 40px);
+  --section-padding-y: clamp(80px, 10vw, 120px);
+
+  /* ── Radii ── */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 999px;
+
+  /* ── Transitions ── */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.2s ease;
+  --transition-smooth: 0.35s var(--ease-smooth);
+  --transition-slow: 0.6s var(--ease-smooth);
+
+  /* ── Shadows ── */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 40px var(--color-primary-glow);
+}
+
+/* =====================================================
+   BASE STYLES
+   ===================================================== */
 html,
 body {
+  width: 100%;
   height: 100%;
-}
-
-body {
-  overflow-x: hidden;
-}
-
-
-
-.instrument-serif {
-  font-family: "Instrument Serif", serif;
+  overscroll-behavior-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 html {
@@ -21,9 +85,138 @@ html {
 }
 
 body {
-  background: black;
-  color: white;
+  overflow-x: hidden;
+  background: var(--color-bg-deep);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ── Typography Scale (Headings) ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(32px, 8vw, 64px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(28px, 6vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+h3 {
+  font-size: clamp(20px, 5vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+h4 {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+h5, h6 {
+  font-size: clamp(13px, 2vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* ── Subtext under headings ── */
+.heading-subtext,
+h1 + p,
+h2 + p,
+h3 + p {
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+
+/* ── Selection ── */
+::selection {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* ── Focus Visible ── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── SVG Transparency ── */
+svg {
+  background: transparent !important;
+}
+
+/* =====================================================
+   UTILITY CLASSES
+   ===================================================== */
+.instrument-serif {
+  font-family: var(--font-serif);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* =====================================================
+   GLASSMORPHISM SYSTEM
+   ===================================================== */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-lg);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-text-primary);
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* =====================================================
+   MARQUEE ANIMATION
+   ===================================================== */
 .logo-marquee {
   display: flex;
   width: max-content;
@@ -44,28 +237,25 @@ body {
     transform: translateX(-50%);
   }
 }
-svg {
-  background: transparent !important;
-}
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overscroll-behavior-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
 
-/* Prevent Lenis from hijacking touch */
+/* =====================================================
+   TOUCH DEVICE OVERRIDES
+   ===================================================== */
 @media (pointer: coarse) {
   html {
     scroll-behavior: auto;
   }
 }
 
-
 /* =====================================================
-   GLOBAL TEXT TRANSFORMATION
+   REDUCED MOTION
    ===================================================== */
-p, h1, h2, h3, h4, h5, h6, span {
-  text-transform: capitalize;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

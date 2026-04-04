@@ -66,8 +66,8 @@ export default function VisionShowcase() {
       <style jsx>{`
         .vision {
           position: relative;
-          background: black;
-          color: white;
+          background: var(--color-bg-deep);
+          color: var(--color-text-primary);
           overflow: hidden;
         }
 
@@ -129,9 +129,9 @@ export default function VisionShowcase() {
         .grid {
           position: relative;
           z-index: 2;
-          max-width: 1200px;
+          max-width: var(--container-max);
           margin: 60px auto 0;
-          padding: 0 24px;
+          padding: 0 var(--container-padding);
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 50px;
@@ -147,8 +147,9 @@ export default function VisionShowcase() {
 
         /* TEXT */
         .text h2 {
-          font-size: 48px;
+          font-size: clamp(34px, 5vw, 48px);
           line-height: 1.1;
+          font-family: var(--font-display);
         }
 
         .text p {

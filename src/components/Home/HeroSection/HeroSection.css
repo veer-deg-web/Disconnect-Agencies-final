@@ -3,7 +3,7 @@
   min-height: 100vh;
   width: 100%;
   overflow: hidden;
-  isolation: isolate; /* ensures clean stacking */
+  isolation: isolate;
 }
 
 /* Navbar */
@@ -25,47 +25,52 @@
 .hero-inner {
   margin: 0 auto;
   width: 100%;
-  max-width: 1320px;
-  padding: 0 3rem;
+  max-width: var(--container-max);
+  padding: 0 var(--container-padding);
 }
 
 .hero-wrap {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-lg);
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 0 240px; /* Original desktop padding */
+  padding: 0 240px;
   width: 100%;
 }
 
 .hero-heading {
-  font-size: 75px;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: clamp(40px, 8vw, 75px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-family: var(--font-display);
 }
 
 .hero-para {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 18px;
+  color: var(--color-text-secondary);
+  font-size: clamp(15px, 2vw, 18px);
   max-width: 800px;
   margin: 0 auto;
+  line-height: 1.6;
 }
 
 .hero-buttons {
   display: flex;
-  gap: 16px;
+  gap: var(--space-md);
   margin-bottom: 40px;
 }
 
 .glow-pill {
   width: 347px;
   max-width: 100%;
-  padding: 0 16px;
+  padding: 0 var(--space-md);
 }
 
-/* Responsive adjustments */
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
 
 @media (max-width: 1200px) {
   .hero-wrap {
@@ -77,23 +82,18 @@
   .hero-wrap {
     padding: 0 40px;
   }
-  
-  .hero-heading {
-    font-size: 60px;
-  }
 }
 
 @media (max-width: 768px) {
   .hero-inner {
-    padding: 0 2rem;
+    padding: 0 var(--space-lg);
   }
 
   .hero-wrap {
-    padding: 0 20px;
+    padding: 0 var(--space-md);
   }
 
   .hero-heading {
-    font-size: clamp(36px, 9vw, 48px);
     line-height: 1.15;
   }
 
@@ -123,23 +123,29 @@
 
 @media (max-width: 480px) {
   .hero-inner {
-    padding: 0 1.5rem;
-  }
-  
-  .hero-wrap {
-    padding: 0 15px;
+    padding: 0 var(--space-md);
   }
 
-  .hero-heading {
-    font-size: 32px;
+  .hero-wrap {
+    padding: 0 12px;
   }
 }
 
 @media (max-width: 360px) {
   .hero-inner {
-    padding: 0 1.2rem;
+    padding: 0 var(--space-sm);
   }
-  
+
+  .hero-section {
+    min-height: 100svh;
+  }
+
+  .hero-content-container {
+    min-height: auto;
+    align-items: flex-start;
+    padding-top: 4.5rem;
+  }
+
   .glow-pill {
     max-width: 280px;
   }

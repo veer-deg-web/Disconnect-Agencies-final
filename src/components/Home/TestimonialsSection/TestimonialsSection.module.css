@@ -1,0 +1,124 @@
+/* =====================================================
+   TestimonialsSection — Styles
+   ===================================================== */
+
+.section {
+  padding: var(--section-padding-y) var(--container-padding);
+  background: radial-gradient(circle at bottom left, #1a0f08, var(--color-bg-deep));
+  color: var(--color-text-primary);
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: var(--space-4xl);
+}
+
+.leftContent {
+  max-width: 480px;
+  will-change: transform, opacity;
+}
+
+.heading {
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 700;
+  line-height: 1.1;
+  font-family: var(--font-display);
+}
+
+.subtitle {
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.rightContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  height: 520px;
+  overflow: hidden;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ── Card ── */
+.card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--color-border-hover);
+}
+
+.name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.role {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.quote {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .heading {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .rightContent {
+    grid-template-columns: 1fr;
+    height: 420px;
+  }
+
+  .hideMobile {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .heading {
+    font-size: 24px;
+  }
+}

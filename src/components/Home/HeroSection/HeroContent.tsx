@@ -75,6 +75,17 @@ const TRUSTED_IMAGES = [
 
 export default function HeroContent() {
   const controls = useAnimationControls();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const syncAuth = () => {
+      setIsLoggedIn(!!localStorage.getItem("userName"));
+    };
+    
+    syncAuth();
+    window.addEventListener("storage", syncAuth);
+    return () => window.removeEventListener("storage", syncAuth);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -129,7 +140,7 @@ export default function HeroContent() {
           animate={controls}
         >
           <ShinyText
-  text="Disconnect Agencies"
+  text="Disconnect"
   speed={2}
   delay={0}
   color="#b5b5b5"
@@ -173,9 +184,11 @@ export default function HeroContent() {
             <BookCallButton />
           </motion.div>
 
-          <motion.div variants={riseUp}>
-            <MorphingLoginButton />
-          </motion.div>
+          {!isLoggedIn && (
+            <motion.div variants={riseUp}>
+              <MorphingLoginButton hideOnLogin={true} />
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Trusted */}
@@ -193,7 +206,7 @@ export default function HeroContent() {
 
 /* ================= SUB COMPONENTS ================= */
 
-export function MorphingLoginButton() {
+export function MorphingLoginButton({ hideOnLogin = false }: { hideOnLogin?: boolean }) {
   const [hover,     setHover]     = useState(false);
   const [cardOpen,  setCardOpen]  = useState(false);
   const [userName,  setUserName]  = useState<string | null>(null);
@@ -267,6 +280,10 @@ export function MorphingLoginButton() {
         {hover ? "Sign Up" : "Login"}
       </button>
     );
+  }
+
+  if (hideOnLogin && userName) {
+    return null;
   }
 
   /* ── LOGGED IN: avatar with hover dropdown ── */

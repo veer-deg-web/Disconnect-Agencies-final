@@ -1,5 +1,5 @@
 .addressSection {
-  padding: 100px 40px;
+  padding: var(--section-padding-y) var(--container-padding);
   background-color: transparent;
   width: 100%;
   max-width: 1400px;
@@ -9,17 +9,18 @@
 }
 
 .heading {
-  font-size: 56px;
+  font-size: clamp(36px, 5vw, 56px);
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 20px;
-  color: #fff;
+  color: var(--color-text-primary);
   letter-spacing: -0.02em;
+  font-family: var(--font-display);
 }
 
 .description {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: clamp(16px, 2vw, 18px);
+  color: var(--color-text-secondary);
   line-height: 1.6;
   margin-bottom: 0;
   max-width: 640px;
@@ -35,41 +36,30 @@
 .cardsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: var(--space-lg);
   margin-top: 20px;
 }
 
 .addressCard {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 28px 24px;
+  padding: var(--space-xl) var(--space-lg);
   display: flex;
   gap: 18px;
   align-items: flex-start;
   text-align: left;
-  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   position: relative;
   overflow: hidden;
-}
-
-.addressCard:hover {
-  border-color: rgba(222, 94, 3, 0.3);
-  background: rgba(255, 255, 255, 0.05);
 }
 
 .cardIcon {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
-  background: rgba(222, 94, 3, 0.1);
-  border: 1px solid rgba(222, 94, 3, 0.2);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-muted);
+  border: 1px solid rgba(232, 93, 4, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #DE5E03;
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 
@@ -84,50 +74,35 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #DE5E03;
-  margin-bottom: 8px;
+  color: var(--color-primary);
+  margin-bottom: var(--space-sm);
 }
 
 .cardLocation {
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
-  margin-bottom: 4px;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xs);
 }
 
 .cardAddress {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
   line-height: 1.5;
 }
 
 /* Tablet */
 @media (max-width: 1024px) {
-  .addressSection {
-    padding: 80px 24px;
-  }
-  .heading {
-    font-size: 44px;
-  }
   .cardsGrid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: var(--space-md);
   }
 }
 
 /* Mobile */
 @media (max-width: 768px) {
-  .addressSection {
-    padding: 60px 16px;
-  }
-  .heading {
-    font-size: 36px;
-  }
-  .description {
-    font-size: 16px;
-  }
   .cardsGrid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: var(--space-md);
   }
 }
