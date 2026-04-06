@@ -19,7 +19,7 @@ export default function CloudContent() {
       </section>
       <OurWorkFinal />
       <ScrollZoomStats />
-      <MoreAboutSection />
+     <MoreAboutSection /> 
       <ProcessSection />
       <section id="testimonials">
         <TestimonialsSection />

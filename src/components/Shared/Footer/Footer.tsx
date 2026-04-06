@@ -129,7 +129,7 @@ export default function Footer() {
                 "Pricing",
                 "Testimonials",
                 "FAQ",
-                "About Us",
+                // "About Us",
                 "Careers",
                 "Blog",
                 "How We Work",
