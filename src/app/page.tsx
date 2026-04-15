@@ -3,11 +3,9 @@ import GrowthShowcaseSection from "@/components/Home/GrowthShowcaseSection/Growt
 import HeroSection from "@/components/Home/HeroSection/HeroSection";
 import PageBackground from "@/components/Home/PageBackground/PageBackground";
 import ScrollToQuerySection from "@/components/Home/ScrollToQuerySection";
-
 import ServicesSection from "@/components/Home/ServicesSection/ServicesSection";
 import SmartGrowthSection from "@/components/Home/SmartGrowthSection/SmartGrowthSection";
 import VisionShowcase from "@/components/Home/VisionShowcase/VisionShowcase";
-
 import PerformanceMetrics from "@/components/Home/PerformanceMetrics/PerformanceMetrics";
 import TestimonialsSection from "@/components/Home/TestimonialsSection/TestimonialsSection";
 import FAQSection from "@/components/Shared/FAQSection/FAQSection";

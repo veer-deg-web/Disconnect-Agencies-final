@@ -81,7 +81,7 @@ export default function HeroContent() {
     const syncAuth = () => {
       setIsLoggedIn(!!localStorage.getItem("userName"));
     };
-    
+
     syncAuth();
     window.addEventListener("storage", syncAuth);
     return () => window.removeEventListener("storage", syncAuth);
@@ -140,17 +140,17 @@ export default function HeroContent() {
           animate={controls}
         >
           <ShinyText
-  text="Disconnect"
-  speed={2}
-  delay={0}
-  color="#b5b5b5"
-  shineColor="#FF5C00"
-  spread={120}
-  direction="left"
-  yoyo={false}
-  pauseOnHover={false}
-  disabled={false}
-/>
+            text="Disconnect"
+            speed={2}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#FF5C00"
+            spread={120}
+            direction="left"
+            yoyo={false}
+            pauseOnHover={false}
+            disabled={false}
+          />
         </motion.h1>
 
         {/* Paragraph */}
@@ -207,11 +207,11 @@ export default function HeroContent() {
 /* ================= SUB COMPONENTS ================= */
 
 export function MorphingLoginButton({ hideOnLogin = false }: { hideOnLogin?: boolean }) {
-  const [hover,     setHover]     = useState(false);
-  const [cardOpen,  setCardOpen]  = useState(false);
-  const [userName,  setUserName]  = useState<string | null>(null);
+  const [hover, setHover] = useState(false);
+  const [cardOpen, setCardOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
-  const [userRole,  setUserRole]  = useState<string>("user");
+  const [userRole, setUserRole] = useState<string>("user");
   const router = useRouter();
 
   /* sync auth state from localStorage */
@@ -250,10 +250,10 @@ export function MorphingLoginButton({ hideOnLogin = false }: { hideOnLogin?: boo
     setUserRole("user");
     setUserAvatar(null);
     setCardOpen(false);
-    
+
     // Fire storage event to sync all listeners
     window.dispatchEvent(new Event("storage"));
-    
+
     router.push("/");
   };
 
